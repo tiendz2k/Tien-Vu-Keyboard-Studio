@@ -62,6 +62,8 @@ Bản dựng Avalonia (.NET 8) thể hiện giao diện thế hệ mới của a
 - [`docs/devices-rongyuan.json`](docs/devices-rongyuan.json) — Bảng 172 thiết bị Akko + MonsGeek (gồm 52 mục MonsGeek có sẵn firmware-id).
 - [`docs/PROTOCOLS-YUNZII-CAKE.md`](docs/PROTOCOLS-YUNZII-CAKE.md) — Giao thức dòng **YUNZII Cake (C75/C98)**: hoá ra chạy chung nền tảng Sinowealth 258A:010C với AULA F75 (họ `kb_by_v2`) — đủ 12 lệnh có dây + giao thức dongle 2.4G, và quan trọng nhất là cơ chế **phân biệt model bằng UUID đọc từ thiết bị (lệnh 0x82)** vì C75/C98 trùng VID:PID.
 - [`docs/devices-yunzii.json`](docs/devices-yunzii.json) — Bảng thiết bị dòng YUNZII Cake (5 mục, kèm UUID).
+- [`docs/PROTOCOLS-REDRAGON-WITMOD.md`](docs/PROTOCOLS-REDRAGON-WITMOD.md) — **Redragon K617 HE** và nền tảng white-label **WitMod** đứng sau nó (cùng lõi dùng cho nhiều hãng: Fantech, Machenike, Keycool, KZZI, Cidoo…): đã xác định transport (usage page 0xFF1B), bảng 36 cặp VID:PID của WebHID, cấu trúc KeyInfo và bộ tính năng HE (actuation/RT/DKS/SOCD/hiệu chuẩn); bảng opcode mức byte còn để trống trung thực — cần thêm một lượt dịch ngược sâu.
+- [`docs/devices-redragon.json`](docs/devices-redragon.json) — Bảng thiết bị WitMod/Redragon trích từ app.
 - [`preview/README-XEM-TRUOC.md`](preview/README-XEM-TRUOC.md) — Giới thiệu bản xem trước giao diện.
 
 ## Nguồn giao thức & lời cảm ơn
