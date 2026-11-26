@@ -762,7 +762,7 @@ namespace TienKeyboardStudioPreview
                 string sub = meta.Size != null && meta.Size.Length == 2
                     ? "Gốc LED " + meta.Size[0] + "×" + meta.Size[1] + " · " + meta.Frames + " frame"
                     : "";
-                var card = new OnlineCard(meta.Name, "Hoàng Phúc Keyboard", sub, uri)
+                var card = new OnlineCard(meta.Name, "Cộng đồng", sub, uri)
                 {
                     Margin = new Thickness(0, 0, 10, 10),
                 };
@@ -824,7 +824,7 @@ namespace TienKeyboardStudioPreview
 
             var root = V(14,
                 Tb("Thư viện Online", "h1"),
-                Tb("Hiệu ứng cộng đồng từ Hoàng Phúc Keyboard. Trong bản xem trước này, cả 16 hiệu ứng đã được chuẩn hoá sẵn cho màn hình TFT và nhúng trong app — duyệt xem không cần mạng.", "sub"),
+                Tb("Hiệu ứng cộng đồng. Trong bản xem trước này, cả 16 hiệu ứng đã được chuẩn hoá sẵn cho màn hình TFT và nhúng trong app — duyệt xem không cần mạng.", "sub"),
                 Card(V(8, kb, Tb("Hiệu ứng đang chọn phát trong ô màn hình TFT của bàn phím.", "faint")), 14),
                 search,
                 tagRow,
@@ -961,7 +961,7 @@ namespace TienKeyboardStudioPreview
                 Tb("Tien Keyboard Studio", "h2"),
                 Tb("Bản xem trước giao diện v0.9.1 — UI-only: không chứa mã thiết bị/HID, không ghi xuống phím thật. Mọi nút bấm liên quan tới phím đều chỉ mô phỏng.", "sub"),
                 Tb("Logo Mẫu C — chữ “T” tạo hình từ phím spacebar — đã được người dùng duyệt.", "sub"),
-                Tb("Font chữ: Be Vietnam Pro (SIL OFL 1.1). GIF thư viện: tự làm cho Tiến. Hiệu ứng cộng đồng: Hoàng Phúc Keyboard.", "faint"));
+                Tb("Font chữ: Be Vietnam Pro (SIL OFL 1.1). GIF thư viện: tự làm cho Tiến.", "faint"));
             var aboutRow = H(14, logoWrap, aboutTexts);
             var aboutCard = Card(aboutRow);
 

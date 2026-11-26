@@ -59,7 +59,7 @@ Chạy thẳng file **TienKeyboardStudioPreview.exe** — không cần cài thê
    Thư giãn; hover là GIF chạy), GIF chọn phát trong ô màn hình TFT trên
    bàn phím + khung xem trước lớn; chuyển Fill/Fit/Stretch để xem cách
    app chuẩn hoá về 128×128.
-5. **Thư viện Online** — 16 hiệu ứng cộng đồng của Hoàng Phúc Keyboard
+5. **Thư viện Online** — 16 hiệu ứng cộng đồng
    (đã chuẩn hoá sẵn cho TFT, nhúng trong app): tìm kiếm, chips hashtag,
    nút "Lấy về máy" (mô phỏng), ghi chú về GIF gốc LED toàn phím.
 6. **Widget TFT** — 3 widget vẽ trên máy tính rồi đưa vào màn hình phím:

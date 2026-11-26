@@ -1,6 +1,6 @@
 T KEYBOARD STUDIO 3.2.1 — THÔNG TIN BUILD
 =========================================
-v3.2.1: bỏ dòng ghi nguồn Hoàng Phúc Keyboard khỏi Thư viện Online theo yêu cầu người dùng (chỉ sửa hiển thị + README, không đổi tính năng/giao thức so với 3.2).
+v3.2.1: bỏ dòng ghi nguồn khỏi Thư viện Online theo yêu cầu người dùng (chỉ sửa hiển thị + README, không đổi tính năng/giao thức so với 3.2).
 Ngày build: 27/11/2026 (Asia/Tokyo)
 Môi trường: Linux VM (cross-compile sang Windows), .NET SDK 8.0.428
 Công nghệ: Avalonia UI 11.3.9 (.NET 8, net8.0) + HidSharp 2.1.0 +

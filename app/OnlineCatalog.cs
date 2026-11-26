@@ -22,7 +22,7 @@ namespace TienKeyboardStudio3
     }
 
     /// <summary>
-    /// Thu vien GIF online kieu hoangphuckeyboard.shop/thu-vien-gif:
+    /// Thu vien GIF online kiểu thư viện GIF online:
     /// catalog 16 GIF cong dong duoc NHUNG san trong app (JSON chi chua ten va
     /// URL cong khai tren CDN cua shop - KHONG dong goi file GIF). Anh thumb
     /// (webp) va GIF goc chi tai ve KHI nguoi dung duyet/bam chon, toi da 25MB,

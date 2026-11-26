@@ -102,7 +102,7 @@ mỗi khung hình: header "04 20 …" (byte[8] = 8) → ACK → 8 khối dữ li
 - 8 khối = một mảng phẳng **512 byte = 128 quad `[key_id, R, G, B]`** cắt thành report 64 byte. Các quad đầu là phím vật lý **đóng gói không khoảng trống, theo thứ tự đọc trực quan** (hàng trên→dưới, trái→phải); phần còn lại là đệm 0 (kể cả byte id).
 - Không có trailer `AA 55`. Chỉ header và commit cuối được ACK; các khối dữ liệu không ACK riêng.
 - Tốc độ đo được: khoảng cách header trung vị 58,7 ms ≈ **17 fps**; trong một khung hình các khối cách nhau ~2,8 ms.
-- Tính bền vững: chưa kiểm chứng, nhưng nhịp ghi này gợi ý dữ liệu chỉ nằm ở **RAM** (khớp với cơ chế app của shop Hoàng Phúc: phải mở app liên tục, GIF không lưu trong phím).
+- Tính bền vững: chưa kiểm chứng, nhưng nhịp ghi này gợi ý dữ liệu chỉ nằm ở **RAM** (khớp với cơ chế một app thương mại tham chiếu: phải mở app liên tục, GIF không lưu trong phím).
 - Lưu ý trung thực từ tác giả: bản bắt gói chỉ animate 1 phím, nên việc render nhiều phím/khung là **suy luận**, chưa phải chứng minh; stream có ghi đè hiệu ứng tích hợp đang chạy hay không cũng chưa kiểm chứng. Đường `0x20` **không** cần chọn hiệu ứng `0x80` trước.
 
 ### 3.4 Kênh nhạc (Music Rhythm) — opcode `0x78`
