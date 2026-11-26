@@ -58,6 +58,8 @@ Bản dựng Avalonia (.NET 8) thể hiện giao diện thế hệ mới của a
 - [`docs/PROTOCOLS-REFERENCE-APP.md`](docs/PROTOCOLS-REFERENCE-APP.md) — Hồ sơ trích xuất giao thức từ một app tham chiếu: 12 mẫu phím thuộc 6 họ giao thức (gồm S75 Pro / Nova75 dùng chung nền tảng F75 Max, AULA F75, GravaStar K1, MAD60 HE, HERO68 HE, WIN60 HE/SE…).
 - [`docs/PROTOCOLS-AULA-HUB.md`](docs/PROTOCOLS-AULA-HUB.md) — Toàn bộ giao thức trong app AULA Hub chính hãng: 7 họ chip (SparkLink V1/V2, HFD, RLW, Bytech HE, Bytech cơ…) kèm bảng lệnh và bằng chứng mã nguồn.
 - [`docs/devices.json`](docs/devices.json) — Bảng 114 mẫu bàn phím (VID:PID, họ chip, khả năng) dạng máy đọc, tổng hợp từ các hồ sơ trên.
+- [`docs/PROTOCOLS-RONGYUAN.md`](docs/PROTOCOLS-RONGYUAN.md) — Giao thức nền tảng **RongYuan RY5088** trích từ Akko Cloud Driver v4 + MonsGeek V4 Driver: hai hãng dùng chung một nền tảng OEM (cùng pháp nhân ký EV, cùng giao thức) — bảng ~25 opcode, lệnh Hall-effect gộp (actuation/RT/DKS/SOCD), giao thức màn hình, hiệu chuẩn.
+- [`docs/devices-rongyuan.json`](docs/devices-rongyuan.json) — Bảng 172 thiết bị Akko + MonsGeek (gồm 52 mục MonsGeek có sẵn firmware-id).
 - [`preview/README-XEM-TRUOC.md`](preview/README-XEM-TRUOC.md) — Giới thiệu bản xem trước giao diện.
 
 ## Nguồn giao thức & lời cảm ơn
