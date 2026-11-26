@@ -1,0 +1,2286 @@
+{
+ "generated_from": "AULA Hub client 1.1.22 (index-npIkQlTa.js registry) + web hub (hub.aulacn.com, table_resolved.json)",
+ "note": "Keyboards only in 'devices'. Mice/headset counted in 'other_device_types' (protocol extraction out of scope). F87ProV2Z client PID corrected to 10000 (source literal 1e4).",
+ "keyboard_entry_count": 114,
+ "other_device_types": {
+  "mice_entries_client": 41,
+  "headset_entries_client": 1
+ },
+ "devices": [
+  {
+   "name": "8K Wireless Receiver",
+   "vid": "0x372E",
+   "pid": "0x106C",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "2.4G dongle",
+   "family": "Bytech HE (Sc/RV)",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": false,
+    "screen": false,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AULA HERO 75 HE",
+   "vid": "0x372E",
+   "pid": "0x103E",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "wired",
+   "family": "Bytech HE (Sc/RV)",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": false,
+    "screen": false,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AULA HERO108 HE",
+   "vid": "0x372E",
+   "pid": "0x103E",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "wired",
+   "family": "Bytech HE (Sc/RV)",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": false,
+    "screen": false,
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ]
+  },
+  {
+   "name": "AULA HERO75 AIR",
+   "vid": "0x372E",
+   "pid": "0x103E",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "wired",
+   "family": "Bytech HE (Sc/RV)",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": false,
+    "screen": false,
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ]
+  },
+  {
+   "name": "HERO 108",
+   "vid": "0x372E",
+   "pid": "0x103E",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "wired",
+   "family": "Bytech HE (Sc/RV)",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": false,
+    "screen": false,
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ]
+  },
+  {
+   "name": "HERO 68 Air",
+   "vid": "0x372E",
+   "pid": "0x103E",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "wired",
+   "family": "Bytech HE (Sc/RV)",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": false,
+    "screen": false,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "HERO 68 HE",
+   "vid": "0x372E",
+   "pid": "0x103E",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "wired",
+   "family": "Bytech HE (Sc/RV)",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": false,
+    "screen": false,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "HERO 68 HE JIS",
+   "vid": "0x372E",
+   "pid": "0x103E",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "wired",
+   "family": "Bytech HE (Sc/RV)",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": false,
+    "screen": false,
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ]
+  },
+  {
+   "name": "HERO 68 MINI",
+   "vid": "0x372E",
+   "pid": "0x103E",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "wired",
+   "family": "Bytech HE (Sc/RV)",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": false,
+    "screen": false,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "HERO 68 XS",
+   "vid": "0x372E",
+   "pid": "0x103E",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "wired",
+   "family": "Bytech HE (Sc/RV)",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": false,
+    "screen": false,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "HERO 84 HE",
+   "vid": "0x372E",
+   "pid": "0x103E",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "wired",
+   "family": "Bytech HE (Sc/RV)",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": false,
+    "screen": false,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "HERO 84 HE JIS",
+   "vid": "0x372E",
+   "pid": "0x103E",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "wired",
+   "family": "Bytech HE (Sc/RV)",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": false,
+    "screen": false,
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ]
+  },
+  {
+   "name": "HERO 99",
+   "vid": "0x372E",
+   "pid": "0x103E",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "wired",
+   "family": "Bytech HE (Sc/RV)",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": false,
+    "screen": false,
+    "knob": null
+   },
+   "sources": [
+    "client"
+   ]
+  },
+  {
+   "name": "HERO 99 HE",
+   "vid": "0x372E",
+   "pid": "0x103E",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "wired",
+   "family": "Bytech HE (Sc/RV)",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": false,
+    "screen": false,
+    "knob": null
+   },
+   "sources": [
+    "client"
+   ]
+  },
+  {
+   "name": "HERO68 MINI Air",
+   "vid": "0x372E",
+   "pid": "0x103E",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "wired",
+   "family": "Bytech HE (Sc/RV)",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": false,
+    "screen": false,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "WIN68HE Ultra",
+   "vid": "0x372E",
+   "pid": "0x103E",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "wired",
+   "family": "Bytech HE (Sc/RV)",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": false,
+    "screen": false,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "2.4G Wireless Receiver",
+   "vid": "0x3554",
+   "pid": "0xFA09",
+   "usage_page": "0xFF02",
+   "usage": 2,
+   "connection": "2.4G dongle",
+   "family": "Bytech co (BPTK)",
+   "capabilities": {
+    "he": false,
+    "per_key": true,
+    "stream": false,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client"
+   ]
+  },
+  {
+   "name": "AULA-F68",
+   "vid": "0x258A",
+   "pid": "0x019D",
+   "usage_page": "0xFF00",
+   "usage": 1,
+   "connection": "wired",
+   "family": "Bytech co (BPTK)",
+   "capabilities": {
+    "he": false,
+    "per_key": true,
+    "stream": false,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ]
+  },
+  {
+   "name": "Game-1002-0202",
+   "vid": "0x258A",
+   "pid": "0x0150",
+   "usage_page": "0xFF02",
+   "usage": 2,
+   "connection": "2.4G dongle",
+   "family": "Bytech co (BPTK)",
+   "capabilities": {
+    "he": false,
+    "per_key": true,
+    "stream": false,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ]
+  },
+  {
+   "name": "Gaming Keyboard",
+   "vid": "0x258A",
+   "pid": "0x010C",
+   "usage_page": "0xFF00",
+   "usage": 1,
+   "connection": "wired",
+   "family": "Bytech co (BPTK)",
+   "capabilities": {
+    "he": false,
+    "per_key": true,
+    "stream": false,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client"
+   ]
+  },
+  {
+   "name": "8K Wireless Receiver",
+   "vid": "0x0C45",
+   "pid": "0xFEF9",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "2.4G dongle",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA F108Pro V2",
+   "vid": "0x38A6",
+   "pid": "0x271A",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA F108Pro V2 Dongle",
+   "vid": "0x0C45",
+   "pid": "0xFEFE",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "2.4G dongle",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA F108ProV2",
+   "vid": "0x38A6",
+   "pid": "0x2739",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": "dot-matrix",
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA F108ProV2C",
+   "vid": "0x38A6",
+   "pid": "0x273A",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": "dot-matrix",
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA F108ProV2C",
+   "vid": "0x38A6",
+   "pid": "0x2749",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": "dot-matrix",
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA F108ProV2C Dongle",
+   "vid": "0x0C45",
+   "pid": "0xFEFC",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "2.4G dongle",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA F75 HE",
+   "vid": "0x38A6",
+   "pid": "0x2729",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AULA F75 HE",
+   "vid": "0x38A6",
+   "pid": "0x2742",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AULA F75 HE Dongle",
+   "vid": "0x0C45",
+   "pid": "0xFEFE",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "2.4G dongle",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AULA F75 V2",
+   "vid": "0x38A6",
+   "pid": "0x2768",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA F75 V2 Dongle",
+   "vid": "0x0C45",
+   "pid": "0xFEFC",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "2.4G dongle",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA F87ProV2C",
+   "vid": "0x38A6",
+   "pid": "0x2712",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client"
+   ]
+  },
+  {
+   "name": "AULA F87ProV2C",
+   "vid": "0x38A6",
+   "pid": "0x2738",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA F87ProV2C",
+   "vid": "0x38A6",
+   "pid": "0x2747",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA F87ProV2C Dongle",
+   "vid": "0x0C45",
+   "pid": "0xFEFC",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "2.4G dongle",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA F87ProV2D",
+   "vid": "0x38A6",
+   "pid": "0x2711",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA F87ProV2D",
+   "vid": "0x38A6",
+   "pid": "0x2737",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA F87ProV2D",
+   "vid": "0x38A6",
+   "pid": "0x2746",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA F87ProV2D  Dongle",
+   "vid": "0x0C45",
+   "pid": "0xFEFE",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "2.4G dongle",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA F87ProV2D Dongle",
+   "vid": "0x0C45",
+   "pid": "0xFEFE",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "2.4G dongle",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA F87ProV2Z",
+   "vid": "0x38A6",
+   "pid": "0x2710",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA F87ProV2Z",
+   "vid": "0x38A6",
+   "pid": "0x2736",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA F87ProV2Z",
+   "vid": "0x38A6",
+   "pid": "0x2748",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA F87ProV2Z Dongle",
+   "vid": "0x0C45",
+   "pid": "0xFEFE",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "2.4G dongle",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA F87S 8K",
+   "vid": "0x38A6",
+   "pid": "0x2908",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA NOVA75 Pro",
+   "vid": "0x38A6",
+   "pid": "0x275C",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA NOVA75 Pro",
+   "vid": "0x0C45",
+   "pid": "0xFEFC",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "2.4G dongle",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA NOVA87",
+   "vid": "0x38A6",
+   "pid": "0x275A",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA NOVA87",
+   "vid": "0x38A6",
+   "pid": "0x275E",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA NOVA87 Dongle",
+   "vid": "0x0C45",
+   "pid": "0xFEFC",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "2.4G dongle",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA NOVA98",
+   "vid": "0x38A6",
+   "pid": "0x273B",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": "TFT 240x135",
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA NOVA98",
+   "vid": "0x38A6",
+   "pid": "0x275D",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": "TFT 240x135",
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "AULA NOVA98 Dongle",
+   "vid": "0x0C45",
+   "pid": "0xFEFC",
+   "usage_page": "0xFF80",
+   "usage": 113,
+   "connection": "2.4G dongle",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client"
+   ]
+  },
+  {
+   "name": "Epomaker x Aula F75 V2",
+   "vid": "0x38A6",
+   "pid": "0x273F",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "F75 Master",
+   "vid": "0x38A6",
+   "pid": "0x2758",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "F75 Master Dongle",
+   "vid": "0x0C45",
+   "pid": "0xFEF9",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "2.4G dongle",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "F75 V2 Dongle",
+   "vid": "0x0C45",
+   "pid": "0xFEFC",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "2.4G dongle",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF67"
+  },
+  {
+   "name": "MINI 60 HE",
+   "vid": "0x0C45",
+   "pid": "0x8032",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "MINI 60 HE PRO",
+   "vid": "0x0C45",
+   "pid": "0x80A2",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "MINI 60 HE PRO",
+   "vid": "0x0C45",
+   "pid": "0x80B2",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "MINI 60 HE PRO Dongle",
+   "vid": "0x0C45",
+   "pid": "0xFEFE",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "2.4G dongle",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "MINI 68 HE",
+   "vid": "0x38A6",
+   "pid": "0x2722",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "MINI 68 HE PRO",
+   "vid": "0x38A6",
+   "pid": "0x2723",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "MINI 68 HE PRO Dongle",
+   "vid": "0x0C45",
+   "pid": "0xFEFE",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "2.4G dongle",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "MINI60HE MAX",
+   "vid": "0x0C45",
+   "pid": "0x80A1",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "MINI60HE MAX Dongle",
+   "vid": "0x0C45",
+   "pid": "0xFEFC",
+   "usage_page": "0xFF80",
+   "usage": 1,
+   "connection": "2.4G dongle",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "MINI68 HE MAX",
+   "vid": "0x38A6",
+   "pid": "0x2724",
+   "usage_page": "0xFF68",
+   "usage": 97,
+   "connection": "wired",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "MINI68HE MAX Dongle",
+   "vid": "0x0C45",
+   "pid": "0xFEFC",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "2.4G dongle",
+   "family": "HFD",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "WIN 60 HE",
+   "vid": "0x2E3C",
+   "pid": "0xC365",
+   "usage_page": "0xFF1B",
+   "usage": 145,
+   "connection": "wired",
+   "family": "RLW",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": false,
+    "screen": false,
+    "knob": false
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "WIN 68 HE",
+   "vid": "0x2E3C",
+   "pid": "0xC365",
+   "usage_page": "0xFF1B",
+   "usage": 145,
+   "connection": "wired",
+   "family": "RLW",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": false,
+    "screen": false,
+    "knob": false
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "2.4G Dongle",
+   "vid": "0x05AC",
+   "pid": "0x024F",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "2.4G dongle",
+   "family": "SONiX F75 Max (web hub)",
+   "capabilities": {
+    "he": false,
+    "per_key": true,
+    "stream": true,
+    "screen": "TFT 128x128",
+    "knob": true
+   },
+   "sources": [
+    "web"
+   ]
+  },
+  {
+   "name": "AULA F108Pro",
+   "vid": "0x0C45",
+   "pid": "0x800A",
+   "usage_page": "0xFF13",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SONiX F75 Max (web hub)",
+   "capabilities": {
+    "he": false,
+    "per_key": true,
+    "stream": true,
+    "screen": "TFT 128x128",
+    "knob": true
+   },
+   "sources": [
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF68"
+  },
+  {
+   "name": "AULA F75Max",
+   "vid": "0x0C45",
+   "pid": "0x800A",
+   "usage_page": "0xFF13",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SONiX F75 Max (web hub)",
+   "capabilities": {
+    "he": false,
+    "per_key": true,
+    "stream": true,
+    "screen": "TFT 128x128",
+    "knob": true
+   },
+   "sources": [
+    "web"
+   ],
+   "filter_alias_usage_page": "0xFF68"
+  },
+  {
+   "name": "F108Pro Dongle",
+   "vid": "0x05AC",
+   "pid": "0x024F",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "2.4G dongle",
+   "family": "SONiX F75 Max (web hub)",
+   "capabilities": {
+    "he": false,
+    "per_key": true,
+    "stream": true,
+    "screen": "TFT 128x128",
+    "knob": true
+   },
+   "sources": [
+    "web"
+   ]
+  },
+  {
+   "name": "HERO 68 HE PRO",
+   "vid": "0x1CA5",
+   "pid": "0x0409",
+   "usage_page": "0xFFA0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V1",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": false,
+    "screen": null,
+    "knob": false
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "HERO 68 HE ULTRA",
+   "vid": "0x1CA5",
+   "pid": "0x0407",
+   "usage_page": "0xFFA0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V1",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": false,
+    "screen": null,
+    "knob": false
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "WIN 60 HE MAX",
+   "vid": "0x1CA2",
+   "pid": "0x1902",
+   "usage_page": "0xFFA0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V1",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": false,
+    "screen": null,
+    "knob": false
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "WIN 60 HE PRO",
+   "vid": "0x1CA2",
+   "pid": "0x1902",
+   "usage_page": "0xFFA0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V1",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": false,
+    "screen": null,
+    "knob": false
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "WIN 68 HE MAX",
+   "vid": "0x1CA2",
+   "pid": "0x1901",
+   "usage_page": "0xFFA0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V1",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": false,
+    "screen": null,
+    "knob": false
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "WIN 68 HE PRO",
+   "vid": "0x1CA2",
+   "pid": "0x1901",
+   "usage_page": "0xFFA0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V1",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": false,
+    "screen": null,
+    "knob": false
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AG60",
+   "vid": "0x38A6",
+   "pid": "0x28D0",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AG60 MAX",
+   "vid": "0x38A6",
+   "pid": "0x28D2",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AG60 MAX",
+   "vid": "0x38A6",
+   "pid": "0x28DD",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AG60 PRO",
+   "vid": "0x38A6",
+   "pid": "0x28D1",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AG60 PRO",
+   "vid": "0x38A6",
+   "pid": "0x28DC",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AG63",
+   "vid": "0x38A6",
+   "pid": "0x272D",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AG63 PRO",
+   "vid": "0x38A6",
+   "pid": "0x272C",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AG63 PRO",
+   "vid": "0x1A86",
+   "pid": "0xFE81",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AG63 pro",
+   "vid": "0x38A6",
+   "pid": "0x272C",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AG63 pro",
+   "vid": "0x1A86",
+   "pid": "0xFE81",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AG75",
+   "vid": "0x38A6",
+   "pid": "0x28DF",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client"
+   ]
+  },
+  {
+   "name": "AG75",
+   "vid": "0x38A6",
+   "pid": "0x28F0",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AG75 MAX",
+   "vid": "0x38A6",
+   "pid": "0x28E1",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AG75 MAX",
+   "vid": "0x38A6",
+   "pid": "0x28F2",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AG75 PRO",
+   "vid": "0x38A6",
+   "pid": "0x28E0",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AG75 PRO",
+   "vid": "0x38A6",
+   "pid": "0x28F1",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AG75 Ultra",
+   "vid": "0x38A6",
+   "pid": "0x28E1",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AG75 Ultra",
+   "vid": "0x38A6",
+   "pid": "0x28F2",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AULA 60",
+   "vid": "0x38A6",
+   "pid": "0x2902",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AULA 66",
+   "vid": "0x38A6",
+   "pid": "0x2903",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AULA60",
+   "vid": "0x38A6",
+   "pid": "0x2902",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "BOX 63",
+   "vid": "0x38A6",
+   "pid": "0x2730",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": "dot-matrix (Decorate1)",
+    "knob": null
+   },
+   "sources": [
+    "client"
+   ]
+  },
+  {
+   "name": "BOX 63",
+   "vid": "0x38A6",
+   "pid": "0x2731",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": "dot-matrix (Decorate1)",
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ]
+  },
+  {
+   "name": "BOX 63MAX",
+   "vid": "0x38A6",
+   "pid": "0x2731",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": "dot-matrix (Decorate1)",
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "BOX 63MAX",
+   "vid": "0x38A6",
+   "pid": "0x2767",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": "dot-matrix (Decorate1)",
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ]
+  },
+  {
+   "name": "F68RX",
+   "vid": "0x38A6",
+   "pid": "0x272E",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "F68rx",
+   "vid": "0x38A6",
+   "pid": "0x272E",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "GALAXY 600",
+   "vid": "0x38A6",
+   "pid": "0x2904",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "WIN 60 EVO",
+   "vid": "0x38A6",
+   "pid": "0x290A",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "WIN 68 EVO",
+   "vid": "0x38A6",
+   "pid": "0x2909",
+   "usage_page": "0xFFB0",
+   "usage": 1,
+   "connection": "wired",
+   "family": "SparkLink V2",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": null,
+    "knob": null
+   },
+   "sources": [
+    "client"
+   ]
+  },
+  {
+   "name": "AULA-Neos75",
+   "vid": "0x1EA7",
+   "pid": "0x4884",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "wired",
+   "family": "VIA/Vial (Neos75)",
+   "capabilities": {
+    "he": true,
+    "per_key": false,
+    "stream": false,
+    "screen": false,
+    "knob": null
+   },
+   "sources": [
+    "client",
+    "web"
+   ]
+  },
+  {
+   "name": "AULA-Neos75 dongle",
+   "vid": "0x6D66",
+   "pid": "0x8572",
+   "usage_page": "0xFF60",
+   "usage": 97,
+   "connection": "2.4G dongle",
+   "family": "VIA/Vial (Neos75)",
+   "capabilities": {
+    "he": true,
+    "per_key": false,
+    "stream": false,
+    "screen": false,
+    "knob": null
+   },
+   "sources": [
+    "web"
+   ]
+  },
+  {
+   "name": "WIN 60 SE",
+   "vid": "0x38A6",
+   "pid": "0x291A",
+   "usage_page": "0xFF00",
+   "usage": 1,
+   "connection": "wired",
+   "family": "WIN60 SE (shop F2)",
+   "capabilities": {
+    "he": true,
+    "per_key": true,
+    "stream": true,
+    "screen": false,
+    "knob": false
+   },
+   "sources": [
+    "web"
+   ],
+   "filter_alias_usage_page": "0x000C"
+  }
+ ]
+}
