@@ -1,7 +1,33 @@
-# Tien Keyboard Studio — BẢN XEM TRƯỚC GIAO DIỆN (v0.9.1)
+# Tien Keyboard Studio — BẢN XEM TRƯỚC GIAO DIỆN (v0.10)
 
 Đây là **app Windows thật** (không phải mockup web) để bạn mở lên xem và duyệt
 **giao diện** của Tien Keyboard Studio bản 3.2 trước khi chốt làm bản đầy đủ.
+
+> **v0.10 — CHỈ BỔ SUNG trên giao diện đã duyệt (không thiết kế lại):**
+> 1. **Liquid Glass** — lớp kính mờ phủ lên sidebar/thẻ cũ: nền bán trong
+>    suốt nhiều lớp, viền sáng ở mép trên, bóng mềm sâu hơn. Bố cục không đổi.
+> 2. **Chọn hình nền app** (Cài đặt → Giao diện, cấu trúc theo trang theme
+>    của AULA): nền **Mặc định** (phẳng, trung tính) + 4 skin có sẵn
+>    (Cực quang, Hoàng hôn, Rừng sâu, Vũ trụ sâu) + mục "Ảnh của bạn",
+>    **4 màu chủ đề**, thẻ xem trước **Sáng/Tối**. Đổi nền là panel kính
+>    cho nền xuyên qua ngay — thử ở Tổng quan và RGB sẽ thấy rõ nhất.
+> 3. **Màn hình chào** khi mở app: Logo Mẫu C + "T Keyboard Studio" +
+>    vệt sáng cầu vồng quét qua hàng phím, ~2 giây, bấm/Esc để bỏ qua.
+>    Có nút **"Xem lại màn hình chào"** và công tắc **"Bỏ qua màn hình
+>    chào mừng"** ở Cài đặt → Giao diện.
+> 4. **Trang GameSense (ý tưởng)** — theo cơ chế thật tìm thấy trong app
+>    AULA: dịch vụ lắng nghe CS2 qua Game State Integration
+>    (127.0.0.1:13650), ánh xạ sự kiện → hành động (chết → mở web/chạy
+>    chương trình; flashbang → overlay chống loá với ảnh chọn sẵn) —
+>    cộng thêm tuỳ chọn phản ứng bằng **đèn phím** qua kênh stream của
+>    app mình, phần bản gốc không có.
+> 5. **Trang Chợ plugin (ý tưởng)** — thẻ theo danh mục (Hiệu ứng khởi
+>    động / Hình nền / Hiệu ứng đèn), panel chi tiết có công tắc Bật +
+>    Xem trước. Cơ chế thật phía sau: plugin cộng đồng trên GitHub +
+>    chợ cấu hình đám mây — trang này mô phỏng trải nghiệm chợ.
+>
+> Cả 5 điểm đã được chạy thử và chụp ảnh kiểm chứng (đủ 10 trang,
+> đổi nền bằng click thật, phát lại màn hình chào bằng click thật).
 
 > **v0.9.1 — sửa lỗi sập app khi mở (bản vá duy nhất so với v0.9):**
 > v0.9 bị crash ngay lúc khởi động do hiệu ứng chuyển trang động vào
@@ -28,8 +54,10 @@ Chạy thẳng file **TienKeyboardStudioPreview.exe** — không cần cài thê
 
 ## Hướng thiết kế đã áp dụng
 
-- **Nền sạch, trung tính** (xám than/navy phẳng — không vũ trụ/sao/tinh vân),
-  thẻ/panel kính mờ rất nhẹ, viền mảnh, bo góc lớn, bóng mềm.
+- **Nền mặc định sạch, trung tính** (xám than/navy phẳng), thẻ/panel kính
+  mờ, viền mảnh, bo góc lớn, bóng mềm. Từ v0.10: người dùng **tự chọn**
+  được hình nền app (skin có sẵn/ảnh riêng) — nền vũ trụ chỉ là một lựa
+  chọn trong danh sách, không phải mặc định.
 - Accent **gradient tím #7C3AED → cyan #22D3EE** dùng tiết chế: nút chính,
   mục đang chọn ở sidebar, thanh trượt, viền thẻ đang chọn.
 - **Bàn phím trung tâm**: vỏ nhôm phay xước + bóng đổ xuống "mặt bàn",
@@ -40,7 +68,7 @@ Chạy thẳng file **TienKeyboardStudioPreview.exe** — không cần cài thê
 - **Logo Mẫu C** (chữ T tạo hình từ phím spacebar) — đã được bạn duyệt —
   dùng làm icon app, đầu sidebar và mục giới thiệu.
 
-## 8 trang trong bản xem trước
+## 10 trang trong bản xem trước
 
 1. **Tổng quan** — khu "Bàn phím đang kết nối": nút **Quét bàn phím**
    (mô phỏng quét ~1 giây) → thẻ AULA F75 Max "Đang sử dụng"
@@ -65,13 +93,20 @@ Chạy thẳng file **TienKeyboardStudioPreview.exe** — không cần cài thê
 6. **Widget TFT** — 3 widget vẽ trên máy tính rồi đưa vào màn hình phím:
    **Thông số máy** (CPU/GPU/RAM — giá trị mô phỏng), **Đang phát**
    (bài hát mô phỏng), **Đồng hồ & thời tiết** (giờ thật của máy bạn).
-7. **Đồng hồ & Cài đặt** — đồng hồ trực tiếp, các công tắc minh hoạ
-   (Dry-run, khởi động cùng Windows, khay hệ thống…), mục giới thiệu
-   kèm logo.
+7. **Đồng hồ & Cài đặt** — mục **Giao diện** mới ở đầu trang (hình nền
+   app, màu chủ đề, xem trước Sáng/Tối, màn hình chào), đồng hồ trực
+   tiếp, các công tắc minh hoạ (Dry-run, khởi động cùng Windows, khay
+   hệ thống…), mục giới thiệu kèm logo.
 8. **Điều khiển từ điện thoại** — trang khái niệm: mã QR mô phỏng +
    mã PIN 4 số, khung điện thoại hiển thị trang điều khiển từ xa mẫu.
    Lưu ý: điện thoại không chỉnh trực tiếp được phím — PC là cầu nối
    bắt buộc và phải đang mở app.
+9. **GameSense** *(ý tưởng — chưa có trong bản thật)* — lắng nghe sự
+   kiện CS2 (GSI), ánh xạ sự kiện → hành động, overlay chống loá khi bị
+   flash, tuỳ chọn phản ứng bằng đèn phím, file cfg mẫu.
+10. **Chợ plugin** *(ý tưởng — chưa có trong bản thật)* — lưới thẻ theo
+    danh mục, panel chi tiết (Bật / Xem trước / Cài đặt), ghi chú cơ
+    chế cộng đồng GitHub + cấu hình đám mây phía sau.
 
 ## Cách góp ý để chốt bản thật
 

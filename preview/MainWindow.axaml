@@ -8,21 +8,33 @@
         Background="#0B0B10"
         FontFamily="avares://TienKeyboardStudioPreview/Assets/Fonts#Be Vietnam Pro">
   <Grid>
-    <!-- Nen phang trung tinh: gradient doc cuc nhe cung tong xam than/navy -->
-    <Border>
-      <Border.Background>
-        <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
-          <GradientStop Color="#12121A" Offset="0" />
-          <GradientStop Color="#0B0B10" Offset="1" />
-        </LinearGradientBrush>
-      </Border.Background>
-    </Border>
+    <!-- NEN APP: gradient phang mac dinh; khi chon skin/anh nen thi anh hien o day,
+         phia tren co lop phu toi nhe de panel kinh va chu luon doc duoc -->
+    <Grid>
+      <Border>
+        <Border.Background>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+            <GradientStop Color="#12121A" Offset="0" />
+            <GradientStop Color="#0B0B10" Offset="1" />
+          </LinearGradientBrush>
+        </Border.Background>
+      </Border>
+      <Image x:Name="BackdropImage" Stretch="UniformToFill" IsVisible="False" />
+      <Border x:Name="BackdropShade" IsVisible="False">
+        <Border.Background>
+          <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+            <GradientStop Color="#590B0B10" Offset="0" />
+            <GradientStop Color="#A60B0B10" Offset="1" />
+          </LinearGradientBrush>
+        </Border.Background>
+      </Border>
+    </Grid>
 
     <Grid ColumnDefinitions="250,*" Margin="14">
-      <!-- SIDEBAR: panel kinh noi tach khoi nen -->
-      <Border Grid.Column="0" CornerRadius="20" Background="#0DFFFFFF"
-              BorderBrush="#17FFFFFF" BorderThickness="1"
-              BoxShadow="0 12 30 0 #59000000" Padding="14" Margin="0,0,10,0">
+      <!-- SIDEBAR: panel kinh noi tach khoi nen (Liquid Glass: highlight mep tren) -->
+      <Border Grid.Column="0" CornerRadius="20" Background="#17FFFFFF"
+              BorderBrush="#2BFFFFFF" BorderThickness="1"
+              BoxShadow="inset 0 1 0 0 #38FFFFFF, inset 0 -1 0 0 #0D000000, 0 12 30 0 #59000000" Padding="14" Margin="0,0,10,0">
         <DockPanel>
           <StackPanel DockPanel.Dock="Top">
             <StackPanel Orientation="Horizontal" Spacing="11">
@@ -45,7 +57,7 @@
                            FontSize="10.5" Foreground="#A6A3B8" TextWrapping="Wrap" />
               </StackPanel>
             </Border>
-            <TextBlock Text="Bản xem trước giao diện · v0.9.1" FontSize="10.5" Foreground="#6F6C84"
+            <TextBlock Text="Bản xem trước giao diện · v0.10" FontSize="10.5" Foreground="#6F6C84"
                        HorizontalAlignment="Center" />
           </StackPanel>
 
@@ -61,6 +73,28 @@
     <Border x:Name="Toast" Classes="toastcard" HorizontalAlignment="Right" VerticalAlignment="Bottom"
             Margin="0,0,26,24" MaxWidth="440" IsVisible="False" Opacity="0" IsHitTestVisible="False">
       <TextBlock x:Name="ToastText" TextWrapping="Wrap" FontSize="12.5" Foreground="#F4F4F8" />
+    </Border>
+
+    <!-- MAN HINH CHAO (v0.10): logo + quet sang phim, ~2 giay, bam/Esc de bo qua -->
+    <Border x:Name="GreetingOverlay" Background="#F20A0A12" IsVisible="False" Opacity="0">
+      <Grid>
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="14" Width="520">
+          <Border CornerRadius="20" ClipToBounds="True" Width="92" Height="92"
+                  HorizontalAlignment="Center"
+                  BoxShadow="0 0 44 0 #667C3AED">
+            <Image Source="/Assets/logo.png" Width="92" Height="92" />
+          </Border>
+          <TextBlock Text="T Keyboard Studio" FontSize="27" FontWeight="Bold" Foreground="#F4F4F8"
+                     HorizontalAlignment="Center" LetterSpacing="0.3" />
+          <TextBlock Text="Chào mừng bạn trở lại" FontSize="13.5" Foreground="#A6A3B8"
+                     HorizontalAlignment="Center" />
+          <Panel x:Name="GreetingSweepHost" Height="30" Margin="10,6,10,0" />
+          <TextBlock x:Name="GreetingStatus" Text="Đang nạp giao diện…" FontSize="11.5"
+                     Foreground="#6F6C84" HorizontalAlignment="Center" />
+        </StackPanel>
+        <TextBlock Text="Bấm vào màn hình hoặc nhấn Esc để bỏ qua" FontSize="11" Foreground="#57546E"
+                   HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,26" />
+      </Grid>
     </Border>
   </Grid>
 </Window>
