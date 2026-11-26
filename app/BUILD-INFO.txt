@@ -1,0 +1,123 @@
+T KEYBOARD STUDIO 3.2 — THÔNG TIN BUILD
+=========================================
+Ngày build: 26/11/2026 (Asia/Tokyo)
+Môi trường: Linux VM (cross-compile sang Windows), .NET SDK 8.0.428
+Công nghệ: Avalonia UI 11.3.9 (.NET 8, net8.0) + HidSharp 2.1.0 +
+  SixLabors.ImageSharp 3.1.12 + NAudio 2.2.1 (WASAPI loopback) +
+  QRCoder 1.6.0 (mã QR thật cho điều khiển điện thoại)
+Lệnh build: xem build.sh (dotnet publish -r win-x64, PublishSingleFile=true)
+Giao diện: nguyên bản Preview v0.9.1 đã được người dùng duyệt (9 trang:
+  8 trang của Preview + trang mới "Per-key (thử nghiệm)").
+
+FILE GIAO (trong thư mục TienKeyboardStudio-v3.2/):
+----------------------------------------------------------------
+1) Bản NHẸ (framework-dependent, single-file)
+   File     : TienKeyboardStudio.exe (trong T-Keyboard-Studio-v3.2-Light.zip)
+   Loại     : PE32+ executable (GUI) x86-64, for MS Windows, 6 sections
+   Kích thước: 43,445,843 byte (~41.4 MiB)
+   SHA-256  : 678fab23a0e7d5b349041e3245897867b82d5a25e79db8570503f4f29a69652b
+   Yêu cầu  : .NET 8 Runtime (Microsoft.NETCore.App 8.0) x64 trên máy Windows.
+              KHÔNG cần Desktop Runtime.
+
+2) Bản NÉN (self-contained, single-file, không cần cài gì)
+   File     : TienKeyboardStudio.exe (trong T-Keyboard-Studio-v3.2-Compressed.zip)
+   Loại     : PE32+ executable (GUI) x86-64, for MS Windows, 10 sections
+   Kích thước: 61,663,675 byte (~58.8 MiB)
+   SHA-256  : 6e6e9fad5f7170e163228c1c2dafd1291cfc7293ac845427f8a0ea05906ee945
+
+NỘI DUNG MỖI ZIP: TienKeyboardStudio.exe + thư mục Library (21 GIF, 3 nhóm:
+Ngân hà 7, Pixel & Game 4, Thư giãn 10) + README.md + BUILD-INFO.txt.
+Ngoài ra 21 GIF thư viện + 16 hiệu ứng cộng đồng (bản TFT) còn được NHÚNG
+trong exe nên trang Màn hình GIF / Online dùng được kể cả khi mất thư mục
+Library. Kích thước tăng so với v3.1 chủ yếu do GIF nhúng + NAudio + QRCoder.
+
+BẢO TOÀN GIAO THỨC ĐÃ KIỂM CHỨNG (yêu cầu bắt buộc của brief):
+----------------------------------------------------------------
+F75Protocol.cs và F75Device.cs GIỮ NGUYÊN 100% so với v3.1 (kiểm bằng SHA-256):
+  v3.1 F75Protocol.cs = ae5b6c65fbb13f964c2e7784d8281a03c9042a354d1edea188179c28cb4f92fe
+  v3.2 F75Protocol.cs = ae5b6c65fbb13f964c2e7784d8281a03c9042a354d1edea188179c28cb4f92fe  (KHỚP)
+  v3.1 F75Device.cs   = 9bd6e298446be758bbb163adaccb29f3bda03d6bb7409fc4c85989b48f1ac618
+  v3.2 F75Device.cs   = 9bd6e298446be758bbb163adaccb29f3bda03d6bb7409fc4c85989b48f1ac618  (KHỚP)
+Toàn bộ lớp mới (per-key/stream/nhạc/cài đặt) nằm ở file RIÊNG
+(L99Protocol.cs, ExperimentalDevice.cs) — không đụng vào đường verified.
+
+ĐÃ KIỂM CHỨNG TRONG BẢN BUILD NÀY:
+----------------------------------------------------------------
+- Biên dịch sạch (0 lỗi) cho win-x64, cả 2 bản publish.
+- Chạy thử bản Linux (cùng mã nguồn) dưới Xvfb: mở lần lượt đủ 9 trang,
+  KHÔNG có ngoại lệ (đây là bước đã bắt được lỗi crash của Preview v0.9).
+  Lưu ý: bản Windows chưa từng chạy trên máy Windows thật; các đường chỉ-
+  Windows (WASAPI, hook bàn phím, registry, khay hệ thống) chỉ được biên
+  dịch kiểm tra, chưa chạy thử — chúng đều bọc try/catch để không làm sập app.
+- Unit test builder (tests/): 67 PASS, 0 FAIL — đối chiếu byte-for-byte với
+  protocol.py của Gavin Graham chạy thật (build_color_blocks,
+  parse_color_blocks, build_color_query_commands, build_stream_blocks,
+  build_stream_frame, build_audio_blocks, build_audio_frame,
+  build_effect_blocks 0x80, build_color_transfer, build_settings_blocks)
+  + tính nhất quán của bảng phím F75 Max trích từ rgb-keyboard.xml chính
+  hãng (80 phím, 79 light_index duy nhất).
+- Quét thiết bị: liệt kê HID thật bằng HidSharp, đối chiếu cơ sở dữ liệu
+  16 mẫu (VID:PID + cờ năng lực). Trang Màn hình GIF / Widget TFT tự ẨN
+  khi mẫu đang chọn không có màn hình; trang Per-key chỉ hiện với F75 Max;
+  nút ghi tự khoá với mẫu chưa hỗ trợ ghi.
+
+ĐÃ KIỂM CHỨNG TỪ TRƯỚC (kế thừa v3.1, giao thức trên giấy tờ):
+----------------------------------------------------------------
+- RGB 20 hiệu ứng qua khối 04 13; đồng bộ đồng hồ 04 28; nạp GIF TFT qua
+  kênh màn hình 0xFF68 — đối chiếu byte-từng-byte từ 2 driver mở độc lập
+  (mohin7/aula-f75max, VitalyArt/Aula-F75-Max-Driver).
+- Khối cài đặt 04 17 (Win lock, Alt+F4, Alt+Tab, Fn, ngủ, phản hồi 1–5):
+  mohin7 + VitalyArt tài liệu hoá NGAY TRÊN F75 Max; offset đối chiếu thêm
+  với protocol.py (TAG1=1, SLEEP=6, RESPONSE=8, trailer 62..63). Trong app
+  khối này đi qua F75Device (đường verified) và tôn trọng Dry-run toàn cục.
+
+CHƯA KIỂM CHỨNG — LỚP THỬ NGHIỆM (per-key / stream / nhạc):
+----------------------------------------------------------------
+Nguồn: Gavin Graham, dự án AULA L99 (github.com/Revisory676/aula-l99-linux).
+L99 dùng chung nền tảng SONiX 0C45:800A với F75 Max (trùng VID:PID dây,
+khung feature report 64B và khối 04 13) — nhưng các lệnh sau CHƯA ai chạy
+trên F75 Max thật:
+- 0xF5 đọc màu per-key (CHỈ ĐỌC): được phép chạy live bằng nút riêng —
+  bước kiểm chứng an toàn đầu tiên dành cho người dùng.
+- 0x23 ghi màu per-key, 0x20 stream ~17fps, 0x78 feed phổ nhạc: GHI.
+  Khoá 2 lớp, mặc định khoá: (1) công tắc Thử nghiệm ở trang Per-key,
+  (2) Dry-run toàn cục phải TẮT. Thiếu một trong hai, app chỉ ghi log
+  đúng các gói sẽ gửi (đây là hành vi mặc định khi bấm các nút này).
+- Thứ tự stream 0x20 là GIẢ THUYẾT đã tài liệu hoá: sắp xếp rect phím
+  theo (top,left) từ rgb-keyboard.xml chính hãng — cùng phương pháp
+  Graham kiểm chứng khớp trên L99, chưa kiểm chứng trên Max.
+- Quirk dữ liệu hãng: Shift_R và Alt_R cùng light_index 0x54 trong XML
+  chính hãng (đã ghi trong code + README) — hai phím nhận cùng màu khi
+  gửi per-key/stream cho tới khi kiểm chứng được trên phím thật.
+- Transport lớp thử nghiệm (ExperimentalDevice) mở stream HID riêng tới
+  kênh lệnh 0xFF13, kiểm tra ACK byte[3]==0x01 và DỪNG ngay khi ACK sai.
+
+STAGE 2 — TRẠNG THÁI THẬT:
+----------------------------------------------------------------
+- Hồ sơ theo ứng dụng: CÓ (theo dõi cửa sổ active, tự áp hiệu ứng + GIF
+  TFT đã gán, lưu app-profiles.json). Chưa chạy thử trên Windows thật.
+- Macro host-side: CÓ (ghi bằng WH_KEYBOARD_LL, phát bằng SendInput,
+  phím tắt toàn cục Ctrl+Alt+R / Ctrl+Alt+P qua RegisterHotKey, lưu
+  macros.json). Chưa chạy thử trên Windows thật.
+- Thống kê gõ phím: CÓ (hook chỉ-đếm theo vị trí phím, WPM cửa sổ 60s,
+  heatmap trên hình bàn phím; không ghi nội dung/chuỗi phím, không lưu
+  khi tắt app). Chưa chạy thử trên Windows thật.
+
+CHƯA LÀM / ĐỂ SAU (nói thẳng):
+----------------------------------------------------------------
+- Widget "Đang phát" (Now Playing): CHƯA tích hợp Windows SMTC. Gói
+  Microsoft.Windows.SDK.Contracts làm lỗi biên dịch NETSDK1130 với target
+  net8.0 thuần (đã thử và loại), đổi target framework vì một widget là
+  không đáng rủi ro cho cả app. Widget hiện chạy bản mô phỏng có ghi rõ
+  "Mô phỏng" và được đánh dấu "Đang phát triển" trong giao diện.
+- Driver ghi thật cho các mẫu ngoài F75 Max (F75 thường 258A:010C,
+  Keychron VIA, Wooting, MADLIONS…): mới ở mức nhận diện + xem trước,
+  đúng lộ trình nghiên cứu đã thống nhất.
+- Nhiệt độ CPU trong widget Thông số máy: không đọc được nếu không có
+  driver cảm biến — widget chỉ hiện CPU%, RAM%, và GPU NVIDIA (nếu có
+  nvidia-smi). Thời tiết cố định Hà Nội (như bản Preview đã duyệt).
+
+NGUYÊN TẮC MẠNG: app không tự gọi mạng. Chỉ 3 luồng do người dùng chủ
+động: tải GIF (link/thư viện online), thời tiết Open-Meteo khi mở trang
+Widget, server LAN điều khiển điện thoại khi người dùng bật (PIN 4 số,
+tắt mặc định). Không telemetry, không tự kiểm tra cập nhật.

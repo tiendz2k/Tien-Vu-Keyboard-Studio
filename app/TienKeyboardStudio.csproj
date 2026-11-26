@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>TienKeyboardStudio</AssemblyName>
+    <RootNamespace>TienKeyboardStudio3</RootNamespace>
+    <Product>T Keyboard Studio</Product>
+    <AssemblyTitle>T Keyboard Studio</AssemblyTitle>
+    <Description>T Keyboard Studio 3.2 — ứng dụng điều khiển bàn phím (AULA F75 Max hỗ trợ đầy đủ; các model khác xem trước). Dry-run bật mặc định.</Description>
+    <Version>3.2.0</Version>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.3.9" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.9" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.9" />
+    <PackageReference Include="HidSharp" Version="2.1.0" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
+    <PackageReference Include="NAudio" Version="2.2.1" />
+    <PackageReference Include="QRCoder" Version="1.6.0" />
+  </ItemGroup>
+
+  <!-- Font Be Vietnam Pro (SIL OFL 1.1) + logo + GIF tich hop + manifest: nhung thang vao exe -->
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\Fonts\*.ttf" />
+    <AvaloniaResource Include="Assets\Fonts\OFL.txt" />
+    <AvaloniaResource Include="Assets\logo.png" />
+    <AvaloniaResource Include="Assets\Gifs\**\*.gif" />
+    <AvaloniaResource Include="Assets\effects-manifest.json" />
+  </ItemGroup>
+
+  <!-- Catalog online (16 hieu ung cong dong): chi URL, tai ve khi nguoi dung bam -->
+  <ItemGroup>
+    <EmbeddedResource Include="online-catalog.json">
+      <LogicalName>TienKeyboardStudio32.online-catalog.json</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <!-- Thu muc Library (21 GIF) nam canh exe sau khi publish, giong v3.1 -->
+  <ItemGroup>
+    <Content Include="..\Library\**\*.gif">
+      <Link>Library\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Library\**\*.md">
+      <Link>Library\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,224 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Gif;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+
+namespace TienKeyboardStudio3
+{
+    /// <summary>
+    /// Cai dat thu vien GIF ca nhan cua Tien:
+    ///  - Thu muc goc: %AppData%/TienKeyboardStudio/
+    ///  - settings.json: danh sach thu muc nguon nguoi dung them vao.
+    ///  - MyGIFs/: noi luu GIF nguoi dung tai tu URL / chuan hoa vao.
+    /// Chi doc/ghi file local. Mang chi dung trong DownloadImageAsync -
+    /// hanh dong tai anh do CHINH nguoi dung bam nut (khong telemetry).
+    /// </summary>
+    public sealed class LibrarySettings
+    {
+        public List<string> Folders { get; set; } = new List<string>();
+    }
+
+    public static class GifLibraryStore
+    {
+        public static string RootDir
+        {
+            get
+            {
+                string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                return Path.Combine(appData, "TienKeyboardStudio");
+            }
+        }
+
+        public static string MyGifsDir => Path.Combine(RootDir, "MyGIFs");
+        public static string SettingsPath => Path.Combine(RootDir, "settings.json");
+
+        public static LibrarySettings Load()
+        {
+            try
+            {
+                if (File.Exists(SettingsPath))
+                {
+                    var s = JsonSerializer.Deserialize<LibrarySettings>(File.ReadAllText(SettingsPath));
+                    if (s != null)
+                    {
+                        if (s.Folders == null) s.Folders = new List<string>();
+                        return s;
+                    }
+                }
+            }
+            catch { }
+            return new LibrarySettings();
+        }
+
+        public static void Save(LibrarySettings settings)
+        {
+            Directory.CreateDirectory(RootDir);
+            File.WriteAllText(SettingsPath,
+                JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true }));
+        }
+
+        public static void EnsureDirs()
+        {
+            Directory.CreateDirectory(RootDir);
+            Directory.CreateDirectory(MyGifsDir);
+        }
+
+        private static readonly string[] ImageExts = { ".gif", ".png", ".jpg", ".jpeg", ".bmp", ".webp" };
+
+        /// <summary>Quet mot thu muc (khong de quy sau) lay file anh/GIF.</summary>
+        public static List<string> ScanFolder(string folder)
+        {
+            var result = new List<string>();
+            try
+            {
+                if (string.IsNullOrWhiteSpace(folder) || !Directory.Exists(folder)) return result;
+                foreach (var f in Directory.GetFiles(folder))
+                {
+                    if (Array.IndexOf(ImageExts, Path.GetExtension(f).ToLowerInvariant()) >= 0)
+                        result.Add(f);
+                }
+            }
+            catch { }
+            result.Sort(StringComparer.OrdinalIgnoreCase);
+            return result;
+        }
+
+        /// <summary>
+        /// Tai anh tu URL do nguoi dung dan vao. Day la loi goi mang DUY NHAT
+        /// cua app, chi chay khi nguoi dung bam nut "Tai tu link".
+        /// Kiem tra: HTTP thanh cong, dung luong <= 25MB, giai ma duoc bang
+        /// ImageSharp (tuc la anh that). Tra ve duong dan file tam da tai.
+        /// </summary>
+        public static async Task<string> DownloadImageAsync(string url)
+        {
+            if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) ||
+                (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+                throw new InvalidOperationException("Link khong hop le - chi chap nhan http/https.");
+
+            EnsureDirs();
+            string tempPath = Path.Combine(RootDir, "download-tmp.bin");
+            using (var http = new HttpClient())
+            {
+                http.Timeout = TimeSpan.FromSeconds(60);
+                http.DefaultRequestHeaders.UserAgent.ParseAdd("TienKeyboardStudio/3.1");
+                using (var resp = await http.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead))
+                {
+                    resp.EnsureSuccessStatusCode();
+                    if (resp.Content.Headers.ContentLength > 25 * 1024 * 1024)
+                        throw new InvalidOperationException("File qua lon (>25MB), khong tai.");
+                    using (var fs = File.Create(tempPath))
+                        await resp.Content.CopyToAsync(fs);
+                }
+            }
+            // Xac thuc la anh that bang cach giai ma thu
+            try
+            {
+                using (var img = Image.Load<Rgba32>(tempPath)) { var _ = img.Width; }
+            }
+            catch
+            {
+                try { File.Delete(tempPath); } catch { }
+                throw new InvalidOperationException("File tai ve khong phai anh/GIF hop le.");
+            }
+            return tempPath;
+        }
+
+        /// <summary>
+        /// Chuan hoa anh/GIF ve chuan man hinh F75 Max: 128x128, toi da 255 frame
+        /// (cat bot), giu delay tung frame (kep 30..500 ms nhu encoder goc).
+        /// Luu thanh GIF vao MyGIFs, tra ve (duong dan, thong tin truoc/sau).
+        /// </summary>
+        public static (string OutPath, string Before, string After) NormalizeToMyGifs(
+            string sourcePath, FitMode fit, string desiredName)
+        {
+            EnsureDirs();
+            using (var src = Image.Load<Rgba32>(sourcePath))
+            {
+                int srcFrames = src.Frames.Count;
+                int frames = Math.Min(srcFrames, F75Protocol.MaxFrames);
+                string before = src.Width + "×" + src.Height + ", " + srcFrames + " frame";
+
+                var mode = fit == FitMode.Fill ? ResizeMode.Crop
+                         : fit == FitMode.Fit ? ResizeMode.Pad
+                         : ResizeMode.Stretch;
+
+                Image<Rgba32> first = ConvertFrame(src, 0, mode);
+                first.Metadata.GetGifMetadata().RepeatCount = 0;
+                var output = first;
+                try
+                {
+                    for (int i = 1; i < frames; i++)
+                    {
+                        using (var f = ConvertFrame(src, i, mode))
+                        {
+                            var root = f.Frames.RootFrame;
+                            root.Metadata.GetGifMetadata().FrameDelay = (ushort)DelayHundredths(src, i);
+                            output.Frames.AddFrame(root);
+                        }
+                    }
+                    output.Frames.RootFrame.Metadata.GetGifMetadata().FrameDelay = (ushort)DelayHundredths(src, 0);
+
+                    string name = SanitizeName(desiredName);
+                    if (string.IsNullOrEmpty(name))
+                        name = SanitizeName(Path.GetFileNameWithoutExtension(sourcePath));
+                    if (string.IsNullOrEmpty(name)) name = "gif-cua-tien";
+                    string outPath = Path.Combine(MyGifsDir, name + ".gif");
+                    int n = 2;
+                    while (File.Exists(outPath))
+                        outPath = Path.Combine(MyGifsDir, name + "-" + (n++) + ".gif");
+
+                    output.SaveAsGif(outPath, new GifEncoder { ColorTableMode = GifColorTableMode.Global });
+                    string after = "128×128, " + frames + " frame" +
+                                   (srcFrames > frames ? " (da cat tu " + srcFrames + ")" : "");
+                    return (outPath, before, after);
+                }
+                finally
+                {
+                    output.Dispose();
+                }
+            }
+        }
+
+        private static Image<Rgba32> ConvertFrame(Image<Rgba32> src, int index, ResizeMode mode)
+        {
+            var frame = src.Frames.CloneFrame(index);
+            frame.Mutate(m => m.Resize(new ResizeOptions
+            {
+                Size = new Size(F75Protocol.ScreenWidth, F75Protocol.ScreenHeight),
+                Mode = mode,
+                PadColor = Color.Black,
+                Sampler = KnownResamplers.Bicubic,
+            }));
+            return frame;
+        }
+
+        private static int DelayHundredths(Image<Rgba32> img, int index)
+        {
+            int ms = 100;
+            try
+            {
+                var meta = img.Frames[index].Metadata.GetGifMetadata();
+                if (meta != null && meta.FrameDelay > 0) ms = meta.FrameDelay * 10;
+            }
+            catch { }
+            ms = Math.Min(500, Math.Max(30, ms));
+            return ms / 10;
+        }
+
+        private static string SanitizeName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name)) return "";
+            foreach (var c in Path.GetInvalidFileNameChars())
+                name = name.Replace(c, '-');
+            name = name.Trim().Trim('.');
+            if (name.Length > 60) name = name.Substring(0, 60);
+            return name;
+        }
+    }
+}
