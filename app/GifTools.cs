@@ -149,7 +149,7 @@ namespace TienKeyboardStudio3
         }
 
         // ---- Ban file (v3.2): nap frame tu file tren dia (thu vien nguoi dung,
-        // cache online) — cung pipeline chuan hoa nhu ban avares. ----
+        // thu vien Online dong goi san) — cung pipeline chuan hoa nhu ban avares. ----
         public static int ProbeFrameCountFile(string path)
         {
             try { using (var img = Image.Load<Rgba32>(path)) return img.Frames.Count; }

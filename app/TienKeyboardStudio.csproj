@@ -9,8 +9,8 @@
     <RootNamespace>TienKeyboardStudio3</RootNamespace>
     <Product>T Keyboard Studio</Product>
     <AssemblyTitle>T Keyboard Studio</AssemblyTitle>
-    <Description>T Keyboard Studio 3.2 — ứng dụng điều khiển bàn phím (AULA F75 Max hỗ trợ đầy đủ; các model khác xem trước). Dry-run bật mặc định.</Description>
-    <Version>3.2.1</Version>
+    <Description>T Keyboard Studio 3.2.2 — ứng dụng điều khiển bàn phím (AULA F75 Max hỗ trợ đầy đủ; các model khác xem trước). Dry-run bật mặc định.</Description>
+    <Version>3.2.2</Version>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>app.ico</ApplicationIcon>
     <AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>
@@ -35,11 +35,26 @@
     <AvaloniaResource Include="Assets\effects-manifest.json" />
   </ItemGroup>
 
-  <!-- Catalog online (16 hieu ung cong dong): chi URL, tai ve khi nguoi dung bam -->
+  <!-- Catalog Thu vien Online (16 hieu ung cong dong DONG GOI SAN, v3.2.2):
+       chi ten + ten file local, file GIF nam o thu muc OnlineLibrary canh exe -->
   <ItemGroup>
     <EmbeddedResource Include="online-catalog.json">
       <LogicalName>TienKeyboardStudio32.online-catalog.json</LogicalName>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <!-- Thu muc OnlineLibrary (16 GIF goc dang dai LED rong) nam canh exe sau khi publish -->
+  <ItemGroup>
+    <Content Include="..\OnlineLibrary\**\*.gif">
+      <Link>OnlineLibrary\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Include="..\OnlineLibrary\**\*.png">
+      <Link>OnlineLibrary\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
   </ItemGroup>
 
   <!-- Thu muc Library (21 GIF) nam canh exe sau khi publish, giong v3.1 -->
@@ -47,6 +62,7 @@
     <Content Include="..\Library\**\*.gif">
       <Link>Library\%(RecursiveDir)%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
     <Content Include="..\Library\**\*.md">
       <Link>Library\%(RecursiveDir)%(Filename)%(Extension)</Link>

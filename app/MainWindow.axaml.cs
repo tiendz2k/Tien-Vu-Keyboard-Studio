@@ -69,7 +69,7 @@ namespace TienKeyboardStudio3
         private TextBlock _gifInfo;
         private WrapPanel _gifWrap;
         private readonly List<GifCard> _gifCards = new List<GifCard>();
-        private string _gifFilter = null; // null = tat ca; "Mine" = Cua toi; "Online" = cache online; con lai = group
+        private string _gifFilter = null; // null = tat ca; "Mine" = Cua toi; "Online" = Thu vien Online dong goi san; con lai = group
         private GifFitMode _gifFit = GifFitMode.Fill;
 
         // Trang Widget
@@ -181,7 +181,7 @@ namespace TienKeyboardStudio3
             RefreshNavVisibility();
             RefreshWriteStates();
             ShowPage("home");
-            AppendLog("T Keyboard Studio v3.2.1 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
+            AppendLog("T Keyboard Studio v3.2.2 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
             AppendLog("Lộ trình an toàn lần đầu: Quét thiết bị → thử RGB (dry-run) → tắt Dry-run → RGB thật → Cài đặt 04 17 → Đồng hồ → GIF TFT nhỏ → Đọc thử 0xF5.");
         }
 
@@ -600,7 +600,7 @@ namespace TienKeyboardStudio3
 
             var root = V(14,
                 Tb("Tổng quan", "h1"),
-                Tb("T Keyboard Studio v3.2.1 — bản thật: quét thiết bị HID thật, ghi xuống F75 Max qua giao thức đã kiểm chứng. Dry-run bật mặc định để an toàn.", "sub"),
+                Tb("T Keyboard Studio v3.2.2 — bản thật: quét thiết bị HID thật, ghi xuống F75 Max qua giao thức đã kiểm chứng. Dry-run bật mặc định để an toàn.", "sub"),
                 connectCard,
                 heroCard,
                 stats,
@@ -1156,7 +1156,7 @@ namespace TienKeyboardStudio3
             var filters = new (string Label, string Group)[]
             {
                 ("Tất cả", null), ("Ngân hà", "NganHa"), ("Pixel & Game", "PixelGame"),
-                ("Thư giãn", "ThuGian"), ("Của tôi", "Mine"), ("Đã tải online", "Online"),
+                ("Thư giãn", "ThuGian"), ("Của tôi", "Mine"), ("Thư viện Online", "Online"),
             };
             var filterBtns = new List<Button>();
             foreach (var (label, group) in filters)
@@ -1266,11 +1266,12 @@ namespace TienKeyboardStudio3
                         Entry = new GifEntry { Name = GifCatalog.PrettyName(f), Group = "Mine", GroupLabel = "Của tôi" },
                         IsFile = true, FilePath = f, GroupKey = "Mine",
                     });
-            if (Directory.Exists(OnlineCatalog.CacheDir))
-                foreach (var f in Directory.GetFiles(OnlineCatalog.CacheDir, "*.gif"))
+            // Thu muc OnlineLibrary canh exe (16 hieu ung dong goi san, v3.2.2)
+            if (Directory.Exists(OnlineCatalog.OnlineLibraryDir))
+                foreach (var f in GifLibraryStore.ScanFolder(OnlineCatalog.OnlineLibraryDir))
                     items.Add(new GifItem
                     {
-                        Entry = new GifEntry { Name = "Online · " + GifCatalog.PrettyName(f), Group = "Online", GroupLabel = "Đã tải online" },
+                        Entry = new GifEntry { Name = "Online · " + GifCatalog.PrettyName(f), Group = "Online", GroupLabel = "Thư viện Online" },
                         IsFile = true, FilePath = f, GroupKey = "Online",
                     });
             return items;
@@ -1537,7 +1538,7 @@ namespace TienKeyboardStudio3
             _onlineLedPlayer.Log = AppendLog;
             var ledState = new RgbAnimState { Brush = Color.FromRgb(0x7C, 0x3A, 0xED), Brightness = 3 };
             var ledKb = new KeyboardView { Mode = KeyboardMode.Animated, State = ledState };
-            var ledStatus = Tb("Chọn một hiệu ứng bên dưới — app sẽ tải GIF gốc về máy rồi chuyển thành đèn từng phím.", "sub");
+            var ledStatus = Tb("Chọn một hiệu ứng bên dưới — GIF đã đóng gói sẵn trong máy, app chuyển ngay thành đèn từng phím (không cần mạng).", "sub");
             OnlineGifItem selectedItem = null;
             string selectedPath = null;
 
@@ -1553,27 +1554,32 @@ namespace TienKeyboardStudio3
                 selectedItem = card.Item;
                 try
                 {
-                    ledStatus.Text = $"Đang tải “{card.Item.Name}” về máy (tối đa 25MB)…";
-                    string path = await OnlineCatalog.DownloadOriginalAsync(card.Item);
+                    string path = OnlineCatalog.ResolvePath(card.Item);
+                    if (path == null)
+                    {
+                        ledStatus.Text = $"Không thấy file của “{card.Item.Name}” trong thư mục OnlineLibrary cạnh exe — hãy giải nén đủ cả thư mục từ file zip nhé.";
+                        AppendLog($"Online: thiếu file local cho “{card.Item.Name}”.");
+                        return;
+                    }
                     selectedPath = path;
-                    card.SetDownloaded(true);
+                    ledStatus.Text = $"Đang chuyển “{card.Item.Name}” thành đèn phím…";
                     var anim = await Task.Run(() => GifLedConverter.Convert(path));
                     _onlineLedPlayer.Load(anim, ledState, ledKb);
                     ledStatus.Text = $"“{card.Item.Name}”: GIF gốc {anim.SourceWidth}×{anim.SourceHeight}, {anim.SourceFrames} frame → đã chuyển thành {anim.Frames.Count} frame đèn phím. Bấm Phát để xem trong app.";
-                    AppendLog($"Online: đã tải + chuyển LED “{card.Item.Name}” ({anim.Frames.Count} frame).");
+                    AppendLog($"Online: đã chuyển LED “{card.Item.Name}” từ file local ({anim.Frames.Count} frame).");
                 }
                 catch (Exception ex)
                 {
-                    ledStatus.Text = "Tải/chuyển thất bại: " + ex.Message;
+                    ledStatus.Text = "Chuyển thất bại: " + ex.Message;
                     AppendLog("Lỗi online: " + ex.Message);
                 }
             }
 
             foreach (var item in catalog)
             {
-                var card = new OnlineGifCard(item) { Margin = new Thickness(0, 0, 10, 10) };
+                var card = new OnlineGifCard(item, OnlineCatalog.ResolvePath(item) != null) { Margin = new Thickness(0, 0, 10, 10) };
                 card.SelectedChanged += c => _ = SelectOnlineAsync(c);
-                card.DownloadClicked += c => _ = SelectOnlineAsync(c);
+                card.UseClicked += c => _ = SelectOnlineAsync(c);
                 cards.Add(card);
                 wrap.Children.Add(card);
                 var captured = card;
@@ -1582,7 +1588,8 @@ namespace TienKeyboardStudio3
                     try
                     {
                         var bmp = await OnlineCatalog.LoadThumbnailAsync(captured.Item);
-                        await Dispatcher.UIThread.InvokeAsync(() => captured.SetThumb(bmp));
+                        if (bmp != null)
+                            await Dispatcher.UIThread.InvokeAsync(() => captured.SetThumb(bmp));
                     }
                     catch { }
                 });
@@ -1623,7 +1630,7 @@ namespace TienKeyboardStudio3
             });
             var tftBtn = WriteBtn("Nạp GIF này lên màn hình TFT", async () =>
             {
-                if (selectedPath == null) { ShowToast("Hãy chọn (để tải) một hiệu ứng trước nhé."); return; }
+                if (selectedPath == null) { ShowToast("Hãy chọn một hiệu ứng trước nhé."); return; }
                 await UploadGifFileAsync(selectedPath, FitMode.Fill, null);
             }, primary: false);
 
@@ -1635,7 +1642,7 @@ namespace TienKeyboardStudio3
 
             var root = V(14,
                 Tb("Thư viện Online", "h1"),
-                Tb("16 hiệu ứng cộng đồng (chỉ chứa URL trong app — bấm chọn là app tải GIF gốc về máy, kiểm tra giải mã được rồi mới dùng). GIF gốc là hiệu ứng LED toàn phím dạng dải rộng; app lấy mẫu màu tại tâm từng phím để phát lên đèn phím, hoặc cắt về 128×128 để nạp màn hình TFT.", "sub"),
+                Tb("16 hiệu ứng cộng đồng ĐÓNG GÓI SẴN trong thư mục OnlineLibrary cạnh exe — dùng hoàn toàn offline, không tải gì từ mạng. GIF gốc là hiệu ứng LED toàn phím dạng dải rộng; app lấy mẫu màu tại tâm từng phím để phát lên đèn phím, hoặc cắt về 128×128 để nạp màn hình TFT.", "sub"),
                 search,
                 wrap,
                 emptyNote,
@@ -1648,15 +1655,14 @@ namespace TienKeyboardStudio3
         {
             private readonly Avalonia.Controls.Image _img;
             private readonly TextBlock _status;
-            private readonly Button _dlBtn;
+            private readonly Button _useBtn;
             private bool _selected;
-            private bool _downloaded;
 
             public OnlineGifItem Item { get; }
             public event Action<OnlineGifCard> SelectedChanged;
-            public event Action<OnlineGifCard> DownloadClicked;
+            public event Action<OnlineGifCard> UseClicked;
 
-            public OnlineGifCard(OnlineGifItem item)
+            public OnlineGifCard(OnlineGifItem item, bool available)
             {
                 Item = item;
                 Classes.Add("pickcard");
@@ -1667,27 +1673,24 @@ namespace TienKeyboardStudio3
                     Width = 168, Height = 84, Stretch = Stretch.Uniform,
                     HorizontalAlignment = HorizontalAlignment.Center,
                 };
-                _status = new TextBlock { Text = "Chưa tải", FontSize = 10, Foreground = UiBrushes.TextSecondary };
-                _dlBtn = new Button { Content = "Tải về + chuyển LED", HorizontalAlignment = HorizontalAlignment.Stretch };
-                _dlBtn.Classes.Add("ghost");
-                _dlBtn.Click += (s, e) => DownloadClicked?.Invoke(this);
+                _status = new TextBlock
+                {
+                    Text = available ? "Có sẵn trong máy · dùng ngay offline" : "Thiếu file (kiểm tra thư mục OnlineLibrary)",
+                    FontSize = 10, Foreground = UiBrushes.TextSecondary,
+                };
+                _useBtn = new Button { Content = "Dùng hiệu ứng này", HorizontalAlignment = HorizontalAlignment.Stretch };
+                _useBtn.Classes.Add("ghost");
+                _useBtn.Click += (s, e) => UseClicked?.Invoke(this);
                 var stack = new StackPanel { Spacing = 6 };
                 stack.Children.Add(_img);
                 stack.Children.Add(new TextBlock { Text = item.Name, FontSize = 12, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap });
                 stack.Children.Add(_status);
-                stack.Children.Add(_dlBtn);
+                stack.Children.Add(_useBtn);
                 Child = stack;
                 PointerPressed += (s, e) => SelectedChanged?.Invoke(this);
             }
 
             public void SetThumb(Bitmap bmp) { if (bmp != null) _img.Source = bmp; }
-
-            public void SetDownloaded(bool done)
-            {
-                _downloaded = done;
-                _status.Text = done ? "Đã tải · sẵn sàng phát LED / nạp TFT" : "Chưa tải";
-                _dlBtn.Content = done ? "Đã tải ✓" : "Tải về + chuyển LED";
-            }
 
             public void SetSelected(bool sel)
             {
@@ -1809,7 +1812,7 @@ namespace TienKeyboardStudio3
             var ledItems = CollectGifItems();
             ledPicker.ItemsSource = ledItems.Select(i => i.Entry.Name).ToList();
             if (ledItems.Count > 0) ledPicker.SelectedIndex = 0;
-            var ledInfo = Tb("Chọn GIF bất kỳ (thư viện, Của tôi, đã tải online — kể cả GIF dải LED rộng của shop) rồi bấm Nạp GIF: app lấy mẫu màu tại tâm rect từng phím theo hình học XML của F75 Max.", "sub");
+            var ledInfo = Tb("Chọn GIF bất kỳ (thư viện, Của tôi, Thư viện Online đóng gói sẵn — kể cả GIF dải LED rộng) rồi bấm Nạp GIF: app lấy mẫu màu tại tâm rect từng phím theo hình học XML của F75 Max.", "sub");
             var loadLedBtn = GhostBtn("Nạp GIF", async () =>
             {
                 int idx = ledPicker.SelectedIndex;
@@ -2239,7 +2242,7 @@ namespace TienKeyboardStudio3
             };
             var aboutTexts = V(4,
                 Tb("T Keyboard Studio", "h2"),
-                Tb("Phiên bản 3.2.1 — bản thật: F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; lớp per-key/stream/nhạc là thử nghiệm có khoá an toàn (xem trang Per-key). Dry-run bật mặc định.", "sub"),
+                Tb("Phiên bản 3.2.2 — bản thật: F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; lớp per-key/stream/nhạc là thử nghiệm có khoá an toàn (xem trang Per-key). Dry-run bật mặc định.", "sub"),
                 Tb("Logo Mẫu C — chữ “T” tạo hình từ phím spacebar — đã được người dùng duyệt.", "sub"),
                 Tb("Font chữ: Be Vietnam Pro (SIL OFL 1.1). GIF thư viện: tự làm cho Tiến. Giao thức per-key: Gavin Graham (AULA L99).", "faint"));
             var aboutCard = Card(H(14, logoWrap, aboutTexts));

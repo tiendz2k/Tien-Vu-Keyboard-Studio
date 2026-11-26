@@ -1,4 +1,4 @@
-# T Keyboard Studio — v3.2
+# T Keyboard Studio — v3.2.2
 
 Ứng dụng điều khiển bàn phím cơ cho Windows, làm riêng cho Tiến.
 **AULA F75 Max: hỗ trợ đầy đủ** qua giao thức HID đã kiểm chứng chéo từ hai driver mã nguồn mở độc lập.
@@ -10,15 +10,15 @@ Giao diện là bản đã được duyệt ở bản xem trước (Preview v0.9
 
 | Bản | File | Yêu cầu |
 |---|---|---|
-| **Light** | `TienKeyboardStudio.exe` trong `T-Keyboard-Studio-v3.2-Light.zip` | Cần **.NET 8 Runtime** (Microsoft.NETCore.App 8.0) x64 đã cài trên máy |
-| **Compressed** | `TienKeyboardStudio.exe` trong `T-Keyboard-Studio-v3.2-Compressed.zip` | Tự chứa toàn bộ — **không cần cài gì thêm** |
+| **Light** | `TienKeyboardStudio.exe` trong `T-Keyboard-Studio-v3.2.2-Light.zip` | Cần **.NET 8 Runtime** (Microsoft.NETCore.App 8.0) x64 đã cài trên máy |
+| **Compressed** | `TienKeyboardStudio.exe` trong `T-Keyboard-Studio-v3.2.2-Compressed.zip` | Tự chứa toàn bộ — **không cần cài gì thêm** |
 
-Giải nén zip ra một thư mục (giữ nguyên thư mục `Library` nằm cạnh file exe), rồi chạy `TienKeyboardStudio.exe`. Windows có thể hiện SmartScreen vì app không ký số — chọn *More info → Run anyway*.
+Giải nén zip ra một thư mục (giữ nguyên hai thư mục `Library` và `OnlineLibrary` nằm cạnh file exe), rồi chạy `TienKeyboardStudio.exe`. Windows có thể hiện SmartScreen vì app không ký số — chọn *More info → Run anyway*.
 
 ## Nguyên tắc an toàn
 
 - **Dry-run BẬT mặc định.** Khi Dry-run bật, mọi thao tác ghi chỉ **ghi log** đúng các gói sẽ gửi — không có gì được ghi xuống phím. Công tắc Dry-run nằm ở thanh bên trái và ở trang Cài đặt.
-- **Không telemetry.** App không tự gọi mạng, ngoại trừ đúng 3 việc bạn chủ động bấm: tải GIF từ link/thư viện online, tải thời tiết khi mở trang Widget, và server điều khiển điện thoại trong LAN khi bạn bật.
+- **Không telemetry.** App không tự gọi mạng, ngoại trừ đúng 3 việc bạn chủ động bấm: tải GIF từ link bạn tự dán ở trang Màn hình GIF, tải thời tiết khi mở trang Widget, và server điều khiển điện thoại trong LAN khi bạn bật. Thư viện Online dùng hoàn toàn offline (GIF đóng gói sẵn trong máy).
 - Các tính năng ghi thật cho F75 Max (RGB, đồng hồ, cài đặt 04 17, nạp GIF TFT) đều qua **cáp USB-C**. Bluetooth/đầu thu 2.4G không nhận cài đặt và không nạp được màn hình.
 - Lớp per-key/stream/nhạc là **THỬ NGHIỆM** có khoá riêng — đọc kỹ mục riêng bên dưới trước khi mở khoá.
 
@@ -42,7 +42,7 @@ Nếu có gì lạ (đèn không đổi, app báo không ACK): cắm lại cáp,
 - **Ánh sáng RGB** — 20 hiệu ứng firmware, màu chính/nhiều màu, độ sáng/tốc độ/hướng, áp dụng qua khối 04 13 đã kiểm chứng.
 - **Theo nhạc** — bắt âm thanh hệ thống thật qua WASAPI loopback (NAudio) → FFT 23 dải phổ. Ba chế độ gửi: *Visualizer stream 0x20* (thử nghiệm), *Nhịp firmware* (pulse độ sáng theo nhịp bass bằng hiệu ứng 04 13 đã kiểm chứng — chạy live theo Dry-run thường), *Feed phổ 0x78* (thử nghiệm). Không bắt được âm thanh thì app tự dùng phổ mô phỏng để xem trước.
 - **Màn hình GIF** — 21 GIF tích hợp + GIF của bạn (thêm thư mục nguồn, tải từ URL, kéo-thả vào cửa sổ app — tự chuẩn hoá 128×128, tối đa 255 frame, lưu vào `%AppData%\TienKeyboardStudio\MyGIFs`), 3 chế độ Fill/Fit/Stretch, nạp lên TFT qua kênh màn hình đã kiểm chứng. **Trang này chỉ hiện khi mẫu đang chọn có màn hình** (F75 Max có; F75 thường/Hi75C Pro không — trang tự ẩn).
-- **Thư viện Online** — 16 hiệu ứng từ thư viện hiệu ứng cộng đồng. App chỉ chứa URL; bấm chọn là tải GIF gốc về máy (tối đa 25MB, có kiểm tra giải mã), rồi: phát lên **đèn từng phím** (GIF→LED), hoặc nạp lên **màn hình TFT**.
+- **Thư viện Online** — 16 hiệu ứng cộng đồng **đóng gói sẵn** trong thư mục `OnlineLibrary` cạnh exe (từ v3.2.2): dùng hoàn toàn offline, không tải gì từ mạng, không còn link bên thứ ba nào. Bấm chọn một hiệu ứng là dùng ngay: phát lên **đèn từng phím** (GIF→LED), hoặc nạp lên **màn hình TFT**. Các hiệu ứng này cũng xuất hiện ở trang Màn hình GIF trong nhóm "Thư viện Online".
 - **Per-key (thử nghiệm)** — xem mục riêng bên dưới. Chỉ hiện khi đang chọn F75 Max.
 - **Widget TFT** — widget vẽ trên máy rồi nạp lên màn hình phím: **Thông số máy** (CPU/RAM thật + GPU NVIDIA qua nvidia-smi nếu có), **Đồng hồ & thời tiết** (giờ thật + thời tiết Hà Nội từ Open-Meteo, không cần API key), **Đang phát** (đang phát triển — chưa tích hợp SMTC, xem BUILD-INFO). Có nút đẩy thủ công và tự động đẩy mỗi 5 giây. Trang này cũng chỉ hiện khi mẫu có màn hình.
 - **Đồng hồ & Cài đặt** — đồng bộ đồng hồ; khối cài đặt thiết bị 04 17 (khoá Win, khoá Alt+F4, khoá Alt+Tab, chuyển Fn, giờ tự ngủ, độ phản hồi phím 1–5); cài đặt app (Dry-run, khởi động cùng Windows, thu nhỏ xuống khay); và 3 tính năng Stage 2 bên dưới.

@@ -1,5 +1,21 @@
-T KEYBOARD STUDIO 3.2.1 — THÔNG TIN BUILD
+T KEYBOARD STUDIO 3.2.2 — THÔNG TIN BUILD
 =========================================
+v3.2.2: Thư viện Online chuyển sang ĐÓNG GÓI SẴN 100% — 16 GIF gốc dạng
+  dải LED rộng nằm trong thư mục OnlineLibrary cạnh exe (tổng 62,752,628
+  byte; từng file đã đối chiếu SHA-256 khớp bản gốc và kiểm tra giải mã
+  GIF hợp lệ: đúng magic GIF89a, đúng số frame/kích thước như manifest).
+  Trang Online đọc thẳng từ đĩa, nút "Tải về" bị bỏ — chọn là dùng ngay:
+  chuyển GIF→LED hoặc nạp TFT. Thumbnail là PNG đóng gói sẵn trong
+  OnlineLibrary/thumbs (frame đại diện chọn lúc đóng gói, rộng 320px) —
+  KHÔNG giải mã GIF nhiều-frame chỉ để lấy ảnh thumb (bản nháp đầu của
+  3.2.2 đã thử và bị tràn RAM khi mở trang: 16 GIF × ~850–1200 frame
+  giải mã song song; đã sửa bằng thumb đóng gói trước khi phát hành).
+  Toàn bộ link/URL bên thứ ba bị xoá khỏi catalog + manifest + code
+  (quét tên/tên miền của shop bên thứ ba trong cây nguồn + dữ liệu +
+  README + BUILD-INFO + cả hai exe mới: 0 kết quả).
+  Đường tải mạng của riêng trang Online bị gỡ hẳn; tính năng "dán URL
+  tải GIF của riêng bạn" ở trang Màn hình GIF (hành động của người dùng)
+  giữ nguyên. Không đổi tính năng/giao thức nào khác so với 3.2.1.
 v3.2.1: bỏ dòng ghi nguồn khỏi Thư viện Online theo yêu cầu người dùng (chỉ sửa hiển thị + README, không đổi tính năng/giao thức so với 3.2).
 Ngày build: 27/11/2026 (Asia/Tokyo)
 Môi trường: Linux VM (cross-compile sang Windows), .NET SDK 8.0.428
@@ -13,24 +29,27 @@ Giao diện: nguyên bản Preview v0.9.1 đã được người dùng duyệt (
 FILE GIAO (trong thư mục TienKeyboardStudio-v3.2/):
 ----------------------------------------------------------------
 1) Bản NHẸ (framework-dependent, single-file)
-   File     : TienKeyboardStudio.exe (trong T-Keyboard-Studio-v3.2.1-Light.zip)
+   File     : TienKeyboardStudio.exe (trong T-Keyboard-Studio-v3.2.2-Light.zip)
    Loại     : PE32+ executable (GUI) x86-64, for MS Windows, 6 sections
-   Kích thước: 43,445,843 byte (~41.4 MiB)
-   SHA-256  : 219314fd0637771c182725b91da710f670212357fddf955ed954510dfa6c4b32
+   Kích thước: 43,437,651 byte (~41.4 MiB)
+   SHA-256  : 70244fbba6d8935a24da1245ddd3f82d6c7120134bab2ae900e6ad6bd3f7a5e5
    Yêu cầu  : .NET 8 Runtime (Microsoft.NETCore.App 8.0) x64 trên máy Windows.
               KHÔNG cần Desktop Runtime.
 
 2) Bản NÉN (self-contained, single-file, không cần cài gì)
-   File     : TienKeyboardStudio.exe (trong T-Keyboard-Studio-v3.2.1-Compressed.zip)
+   File     : TienKeyboardStudio.exe (trong T-Keyboard-Studio-v3.2.2-Compressed.zip)
    Loại     : PE32+ executable (GUI) x86-64, for MS Windows, 10 sections
-   Kích thước: 61,663,675 byte (~58.8 MiB)
-   SHA-256  : cb70e8bd894f6ed04367601201c14c3c72f18102f852ceb7d9250fe476cb70fe
+   Kích thước: 61,655,483 byte (~58.8 MiB)
+   SHA-256  : b27288701a7ede72f0603c0d6fc50344756c4eaa5f5ff64d52c89f9d332056b8
 
 NỘI DUNG MỖI ZIP: TienKeyboardStudio.exe + thư mục Library (21 GIF, 3 nhóm:
-Ngân hà 7, Pixel & Game 4, Thư giãn 10) + README.md + BUILD-INFO.txt.
+Ngân hà 7, Pixel & Game 4, Thư giãn 10) + thư mục OnlineLibrary (16 GIF gốc
+dạng dải LED rộng của Thư viện Online, tổng ~59.9 MiB) + README.md +
+BUILD-INFO.txt. Zip nặng hơn hẳn từ v3.2.2 là do 16 GIF gốc này.
 Ngoài ra 21 GIF thư viện + 16 hiệu ứng cộng đồng (bản TFT) còn được NHÚNG
-trong exe nên trang Màn hình GIF / Online dùng được kể cả khi mất thư mục
-Library. Kích thước tăng so với v3.1 chủ yếu do GIF nhúng + NAudio + QRCoder.
+trong exe nên trang Màn hình GIF dùng được kể cả khi mất thư mục Library.
+(Riêng trang Online đọc GIF GỐC từ thư mục OnlineLibrary — đừng xoá thư
+mục này.) Kích thước tăng so với v3.1 chủ yếu do GIF nhúng + NAudio + QRCoder.
 
 BẢO TOÀN GIAO THỨC ĐÃ KIỂM CHỨNG (yêu cầu bắt buộc của brief):
 ----------------------------------------------------------------
@@ -45,6 +64,11 @@ Toàn bộ lớp mới (per-key/stream/nhạc/cài đặt) nằm ở file RIÊNG
 ĐÃ KIỂM CHỨNG TRONG BẢN BUILD NÀY:
 ----------------------------------------------------------------
 - Biên dịch sạch (0 lỗi) cho win-x64, cả 2 bản publish.
+- (v3.2.2) Chạy thử bản Linux dưới Xvfb: mở đủ 9 trang, KHÔNG ngoại lệ;
+  trang Thư viện Online render đủ 16 thẻ từ file local (thumb PNG đóng
+  gói), bấm "Dùng hiệu ứng này" chuyển GIF→LED thành công từ file local
+  (900×281, 849 frame → 300 frame đèn, có log xác nhận); trang Màn hình
+  GIF hiện nhóm "Thư viện Online" với đủ 16 GIF từ thư mục OnlineLibrary.
 - Chạy thử bản Linux (cùng mã nguồn) dưới Xvfb: mở lần lượt đủ 9 trang,
   KHÔNG có ngoại lệ (đây là bước đã bắt được lỗi crash của Preview v0.9).
   Lưu ý: bản Windows chưa từng chạy trên máy Windows thật; các đường chỉ-
@@ -119,6 +143,8 @@ CHƯA LÀM / ĐỂ SAU (nói thẳng):
   nvidia-smi). Thời tiết cố định Hà Nội (như bản Preview đã duyệt).
 
 NGUYÊN TẮC MẠNG: app không tự gọi mạng. Chỉ 3 luồng do người dùng chủ
-động: tải GIF (link/thư viện online), thời tiết Open-Meteo khi mở trang
-Widget, server LAN điều khiển điện thoại khi người dùng bật (PIN 4 số,
-tắt mặc định). Không telemetry, không tự kiểm tra cập nhật.
+động: tải GIF từ link người dùng tự dán (trang Màn hình GIF), thời tiết
+Open-Meteo khi mở trang Widget, server LAN điều khiển điện thoại khi
+người dùng bật (PIN 4 số, tắt mặc định). Thư viện Online từ v3.2.2
+không còn luồng mạng nào — đọc 100% từ thư mục OnlineLibrary tại máy.
+Không telemetry, không tự kiểm tra cập nhật.

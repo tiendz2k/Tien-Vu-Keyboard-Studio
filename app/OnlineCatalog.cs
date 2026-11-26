@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.Http;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -12,36 +11,25 @@ using SixLabors.ImageSharp.Processing;
 
 namespace TienKeyboardStudio3
 {
-    /// <summary>Mot muc trong catalog thu vien GIF online (chi ten + URL cong khai).</summary>
+    /// <summary>Mot muc trong catalog Thu vien Online (ten + ten file GIF dong goi san).</summary>
     public sealed class OnlineGifItem
     {
         public string Name { get; set; }
         public string Source { get; set; }
-        public string Gif { get; set; }
-        public string Thumb { get; set; }
+        public string File { get; set; }
     }
 
     /// <summary>
-    /// Thu vien GIF online kiểu thư viện GIF online:
-    /// catalog 16 GIF cong dong duoc NHUNG san trong app (JSON chi chua ten va
-    /// URL cong khai tren CDN cua shop - KHONG dong goi file GIF). Anh thumb
-    /// (webp) va GIF goc chi tai ve KHI nguoi dung duyet/bam chon, toi da 25MB,
-    /// xac thuc giai ma duoc bang ImageSharp. Khong telemetry, khong endpoint nao khac.
+    /// Thu vien Online DONG GOI SAN 100% (v3.2.2): 16 GIF cong dong dang dai LED
+    /// rong nam san trong thu muc "OnlineLibrary" canh file exe; catalog nhung
+    /// trong app chi chua ten + ten file local. Trang nay KHONG tai mang, khong
+    /// chua bat ky URL ben thu ba nao — anh thumb va GIF goc deu doc thang tu dia.
+    /// (Tinh nang "dan URL de tai GIF cua rieng ban" o trang Man hinh GIF la
+    /// hanh dong chu dong cua nguoi dung — giu nguyen, nam o GifLibrary.)
     /// </summary>
     public static class OnlineCatalog
     {
-        public const int MaxBytes = 25 * 1024 * 1024;
-
-        private static readonly HttpClient Http = CreateHttp();
-
-        private static HttpClient CreateHttp()
-        {
-            var h = new HttpClient { Timeout = TimeSpan.FromSeconds(90) };
-            h.DefaultRequestHeaders.UserAgent.ParseAdd("TienKeyboardStudio/3.2");
-            return h;
-        }
-
-        public static string CacheDir => Path.Combine(GifLibraryStore.RootDir, "OnlineCache");
+        public static string OnlineLibraryDir => Path.Combine(AppContext.BaseDirectory, "OnlineLibrary");
 
         public static List<OnlineGifItem> LoadCatalog()
         {
@@ -59,89 +47,37 @@ namespace TienKeyboardStudio3
             catch { return new List<OnlineGifItem>(); }
         }
 
-        private static async Task<byte[]> DownloadBytesAsync(string url, int maxBytes)
+        /// <summary>Duong dan file GIF local cua muc; null neu thieu file (nguoi dung da xoa thu muc OnlineLibrary).</summary>
+        public static string ResolvePath(OnlineGifItem item)
         {
-            if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) ||
-                (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
-                throw new InvalidOperationException("Link khong hop le - chi chap nhan http/https.");
-            using (var resp = await Http.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead))
-            {
-                resp.EnsureSuccessStatusCode();
-                if (resp.Content.Headers.ContentLength > maxBytes)
-                    throw new InvalidOperationException("File qua lon (>25MB).");
-                using (var ms = new MemoryStream())
-                {
-                    var buffer = new byte[81920];
-                    using (var s = await resp.Content.ReadAsStreamAsync())
-                    {
-                        int read;
-                        while ((read = await s.ReadAsync(buffer, 0, buffer.Length)) > 0)
-                        {
-                            if (ms.Length + read > maxBytes)
-                                throw new InvalidOperationException("File qua lon (>25MB).");
-                            ms.Write(buffer, 0, read);
-                        }
-                    }
-                    return ms.ToArray();
-                }
-            }
+            if (item == null || string.IsNullOrEmpty(item.File)) return null;
+            string path = Path.Combine(OnlineLibraryDir, item.File);
+            return File.Exists(path) ? path : null;
         }
 
-        /// <summary>Tai anh thumb webp va giai ma thanh Bitmap (thu nho toi da 320px rong).</summary>
+        /// <summary>
+        /// Anh thumb cua muc: UU TIEN file PNG dong goi san trong OnlineLibrary/thumbs
+        /// (frame dai dien chon san luc dong goi, rong 320px) — doc rat nhe. Chi khi
+        /// thieu file PNG moi giai ma frame dau cua GIF (du phong; GIF dai LED co the
+        /// rat nhieu frame nen tranh dung duong nay hang loat).
+        /// </summary>
         public static async Task<Bitmap> LoadThumbnailAsync(OnlineGifItem item)
         {
-            var bytes = await DownloadBytesAsync(item.Thumb, 8 * 1024 * 1024);
+            if (item == null || string.IsNullOrEmpty(item.File)) return null;
+            string thumb = Path.Combine(OnlineLibraryDir, "thumbs",
+                Path.GetFileNameWithoutExtension(item.File) + ".png");
+            string path = File.Exists(thumb) ? thumb : ResolvePath(item);
+            if (path == null) return null;
             return await Task.Run(() =>
             {
-                using (var img = Image.Load<Rgba32>(bytes))
+                using (var img = Image.Load<Rgba32>(path))
+                using (var frame = img.Frames.CloneFrame(0))
                 {
-                    var frame = img.Frames.CloneFrame(0);
                     if (frame.Width > 320)
                         frame.Mutate(m => m.Resize(320, (int)(frame.Height * 320.0 / frame.Width)));
                     return BitmapConvert.ToBitmap(frame);
                 }
             });
-        }
-
-        /// <summary>
-        /// Tai GIF goc ve cache tam (theo tung muc), xac thuc giai ma duoc.
-        /// Tra ve duong dan file tam. Goi lai lan sau se dung ban cache.
-        /// </summary>
-        public static async Task<string> DownloadOriginalAsync(OnlineGifItem item)
-        {
-            Directory.CreateDirectory(CacheDir);
-            string key = StableKey(item.Gif);
-            string path = Path.Combine(CacheDir, key + ".gif");
-            if (File.Exists(path) && new FileInfo(path).Length > 0) return path;
-
-            var bytes = await DownloadBytesAsync(item.Gif, MaxBytes);
-            string tmp = path + ".tmp";
-            File.WriteAllBytes(tmp, bytes);
-            try
-            {
-                using (var img = Image.Load<Rgba32>(tmp)) { var _ = img.Width; }
-            }
-            catch
-            {
-                try { File.Delete(tmp); } catch { }
-                throw new InvalidOperationException("File tai ve khong phai anh/GIF hop le.");
-            }
-            File.Move(tmp, path, true);
-            return path;
-        }
-
-        private static string StableKey(string url)
-        {
-            // dung doan GUID trong URL lam ten file cache (on dinh, khong trung)
-            var parts = url.Split('/');
-            foreach (var p in parts)
-                if (p.Length == 36 && p.Contains("-")) return p;
-            unchecked
-            {
-                int h = 17;
-                foreach (char c in url) h = h * 31 + c;
-                return "gif-" + (h & 0x7fffffff).ToString("x8");
-            }
         }
 
         /// <summary>
