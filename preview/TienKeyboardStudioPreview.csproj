@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>TienKeyboardStudioPreview</AssemblyName>
+    <RootNamespace>TienKeyboardStudioPreview</RootNamespace>
+    <Product>Tien Keyboard Studio — Bản xem trước</Product>
+    <AssemblyTitle>Tien Keyboard Studio — Bản xem trước giao diện</AssemblyTitle>
+    <Description>Bản XEM TRƯỚC giao diện Tien Keyboard Studio (UI-only, không chứa mã thiết bị/HID, không ghi xuống phím thật).</Description>
+    <Version>0.9.1</Version>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.3.9" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.9" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.9" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
+  </ItemGroup>
+
+  <!-- Font Be Vietnam Pro (SIL OFL 1.1) + GIF tich hop + manifest hieu ung: nhung thang vao exe -->
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\Fonts\*.ttf" />
+    <AvaloniaResource Include="Assets\Fonts\OFL.txt" />
+    <AvaloniaResource Include="Assets\logo.png" />
+    <AvaloniaResource Include="Assets\Gifs\**\*.gif" />
+    <AvaloniaResource Include="Assets\effects-manifest.json" />
+  </ItemGroup>
+
+</Project>

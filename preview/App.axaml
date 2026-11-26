@@ -1,0 +1,212 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="TienKeyboardStudioPreview.App"
+             RequestedThemeVariant="Dark">
+  <Application.Resources>
+    <!-- Accent gradient tim -> cyan (dung tiet che tren nen sach) -->
+    <LinearGradientBrush x:Key="AccentGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+      <GradientStop Color="#7C3AED" Offset="0" />
+      <GradientStop Color="#22D3EE" Offset="1" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="AccentGradientHover" StartPoint="0%,0%" EndPoint="100%,100%">
+      <GradientStop Color="#8F52FF" Offset="0" />
+      <GradientStop Color="#38E0F8" Offset="1" />
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="TextPrimary" Color="#F4F4F8" />
+    <SolidColorBrush x:Key="TextSecondary" Color="#A6A3B8" />
+    <SolidColorBrush x:Key="TextFaint" Color="#6F6C84" />
+    <SolidColorBrush x:Key="GlassFill" Color="#0FFFFFFF" />
+    <SolidColorBrush x:Key="GlassBorder" Color="#17FFFFFF" />
+    <SolidColorBrush x:Key="OkGreen" Color="#34D399" />
+  </Application.Resources>
+  <Application.Styles>
+    <FluentTheme />
+
+    <!-- The kinh mo sach: nen trang alpha nhe, vien manh, bo goc lon, bong mem -->
+    <Style Selector="Border.card">
+      <Setter Property="Background" Value="#0DFFFFFF" />
+      <Setter Property="BorderBrush" Value="#17FFFFFF" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="18" />
+      <Setter Property="Padding" Value="18" />
+      <Setter Property="BoxShadow" Value="0 10 28 0 #59000000, 0 2 6 0 #33000000" />
+    </Style>
+    <Style Selector="Border.cardflat">
+      <Setter Property="Background" Value="#09FFFFFF" />
+      <Setter Property="BorderBrush" Value="#12FFFFFF" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="14" />
+      <Setter Property="Padding" Value="14" />
+    </Style>
+
+    <Style Selector="TextBlock.h1">
+      <Setter Property="FontSize" Value="26" />
+      <Setter Property="FontWeight" Value="Bold" />
+      <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+      <Setter Property="LetterSpacing" Value="0.2" />
+    </Style>
+    <Style Selector="TextBlock.h2">
+      <Setter Property="FontSize" Value="15.5" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+    </Style>
+    <Style Selector="TextBlock.h3">
+      <Setter Property="FontSize" Value="13" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+    </Style>
+    <Style Selector="TextBlock.sub">
+      <Setter Property="FontSize" Value="12.5" />
+      <Setter Property="Foreground" Value="{StaticResource TextSecondary}" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+      <Setter Property="LineHeight" Value="18" />
+    </Style>
+    <Style Selector="TextBlock.faint">
+      <Setter Property="FontSize" Value="11.5" />
+      <Setter Property="Foreground" Value="{StaticResource TextFaint}" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+      <Setter Property="LineHeight" Value="17" />
+    </Style>
+    <!-- Nut chinh gradient -->
+    <Style Selector="Button.primary">
+      <Setter Property="Background" Value="{StaticResource AccentGradient}" />
+      <Setter Property="Foreground" Value="White" />
+      <Setter Property="CornerRadius" Value="12" />
+      <Setter Property="Padding" Value="18,10" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="FontSize" Value="13.5" />
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    <Style Selector="Button.primary:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource AccentGradientHover}" />
+    </Style>
+    <Style Selector="Button.ghost">
+      <Setter Property="Background" Value="#0DFFFFFF" />
+      <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+      <Setter Property="CornerRadius" Value="11" />
+      <Setter Property="Padding" Value="14,8" />
+      <Setter Property="BorderBrush" Value="#1FFFFFFF" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="FontSize" Value="12.5" />
+    </Style>
+    <Style Selector="Button.ghost:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#1AFFFFFF" />
+    </Style>
+
+    <!-- Sidebar nav -->
+    <Style Selector="Button.nav">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Foreground" Value="#B9B6CC" />
+      <Setter Property="CornerRadius" Value="12" />
+      <Setter Property="Padding" Value="13,10" />
+      <Setter Property="Margin" Value="0,2" />
+      <Setter Property="HorizontalAlignment" Value="Stretch" />
+      <Setter Property="HorizontalContentAlignment" Value="Left" />
+      <Setter Property="FontSize" Value="13.5" />
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    <Style Selector="Button.nav:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#12FFFFFF" />
+      <Setter Property="TextElement.Foreground" Value="White" />
+    </Style>
+    <Style Selector="Button.nav.sel">
+      <Setter Property="Foreground" Value="White" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style Selector="Button.nav.sel /template/ ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource AccentGradient}" />
+      <Setter Property="TextElement.Foreground" Value="White" />
+    </Style>
+
+    <!-- Chip / tag -->
+    <Style Selector="Button.chip">
+      <Setter Property="Background" Value="#0DFFFFFF" />
+      <Setter Property="Foreground" Value="#C9C6DA" />
+      <Setter Property="CornerRadius" Value="999" />
+      <Setter Property="Padding" Value="13,6" />
+      <Setter Property="BorderBrush" Value="#1AFFFFFF" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="FontSize" Value="12" />
+    </Style>
+    <Style Selector="Button.chip:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#1AFFFFFF" />
+    </Style>
+    <Style Selector="Button.chip.sel">
+      <Setter Property="Foreground" Value="White" />
+      <Setter Property="BorderBrush" Value="#A78BFA" />
+    </Style>
+    <Style Selector="Button.chip.sel /template/ ContentPresenter">
+      <Setter Property="Background" Value="#407C3AED" />
+      <Setter Property="TextElement.Foreground" Value="White" />
+    </Style>
+
+    <!-- Segmented control trong khay kinh -->
+    <Style Selector="Button.seg">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="Foreground" Value="#A6A3B8" />
+      <Setter Property="CornerRadius" Value="9" />
+      <Setter Property="Padding" Value="14,6" />
+      <Setter Property="FontSize" Value="12.5" />
+      <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    <Style Selector="Button.seg:pointerover /template/ ContentPresenter">
+      <Setter Property="TextElement.Foreground" Value="White" />
+    </Style>
+    <Style Selector="Button.seg.sel">
+      <Setter Property="Foreground" Value="White" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style Selector="Button.seg.sel /template/ ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource AccentGradient}" />
+      <Setter Property="TextElement.Foreground" Value="White" />
+    </Style>
+    <Style Selector="Border.segtray">
+      <Setter Property="Background" Value="#0A000000" />
+      <Setter Property="BorderBrush" Value="#14FFFFFF" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="12" />
+      <Setter Property="Padding" Value="3" />
+    </Style>
+
+    <!-- The chon (hieu ung / GIF / thiet bi / mau phim) -->
+    <Style Selector="Border.pickcard">
+      <Setter Property="Background" Value="#0AFFFFFF" />
+      <Setter Property="BorderBrush" Value="#14FFFFFF" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="14" />
+      <Setter Property="Padding" Value="10" />
+    </Style>
+
+    <!-- O tim kiem -->
+    <Style Selector="TextBox.search">
+      <Setter Property="Background" Value="#0DFFFFFF" />
+      <Setter Property="BorderBrush" Value="#1AFFFFFF" />
+      <Setter Property="CornerRadius" Value="12" />
+      <Setter Property="Padding" Value="12,9" />
+      <Setter Property="FontSize" Value="13" />
+    </Style>
+
+    <!-- Slider: track gradient -->
+    <Style Selector="Slider">
+      <Setter Property="Foreground" Value="{StaticResource AccentGradient}" />
+    </Style>
+
+    <!-- Thanh cuon mong, nhe -->
+    <Style Selector="ScrollBar:vertical">
+      <Setter Property="Width" Value="8" />
+    </Style>
+    <Style Selector="ScrollBar:horizontal">
+      <Setter Property="Height" Value="8" />
+    </Style>
+
+    <!-- Toast kinh mo -->
+    <Style Selector="Border.toastcard">
+      <Setter Property="Background" Value="#E61B1B26" />
+      <Setter Property="BorderBrush" Value="#3AFFFFFF" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="14" />
+      <Setter Property="Padding" Value="15,11" />
+      <Setter Property="BoxShadow" Value="0 14 34 0 #80000000" />
+    </Style>
+  </Application.Styles>
+</Application>
