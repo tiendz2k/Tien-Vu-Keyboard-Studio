@@ -60,6 +60,8 @@ Bản dựng Avalonia (.NET 8) thể hiện giao diện thế hệ mới của a
 - [`docs/devices.json`](docs/devices.json) — Bảng 114 mẫu bàn phím (VID:PID, họ chip, khả năng) dạng máy đọc, tổng hợp từ các hồ sơ trên.
 - [`docs/PROTOCOLS-RONGYUAN.md`](docs/PROTOCOLS-RONGYUAN.md) — Giao thức nền tảng **RongYuan RY5088** trích từ Akko Cloud Driver v4 + MonsGeek V4 Driver: hai hãng dùng chung một nền tảng OEM (cùng pháp nhân ký EV, cùng giao thức) — bảng ~25 opcode, lệnh Hall-effect gộp (actuation/RT/DKS/SOCD), giao thức màn hình, hiệu chuẩn.
 - [`docs/devices-rongyuan.json`](docs/devices-rongyuan.json) — Bảng 172 thiết bị Akko + MonsGeek (gồm 52 mục MonsGeek có sẵn firmware-id).
+- [`docs/PROTOCOLS-YUNZII-CAKE.md`](docs/PROTOCOLS-YUNZII-CAKE.md) — Giao thức dòng **YUNZII Cake (C75/C98)**: hoá ra chạy chung nền tảng Sinowealth 258A:010C với AULA F75 (họ `kb_by_v2`) — đủ 12 lệnh có dây + giao thức dongle 2.4G, và quan trọng nhất là cơ chế **phân biệt model bằng UUID đọc từ thiết bị (lệnh 0x82)** vì C75/C98 trùng VID:PID.
+- [`docs/devices-yunzii.json`](docs/devices-yunzii.json) — Bảng thiết bị dòng YUNZII Cake (5 mục, kèm UUID).
 - [`preview/README-XEM-TRUOC.md`](preview/README-XEM-TRUOC.md) — Giới thiệu bản xem trước giao diện.
 
 ## Nguồn giao thức & lời cảm ơn
