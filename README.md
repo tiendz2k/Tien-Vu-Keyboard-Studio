@@ -64,6 +64,8 @@ Bản dựng Avalonia (.NET 8) thể hiện giao diện thế hệ mới của a
 - [`docs/devices-yunzii.json`](docs/devices-yunzii.json) — Bảng thiết bị dòng YUNZII Cake (5 mục, kèm UUID).
 - [`docs/PROTOCOLS-REDRAGON-WITMOD.md`](docs/PROTOCOLS-REDRAGON-WITMOD.md) — **Redragon K617 HE** và nền tảng white-label **WitMod** đứng sau nó (cùng lõi dùng cho nhiều hãng: Fantech, Machenike, Keycool, KZZI, Cidoo…): đã xác định transport (usage page 0xFF1B), bảng 36 cặp VID:PID của WebHID, cấu trúc KeyInfo và bộ tính năng HE (actuation/RT/DKS/SOCD/hiệu chuẩn); bảng opcode mức byte còn để trống trung thực — cần thêm một lượt dịch ngược sâu.
 - [`docs/devices-redragon.json`](docs/devices-redragon.json) — Bảng thiết bị WitMod/Redragon trích từ app.
+- [`docs/PROTOCOLS-MCHOSE.md`](docs/PROTOCOLS-MCHOSE.md) — **MCHOSE M HUB**: app là vỏ Electron cho web driver WebHID, bên trong có **4 stack giao thức** — BY (cơ, cùng họ `kb_by_v2` với YUNZII Cake), legacy XOR 0xFF, **GLW/CZ cho dòng Ace 68/Jet75** (khối Hall-effect giải mã ở mức byte: actuation/RT/DKS/MT/TGL/hiệu chuẩn), và QHW (V3). Không mẫu nào của MCHOSE có màn hình thật.
+- [`docs/devices-mchose.json`](docs/devices-mchose.json) — Bảng 49 bàn phím MCHOSE (31 cấu hình CZ có đủ VID:PID).
 - [`preview/README-XEM-TRUOC.md`](preview/README-XEM-TRUOC.md) — Giới thiệu bản xem trước giao diện.
 
 ## Nguồn giao thức & lời cảm ơn

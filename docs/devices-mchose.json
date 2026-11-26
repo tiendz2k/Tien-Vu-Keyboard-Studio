@@ -1,0 +1,1195 @@
+{
+ "source": "MCHOSE M HUB desktop app (NSIS installer from cdn.mchose.com.cn) + web driver www.mchose.com.cn + runtime config cdn.mchose.com.cn/configCenter/custom/cardList.json",
+ "generated": "2026-11-27",
+ "keyboards": [
+  {
+   "model": "Ace 60",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x41e4",
+     "pid": "0x2101",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x41e4",
+     "pid": "0x2102",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    },
+    {
+     "vid": "0x19f5",
+     "pid": "0xfc30",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x19f5",
+     "pid": "0xff1b",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "Ace 60 Pro",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x41e4",
+     "pid": "0x2103",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x41e4",
+     "pid": "0x2104",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    },
+    {
+     "vid": "0x19f5",
+     "pid": "0xfc31",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x19f5",
+     "pid": "0xff0f",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "Ace 60 Pro ISO FR",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x3837",
+     "pid": "0x3040",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x3041",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "Ace 60 Pro Nordic",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x3837",
+     "pid": "0x3002",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x3022",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "Ace 60X I",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x41e4",
+     "pid": "0x2126",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x41e4",
+     "pid": "0x2127",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "Ace 60X II",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x41e4",
+     "pid": "0x2112",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x41e4",
+     "pid": "0x2113",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "Ace 68 I",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x41e4",
+     "pid": "0x2114",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x41e4",
+     "pid": "0x2115",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "Ace 68 Pro",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x41e4",
+     "pid": "0x2116",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x41e4",
+     "pid": "0x2117",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "Ace 68 III",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x3837",
+     "pid": "0x3003",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x302a",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "Ace 68 Air II",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x41e4",
+     "pid": "0x2120",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x41e4",
+     "pid": "0x2121",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "Ace 68 Air III",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x41e4",
+     "pid": "0x2132",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x41e4",
+     "pid": "0x2133",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "Ace 68 Air 2",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x3837",
+     "pid": "0x300a",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x300b",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "Ace 68 GT",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x3837",
+     "pid": "0x3007",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x3009",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "Ace 68 Turbo 16K",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x3837",
+     "pid": "0x3026",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x3027",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "Ace 68 Turbo 8K",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x3837",
+     "pid": "0x3028",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 0
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x3029",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "Ace 68 V2 III",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x3837",
+     "pid": "0x3024",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x3025",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "Ace 75 8K",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x3837",
+     "pid": "0x303c",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x303d",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "G75 V2",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x3837",
+     "pid": "0x2021",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x2022",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x3033",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 0
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x2010",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "G87 V2",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x3837",
+     "pid": "0x2015",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x2019",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x3033",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 0
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x2010",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "G87 V3",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "QHW",
+   "identities": [
+    {
+     "vid": "0x3837",
+     "pid": "0x2029",
+     "usagePage": "0xff80",
+     "usage": "0x01",
+     "priority": 1
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x202A",
+     "usagePage": "0xff80",
+     "usage": "0x01",
+     "priority": 2
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x1015",
+     "usagePage": "0xff80",
+     "usage": "0x01",
+     "priority": 0
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x1017",
+     "usagePage": "0xff80",
+     "usage": "0x01",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "G98 V3",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "QHW",
+   "identities": [
+    {
+     "vid": "0x3837",
+     "pid": "0x2025",
+     "usagePage": "0xff80",
+     "usage": "0x01",
+     "priority": 1
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x2026",
+     "usagePage": "0xff80",
+     "usage": "0x01",
+     "priority": 2
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x1015",
+     "usagePage": "0xff80",
+     "usage": "0x01",
+     "priority": 0
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x1017",
+     "usagePage": "0xff80",
+     "usage": "0x01",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "God 60",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x3837",
+     "pid": "0x3020",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x301a",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "GT 75",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x3837",
+     "pid": "0x302D",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x302F",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "Jet 75 I",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x41e4",
+     "pid": "0x2118",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x41e4",
+     "pid": "0x2119",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "Jet 75 II",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x41e4",
+     "pid": "0x211a",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x41e4",
+     "pid": "0x211b",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "K87 V3",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "QHW",
+   "identities": [
+    {
+     "vid": "0x3837",
+     "pid": "0x2023",
+     "usagePage": "0xff80",
+     "usage": "0x01",
+     "priority": 1
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x2024",
+     "usagePage": "0xff80",
+     "usage": "0x01",
+     "priority": 2
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x1015",
+     "usagePage": "0xff80",
+     "usage": "0x01",
+     "priority": 0
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x1017",
+     "usagePage": "0xff80",
+     "usage": "0x01",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "K87S",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x3837",
+     "pid": "0x200e",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x200f",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x3033",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 0
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x2010",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "K99 V3",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x3837",
+     "pid": "0x2020",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x201f",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x3033",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 0
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x2010",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "Mix 87 I",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x41e4",
+     "pid": "0x2122",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x41e4",
+     "pid": "0x2123",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "Mix 87 III",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x3837",
+     "pid": "0x300d",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x3837",
+     "pid": "0x302c",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "Zero75X",
+   "family": "CZ (Hall-effect / magnetic)",
+   "protocolStack": "GLW/CZ",
+   "identities": [
+    {
+     "vid": "0x41e4",
+     "pid": "0x211c",
+     "usagePage": "0x0001",
+     "usage": "0x0000",
+     "priority": 1
+    },
+    {
+     "vid": "0x41e4",
+     "pid": "0x211d",
+     "usagePage": "0xff00",
+     "usage": "0x0001",
+     "priority": 2
+    }
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "source": "cardList.json (configCenter CDN)"
+  },
+  {
+   "model": "G87",
+   "family": "BY mechanical",
+   "identities": [
+    "0x41E4:0x2001",
+    "0x41E4:0x2201"
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "notes": "PID alone decides model; per-key RGB (126-entry DIY tables); 87 keys",
+   "source": "main-8Ejovhva.js getDevName()/HidIndexDeviceFilters"
+  },
+  {
+   "model": "G87 V2 (1K)",
+   "family": "BY mechanical",
+   "identities": [
+    "0x3837:0x201A wired",
+    "0x3837:0x201B receiver"
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "notes": "usagePage 0xFF02; wireRid 9; volume roller",
+   "source": "main-8Ejovhva.js getDevName()/HidIndexDeviceFilters"
+  },
+  {
+   "model": "K99",
+   "family": "BY mechanical",
+   "identities": [
+    "0x05AC:0x024F"
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "notes": "name must contain K99; 99 keys",
+   "source": "main-8Ejovhva.js getDevName()/HidIndexDeviceFilters"
+  },
+  {
+   "model": "K99 V2",
+   "family": "BY mechanical",
+   "identities": [
+    "0x258A:0x010C",
+    "0x3554:0xFA09"
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "notes": "shared wired PID 0x258A:0x010C — name disambiguates; uses K99 config",
+   "source": "main-8Ejovhva.js getDevName()/HidIndexDeviceFilters"
+  },
+  {
+   "model": "G98",
+   "family": "BY mechanical",
+   "identities": [
+    "0x258A:0x010C",
+    "0x3554:0xFA09"
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "notes": "name contains G98; 99 keys",
+   "source": "main-8Ejovhva.js getDevName()/HidIndexDeviceFilters"
+  },
+  {
+   "model": "G98 Pro",
+   "family": "BY mechanical",
+   "identities": [
+    "0x258A:0x01B9",
+    "0x258A:0x01BB"
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "notes": "shared with Z75/Z75S — name disambiguates; wireRid 9",
+   "source": "main-8Ejovhva.js getDevName()/HidIndexDeviceFilters"
+  },
+  {
+   "model": "G98 V2",
+   "family": "BY mechanical",
+   "identities": [
+    "0x41E4:0x2203",
+    "0x41E4:0x2004"
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "notes": "wireRid 9; ~104 keys",
+   "source": "main-8Ejovhva.js getDevName()/HidIndexDeviceFilters"
+  },
+  {
+   "model": "UT98",
+   "family": "BY mechanical",
+   "identities": [
+    "0x41E4:0x2203",
+    "0x41E4:0x2004"
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "notes": "same PIDs as G98 V2 — name contains UT98",
+   "source": "main-8Ejovhva.js getDevName()/HidIndexDeviceFilters"
+  },
+  {
+   "model": "X75",
+   "family": "BY mechanical",
+   "identities": [
+    "0x258A:0x010C",
+    "0x3554:0xFA09"
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "notes": "name contains X75; ~91 keys",
+   "source": "main-8Ejovhva.js getDevName()/HidIndexDeviceFilters"
+  },
+  {
+   "model": "X75 V2",
+   "family": "BY mechanical",
+   "identities": [
+    "0x258A:0x010C",
+    "0x3554:0xFA09"
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "notes": "name contains X75_V2",
+   "source": "main-8Ejovhva.js getDevName()/HidIndexDeviceFilters"
+  },
+  {
+   "model": "GX87",
+   "family": "BY mechanical",
+   "identities": [
+    "0x258A:0x010C",
+    "0x3554:0xFA09"
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "notes": "",
+   "source": "main-8Ejovhva.js getDevName()/HidIndexDeviceFilters"
+  },
+  {
+   "model": "GX87 V2",
+   "family": "BY mechanical",
+   "identities": [
+    "0x258A:0x010C",
+    "0x3554:0xFA09"
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "notes": "name-maps to GX87 config",
+   "source": "main-8Ejovhva.js getDevName()/HidIndexDeviceFilters"
+  },
+  {
+   "model": "K87",
+   "family": "BY mechanical",
+   "identities": [
+    "0x05AC:0x024F",
+    "0x3554:0xFA09"
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "notes": "shares 0x05AC:0x024F with K99 — name disambiguates",
+   "source": "main-8Ejovhva.js getDevName()/HidIndexDeviceFilters"
+  },
+  {
+   "model": "KX75",
+   "family": "BY mechanical",
+   "identities": [
+    "0x258A:0x010C"
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "notes": "only 268 accepted in code; ~82 keys",
+   "source": "main-8Ejovhva.js getDevName()/HidIndexDeviceFilters"
+  },
+  {
+   "model": "G75 Pro",
+   "family": "BY mechanical",
+   "identities": [
+    "0x258A:0x010C",
+    "0x3554:0xFA09"
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "notes": "registry key G75",
+   "source": "main-8Ejovhva.js getDevName()/HidIndexDeviceFilters"
+  },
+  {
+   "model": "G75 V2 (1K, BY variant)",
+   "family": "BY mechanical",
+   "identities": [
+    "0x3837:0x3016",
+    "0x41E4:0x2001"
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "notes": "distinct from CZ G75 V2 (PIDs 0x3033/0x2021/0x2022 excluded from BY)",
+   "source": "main-8Ejovhva.js getDevName()/HidIndexDeviceFilters"
+  },
+  {
+   "model": "Z75",
+   "family": "BY mechanical",
+   "identities": [
+    "0x258A:0x01B9",
+    "0x258A:0x01BB"
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "notes": "uses Z75S config; wireRid 9",
+   "source": "main-8Ejovhva.js getDevName()/HidIndexDeviceFilters"
+  },
+  {
+   "model": "Z75S",
+   "family": "BY mechanical",
+   "identities": [
+    "0x258A:0x01B9",
+    "0x258A:0x01BB"
+   ],
+   "connection": [
+    "wired",
+    "2.4G"
+   ],
+   "notes": "wireRid 9; 85 keys",
+   "source": "main-8Ejovhva.js getDevName()/HidIndexDeviceFilters"
+  }
+ ],
+ "notes": [
+  "Driver has NO Bluetooth path (0 occurrences of Bluetooth in main bundle) — wired + 2.4G receiver only.",
+  "BY family: models sharing a PID are disambiguated by USB productName (getDevName).",
+  "CZ family: two protocol stacks — GLW/CZ (usagePage 0xFF00) and QHW (usagePage 0xFF80, only G87 V3 / G98 V3 / K87 V3).",
+  "Shared CZ receiver identities: 0x3837:0x3033 (wired-side, p0) + 0x3837:0x2010 (vendor channel) for G75V2/G87V2/K87S/K99V3; 0x3837:0x1015/0x1017 for the QHW V3 trio.",
+  "Non-keyboard devices in the same driver: mice (A5/A7/K7/V7/G3 + docks), headsets (S9 Pro/G9/V9/X9/K20 lines, mostly C-Media), ASUS Aura motherboard controller 0x0B05:0x19AF."
+ ]
+}
