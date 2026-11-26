@@ -1,6 +1,7 @@
-T KEYBOARD STUDIO 3.2 — THÔNG TIN BUILD
+T KEYBOARD STUDIO 3.2.1 — THÔNG TIN BUILD
 =========================================
-Ngày build: 26/11/2026 (Asia/Tokyo)
+v3.2.1: bỏ dòng ghi nguồn Hoàng Phúc Keyboard khỏi Thư viện Online theo yêu cầu người dùng (chỉ sửa hiển thị + README, không đổi tính năng/giao thức so với 3.2).
+Ngày build: 27/11/2026 (Asia/Tokyo)
 Môi trường: Linux VM (cross-compile sang Windows), .NET SDK 8.0.428
 Công nghệ: Avalonia UI 11.3.9 (.NET 8, net8.0) + HidSharp 2.1.0 +
   SixLabors.ImageSharp 3.1.12 + NAudio 2.2.1 (WASAPI loopback) +
@@ -12,18 +13,18 @@ Giao diện: nguyên bản Preview v0.9.1 đã được người dùng duyệt (
 FILE GIAO (trong thư mục TienKeyboardStudio-v3.2/):
 ----------------------------------------------------------------
 1) Bản NHẸ (framework-dependent, single-file)
-   File     : TienKeyboardStudio.exe (trong T-Keyboard-Studio-v3.2-Light.zip)
+   File     : TienKeyboardStudio.exe (trong T-Keyboard-Studio-v3.2.1-Light.zip)
    Loại     : PE32+ executable (GUI) x86-64, for MS Windows, 6 sections
    Kích thước: 43,445,843 byte (~41.4 MiB)
-   SHA-256  : 678fab23a0e7d5b349041e3245897867b82d5a25e79db8570503f4f29a69652b
+   SHA-256  : 219314fd0637771c182725b91da710f670212357fddf955ed954510dfa6c4b32
    Yêu cầu  : .NET 8 Runtime (Microsoft.NETCore.App 8.0) x64 trên máy Windows.
               KHÔNG cần Desktop Runtime.
 
 2) Bản NÉN (self-contained, single-file, không cần cài gì)
-   File     : TienKeyboardStudio.exe (trong T-Keyboard-Studio-v3.2-Compressed.zip)
+   File     : TienKeyboardStudio.exe (trong T-Keyboard-Studio-v3.2.1-Compressed.zip)
    Loại     : PE32+ executable (GUI) x86-64, for MS Windows, 10 sections
    Kích thước: 61,663,675 byte (~58.8 MiB)
-   SHA-256  : 6e6e9fad5f7170e163228c1c2dafd1291cfc7293ac845427f8a0ea05906ee945
+   SHA-256  : cb70e8bd894f6ed04367601201c14c3c72f18102f852ceb7d9250fe476cb70fe
 
 NỘI DUNG MỖI ZIP: TienKeyboardStudio.exe + thư mục Library (21 GIF, 3 nhóm:
 Ngân hà 7, Pixel & Game 4, Thư giãn 10) + README.md + BUILD-INFO.txt.

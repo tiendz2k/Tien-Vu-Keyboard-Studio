@@ -42,7 +42,7 @@ Nếu có gì lạ (đèn không đổi, app báo không ACK): cắm lại cáp,
 - **Ánh sáng RGB** — 20 hiệu ứng firmware, màu chính/nhiều màu, độ sáng/tốc độ/hướng, áp dụng qua khối 04 13 đã kiểm chứng.
 - **Theo nhạc** — bắt âm thanh hệ thống thật qua WASAPI loopback (NAudio) → FFT 23 dải phổ. Ba chế độ gửi: *Visualizer stream 0x20* (thử nghiệm), *Nhịp firmware* (pulse độ sáng theo nhịp bass bằng hiệu ứng 04 13 đã kiểm chứng — chạy live theo Dry-run thường), *Feed phổ 0x78* (thử nghiệm). Không bắt được âm thanh thì app tự dùng phổ mô phỏng để xem trước.
 - **Màn hình GIF** — 21 GIF tích hợp + GIF của bạn (thêm thư mục nguồn, tải từ URL, kéo-thả vào cửa sổ app — tự chuẩn hoá 128×128, tối đa 255 frame, lưu vào `%AppData%\TienKeyboardStudio\MyGIFs`), 3 chế độ Fill/Fit/Stretch, nạp lên TFT qua kênh màn hình đã kiểm chứng. **Trang này chỉ hiện khi mẫu đang chọn có màn hình** (F75 Max có; F75 thường/Hi75C Pro không — trang tự ẩn).
-- **Thư viện Online** — 16 hiệu ứng cộng đồng của Hoàng Phúc Keyboard. App chỉ chứa URL; bấm chọn là tải GIF gốc về máy (tối đa 25MB, có kiểm tra giải mã), rồi: phát lên **đèn từng phím** (GIF→LED), hoặc nạp lên **màn hình TFT**.
+- **Thư viện Online** — 16 hiệu ứng từ thư viện hiệu ứng cộng đồng. App chỉ chứa URL; bấm chọn là tải GIF gốc về máy (tối đa 25MB, có kiểm tra giải mã), rồi: phát lên **đèn từng phím** (GIF→LED), hoặc nạp lên **màn hình TFT**.
 - **Per-key (thử nghiệm)** — xem mục riêng bên dưới. Chỉ hiện khi đang chọn F75 Max.
 - **Widget TFT** — widget vẽ trên máy rồi nạp lên màn hình phím: **Thông số máy** (CPU/RAM thật + GPU NVIDIA qua nvidia-smi nếu có), **Đồng hồ & thời tiết** (giờ thật + thời tiết Hà Nội từ Open-Meteo, không cần API key), **Đang phát** (đang phát triển — chưa tích hợp SMTC, xem BUILD-INFO). Có nút đẩy thủ công và tự động đẩy mỗi 5 giây. Trang này cũng chỉ hiện khi mẫu có màn hình.
 - **Đồng hồ & Cài đặt** — đồng bộ đồng hồ; khối cài đặt thiết bị 04 17 (khoá Win, khoá Alt+F4, khoá Alt+Tab, chuyển Fn, giờ tự ngủ, độ phản hồi phím 1–5); cài đặt app (Dry-run, khởi động cùng Windows, thu nhỏ xuống khay); và 3 tính năng Stage 2 bên dưới.
@@ -78,6 +78,6 @@ Tuy vậy: **chưa ai kiểm chứng các lệnh này trên F75 Max thật.** V�
 
 - Giao thức F75 Max đã kiểm chứng (04 13 / 04 28 / kênh màn hình 0xFF68 / khối 04 17): đối chiếu từ hai driver mã nguồn mở độc lập của mohin7 (AULA Studio) và VitalyArt (Aula-F75-Max-Driver).
 - Giao thức per-key/stream/nhạc (lớp thử nghiệm): Gavin Graham — dự án AULA L99 (MIT).
-- Hiệu ứng cộng đồng ở Thư viện Online: Hoàng Phúc Keyboard.
+- Hiệu ứng ở Thư viện Online: thư viện hiệu ứng cộng đồng.
 - Font Be Vietnam Pro: SIL Open Font License 1.1.
 - Bàn phím trong app là hình vẽ vector tự vẽ — không dùng tài sản của AULA.

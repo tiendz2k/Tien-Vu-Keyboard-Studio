@@ -181,7 +181,7 @@ namespace TienKeyboardStudio3
             RefreshNavVisibility();
             RefreshWriteStates();
             ShowPage("home");
-            AppendLog("T Keyboard Studio v3.2 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
+            AppendLog("T Keyboard Studio v3.2.1 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
             AppendLog("Lộ trình an toàn lần đầu: Quét thiết bị → thử RGB (dry-run) → tắt Dry-run → RGB thật → Cài đặt 04 17 → Đồng hồ → GIF TFT nhỏ → Đọc thử 0xF5.");
         }
 
@@ -600,7 +600,7 @@ namespace TienKeyboardStudio3
 
             var root = V(14,
                 Tb("Tổng quan", "h1"),
-                Tb("T Keyboard Studio v3.2 — bản thật: quét thiết bị HID thật, ghi xuống F75 Max qua giao thức đã kiểm chứng. Dry-run bật mặc định để an toàn.", "sub"),
+                Tb("T Keyboard Studio v3.2.1 — bản thật: quét thiết bị HID thật, ghi xuống F75 Max qua giao thức đã kiểm chứng. Dry-run bật mặc định để an toàn.", "sub"),
                 connectCard,
                 heroCard,
                 stats,
@@ -1635,7 +1635,7 @@ namespace TienKeyboardStudio3
 
             var root = V(14,
                 Tb("Thư viện Online", "h1"),
-                Tb("16 hiệu ứng cộng đồng từ Hoàng Phúc Keyboard (chỉ chứa URL trong app — bấm chọn là app tải GIF gốc về máy, kiểm tra giải mã được rồi mới dùng). GIF gốc là hiệu ứng LED toàn phím dạng dải rộng; app lấy mẫu màu tại tâm từng phím để phát lên đèn phím, hoặc cắt về 128×128 để nạp màn hình TFT.", "sub"),
+                Tb("16 hiệu ứng cộng đồng (chỉ chứa URL trong app — bấm chọn là app tải GIF gốc về máy, kiểm tra giải mã được rồi mới dùng). GIF gốc là hiệu ứng LED toàn phím dạng dải rộng; app lấy mẫu màu tại tâm từng phím để phát lên đèn phím, hoặc cắt về 128×128 để nạp màn hình TFT.", "sub"),
                 search,
                 wrap,
                 emptyNote,
@@ -1674,7 +1674,6 @@ namespace TienKeyboardStudio3
                 var stack = new StackPanel { Spacing = 6 };
                 stack.Children.Add(_img);
                 stack.Children.Add(new TextBlock { Text = item.Name, FontSize = 12, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap });
-                stack.Children.Add(new TextBlock { Text = item.Source ?? "", FontSize = 10, Foreground = UiBrushes.TextSecondary });
                 stack.Children.Add(_status);
                 stack.Children.Add(_dlBtn);
                 Child = stack;
@@ -2240,9 +2239,9 @@ namespace TienKeyboardStudio3
             };
             var aboutTexts = V(4,
                 Tb("T Keyboard Studio", "h2"),
-                Tb("Phiên bản 3.2 — bản thật: F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; lớp per-key/stream/nhạc là thử nghiệm có khoá an toàn (xem trang Per-key). Dry-run bật mặc định.", "sub"),
+                Tb("Phiên bản 3.2.1 — bản thật: F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; lớp per-key/stream/nhạc là thử nghiệm có khoá an toàn (xem trang Per-key). Dry-run bật mặc định.", "sub"),
                 Tb("Logo Mẫu C — chữ “T” tạo hình từ phím spacebar — đã được người dùng duyệt.", "sub"),
-                Tb("Font chữ: Be Vietnam Pro (SIL OFL 1.1). GIF thư viện: tự làm cho Tiến. Hiệu ứng cộng đồng: Hoàng Phúc Keyboard. Giao thức per-key: Gavin Graham (AULA L99).", "faint"));
+                Tb("Font chữ: Be Vietnam Pro (SIL OFL 1.1). GIF thư viện: tự làm cho Tiến. Giao thức per-key: Gavin Graham (AULA L99).", "faint"));
             var aboutCard = Card(H(14, logoWrap, aboutTexts));
 
             var root = V(14,

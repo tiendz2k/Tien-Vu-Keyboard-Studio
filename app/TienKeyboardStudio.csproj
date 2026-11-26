@@ -10,7 +10,7 @@
     <Product>T Keyboard Studio</Product>
     <AssemblyTitle>T Keyboard Studio</AssemblyTitle>
     <Description>T Keyboard Studio 3.2 — ứng dụng điều khiển bàn phím (AULA F75 Max hỗ trợ đầy đủ; các model khác xem trước). Dry-run bật mặc định.</Description>
-    <Version>3.2.0</Version>
+    <Version>3.2.1</Version>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>app.ico</ApplicationIcon>
     <AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>
