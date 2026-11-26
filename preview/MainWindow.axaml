@@ -57,7 +57,7 @@
                            FontSize="10.5" Foreground="#A6A3B8" TextWrapping="Wrap" />
               </StackPanel>
             </Border>
-            <TextBlock Text="Bản xem trước giao diện · v0.10" FontSize="10.5" Foreground="#6F6C84"
+            <TextBlock Text="Bản xem trước giao diện · v0.10.1" FontSize="10.5" Foreground="#6F6C84"
                        HorizontalAlignment="Center" />
           </StackPanel>
 
@@ -67,6 +67,13 @@
 
       <!-- Vung noi dung trang -->
       <Grid Grid.Column="1" x:Name="PageHost" Margin="8,2,2,2" />
+    </Grid>
+
+    <!-- MODAL CHI TIET PLUGIN (v0.10.1): nen mo + panel kinh o giua man hinh,
+         noi dung panel dung tu code (OpenPluginModal) -->
+    <Grid x:Name="PluginModal" IsVisible="False" Opacity="0">
+      <Border x:Name="PluginModalDim" Background="#B30A0A12" />
+      <Panel x:Name="PluginModalHost" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="24" />
     </Grid>
 
     <!-- TOAST kinh mo -->

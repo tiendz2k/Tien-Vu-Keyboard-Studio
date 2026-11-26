@@ -48,6 +48,8 @@ namespace TienKeyboardStudioPreview
             InitializeComponent();
             Toast.Transitions = new Transitions { new DoubleTransition { Property = OpacityProperty, Duration = TimeSpan.FromMilliseconds(240) } };
             GreetingOverlay.Transitions = new Transitions { new DoubleTransition { Property = OpacityProperty, Duration = TimeSpan.FromMilliseconds(220) } };
+            PluginModal.Transitions = new Transitions { new DoubleTransition { Property = OpacityProperty, Duration = TimeSpan.FromMilliseconds(220) } };
+            PluginModalDim.PointerPressed += (s, e) => ClosePluginModal();
 
             BuildNav();
             _pages["home"] = BuildHomePage();
@@ -69,7 +71,9 @@ namespace TienKeyboardStudioPreview
             GreetingOverlay.PointerPressed += (s, e) => DismissGreeting();
             KeyDown += (s, e) =>
             {
-                if (e.Key == Key.Escape && GreetingOverlay.IsVisible) DismissGreeting();
+                if (e.Key != Key.Escape) return;
+                if (GreetingOverlay.IsVisible) DismissGreeting();
+                else if (PluginModal.IsVisible) ClosePluginModal();
             };
             Opened += (s, e) => { if (!_skipGreeting) ShowGreeting(); };
         }
@@ -1071,7 +1075,7 @@ namespace TienKeyboardStudioPreview
             };
             var aboutTexts = V(4,
                 Tb("Tien Keyboard Studio", "h2"),
-                Tb("Bản xem trước giao diện v0.10 — UI-only: không chứa mã thiết bị/HID, không ghi xuống phím thật. Mọi nút bấm liên quan tới phím đều chỉ mô phỏng.", "sub"),
+                Tb("Bản xem trước giao diện v0.10.1 — UI-only: không chứa mã thiết bị/HID, không ghi xuống phím thật. Mọi nút bấm liên quan tới phím đều chỉ mô phỏng.", "sub"),
                 Tb("Logo Mẫu C — chữ “T” tạo hình từ phím spacebar — đã được người dùng duyệt.", "sub"),
                 Tb("Font chữ: Be Vietnam Pro (SIL OFL 1.1). GIF thư viện: tự làm cho Tiến.", "faint"));
             var aboutRow = H(14, logoWrap, aboutTexts);
@@ -1405,140 +1409,151 @@ namespace TienKeyboardStudioPreview
         }
 
         // ================= TRANG MOI (v0.10): CHO PLUGIN (Y TUONG) =================
+        // v0.10.1: trinh bay lai theo dung kieu cho plugin cua AULA Hub thay tren video
+        // tham khao: luoi the 2 cot; moi the co ANH XEM TRUOC o tren, ten, mo ta 1 dong,
+        // chip tag danh muc, chan the "Ma nguon" (GitHub) + ten tac gia. Bam vao the mo
+        // MODAL CHI TIET o giua man hinh (anh lon, mo ta day du, cong tac "Bat", cac
+        // truong cau hinh rieng cua plugin, nut "Xem truoc", nut X dong goc tren phai).
         private sealed class PluginItem
         {
-            public string Name, Author, Cat, CatLabel, Desc, Detail, Meta, Initials;
-            public Color GA, GB;
+            public string Name, Author, Cat, CatLabel, Desc, Detail, Meta, Thumb;
+            public bool BuiltIn;
+        }
+
+        private static readonly Dictionary<string, Bitmap> ThumbCache = new Dictionary<string, Bitmap>();
+
+        private static Bitmap LoadThumb(string file)
+        {
+            if (ThumbCache.TryGetValue(file, out var b)) return b;
+            using (var s = AssetLoader.Open(GifTools.Asset("Assets/Plugins/" + file)))
+            {
+                var bmp = new Bitmap(s);
+                ThumbCache[file] = bmp;
+                return bmp;
+            }
+        }
+
+        private static List<PluginItem> StoreItems() => new List<PluginItem>
+        {
+            new PluginItem
+            {
+                Name = "DeepSeek Harness Boot", Author = "Cộng đồng GitHub", Cat = "boot", CatLabel = "Hiệu ứng khởi động",
+                Desc = "Màn hình chào kiểu terminal “AI harness”: chuỗi bước xác nhận nạp module, có đọc bằng giọng nói.",
+                Detail = "Mỗi lần khởi động, app chạy chuỗi xác nhận từng bước (nạp module → kiểm tra thiết bị → sẵn sàng): nhấn chuột hoặc Enter/Space để qua bước, Esc để bỏ qua. Có tuỳ chọn đọc từng bước bằng giọng nói hệ thống, đặt tên và mã định danh riêng hiển thị trên màn hình chào.",
+                Meta = "Phiên bản 1.2.0 · 0,4 MB · Miễn phí", Thumb = "thumb-ds-harness.png",
+            },
+            new PluginItem
+            {
+                Name = "550C Boot", Author = "Cộng đồng GitHub", Cat = "boot", CatLabel = "Hiệu ứng khởi động",
+                Desc = "Màn hình chào giả lập 550C: đồng hồ CRT màu hổ phách, kim quét một vòng rồi hiện logo.",
+                Detail = "Bản cổng cộng đồng của hiệu ứng boot 550C: nền CRT hổ phách, kim đồng hồ quét từ trái sang phải kèm vệt sáng, kết thúc bằng logo app. Thời lượng ~1,8 giây, bỏ qua được bằng Esc.",
+                Meta = "Phiên bản 1.0.3 · 0,8 MB · Miễn phí", Thumb = "thumb-550c.png",
+            },
+            new PluginItem
+            {
+                Name = "Wallpaper Engine Sync", Author = "Cộng đồng GitHub", Cat = "wallpaper", CatLabel = "Công cụ hình nền",
+                Desc = "Dùng hình nền cực bá của Wallpaper Engine làm nền ứng dụng — không đổi hình nền Windows.",
+                Detail = "Công cụ nền đọc cảnh đang chạy của Wallpaper Engine và dùng khung hình của nó làm hình nền app (mục Giao diện trong Cài đặt). Cần có Wallpaper Engine; chỉ đọc ảnh, không can thiệp vào WE.",
+                Meta = "Phiên bản 2.1.0 · 1,1 MB · Miễn phí", Thumb = "thumb-we-sync.png",
+            },
+            new PluginItem
+            {
+                Name = "Aurora Wave Pack", Author = "T Keyboard Team", Cat = "led", CatLabel = "Hiệu ứng đèn",
+                Desc = "Gói 6 hiệu ứng sóng đèn từng phím qua kênh stream: sóng ngang, sóng chéo, mưa sao, nhịp thở đôi…",
+                Detail = "6 hiệu ứng chạy bằng kênh stream từng phím của T Keyboard (xem trước ngay trên bàn phím trong app). Tốc độ và độ sáng dùng chung thanh trượt ở trang Ánh sáng RGB.",
+                Meta = "Phiên bản 1.0.0 · 0,2 MB · Miễn phí", Thumb = "thumb-aurora-wave.png",
+            },
+            new PluginItem
+            {
+                Name = "Tien Galaxy Boot", Author = "T Keyboard Team", Cat = "boot", CatLabel = "Hiệu ứng khởi động",
+                Desc = "Màn hình chào riêng của T Keyboard: vệt sáng cầu vồng quét qua hàng phím + logo Mẫu C.",
+                Detail = "Đây chính là màn hình chào mặc định của app — vệt sáng quét ngang hàng phím trong ~2 giây, bấm hoặc nhấn Esc để bỏ qua. Đang bật sẵn; xem lại bất cứ lúc nào ở Cài đặt → Giao diện.",
+                Meta = "Phiên bản 1.0.0 · Có sẵn trong app · Miễn phí", Thumb = "thumb-tien-galaxy.png", BuiltIn = true,
+            },
+        };
+
+        private Border StoreCard(PluginItem it)
+        {
+            var thumbBox = new Border
+            {
+                Height = 148, ClipToBounds = true,
+                CornerRadius = new CornerRadius(13, 13, 0, 0),
+                Child = new Image { Source = LoadThumb(it.Thumb), Stretch = Stretch.UniformToFill },
+            };
+            var title = Tb(it.Name, "h3");
+            title.FontSize = 13.5;
+            var desc = new TextBlock
+            {
+                Text = it.Desc, FontSize = 12, Foreground = UiBrushes.TextSecondary,
+                TextTrimming = TextTrimming.CharacterEllipsis, MaxLines = 1,
+            };
+            var pill = new Border
+            {
+                Background = new SolidColorBrush(Color.FromArgb(0x2E, 0x7C, 0x3A, 0xED)),
+                CornerRadius = new CornerRadius(999),
+                Padding = new Thickness(8, 3),
+                Child = new TextBlock { Text = it.CatLabel, FontSize = 10, Foreground = new SolidColorBrush(Color.FromRgb(0xC4, 0xB5, 0xFD)) },
+                HorizontalAlignment = HorizontalAlignment.Left,
+            };
+            var srcLink = new TextBlock
+            {
+                Text = "Mã nguồn", FontSize = 11.5, FontWeight = FontWeight.SemiBold,
+                Foreground = new SolidColorBrush(Color.FromRgb(0x38, 0xE0, 0xF8)),
+                TextDecorations = TextDecorations.Underline,
+                Cursor = new Cursor(StandardCursorType.Hand),
+                VerticalAlignment = VerticalAlignment.Center,
+            };
+            srcLink.PointerPressed += (s, e) =>
+            {
+                e.Handled = true;
+                ShowToast("Bản xem trước — liên kết mã nguồn GitHub của “" + it.Name + "” chỉ minh hoạ");
+            };
+            var author = Tb(it.Author, "faint");
+            var footer = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto") };
+            footer.Children.Add(srcLink);
+            Grid.SetColumn(author, 1);
+            footer.Children.Add(author);
+
+            var body = new StackPanel { Spacing = 7, Margin = new Thickness(13, 11, 13, 12) };
+            body.Children.Add(title);
+            body.Children.Add(desc);
+            body.Children.Add(pill);
+            body.Children.Add(footer);
+            var stack = new StackPanel();
+            stack.Children.Add(thumbBox);
+            stack.Children.Add(body);
+            var card = new Border
+            {
+                Classes = { "pickcard" },
+                Padding = new Thickness(0),
+                Child = stack,
+                Cursor = new Cursor(StandardCursorType.Hand),
+            };
+            card.PointerPressed += (s, e) => OpenPluginModal(it);
+            return card;
         }
 
         private Control BuildStorePage()
         {
-            var items = new List<PluginItem>
-            {
-                new PluginItem
-                {
-                    Name = "DeepSeek Harness Boot", Author = "Cộng đồng GitHub", Cat = "boot", CatLabel = "Hiệu ứng khởi động",
-                    Desc = "Màn hình chào kiểu “AI harness”: logo hiện dần kèm dòng trạng thái nạp module — gọn, nhanh, rất công nghệ.",
-                    Detail = "Khi mở app, màn hình chào chạy chuỗi nạp ngắn (logo → kiểm tra module → sẵn sàng) trong khoảng 2 giây, bấm để bỏ qua. Phong cách tối giản, hợp với người thích cảm giác “hệ thống AI đang khởi động”.",
-                    Meta = "Phiên bản 1.2.0 · 0,4 MB · Miễn phí", Initials = "DS",
-                    GA = Color.FromRgb(0x1D, 0x4E, 0xD8), GB = Color.FromRgb(0x0E, 0x9B, 0x8A),
-                },
-                new PluginItem
-                {
-                    Name = "550C Boot", Author = "Cộng đồng GitHub", Cat = "boot", CatLabel = "Hiệu ứng khởi động",
-                    Desc = "Màn hình chào phong cách đồng hồ tốc độ: vòng tua quét một vòng rồi nhường chỗ cho logo.",
-                    Detail = "Lấy cảm hứng từ bảng đồng hồ xe đua 550C: kim quét từ trái sang phải kèm vệt sáng, kết thúc bằng logo app. Âm thanh không kèm theo; thời lượng ~1,8 giây, bỏ qua được.",
-                    Meta = "Phiên bản 1.0.3 · 0,8 MB · Miễn phí", Initials = "550C",
-                    GA = Color.FromRgb(0xB9, 0x1C, 0x1C), GB = Color.FromRgb(0xF5, 0x9E, 0x0B),
-                },
-                new PluginItem
-                {
-                    Name = "Wallpaper Engine Sync", Author = "Cộng đồng GitHub", Cat = "wallpaper", CatLabel = "Hình nền",
-                    Desc = "Đồng bộ hình nền app với Wallpaper Engine: đổi cảnh trong WE là nền app đổi theo.",
-                    Detail = "Công cụ nền đọc cảnh đang chạy của Wallpaper Engine và dùng khung hình của nó làm hình nền app (mục Giao diện trong Cài đặt). Cần có Wallpaper Engine; chỉ đọc ảnh, không can thiệp vào WE.",
-                    Meta = "Phiên bản 2.1.0 · 1,1 MB · Miễn phí", Initials = "WE",
-                    GA = Color.FromRgb(0x43, 0x38, 0xCA), GB = Color.FromRgb(0x7C, 0x3A, 0xED),
-                },
-                new PluginItem
-                {
-                    Name = "Aurora Wave Pack", Author = "T Keyboard Team", Cat = "led", CatLabel = "Hiệu ứng đèn",
-                    Desc = "Gói 6 hiệu ứng sóng đèn từng phím qua kênh stream: sóng ngang, sóng chéo, mưa sao, nhịp thở đôi…",
-                    Detail = "6 hiệu ứng chạy bằng kênh stream từng phím của T Keyboard (xem trước ngay trên bàn phím trong app). Tốc độ và độ sáng dùng chung thanh trượt ở trang Ánh sáng RGB.",
-                    Meta = "Phiên bản 1.0.0 · 0,2 MB · Miễn phí", Initials = "AW",
-                    GA = Color.FromRgb(0x7C, 0x3A, 0xED), GB = Color.FromRgb(0x22, 0xD3, 0xEE),
-                },
-                new PluginItem
-                {
-                    Name = "Tien Galaxy Boot", Author = "T Keyboard Team", Cat = "boot", CatLabel = "Hiệu ứng khởi động",
-                    Desc = "Màn hình chào riêng của T Keyboard: vệt sáng cầu vồng quét qua hàng phím + logo Mẫu C.",
-                    Detail = "Đây chính là màn hình chào mặc định của app — vệt sáng quét ngang hàng phím trong ~2 giây, bấm hoặc nhấn Esc để bỏ qua. Đang bật sẵn; xem lại bất cứ lúc nào ở Cài đặt → Giao diện.",
-                    Meta = "Phiên bản 1.0.0 · Có sẵn trong app · Miễn phí", Initials = "TG",
-                    GA = Color.FromRgb(0x5B, 0x21, 0xB6), GB = Color.FromRgb(0x0E, 0x74, 0x90),
-                },
-            };
+            var items = StoreItems();
 
-            // --- Chi tiet (cap nhat khi chon the) ---
-            var detailName = Tb(items[0].Name, "h2");
-            var detailMeta = Tb(items[0].Meta, "faint");
-            var detailDesc = Tb(items[0].Detail, "sub");
-            var detailCat = Tb(items[0].CatLabel + " · " + items[0].Author, "sub");
-            var enableSw = new PillSwitch();
-            enableSw.IsChecked = true;
-            var detailCard = Card(V(10,
-                detailName, detailCat, detailDesc, detailMeta,
-                H(12,
-                    H(8, Tb("Bật", "h3"), enableSw),
-                    GhostBtn("Xem trước", () =>
-                    {
-                        if (detailName.Text != null && detailName.Text.Contains("Boot")) ShowGreeting();
-                        else ShowToast("Bản xem trước — hiệu ứng sẽ chạy thử ngay trong app (mô phỏng)");
-                    }),
-                    PrimaryBtn("Cài đặt", () => ShowToast("Đã cài (mô phỏng) — bản xem trước không tải gì về máy")))));
-
-            // --- Luoi the ---
+            // --- Luoi the 2 cot ---
             var wrap = new WrapPanel();
             var cards = new List<Border>();
-            void SelectItem(int idx)
-            {
-                var it = items[idx];
-                detailName.Text = it.Name;
-                detailCat.Text = it.CatLabel + " · " + it.Author;
-                detailDesc.Text = it.Detail;
-                detailMeta.Text = it.Meta;
-                for (int j = 0; j < cards.Count; j++)
-                {
-                    cards[j].BorderBrush = j == idx ? UiBrushes.AccentGradient() : UiBrushes.GlassBorder;
-                    cards[j].BorderThickness = new Thickness(j == idx ? 1.8 : 1);
-                }
-            }
             for (int i = 0; i < items.Count; i++)
             {
-                int idx = i;
-                var it = items[i];
-                var banner = new Border
-                {
-                    Height = 74, CornerRadius = new CornerRadius(9),
-                    Background = new LinearGradientBrush
-                    {
-                        StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
-                        EndPoint = new RelativePoint(1, 1, RelativeUnit.Relative),
-                        GradientStops = { new GradientStop(it.GA, 0), new GradientStop(it.GB, 1) },
-                    },
-                    Child = new TextBlock
-                    {
-                        Text = it.Initials, FontSize = 21, FontWeight = FontWeight.Bold,
-                        Foreground = Brushes.White,
-                        HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center,
-                    },
-                };
-                var pill = new Border
-                {
-                    Background = new SolidColorBrush(Color.FromArgb(0x2E, 0x7C, 0x3A, 0xED)),
-                    CornerRadius = new CornerRadius(999),
-                    Padding = new Thickness(8, 3),
-                    Child = new TextBlock { Text = it.CatLabel, FontSize = 10, Foreground = new SolidColorBrush(Color.FromRgb(0xC4, 0xB5, 0xFD)) },
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                };
-                var content = V(7, banner, Tb(it.Name, "h3"), Tb(it.Author, "faint"), pill, Tb(it.Desc, "sub"));
-                var card = new Border
-                {
-                    Classes = { "pickcard" },
-                    Child = content,
-                    Width = 252,
-                    Margin = new Thickness(0, 0, 10, 10),
-                    Cursor = new Cursor(StandardCursorType.Hand),
-                };
-                card.PointerPressed += (s, e) => SelectItem(idx);
+                var card = StoreCard(items[i]);
+                card.Width = 418;
+                card.Margin = new Thickness(0, 0, i % 2 == 0 ? 10 : 0, 10);
                 cards.Add(card);
                 wrap.Children.Add(card);
             }
-            SelectItem(4); // mac dinh chon Tien Galaxy Boot (cua minh)
 
-            // --- Loc theo danh muc ---
+            // --- Loc theo danh muc (tab giong ban tham khao) ---
             var filterRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
             var cats = new (string Label, string Cat)[]
             {
-                ("Tất cả", "all"), ("Hiệu ứng khởi động", "boot"), ("Hình nền", "wallpaper"), ("Hiệu ứng đèn", "led"),
+                ("Tất cả", "all"), ("Hiệu ứng khởi động", "boot"), ("Công cụ hình nền", "wallpaper"), ("Hiệu ứng đèn", "led"),
             };
             var filterBtns = new List<Button>();
             foreach (var (label, cat) in cats)
@@ -1559,13 +1574,146 @@ namespace TienKeyboardStudioPreview
 
             var root = V(14,
                 Tb("Chợ plugin", "h1"),
-                Tb("Kho cộng đồng: hiệu ứng khởi động, công cụ hình nền và gói hiệu ứng đèn do cộng đồng đóng góp — chọn một món để xem chi tiết, bật/tắt và xem trước.", "sub"),
+                Tb("Kho cộng đồng: hiệu ứng khởi động, công cụ hình nền và gói hiệu ứng đèn do cộng đồng đóng góp — bấm vào một thẻ để mở panel chi tiết: bật/tắt, cấu hình và xem trước.", "sub"),
                 ConceptChip("Ý tưởng — chưa có trong bản thật"),
                 filterRow,
                 wrap,
-                detailCard,
                 CardFlat(Tb("Ghi chú cơ chế thật: ở hệ sinh thái tham khảo, không có SDK plugin chính thức — “plugin” đến từ cộng đồng GitHub (các repo chia sẻ hiệu ứng/cấu hình) và chợ cấu hình đám mây của cộng đồng. Trang này mô phỏng trải nghiệm chợ; bản thật chỉ cài từ nguồn đã kiểm chứng.", "faint")));
             return Scroll(root);
+        }
+
+        // ---------- MODAL CHI TIET PLUGIN (v0.10.1) ----------
+        private void OpenPluginModal(PluginItem it)
+        {
+            PluginModalHost.Children.Clear();
+            PluginModalHost.Children.Add(BuildPluginModalPanel(it));
+            PluginModal.IsVisible = true;
+            PluginModal.Opacity = 1;
+        }
+
+        private void ClosePluginModal()
+        {
+            if (!PluginModal.IsVisible) return;
+            PluginModal.Opacity = 0;
+            var t = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(230) };
+            t.Tick += (s, e) => { t.Stop(); PluginModal.IsVisible = false; };
+            t.Start();
+        }
+
+        private Control BuildPluginModalPanel(PluginItem it)
+        {
+            var title = Tb(it.Name, "h2");
+            title.VerticalAlignment = VerticalAlignment.Center;
+            var closeBtn = new Button { Content = "✕", FontSize = 13, Padding = new Thickness(10, 5) };
+            closeBtn.Classes.Add("ghost");
+            closeBtn.Click += (s, e) => ClosePluginModal();
+            var head = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto") };
+            head.Children.Add(title);
+            Grid.SetColumn(closeBtn, 1);
+            head.Children.Add(closeBtn);
+
+            var preview = new Border
+            {
+                Height = 196, ClipToBounds = true, CornerRadius = new CornerRadius(12),
+                Child = new Image { Source = LoadThumb(it.Thumb), Stretch = Stretch.UniformToFill },
+            };
+
+            var enableSw = new PillSwitch { IsChecked = it.BuiltIn };
+            enableSw.Changed += v => ShowToast(v
+                ? "Đã bật “" + it.Name + "” (mô phỏng)"
+                : "Đã tắt “" + it.Name + "” (mô phỏng)");
+            var enableRow = H(10, Tb("Bật", "h3"), enableSw);
+            enableRow.Children[0].VerticalAlignment = VerticalAlignment.Center;
+
+            var inner = new StackPanel { Spacing = 11, Margin = new Thickness(20, 16, 20, 18) };
+            inner.Children.Add(head);
+            inner.Children.Add(preview);
+            inner.Children.Add(Tb(it.CatLabel + " · " + it.Author + " · " + it.Meta, "faint"));
+            inner.Children.Add(Tb(it.Detail, "sub"));
+            inner.Children.Add(new Border { Height = 1, Background = new SolidColorBrush(Color.FromArgb(0x14, 0xFF, 0xFF, 0xFF)) });
+            inner.Children.Add(enableRow);
+            foreach (var row in PluginConfigRows(it)) inner.Children.Add(row);
+            inner.Children.Add(H(10,
+                PrimaryBtn("Xem trước", () =>
+                {
+                    if (it.Cat == "boot") { ClosePluginModal(); ShowGreeting(); }
+                    else ShowToast("Bản xem trước — hiệu ứng sẽ chạy thử ngay trong app (mô phỏng)");
+                }),
+                GhostBtn("Đóng", () => ClosePluginModal())));
+
+            return new Border
+            {
+                Classes = { "card" },
+                // Nen dac hon style card thuong (nhu toastcard) de panel noi ro tren nen mo
+                Background = new SolidColorBrush(Color.FromArgb(0xE6, 0x1B, 0x1B, 0x26)),
+                Width = 560,
+                Padding = new Thickness(0),
+                Child = inner,
+            };
+        }
+
+        private IEnumerable<Control> PluginConfigRows(PluginItem it)
+        {
+            var rows = new List<Control>();
+            Control Row(string label, Control ctl)
+            {
+                var g = new Grid { ColumnDefinitions = new ColumnDefinitions("190,*") };
+                var lb = Tb(label, "sub");
+                lb.VerticalAlignment = VerticalAlignment.Center;
+                g.Children.Add(lb);
+                ctl.HorizontalAlignment = HorizontalAlignment.Left;
+                ctl.VerticalAlignment = VerticalAlignment.Center;
+                Grid.SetColumn(ctl, 1);
+                g.Children.Add(ctl);
+                return g;
+            }
+
+            if (it.Cat == "boot")
+            {
+                var voice = new PillSwitch { IsChecked = true };
+                voice.Changed += v => ShowToast("Bản xem trước — tuỳ chọn “Đọc bằng giọng nói” chỉ minh hoạ");
+                rows.Add(Row("Đọc bằng giọng nói", voice));
+
+                var volVal = Tb("90%", "sub");
+                var vol = new Slider { Minimum = 0, Maximum = 100, Value = 90, Width = 220 };
+                vol.PropertyChanged += (s, e) =>
+                {
+                    if (e.Property == Slider.ValueProperty) volVal.Text = (int)vol.Value + "%";
+                };
+                rows.Add(Row("Âm lượng", H(10, vol, volVal)));
+
+                var nameBox = new TextBox { Text = "T OPERATOR", Width = 220 };
+                nameBox.Classes.Add("search");
+                rows.Add(Row("Tên định danh", nameBox));
+
+                var codeBox = new TextBox { Text = "TKB-001", Width = 220 };
+                codeBox.Classes.Add("search");
+                rows.Add(Row("Mã định danh", codeBox));
+            }
+            else if (it.Cat == "wallpaper")
+            {
+                var (seg, _) = Segmented(new[] { "Wallpaper Engine", "Thư mục ảnh" }, 0,
+                    i => ShowToast("Bản xem trước — nguồn hình nền chỉ minh hoạ"));
+                rows.Add(Row("Nguồn hình nền", seg));
+                var auto = new PillSwitch { IsChecked = true };
+                auto.Changed += v => ShowToast("Bản xem trước — tuỳ chọn “Tự đổi theo cảnh” chỉ minh hoạ");
+                rows.Add(Row("Tự đổi theo cảnh", auto));
+            }
+            else
+            {
+                var sync = new PillSwitch { IsChecked = false };
+                sync.Changed += v => ShowToast("Bản xem trước — tuỳ chọn đồng bộ tốc độ chỉ minh hoạ");
+                rows.Add(Row("Đồng bộ tốc độ với trang RGB", sync));
+
+                var spdVal = Tb("50%", "sub");
+                var spd = new Slider { Minimum = 0, Maximum = 100, Value = 50, Width = 220 };
+                spd.PropertyChanged += (s, e) =>
+                {
+                    if (e.Property == Slider.ValueProperty) spdVal.Text = (int)spd.Value + "%";
+                };
+                rows.Add(Row("Tốc độ hiệu ứng", H(10, spd, spdVal)));
+            }
+            return rows;
         }
 
         // ================= TRANG 8: DIEU KHIEN TU DIEN THOAI =================

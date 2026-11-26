@@ -1,7 +1,18 @@
-# Tien Keyboard Studio — BẢN XEM TRƯỚC GIAO DIỆN (v0.10)
+# Tien Keyboard Studio — BẢN XEM TRƯỚC GIAO DIỆN (v0.10.1)
 
 Đây là **app Windows thật** (không phải mockup web) để bạn mở lên xem và duyệt
 **giao diện** của Tien Keyboard Studio bản 3.2 trước khi chốt làm bản đầy đủ.
+
+> **v0.10.1 — chỉ sửa TRANG CHỢ PLUGIN theo đúng kiểu trình bày của
+> AULA Hub trên video tham khảo:** lưới thẻ 2 cột; mỗi thẻ có **ảnh xem
+> trước** ở trên, tên, mô tả 1 dòng, chip danh mục, chân thẻ **"Mã
+> nguồn" (GitHub) + tên tác giả**. Bấm vào thẻ mở **MODAL chi tiết** ở
+> giữa màn hình: ảnh lớn, mô tả đầy đủ, công tắc **Bật**, các trường
+> cấu hình riêng (plugin khởi động: Đọc bằng giọng nói / Âm lượng /
+> Tên định danh / Mã định danh), nút **Xem trước** (plugin khởi động →
+> phát lại màn hình chào thật), nút ✕ đóng. Tab lọc: Tất cả / Hiệu ứng
+> khởi động / Công cụ hình nền / Hiệu ứng đèn. Mọi trang khác giữ
+> nguyên như v0.10.
 
 > **v0.10 — CHỈ BỔ SUNG trên giao diện đã duyệt (không thiết kế lại):**
 > 1. **Liquid Glass** — lớp kính mờ phủ lên sidebar/thẻ cũ: nền bán trong
@@ -104,9 +115,10 @@ Chạy thẳng file **TienKeyboardStudioPreview.exe** — không cần cài thê
 9. **GameSense** *(ý tưởng — chưa có trong bản thật)* — lắng nghe sự
    kiện CS2 (GSI), ánh xạ sự kiện → hành động, overlay chống loá khi bị
    flash, tuỳ chọn phản ứng bằng đèn phím, file cfg mẫu.
-10. **Chợ plugin** *(ý tưởng — chưa có trong bản thật)* — lưới thẻ theo
-    danh mục, panel chi tiết (Bật / Xem trước / Cài đặt), ghi chú cơ
-    chế cộng đồng GitHub + cấu hình đám mây phía sau.
+10. **Chợ plugin** *(ý tưởng — chưa có trong bản thật)* — lưới thẻ 2
+    cột kiểu AULA Hub (ảnh xem trước + tag danh mục + "Mã nguồn"/tác
+    giả ở chân thẻ), bấm thẻ mở modal chi tiết (Bật / cấu hình riêng /
+    Xem trước), ghi chú cơ chế cộng đồng GitHub + cấu hình đám mây.
 
 ## Cách góp ý để chốt bản thật
 
