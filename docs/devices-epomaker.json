@@ -1,0 +1,1094 @@
+{
+ "source": "EPOMAKER Driver 2.1.92 (Electron renderer bundle main_c38c7efc.js), device registry trích tĩnh",
+ "platform": "RongYuan IoT driver platform (VID 0x3151, usagePage 0xFFFF, usage 2)",
+ "count": 74,
+ "devices": [
+  {
+   "displayName": "Aura75",
+   "internalName": "yc500_aura75_soc",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "Click",
+   "internalName": "mouse_m11b_3950_8k_8k",
+   "chipFamily": "mouse",
+   "vid": "0x3151",
+   "pids": [
+    "0x402a",
+    "0x402d"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "mouse",
+   "screen": null
+  },
+  {
+   "displayName": "Cypher 81",
+   "internalName": "yc3121_sg9001_soc",
+   "chipFamily": "yc3121",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "Cypher 96",
+   "internalName": "yc3121_sg8983_soc",
+   "chipFamily": "yc3121",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "DS87",
+   "internalName": "yc3121_ds87_soc",
+   "chipFamily": "yc3121",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "DynaTab 75",
+   "internalName": "yc3121_kf850p_soc",
+   "chipFamily": "yc3121",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": "không có block LED/screen trong otherSetting (Iu) ở bản này"
+  },
+  {
+   "displayName": "DynaTab 75X",
+   "internalName": "yc500_kf850_screen_soc",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": "registry gắn config dot-matrix 60x9 24-bit (qc); có biến thể cấu hình 240x173 + Touch 80x80 (qs) trong cùng registry"
+  },
+  {
+   "displayName": "EP108",
+   "internalName": "yc300_ep108",
+   "chipFamily": "yc300",
+   "vid": "0x25a7",
+   "pids": [
+    "0x2420",
+    "0x4003"
+   ],
+   "usagePage": "0x1",
+   "usage": 6,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "EP21",
+   "internalName": "yc500_ep21_dm",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4010",
+    "0x4018"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "EP64",
+   "internalName": "yc500_ml_ep64_dm",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4010"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "EP64",
+   "internalName": "yc500_ml_ep64_soc",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "EP68",
+   "internalName": "yc500_ep68_dm",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4018"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "EP68",
+   "internalName": "yc500_ep68_soc",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "EP68",
+   "internalName": "yzw_ep68_dm",
+   "chipFamily": "yzw",
+   "vid": "0x461",
+   "pids": [
+    "0x4002"
+   ],
+   "usagePage": "0x1",
+   "usage": 6,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "EP68",
+   "internalName": "yzw_ep68",
+   "chipFamily": "yzw",
+   "vid": "0x461",
+   "pids": [
+    "0x4002"
+   ],
+   "usagePage": "0x1",
+   "usage": 6,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "EP75 pro",
+   "internalName": "yc500_ep75pro_soc",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "EP84",
+   "internalName": "yc500_ep84_soc",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "EP84",
+   "internalName": "yzw_ep84",
+   "chipFamily": "yzw",
+   "vid": "0x461",
+   "pids": [
+    "0x4002"
+   ],
+   "usagePage": "0x1",
+   "usage": 6,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "EP84",
+   "internalName": "yzw_ep84_dm",
+   "chipFamily": "yzw",
+   "vid": "0x461",
+   "pids": [
+    "0x4002"
+   ],
+   "usagePage": "0x1",
+   "usage": 6,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "EP84 PLUS",
+   "internalName": "yc500_ml_ep84plus_dm",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4010"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "EP84 PLUS",
+   "internalName": "yc500_ml_ep84plus_soc",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "EP84 pro",
+   "internalName": "yc500_ep84pro_soc",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "EP87",
+   "internalName": "yzw_cy_ep87",
+   "chipFamily": "yzw",
+   "vid": "0x3151",
+   "pids": [
+    "0x4002"
+   ],
+   "usagePage": "0x1",
+   "usage": 6,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "EP87",
+   "internalName": "yzw_ep87",
+   "chipFamily": "yzw",
+   "vid": "0x3151",
+   "pids": [
+    "0x4002"
+   ],
+   "usagePage": "0x1",
+   "usage": 6,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "Eclair 75",
+   "internalName": "yzw_eclair75",
+   "chipFamily": "yzw",
+   "vid": "0x461",
+   "pids": [
+    "0x4002"
+   ],
+   "usagePage": "0x1",
+   "usage": 6,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "Epomaker Cypher 81",
+   "internalName": "ry5088_sg9001_8k_8k",
+   "chipFamily": "ry5088",
+   "vid": "0x3151",
+   "pids": [
+    "0x502b",
+    "0x502f"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "Epomaker M65",
+   "internalName": "ry5088_mmdkm60c_dm_8k_002",
+   "chipFamily": "ry5088",
+   "vid": "0x3151",
+   "pids": [
+    "0x502d"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "HE65 Mag",
+   "internalName": "ry5088_fq_x83_soc_8k_002",
+   "chipFamily": "ry5088",
+   "vid": "0x3151",
+   "pids": [
+    "0x502b",
+    "0x502f"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "HE65 Mec",
+   "internalName": "pan1086_fq_x83_soc",
+   "chipFamily": "pan1086",
+   "vid": "0x3151",
+   "pids": [
+    "0x5025",
+    "0x5026"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "HE68 Llte",
+   "internalName": "ry5088_kf109he68lite_dm_8k",
+   "chipFamily": "ry5088",
+   "vid": "0x3151",
+   "pids": [
+    "0x5029"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "HE68 Mag",
+   "internalName": "ry5088_x82he68_dm_8k",
+   "chipFamily": "ry5088",
+   "vid": "0x3151",
+   "pids": [
+    "0x5029"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "HE75 Mag",
+   "internalName": "yc3121_x87_soc_hall",
+   "chipFamily": "yc3121",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "HE75 Mag",
+   "internalName": "ry5088_x87a_he75mag_8k_8k_002",
+   "chipFamily": "ry5088",
+   "vid": "0x3151",
+   "pids": [
+    "0x502b",
+    "0x502f"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "KF850 UK",
+   "internalName": "yc3121_kf850_uk_screen",
+   "chipFamily": "yc3121",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": "dot-matrix 60x9 24-bit (qc)"
+  },
+  {
+   "displayName": "KF850-P UK",
+   "internalName": "yc3121_kf850_uk",
+   "chipFamily": "yc3121",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "M1",
+   "internalName": "mouse_m11_3395_1k_8k",
+   "chipFamily": "mouse",
+   "vid": "0x3151",
+   "pids": [
+    "0x402a",
+    "0x402d"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "mouse",
+   "screen": null
+  },
+  {
+   "displayName": "M1 Pro",
+   "internalName": "mouse_m11_3950_8k_8k",
+   "chipFamily": "mouse",
+   "vid": "0x3151",
+   "pids": [
+    "0x402a",
+    "0x402d"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "mouse",
+   "screen": null
+  },
+  {
+   "displayName": "RT100",
+   "internalName": "yc3121_cy_rt100_soc",
+   "chipFamily": "yc3121",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": "TFT 240x173 RGB565 (config Js); biến thể UK/yc500: 162x173 + weather/temp (Qs)"
+  },
+  {
+   "displayName": "RT100",
+   "internalName": "yc3121_cy_rt100_dm",
+   "chipFamily": "yc3121",
+   "vid": "0x3151",
+   "pids": [
+    "0x4010"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": "TFT 240x173 RGB565 (config Js); biến thể UK/yc500: 162x173 + weather/temp (Qs)"
+  },
+  {
+   "displayName": "RT100",
+   "internalName": "yc3121_rt100_uk_soc_jp",
+   "chipFamily": "yc3121",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": "TFT 240x173 RGB565 (config Js); biến thể UK/yc500: 162x173 + weather/temp (Qs)"
+  },
+  {
+   "displayName": "RT100",
+   "internalName": "yc3121_rt100_uk_soc",
+   "chipFamily": "yc3121",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": "TFT 240x173 RGB565 (config Js); biến thể UK/yc500: 162x173 + weather/temp (Qs)"
+  },
+  {
+   "displayName": "RT100",
+   "internalName": "yc500_cy_rt100",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4010",
+    "0x4011"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": "TFT 240x173 RGB565 (config Js); biến thể UK/yc500: 162x173 + weather/temp (Qs)"
+  },
+  {
+   "displayName": "RT100",
+   "internalName": "yc500_rt100_uk",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4010",
+    "0x4011"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": "TFT 240x173 RGB565 (config Js); biến thể UK/yc500: 162x173 + weather/temp (Qs)"
+  },
+  {
+   "displayName": "RT100",
+   "internalName": "yc500_rt100",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4010",
+    "0x4011"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": "TFT 240x173 RGB565 (config Js); biến thể UK/yc500: 162x173 + weather/temp (Qs)"
+  },
+  {
+   "displayName": "RT65",
+   "internalName": "yc3121_kf101_soc",
+   "chipFamily": "yc3121",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "RT80",
+   "internalName": "yc3121_kf830_soc",
+   "chipFamily": "yc3121",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "Shadow-X",
+   "internalName": "yc500_shadowX_dm",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4010"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "Shadow-X",
+   "internalName": "yc500_shadowX_soc",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "Skyline 87",
+   "internalName": "yc300_skyline87",
+   "chipFamily": "yc300",
+   "vid": "0x25a7",
+   "pids": [
+    "0x2420",
+    "0x4003"
+   ],
+   "usagePage": "0x1",
+   "usage": 6,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "TH-21",
+   "internalName": "yc300_th21_dm",
+   "chipFamily": "yc300",
+   "vid": "0x461",
+   "pids": [
+    "0x4003"
+   ],
+   "usagePage": "0x1",
+   "usage": 6,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "TH-21",
+   "internalName": "yc500_th21",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4010",
+    "0x4011"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "TH100",
+   "internalName": "yzw_th100",
+   "chipFamily": "yzw",
+   "vid": "0x461",
+   "pids": [
+    "0x4002"
+   ],
+   "usagePage": "0x1",
+   "usage": 6,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "TH66",
+   "internalName": "yc500_th66_soc",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "TH66",
+   "internalName": "yc500_th66_uk",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4010",
+    "0x4011"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "TH66",
+   "internalName": "yc500_cy_th66",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4010",
+    "0x4011"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "TH66",
+   "internalName": "yzw_cy_th66",
+   "chipFamily": "yzw",
+   "vid": "0x461",
+   "pids": [
+    "0x4002"
+   ],
+   "usagePage": "0x1",
+   "usage": 6,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "TH68",
+   "internalName": "yc500_th68_soc",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "TH68",
+   "internalName": "yzw_cy_th68",
+   "chipFamily": "yzw",
+   "vid": "0x461",
+   "pids": [
+    "0x4002"
+   ],
+   "usagePage": "0x1",
+   "usage": 6,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "TH80",
+   "internalName": "yc500_th80",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4010",
+    "0x4011"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "TH80",
+   "internalName": "yc500_th80_soc",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "TH80",
+   "internalName": "yc500_th80_uk",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4010",
+    "0x4011"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "TH80",
+   "internalName": "yzw_cy_th80",
+   "chipFamily": "yzw",
+   "vid": "0x461",
+   "pids": [
+    "0x4002"
+   ],
+   "usagePage": "0x1",
+   "usage": 6,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "TH80 ISO",
+   "internalName": "yc500_th80uk_iso_soc",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "TH80 SE",
+   "internalName": "yc500_th80se_dm",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4010"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "TH80 SE",
+   "internalName": "yc500_th80se_soc",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "TH80 SE",
+   "internalName": "yc500_th80se",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4010",
+    "0x4011"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "TH80X",
+   "internalName": "yc500_th80x_soc",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "TH96",
+   "internalName": "yc500_th96_soc",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "TH96",
+   "internalName": "yc500_th96",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4010",
+    "0x4011"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "TH96",
+   "internalName": "yc500_th96_uk",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4010",
+    "0x4011"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "TH98",
+   "internalName": "yc500_cy_th98_soc",
+   "chipFamily": "yc500",
+   "vid": "0x3151",
+   "pids": [
+    "0x4011",
+    "0x4015"
+   ],
+   "usagePage": "0xffff",
+   "usage": 2,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "TH98",
+   "internalName": "yzw_cy_th98",
+   "chipFamily": "yzw",
+   "vid": "0x5ac",
+   "pids": [
+    "0x24f"
+   ],
+   "usagePage": "0x1",
+   "usage": 6,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "TK68",
+   "internalName": "yc300_acr68pile",
+   "chipFamily": "yc300",
+   "vid": "0x5ac",
+   "pids": [
+    "0x24f"
+   ],
+   "usagePage": "0x1",
+   "usage": 6,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  },
+  {
+   "displayName": "th96 WAP",
+   "internalName": "yc300_th96",
+   "chipFamily": "yc300",
+   "vid": "0x25a7",
+   "pids": [
+    "0x2420",
+    "0x4003"
+   ],
+   "usagePage": "0x1",
+   "usage": 6,
+   "featureReportByteLength": 65,
+   "type": "keyboard",
+   "screen": null
+  }
+ ]
+}

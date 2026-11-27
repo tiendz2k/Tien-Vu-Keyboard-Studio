@@ -66,6 +66,8 @@ Bản dựng Avalonia (.NET 8) thể hiện giao diện thế hệ mới của a
 - [`docs/devices-redragon.json`](docs/devices-redragon.json) — Bảng thiết bị WitMod/Redragon trích từ app.
 - [`docs/PROTOCOLS-MCHOSE.md`](docs/PROTOCOLS-MCHOSE.md) — **MCHOSE M HUB**: app là vỏ Electron cho web driver WebHID, bên trong có **4 stack giao thức** — BY (cơ, cùng họ `kb_by_v2` với YUNZII Cake), legacy XOR 0xFF, **GLW/CZ cho dòng Ace 68/Jet75** (khối Hall-effect giải mã ở mức byte: actuation/RT/DKS/MT/TGL/hiệu chuẩn), và QHW (V3). Không mẫu nào của MCHOSE có màn hình thật.
 - [`docs/devices-mchose.json`](docs/devices-mchose.json) — Bảng 49 bàn phím MCHOSE (31 cấu hình CZ có đủ VID:PID).
+- [`docs/PROTOCOLS-EPOMAKER.md`](docs/PROTOCOLS-EPOMAKER.md) — **EPOMAKER Driver hợp nhất v2.1.92**: hoá ra cũng là một bản white-label của nền tảng **RongYuan** (cùng họ Akko/MonsGeek — giao thức lõi đã có trong `PROTOCOLS-RONGYUAN.md`); giá trị mới là bảng thiết bị EPOMAKER và **giao thức màn hình mức byte của RT100** (240×173 RGB565: xoá flash → gói chuẩn bị 165/169 → dữ liệu 37/41, gói 56 B) cùng nhóm lệnh màn hình 32–53. TH80 Pro/Galaxy100 là QMK/VIA (đã công khai) nên bỏ qua.
+- [`docs/devices-epomaker.json`](docs/devices-epomaker.json) — Bảng 74 thiết bị EPOMAKER.
 - [`preview/README-XEM-TRUOC.md`](preview/README-XEM-TRUOC.md) — Giới thiệu bản xem trước giao diện.
 
 ## Nguồn giao thức & lời cảm ơn
