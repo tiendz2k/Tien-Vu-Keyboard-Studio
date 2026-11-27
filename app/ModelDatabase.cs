@@ -265,6 +265,91 @@ namespace TienKeyboardStudio3
             foreach (var m in BuildMchoseModels())
                 if (!All.Any(x => string.Equals(x.Name, m.Name, StringComparison.OrdinalIgnoreCase)))
                     All.Add(m);
+            foreach (var m in BuildDareUModels())
+                if (!All.Any(x => string.Equals(x.Name, m.Name, StringComparison.OrdinalIgnoreCase)))
+                    All.Add(m);
+            foreach (var m in BuildAulaHubModels())
+                if (!All.Any(x => string.Equals(x.Name, m.Name, StringComparison.OrdinalIgnoreCase)))
+                    All.Add(m);
+        }
+
+        // v3.9 Driver Pack 5: nap cac model DareU tu registry trich tu WEB
+        // driver chinh hang dr.dareu.com (DareURegistryData — 187 muc:
+        // 94 ban phim, 69 chuot, 24 dongle; chi ban phim vao danh sach
+        // model). Dinh danh = VID:PID -> muc registry (co che cua chinh
+        // hang); PID la -> chi xem. Gop cac PID trung ten thanh mot model.
+        private static List<KeyboardModel> BuildDareUModels()
+        {
+            var byName = new Dictionary<string, KeyboardModel>(StringComparer.OrdinalIgnoreCase);
+            var order = new List<KeyboardModel>();
+            foreach (var e in DareURegistryData.Entries)
+            {
+                if (!e.IsKeyboard) continue;
+                if (!byName.TryGetValue(e.DisplayName, out var m))
+                {
+                    m = new KeyboardModel
+                    {
+                        Name = e.DisplayName,
+                        Brand = "DareU",
+                        Family = "dareu",
+                        Stack = e.Family,
+                        StatusKind = 1,
+                        HasScreen = false, // khong model DareU All-in-One nao co LCD (HasLcd deu false trong JSON hang)
+                        HasHE = e.IsHe,
+                        Layout = (e.KeyCount > 0 ? LayoutGuess(e.KeyCount) : "Bàn phím") +
+                                 (e.IsHe ? " · Hall-effect" : " · cơ"),
+                        ProtocolStatus = "Driver Pack 5 (DareU " + e.Family + ") — chưa kiểm chứng phần cứng",
+                        IdNote = "Định danh bằng VID:PID theo registry web driver chính hãng (PID chọn họ FwType) + probe đọc của từng họ trước khi ghi. PID lạ không có trong registry → chỉ xem.",
+                    };
+                    byName[e.DisplayName] = m;
+                    order.Add(m);
+                }
+                if (e.IsHe) m.HasHE = true;
+                if (!m.Ids.Any(t => t.Vid == e.Vid && t.Pid == e.Pid))
+                    m.Ids.Add((e.Vid, e.Pid, e.FwType == 7 ? "Đầu thu 2.4G" : "USB có dây"));
+            }
+            return order;
+        }
+
+        // v3.9 Driver Pack 5: nap cac model AULA Hub con lai (HFD +
+        // SparkLink V1/V2 — AulaHubRegistryData, 85 muc trich tu devices.json
+        // cua AULA Hub). Cac ho da co o pack truoc (RLW, Bytech HE, BPTK,
+        // nhom web F75 Max) khong nap lai. Dinh danh = VID:PID + usage page.
+        private static List<KeyboardModel> BuildAulaHubModels()
+        {
+            var byName = new Dictionary<string, KeyboardModel>(StringComparer.OrdinalIgnoreCase);
+            var order = new List<KeyboardModel>();
+            foreach (var e in AulaHubRegistryData.Entries)
+            {
+                if (!byName.TryGetValue(e.DisplayName, out var m))
+                {
+                    string stack = e.Family == "HFD" ? "HFD" : e.Family == "SparkLinkV1" ? "SLV1" : "SLV2";
+                    m = new KeyboardModel
+                    {
+                        Name = e.DisplayName,
+                        Brand = "AULA",
+                        Family = "aulahub",
+                        Stack = stack,
+                        StatusKind = 1,
+                        HasScreen = e.HasScreen,
+                        ScreenW = e.ScreenNote.StartsWith("TFT") ? 240 : 0,
+                        ScreenH = e.ScreenNote.StartsWith("TFT") ? 135 : 0,
+                        HasHE = e.HasHE,
+                        Layout = "Bàn phím" + (e.HasHE ? " · Hall-effect" : "") +
+                                 (e.HasScreen ? " · " + e.ScreenNote : ""),
+                        ProtocolStatus = "Driver Pack 5 (AULA Hub " + stack + ") — chưa kiểm chứng phần cứng",
+                        IdNote = "Định danh bằng VID:PID + usage page 0x" + e.UsagePage.ToString("X4") +
+                                 " theo registry AULA Hub (một cặp VID:PID có thể thuộc nhiều họ — usage page mới quyết định) + probe đọc trước khi ghi.",
+                    };
+                    byName[e.DisplayName] = m;
+                    order.Add(m);
+                }
+                if (e.HasHE) m.HasHE = true;
+                if (e.HasScreen) m.HasScreen = true;
+                if (!m.Ids.Any(t => t.Vid == e.Vid && t.Pid == e.Pid))
+                    m.Ids.Add((e.Vid, e.Pid, e.Connection == "2.4G dongle" ? "Đầu thu 2.4G" : "USB có dây"));
+            }
+            return order;
         }
 
         private static string MchoseLayoutGuess(string name)

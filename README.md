@@ -133,6 +133,9 @@ MIT — xem file [`LICENSE`](LICENSE).
 
 ## Mã băm các bản phát hành chính thức (SHA-256)
 
+- v3.9.0 Light: `66975835a251a274de06b9867e33148abfae2e9a1d7d0d3df59d69742560d36d`
+- v3.9.0 Compressed: `9e708c4ed22343a70c6cc962513deba167797f5fa84b883b7041c1869b6fb697`
+
 - v3.8.0 Light: `41d9a4a15daf00c150ef259d5803887f3a43931cc4e27ea80ad4e0aa0341a7d3`
 - v3.8.0 Compressed: `02ad4c647041c45f28e5c57a7d8d913e2dc7c857ef5c8330721759229ce85556`
 - v3.7.0 Light: `458f454b3b5de922c3beaa294c4b52fd117872932e9e72f2cf031399b0b7f5ef`

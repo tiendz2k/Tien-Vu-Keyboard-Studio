@@ -65,6 +65,22 @@ namespace TienKeyboardStudio3
         private readonly WitModDevice _wm = new WitModDevice();
         private TextBlock _wmIdStatus;
         private TextBlock _wmInfoStatus;
+        // v3.9 Driver Pack 5: ho DareU (TG/TG-RT/OHID/JM/QF — dinh danh bang registry PID)
+        private readonly DareUDevice _du = new DareUDevice();
+        private TextBlock _duIdStatus;
+        private TextBlock _duInfoStatus;
+        private TextBlock _duModelInfo;
+        private Border _duHeCard;
+        private Border _duOhidCard;
+        private Border _duJmCard;
+        // v3.9 Driver Pack 5: cac ho AULA Hub con lai (HFD / SparkLink V1 / SparkLink V2)
+        private readonly AulaHubDevice _ah = new AulaHubDevice();
+        private TextBlock _ahIdStatus;
+        private TextBlock _ahInfoStatus;
+        private TextBlock _ahModelInfo;
+        private Border _ahHfdCard;
+        private Border _ahSlV1Card;
+        private Border _ahSlV2Card;
         private TextBlock _regStatus;
         private bool _dryRun = true;
         private bool _experimental = false;
@@ -188,6 +204,10 @@ namespace TienKeyboardStudio3
             _wm.Log = AppendLog;
             _sx.DryRun = true;
             _wm.DryRun = true;
+            _du.Log = AppendLog;
+            _ah.Log = AppendLog;
+            _du.DryRun = true;
+            _ah.DryRun = true;
             // v3.7: ap dung bang thiet bi cong dong da tai ve (neu co va hop
             // le) — chi BO SUNG mau moi, khong ghi de bang tich hop.
             try
@@ -227,6 +247,8 @@ namespace TienKeyboardStudio3
             _pages["mchose"] = BuildMchosePage();
             _pages["sonix"] = BuildSonixPage();
             _pages["witmod"] = BuildWitModPage();
+            _pages["dareu"] = BuildDareUPage();
+            _pages["aulahub"] = BuildAulaHubPage();
             _pages["store"] = BuildStorePage();
             _pages["widget"] = BuildWidgetPage();
             _pages["settings"] = BuildSettingsPage();
@@ -284,7 +306,7 @@ namespace TienKeyboardStudio3
             RefreshWriteStates();
             ShowPage("home");
             _ = RunIntegrityCheckAsync();
-            AppendLog("Tien Vu Keyboard Studio v3.8.0 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
+            AppendLog("Tien Vu Keyboard Studio v3.9.0 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
             AppendLog("Lộ trình an toàn lần đầu: Quét thiết bị → thử RGB (dry-run) → tắt Dry-run → RGB thật → Cài đặt 04 17 → Đồng hồ → GIF TFT nhỏ → Đọc thử 0xF5.");
         }
 
@@ -322,6 +344,8 @@ namespace TienKeyboardStudio3
             try { _mc.Dispose(); } catch { }
             try { _sx.Dispose(); } catch { }
             try { _wm.Dispose(); } catch { }
+            try { _du.Dispose(); } catch { }
+            try { _ah.Dispose(); } catch { }
             try { _device.Dispose(); } catch { }
         }
 
@@ -453,6 +477,8 @@ namespace TienKeyboardStudio3
                 ("mchose", "Họ MCHOSE", "M12 21s-7.5-4.6-7.5-10.5A7.5 7.5 0 0 1 19.5 10.5C19.5 16.4 12 21 12 21Z M12 12.8v-5 M9.8 10.2 12 7.8l2.2 2.4"),
                 ("sonix", "Họ SONiX (S75/MAD60/HERO)", "M5 5h14v14H5z M9 5V3 M15 5V3 M9 19v2 M15 19v2 M5 10H3 M5 15H3 M19 10h2 M19 15h2"),
                 ("witmod", "Họ WitMod (Redragon)", "M4 17 17 4l3 3L7 20H4Z M14 7l3 3"),
+                ("dareu", "Họ DareU", "M12 3v3 M12 18v3 M3 12h3 M18 12h3 M5.6 5.6l2.1 2.1 M16.3 16.3l2.1 2.1 M18.4 5.6l-2.1 2.1 M7.7 16.3l-2.1 2.1 M12 15.5 A3.5 3.5 0 1 1 12 8.5 A3.5 3.5 0 1 1 12 15.5"),
+                ("aulahub", "Họ AULA Hub", "M4 6.5 A1.5 1.5 0 0 1 5.5 5h13A1.5 1.5 0 0 1 20 6.5v11A1.5 1.5 0 0 1 18.5 19h-13A1.5 1.5 0 0 1 4 17.5Z M7.5 9.5h9 M7.5 13h5"),
                 ("store", "Chợ plugin", "M5.5 8h13l-.9 11.5A1.5 1.5 0 0 1 16.1 21H7.9a1.5 1.5 0 0 1-1.5-1.5L5.5 8Z M8.5 10.5V6.8a3.5 3.5 0 0 1 7 0v3.7"),
                 ("widget", "Widget TFT", "M4.5 15.5 A8.5 8.5 0 1 1 19.5 15.5 M12 15.5 16 10 M12 15.5 m-1.2 0 a1.2 1.2 0 1 0 2.4 0 a1.2 1.2 0 1 0-2.4 0"),
                 ("settings", "Đồng hồ & Cài đặt", "M12 12 m-9 0 a9 9 0 1 0 18 0 a9 9 0 1 0-18 0 M12 7v5.2l3.4 2"),
@@ -487,6 +513,8 @@ namespace TienKeyboardStudio3
                 if (key == "mchose") show = _selectedModel.Family == "mchose";
                 if (key == "sonix") show = _selectedModel.Family == "sonix_sib";
                 if (key == "witmod") show = _selectedModel.Family == "witmod";
+                if (key == "dareu") show = _selectedModel.Family == "dareu";
+                if (key == "aulahub") show = _selectedModel.Family == "aulahub";
                 btn.IsVisible = show;
             }
             if (!_pages.ContainsKey(_currentPage)) return;
@@ -496,7 +524,9 @@ namespace TienKeyboardStudio3
                              || _currentPage == "rongyuan" && _selectedModel.Family != "rongyuan"
                              || _currentPage == "mchose" && _selectedModel.Family != "mchose"
                              || _currentPage == "sonix" && _selectedModel.Family != "sonix_sib"
-                             || _currentPage == "witmod" && _selectedModel.Family != "witmod";
+                             || _currentPage == "witmod" && _selectedModel.Family != "witmod"
+                             || _currentPage == "dareu" && _selectedModel.Family != "dareu"
+                             || _currentPage == "aulahub" && _selectedModel.Family != "aulahub";
             if (curHidden) ShowPage("home");
         }
 
@@ -540,6 +570,8 @@ namespace TienKeyboardStudio3
             if (key == "mchose") RefreshMcPage();
             if (key == "sonix") RefreshSxPage();
             if (key == "witmod") RefreshWmPage();
+            if (key == "dareu") RefreshDareUPage();
+            if (key == "aulahub") RefreshAulaHubPage();
             if (key == "settings") { UpdateClockLabels(); RefreshTypingLabels(); RefreshGreetingStyleText(); }
             if (key != "perkey") _ledPlayer?.Stop();
             if (key != "online") _onlineLedPlayer?.Stop();
@@ -596,6 +628,8 @@ namespace TienKeyboardStudio3
             _mc.DryRun = on;
             _sx.DryRun = on;
             _wm.DryRun = on;
+            _du.DryRun = on;
+            _ah.DryRun = on;
             DryTitle.Text = on ? "Dry-run đang bật" : "ĐANG GHI THẬT XUỐNG PHÍM";
             DryTitle.Foreground = new SolidColorBrush(on ? Color.FromRgb(0x34, 0xD3, 0x99) : Color.FromRgb(0xF5, 0x9B, 0x9B));
             DryDesc.Text = on
@@ -621,6 +655,8 @@ namespace TienKeyboardStudio3
             _mc.ExperimentalEnabled = on;
             _sx.ExperimentalEnabled = on;
             _wm.ExperimentalEnabled = on;
+            _du.ExperimentalEnabled = on;
+            _ah.ExperimentalEnabled = on;
             AppendLog(on
                 ? "Lớp THỬ NGHIỆM per-key: BẬT. Lệnh 0x23/0x20/0x78 sẽ gửi THẬT khi Dry-run cũng tắt. Đây là giao thức tài liệu hoá trên AULA L99 (cùng nền tảng), CHƯA kiểm chứng trên F75 Max."
                 : "Lớp THỬ NGHIỆM per-key: TẮT. Lệnh 0x23/0x20/0x78 chỉ ghi log gói sẽ gửi.");
@@ -772,7 +808,7 @@ namespace TienKeyboardStudio3
             var root = V(14,
                 Tb("Tổng quan", "h1"),
                 _integrityBanner,
-                Tb("Tien Vu Keyboard Studio v3.8.0 — bản thật: quét thiết bị HID thật, ghi xuống F75 Max qua giao thức đã kiểm chứng; Driver Pack 1 thêm họ Sinowealth kb_by_v2 (định danh 0x82 trước khi ghi); Driver Pack 2 thêm nền tảng RongYuan — Akko/MonsGeek/EPOMAKER (định danh dev_id 0x8F trước khi ghi); Driver Pack 3 thêm họ MCHOSE — stack GLW/CZ + QHW (định danh bằng PID registry + probe đọc trước khi ghi; họ BY dùng chung Pack 1, chỉ xem); Driver Pack 4 thêm các họ SONiX anh em (S75 Pro/Nova75, MAD60, HERO68 HE, WIN60 HE/SE) và nền WitMod (Redragon K617 HE) — định danh bằng probe của từng họ trước khi ghi, chưa kiểm chứng trên phần cứng thật. v3.8: bản GỌN — Thư viện Online không còn đóng gói GIF (tải theo nhu cầu từ Google Drive của dự án), thêm GIF từ link TikTok (thử nghiệm), chữ ký tác giả + kiểm tra toàn vẹn bản phát hành. Dry-run bật mặc định để an toàn.", "sub"),
+                Tb("Tien Vu Keyboard Studio v3.9.0 — bản thật: quét thiết bị HID thật, ghi xuống F75 Max qua giao thức đã kiểm chứng; Driver Pack 1 thêm họ Sinowealth kb_by_v2 (định danh 0x82 trước khi ghi); Driver Pack 2 thêm nền tảng RongYuan — Akko/MonsGeek/EPOMAKER (định danh dev_id 0x8F trước khi ghi); Driver Pack 3 thêm họ MCHOSE — stack GLW/CZ + QHW (định danh bằng PID registry + probe đọc trước khi ghi; họ BY dùng chung Pack 1, chỉ xem); Driver Pack 4 thêm các họ SONiX anh em (S75 Pro/Nova75, MAD60, HERO68 HE, WIN60 HE/SE) và nền WitMod (Redragon K617 HE) — định danh bằng probe của từng họ trước khi ghi, chưa kiểm chứng trên phần cứng thật. Driver Pack 5 (v3.9, pack CUỐI) thêm họ DareU (TG/TG-RT + Magnetic Axis, OHID, JM/QF — định danh bằng registry PID từ web driver chính hãng) và các họ AULA Hub còn lại (HFD, SparkLink V1/V2 — định danh bằng VID:PID + usage page). v3.8: bản GỌN — Thư viện Online không còn đóng gói GIF (tải theo nhu cầu từ Google Drive của dự án), thêm GIF từ link TikTok (thử nghiệm), chữ ký tác giả + kiểm tra toàn vẹn bản phát hành. Dry-run bật mặc định để an toàn.", "sub"),
                 connectCard,
                 heroCard,
                 stats,
@@ -882,7 +918,11 @@ namespace TienKeyboardStudio3
                                 ? $"{model.Name}: thuộc các họ SONiX anh em (Driver Pack 4, stack {model.Stack}) — mở trang 'Họ SONiX' và chạy Probe/Nhận diện trước khi ghi."
                                 : model.Family == "witmod"
                                     ? $"{model.Name}: thuộc nền WitMod (Driver Pack 4) — mở trang 'Họ WitMod' và chạy Nhận diện (0x0D + 0x01) trước khi ghi."
-                                    : $"{model.Name}: chế độ XEM TRƯỚC — giao diện/hiệu ứng xem được, tính năng ghi xuống phím đang khoá vì driver cho mẫu này chưa tích hợp.");
+                                    : model.Family == "dareu"
+                                        ? $"{model.Name}: thuộc họ DareU (Driver Pack 5, họ {model.Stack}) — mở trang 'Họ DareU' và chạy Nhận diện (registry PID) trước khi ghi."
+                                        : model.Family == "aulahub"
+                                            ? $"{model.Name}: thuộc các họ AULA Hub (Driver Pack 5, {model.Stack}) — mở trang 'Họ AULA Hub' và chạy Nhận diện (VID:PID + usage page) trước khi ghi."
+                                            : $"{model.Name}: chế độ XEM TRƯỚC — giao diện/hiệu ứng xem được, tính năng ghi xuống phím đang khoá vì driver cho mẫu này chưa tích hợp.");
             if ((_currentPage == "gif" || _currentPage == "widget") && !model.HasScreen) ShowPage("home");
             if (_currentPage == "perkey" && !model.FullSupport) ShowPage("home");
             if (_currentPage == "kbbyv2" && model.Family != "kb_by_v2") ShowPage("home");
@@ -890,10 +930,14 @@ namespace TienKeyboardStudio3
             if (_currentPage == "mchose" && model.Family != "mchose") ShowPage("home");
             if (_currentPage == "sonix" && model.Family != "sonix_sib") ShowPage("home");
             if (_currentPage == "witmod" && model.Family != "witmod") ShowPage("home");
+            if (_currentPage == "dareu" && model.Family != "dareu") ShowPage("home");
+            if (_currentPage == "aulahub" && model.Family != "aulahub") ShowPage("home");
             if (_currentPage == "rongyuan") RefreshRyPage();
             if (_currentPage == "mchose") RefreshMcPage();
             if (_currentPage == "sonix") RefreshSxPage();
             if (_currentPage == "witmod") RefreshWmPage();
+            if (_currentPage == "dareu") RefreshDareUPage();
+            if (_currentPage == "aulahub") RefreshAulaHubPage();
         }
 
         private Control BuildModelGrid()
@@ -1363,6 +1407,8 @@ namespace TienKeyboardStudio3
             Add("MCHOSE", _mcIdStatus?.Text);
             Add("SONiX anh em", _sx.LastIdSummary);
             Add("WitMod", _wm.LastIdSummary);
+            Add("DareU", _duIdStatus?.Text);
+            Add("AULA Hub", _ahIdStatus?.Text);
             string probeText = summaries.Count > 0 ? string.Join(" | ", summaries) : "";
 
             var list = new List<DeviceProbeInfo>();
@@ -1952,6 +1998,363 @@ namespace TienKeyboardStudio3
                 ShowToast(sent ? $"Đã gửi THẬT xuống phím: {title}" : $"[Chỉ log] {title} — chưa mở khoá đủ điều kiện ghi thật.");
             }
             catch (Exception ex) { AppendLog("LỖI ghi MCHOSE: " + ex.Message); ShowToast("Lỗi: " + ex.Message); }
+            finally { _busy = false; }
+        }
+
+        // ================= TRANG HO DAREU (Driver Pack 5) =================
+        // Trang chi hien khi model dang chon co Family == "dareu"; muc
+        // Magnetic Axis chi hien voi model TG-RT (HasHE), muc OHID/JM chi
+        // hien voi dung ho cua model (quy tac capability).
+        private Control BuildDareUPage()
+        {
+            var warn = new Border
+            {
+                Background = new SolidColorBrush(Color.FromArgb(0x2E, 0xF5, 0x9B, 0x9B)),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(0x66, 0xF5, 0x9B, 0x9B)),
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(12),
+                Padding = new Thickness(14, 10),
+                Child = Tb("Chưa kiểm chứng trên phần cứng thật — giao thức DareU được trích byte-level từ WEB driver chính hãng dr.dareu.com (bản cài desktop của hãng CHƯA BAO GIỜ được kiểm toán: CDN của hãng chặn mọi lần tải thử). Mọi lệnh ghi đều khoá sau: định danh khớp registry + công tắc Thử nghiệm (trang Per-key) + tắt Dry-run. PID lạ không có trong registry 187 mục → chỉ xem, cấm ghi.", null, 12),
+            };
+
+            _duModelInfo = Tb("", "sub");
+            _duIdStatus = Tb("Chưa nhận diện. Hãy cắm phím DareU bằng cáp USB rồi bấm Nhận diện.", "sub");
+            var idCard = Card(V(10,
+                Tb("1 · Nhận diện thiết bị (bắt buộc trước khi ghi)", "h2"),
+                _duModelInfo,
+                Tb("Định danh đúng cơ chế của hãng: VID:PID (VID duy nhất 0x260D) → mục registry → họ giao thức theo FwType (0 TG, 1 HS, 2 JM, 3 QF, 4/5 OHID, 6 TG-RT, 7 dongle). Sau khi mở, app chạy thêm probe ĐỌC của từng họ (TG đọc FW + tên; OHID truy vấn version; JM đọc CID/MID/JmType).", "sub"),
+                PrimaryBtn("Nhận diện thiết bị (mở + probe đọc — chỉ đọc)", async () =>
+                {
+                    if (_busy) { ShowToast("Đang bận thao tác trước — đợi một chút nhé."); return; }
+                    _busy = true;
+                    try
+                    {
+                        var (vid, pid, _) = _selectedModel.Ids.Count > 0 ? _selectedModel.Ids[0] : (0x260D, 0, "");
+                        bool opened = await Task.Run(() => _du.OpenByVidPid(vid, pid));
+                        if (opened && _du.Identified)
+                        {
+                            string probe = await Task.Run(() => _du.ProbeRead());
+                            _duIdStatus.Text = $"Đã định danh: {_du.IdentifiedEntry.DisplayName} — họ {_du.IdentifiedEntry.Family} (FwType {_du.IdentifiedEntry.FwType}), model nội bộ {_du.IdentifiedEntry.InternalModel}. {probe}";
+                            ShowToast($"Đã định danh: {_du.IdentifiedEntry.DisplayName}");
+                        }
+                        else if (opened)
+                        {
+                            _duIdStatus.Text = "Đã mở thiết bị nhưng PID không có trong registry 187 mục — CHẾ ĐỘ CHỈ XEM, cấm ghi. Hãy dùng nút sao chép thông tin thiết bị để bổ sung registry.";
+                            ShowToast("PID lạ — chế độ chỉ xem.");
+                        }
+                        else
+                        {
+                            _duIdStatus.Text = "Không mở được thiết bị. Kiểm tra cáp USB và VID:PID của model đang chọn.";
+                            ShowToast("Không mở được thiết bị DareU.");
+                        }
+                        RefreshDareUPage();
+                    }
+                    catch (Exception ex) { AppendLog("LỖI nhận diện DareU: " + ex.Message); ShowToast("Lỗi: " + ex.Message); }
+                    finally { _busy = false; }
+                }),
+                _duIdStatus,
+                CopyInfoButton()));
+
+            _duInfoStatus = Tb("", "sub");
+            var tgCard = Card(V(10,
+                Tb("2 · Họ TG / HS: đèn LED + đọc trạng thái", "h2"),
+                Tb("Khung TG: feature report 64 byte, header 6 byte [TargetId, Size, Class, Cmd (|0x80 = GET), Profile, 0], không checksum; ACK = poll đáp trả 10 ms × 20 tới khi nibble trạng thái == 2. Lớp lệnh LED FRAME (4) / CUSTOM (8) chỉ có mã lệnh trong enum của hãng — bản web không có mã gửi nên app KHÔNG dựng gói stream cho hai lệnh này. Chỉ số hiệu ứng LED nằm trong JSON cấu hình riêng của từng model; nút dưới đây gửi LED EFFECT với chỉ số thô để thử đường truyền.", "sub"),
+                H(10,
+                    GhostBtn("Đọc lại probe (FW / version / CID)", async () =>
+                    {
+                        if (_busy) { ShowToast("Đang bận thao tác trước — đợi một chút nhé."); return; }
+                        _busy = true;
+                        try { _duInfoStatus.Text = await Task.Run(() => _du.ProbeRead()); }
+                        catch (Exception ex) { AppendLog("LỖI probe DareU: " + ex.Message); ShowToast("Lỗi: " + ex.Message); }
+                        finally { _busy = false; }
+                    }),
+                    PrimaryBtn("Gửi LED EFFECT mẫu (hiệu ứng thô 1, tím, tốc độ 2)", async () =>
+                        await DuWriteAsync("TG LED EFFECT mẫu", () => _du.SetLedEffect(1, 0, 2, (0x7C, 0x3A, 0xED))))),
+                _duInfoStatus));
+
+            // --- Muc Magnetic Axis: chi hien voi model TG-RT (RefreshDareUPage) ---
+            var travelSeg = Segmented(new[] { "0.5 mm", "1.0 mm", "1.5 mm", "2.0 mm", "3.0 mm" }, 2, async idx =>
+            {
+                double mm = new[] { 0.5, 1.0, 1.5, 2.0, 3.0 }[idx];
+                await DuWriteAsync($"Hành trình toàn cục {mm} mm", () => _du.SetGlobalTravel(mm));
+            });
+            var heContent = V(10,
+                Tb("3 · Magnetic Axis (lớp 13 — chỉ TG-RT)", "h2"),
+                Tb("Mã hoá hành trình theo TravelVersion của model: EK75 RT = v1 (uint16 BE, bước 0.02 mm, dải 0.3–3.3 mm, mặc định 1.5 mm). Gồm GLOBAL_KEY_TRAVEL, SINGLE_TRIGGER, RAPID_TRIGGER (init/nhấn/nhả), DEAD_ZONE, MT/TGL/DKS, SOCD, GAME_MODE và hiệu chuẩn hành trình theo đúng luồng của hãng (vào hiệu chuẩn → nhấn các phím xuống hết cỡ → thoát).", "sub"),
+                Tb("Hành trình toàn cục (áp cho mọi phím):", "sub"),
+                travelSeg.Root,
+                H(10,
+                    GhostBtn("Đọc hành trình toàn cục hiện tại", async () =>
+                    {
+                        if (_busy) { ShowToast("Đang bận thao tác trước — đợi một chút nhé."); return; }
+                        _busy = true;
+                        try
+                        {
+                            var mm = await Task.Run(() => _du.ReadGlobalTravel());
+                            _duInfoStatus.Text = mm.HasValue ? $"Hành trình toàn cục hiện tại ≈ {mm.Value:0.00} mm." : "Không đọc được hành trình.";
+                        }
+                        catch (Exception ex) { AppendLog("LỖI đọc hành trình DareU: " + ex.Message); ShowToast("Lỗi: " + ex.Message); }
+                        finally { _busy = false; }
+                    }),
+                    GhostBtn("Single Trigger phím 0 = 1.0 mm", async () =>
+                        await DuWriteAsync("Single Trigger phím 0", () => _du.SetSingleTrigger(0, 1.0))),
+                    GhostBtn("Rapid Trigger phím 0 (0.5 / 0.3 / 0.3 mm)", async () =>
+                        await DuWriteAsync("Rapid Trigger phím 0", () => _du.SetRapidTrigger(0, 0.5, 0.3, 0.3)))),
+                H(10,
+                    PrimaryBtn("Hiệu chuẩn: VÀO hiệu chuẩn", async () =>
+                        await DuWriteAsync("Vào hiệu chuẩn hành trình", () => _du.TravelCalibrationEnter())),
+                    GhostBtn("Hiệu chuẩn: THOÁT hiệu chuẩn", async () =>
+                        await DuWriteAsync("Thoát hiệu chuẩn hành trình", () => _du.TravelCalibrationExit())),
+                    GhostBtn("Game Mode: Bật", async () =>
+                        await DuWriteAsync("Game Mode bật", () => _du.SetGameMode(true))),
+                    GhostBtn("Game Mode: Tắt", async () =>
+                        await DuWriteAsync("Game Mode tắt", () => _du.SetGameMode(false)))));
+            _duHeCard = Card(heContent);
+
+            // --- Muc OHID: chi hien voi model OHID (RefreshDareUPage) ---
+            var ohidContent = V(10,
+                Tb("3 · OHID: trigger + lưu cấu hình", "h2"),
+                Tb("Khung OHID: [0xAA, Len, Cmd (|0x80 khi ghi), Checksum = Σ(byte+index), Data…] 64 byte. Hầu hết lệnh SET phải gọi tiếp ORDER SAVE_USER (2) — app tự gửi kèm. Bản ghi trigger: SINGLE 4 byte/phim [keyId, 0, travelLE16], RT 5 byte/phim [keyId, 0, valueLE24]. RGB_KEY/RGB_MATRIX có mã lệnh nhưng định dạng bản ghi KHÔNG có trong hồ sơ web driver → chỉ ghi log, không đoán byte.", "sub"),
+                H(10,
+                    PrimaryBtn("Single Trigger phím 0 (travel thô LE 500)", async () =>
+                        await DuWriteAsync("OHID Single Trigger phím 0", () =>
+                            _du.OhidSetSingleTrigger(new List<(byte, ushort)> { (0, 500) }))),
+                    GhostBtn("RT phím 0 (giá trị thô LE24 500)", async () =>
+                        await DuWriteAsync("OHID RT phím 0", () =>
+                            _du.OhidSetRt(new List<(byte, int)> { (0, 500) }))),
+                    GhostBtn("RGB_KEY / RGB_MATRIX (chỉ log — chưa rõ định dạng)", () => _du.OhidRgbNote()),
+                    GhostBtn("Khôi phục cài đặt gốc (ORDER FACTORY)", async () =>
+                        await DuWriteAsync("OHID khôi phục cài đặt gốc", () => _du.OhidFactoryReset()))));
+            _duOhidCard = Card(ohidContent);
+
+            // --- Muc JM/QF: chi hien voi model JM/QF (RefreshDareUPage) ---
+            var jmContent = V(10,
+                Tb("3 · JM / QF: truyền buffer theo địa chỉ", "h2"),
+                Tb("Report 16 byte (ReportId 8), checksum nguyên văn từ mã hãng: s = Σ các byte trước; trả s < 55 ? 85 − s : 341 − s (dạng rút gọn (0x55 − Σ) mod 256 chỉ là suy luận toán học). Truyền buffer (keymap/macro): 10 byte/gói, địa chỉ BE tự tăng, count cộng 128 cho các gói chưa phải gói cuối. Nút dưới đây ghi một buffer mẫu 20 byte tại địa chỉ 0x0000 để thử đường truyền.", "sub"),
+                H(10,
+                    PrimaryBtn("Ghi buffer mẫu 20 byte @0x0000", async () =>
+                        await DuWriteAsync("JM ghi buffer mẫu", () =>
+                            _du.JmWriteBuffer(0, new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 })))));
+            _duJmCard = Card(jmContent);
+
+            var root = V(14,
+                Tb("Họ DareU (Driver Pack 5)", "h1"),
+                warn,
+                idCard,
+                tgCard,
+                _duHeCard,
+                _duOhidCard,
+                _duJmCard);
+            return Scroll(root);
+        }
+
+        private void RefreshDareUPage()
+        {
+            var m = _selectedModel;
+            if (_duHeCard != null) _duHeCard.IsVisible = m.Family == "dareu" && m.HasHE;
+            if (_duOhidCard != null) _duOhidCard.IsVisible = m.Family == "dareu" && m.Stack == "OHID";
+            if (_duJmCard != null) _duJmCard.IsVisible = m.Family == "dareu" && (m.Stack == "JM" || m.Stack == "QF");
+            if (_duModelInfo != null)
+            {
+                string ids = m.Ids.Count > 0
+                    ? string.Join(", ", m.Ids.Select(t => $"{t.Vid:X4}:{t.Pid:X4} ({t.Conn})"))
+                    : "(chưa có VID:PID trong registry)";
+                _duModelInfo.Text = $"Model đang chọn: {m.Name} — họ {m.Stack}, {(m.HasHE ? "Hall-effect (Magnetic Axis)" : "cơ / không HE")}, không màn hình LCD. VID:PID đã biết: {ids}. {m.IdNote}";
+            }
+        }
+
+        private async Task DuWriteAsync(string title, Action send)
+        {
+            if (_busy) { ShowToast("Đang bận thao tác trước — đợi một chút nhé."); return; }
+            _busy = true;
+            try
+            {
+                bool armed = _du.Identified && _experimental && !_dryRun;
+                await Task.Run(send);
+                ShowToast(armed ? $"Đã gửi THẬT xuống phím: {title}" : $"[Chỉ log] {title} — chưa mở khoá đủ điều kiện ghi thật.");
+            }
+            catch (Exception ex) { AppendLog("LỖI ghi DareU: " + ex.Message); ShowToast("Lỗi: " + ex.Message); }
+            finally { _busy = false; }
+        }
+
+        // ================= TRANG HO AULA HUB (Driver Pack 5) =================
+        // Trang chi hien khi model dang chon co Family == "aulahub"; cac muc
+        // HFD / SparkLink V1 / SparkLink V2 chi hien voi dung ho cua model.
+        private Control BuildAulaHubPage()
+        {
+            var warn = new Border
+            {
+                Background = new SolidColorBrush(Color.FromArgb(0x2E, 0xF5, 0x9B, 0x9B)),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(0x66, 0xF5, 0x9B, 0x9B)),
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(12),
+                Padding = new Thickness(14, 10),
+                Child = Tb("Chưa kiểm chứng trên phần cứng thật — các họ HFD / SparkLink trích từ client AULA Hub 1.1.22 + web hub đã giải phẫu. Trang này CHỈ gồm các họ chưa có ở các pack trước (RLW = WIN60 HE và Bytech HE = HERO68 HE đã ở Pack 4; Sinowealth ở Pack 1). Mọi lệnh ghi đều khoá sau: định danh khớp registry + công tắc Thử nghiệm (trang Per-key) + tắt Dry-run.", null, 12),
+            };
+
+            _ahModelInfo = Tb("", "sub");
+            _ahIdStatus = Tb("Chưa nhận diện. Hãy cắm phím bằng cáp USB rồi bấm Nhận diện.", "sub");
+            var idCard = Card(V(10,
+                Tb("1 · Nhận diện thiết bị (bắt buộc trước khi ghi)", "h2"),
+                _ahModelInfo,
+                Tb("Định danh bằng VID:PID + usage page theo registry AULA Hub (0xFF68 = HFD, 0xFFA0 = SparkLink V1, 0xFFB0 = SparkLink V2) — một cặp VID:PID có thể thuộc nhiều họ khác nhau, usage page mới quyết định. Sau khi mở, app chạy probe ĐỌC của từng họ (HFD đọc khối thông tin 56 byte; SparkLink V1 đồng bộ BoardID; SparkLink V2 đọc phiên bản giao thức).", "sub"),
+                PrimaryBtn("Nhận diện thiết bị (mở + probe đọc — chỉ đọc)", async () =>
+                {
+                    if (_busy) { ShowToast("Đang bận thao tác trước — đợi một chút nhé."); return; }
+                    _busy = true;
+                    try
+                    {
+                        AulaHubEntry found = null;
+                        foreach (var e in AulaHubRegistryData.Entries)
+                        {
+                            if (!string.Equals(e.DisplayName, _selectedModel.Name, StringComparison.OrdinalIgnoreCase)) continue;
+                            if (!_selectedModel.Ids.Any(t => t.Vid == e.Vid && t.Pid == e.Pid)) continue;
+                            found = e; break;
+                        }
+                        if (found == null)
+                        {
+                            _ahIdStatus.Text = "Model đang chọn không có mục registry AULA Hub khớp — chỉ xem.";
+                            ShowToast("Không có mục registry khớp.");
+                            return;
+                        }
+                        bool opened = await Task.Run(() => _ah.Open(found));
+                        if (opened && _ah.Identified)
+                        {
+                            string probe = await Task.Run(() => _ah.ProbeRead());
+                            _ahIdStatus.Text = $"Đã định danh: {found.DisplayName} — họ {found.Family}, usage page 0x{found.UsagePage:X4}, report {_ah.ReportLength} byte. {probe}";
+                            ShowToast($"Đã định danh: {found.DisplayName}");
+                        }
+                        else
+                        {
+                            _ahIdStatus.Text = "Không mở được interface khớp usage page của model đang chọn.";
+                            ShowToast("Không mở được thiết bị AULA Hub.");
+                        }
+                        RefreshAulaHubPage();
+                    }
+                    catch (Exception ex) { AppendLog("LỖI nhận diện AULA Hub: " + ex.Message); ShowToast("Lỗi: " + ex.Message); }
+                    finally { _busy = false; }
+                }),
+                _ahIdStatus,
+                CopyInfoButton()));
+
+            _ahInfoStatus = Tb("", "sub");
+            var readCard = Card(V(10,
+                Tb("2 · Đọc thông tin (chỉ đọc — chạy live, cần Nhận diện trước)", "h2"),
+                H(10,
+                    GhostBtn("Chạy lại probe đọc của họ hiện tại", async () =>
+                    {
+                        if (_busy) { ShowToast("Đang bận thao tác trước — đợi một chút nhé."); return; }
+                        _busy = true;
+                        try { _ahInfoStatus.Text = await Task.Run(() => _ah.ProbeRead()); }
+                        catch (Exception ex) { AppendLog("LỖI probe AULA Hub: " + ex.Message); ShowToast("Lỗi: " + ex.Message); }
+                        finally { _busy = false; }
+                    })),
+                _ahInfoStatus));
+
+            // --- Muc HFD: chi hien voi model HFD (RefreshAulaHubPage) ---
+            var hfdContent = V(10,
+                Tb("3 · HFD: đèn, per-key, RT, màn hình TFT", "h2"),
+                Tb("Khung HFD: [0xAA, cmd, len, addrLE16, hdr, payload@8], đáp trả [0x55, cmd…], không checksum trên đường chính (ngoại lệ duy nhất: lệnh nhạc legacy 53 có checksum ở byte 31). Khối per-key 512 byte = 128 ô [ledId, R, G, B]; khối RT 1024 byte = 128 bản ghi 8 byte (giá trị ÷100). Màn hình TFT NOVA98 240×135 RGB565 đi qua giao diện phụ 0xFF67 với header lệnh 80 riêng và đáp trả chờ ở responseCmd 65 (điểm lạ ghi nguyên văn từ mã hãng). Dongle 2.4G của HFD dùng BỘ LỆNH RIÊNG (55/59/60, màu RGB565) — không forward giao thức có dây.", "sub"),
+                H(10,
+                    PrimaryBtn("Đặt hiệu ứng LED tĩnh (mode 1, tím)", async () =>
+                        await AhWriteAsync("HFD LED tĩnh", () => _ah.HfdSetLedEffect(1, 4, 2, (0x7C, 0x3A, 0xED)))),
+                    GhostBtn("Per-key: phủ tím toàn bộ 128 ô", async () =>
+                        await AhWriteAsync("HFD per-key tím", () =>
+                        {
+                            var colors = new List<(byte, byte, byte)>();
+                            for (int i = 0; i < 128; i++) colors.Add((0x7C, 0x3A, 0xED));
+                            _ah.HfdSetPerKey(colors);
+                        })),
+                    GhostBtn("Ghi bản ghi RT ô 0 (1.5 / 0.5 / 0.5 mm)", async () =>
+                        await AhWriteAsync("HFD RT ô 0", () => _ah.HfdSetRtRecord(0, true, 1.5, 0.5, 0.5)))),
+                Tb("Upload animation TFT (NOVA98) cần giao diện phụ 0xFF67 và nguồn khung hình 240×135 — tầng thiết bị đã có sẵn (bảng trễ 256 byte + header lệnh 80); bản này chưa nối nguồn khung từ trang GIF nên chưa có nút upload, tránh gửi khung rỗng xuống màn hình thật.", "sub"));
+            _ahHfdCard = Card(hfdContent);
+
+            // --- Muc SparkLink V1: chi hien voi model SLV1 (RefreshAulaHubPage) ---
+            var slv1Content = V(10,
+                Tb("3 · SparkLink V1 (KB2): đèn bền + hành trình", "h2"),
+                Tb("Khung 64 byte [0x5C, len, cmd, checksum, payload]; checksum chỉ phụ thuộc byte payload cuối. Per-key BỀN (ghi vào bộ nhớ, KHÔNG có stream realtime ở họ này): mỗi phím một gói KRGB [cờ, key, R, G, B] và kết thúc bằng gói lưu key 254. Hành trình qua khối DB (mm × 1000, LE16). ACK kiểu FIFO, timeout 1000 ms, tối đa 3 lần thử.", "sub"),
+                H(10,
+                    PrimaryBtn("Đặt khối đèn PRGB (tĩnh, tím, sáng 4/5)", async () =>
+                        await AhWriteAsync("SparkLink V1 PRGB", () =>
+                        {
+                            var colors = new List<(byte, byte, byte)>();
+                            for (int i = 0; i < 7; i++) colors.Add((0x7C, 0x3A, 0xED));
+                            _ah.SlV1SetPrgb(colors, 4, 0, 3);
+                        })),
+                    GhostBtn("Per-key: phím 0 tím + lưu", async () =>
+                        await AhWriteAsync("SparkLink V1 per-key phím 0", () =>
+                            _ah.SlV1SetPerKey(new List<(byte, byte, byte, byte)> { (0, 0x7C, 0x3A, 0xED) }))),
+                    GhostBtn("Hành trình 1.5 mm (DB)", async () =>
+                        await AhWriteAsync("SparkLink V1 DB 1.5 mm", () => _ah.SlV1SetGlobalTravel(1.5, 0.1, 0.1))),
+                    GhostBtn("Lưu tham số (ORDER 2)", async () =>
+                        await AhWriteAsync("SparkLink V1 lưu tham số", () => _ah.SlV1SaveParams()))));
+            _ahSlV1Card = Card(slv1Content);
+
+            // --- Muc SparkLink V2: chi hien voi model SLV2 (RefreshAulaHubPage) ---
+            var slv2Content = V(10,
+                Tb("3 · SparkLink V2: đèn, per-key, stream DirectDrive, trigger", "h2"),
+                Tb("Khung [category, sub, payload] — không magic/length/checksum. Ma trận điện luôn 6×21 = 126 ô, mỗi chunk 15 ô (B,G,R,flag). Per-key bền dùng sub 4; stream DirectDrive dùng CÙNG khung nhưng byte[1]=5 và fire-and-forget; stream GIF dùng gói [5,5,0,chunk] với nhịp max(1, round(300/speed)) ms. Khung trigger 27 byte (mm × 1000). Dot-matrix BOX 63 đi qua category 10 (CustomCommand).", "sub"),
+                H(10,
+                    PrimaryBtn("Đặt đèn nền (tĩnh, tím, sáng 80/100)", async () =>
+                        await AhWriteAsync("SparkLink V2 đèn nền", () => _ah.SlV2SetLightingBase(0, 1, 0, 80, 3))),
+                    GhostBtn("Per-key bền: chunk 0 phủ tím", async () =>
+                        await AhWriteAsync("SparkLink V2 per-key chunk 0", () =>
+                        {
+                            var cells = new List<(byte, byte, byte, bool)>();
+                            for (int i = 0; i < 15; i++) cells.Add((0x7C, 0x3A, 0xED, true));
+                            _ah.SlV2SetPerKeyChunk(0, 0, cells);
+                        })),
+                    GhostBtn("Stream DirectDrive: chunk 0 tím (1 khung)", async () =>
+                        await AhWriteAsync("SparkLink V2 DirectDrive chunk 0", () =>
+                        {
+                            var cells = new List<(byte, byte, byte, bool)>();
+                            for (int i = 0; i < 15; i++) cells.Add((0x7C, 0x3A, 0xED, true));
+                            _ah.SlV2StreamChunk(0, 0, cells);
+                        })),
+                    GhostBtn("Trigger ô (0,0): RT 1.5 / 0.5 mm", async () =>
+                        await AhWriteAsync("SparkLink V2 trigger (0,0)", () => _ah.SlV2SetTrigger(0, 0, 1, 1.5, 1.5, 0.5, 0.5))),
+                    GhostBtn("Lưu tham số (Global 2)", async () =>
+                        await AhWriteAsync("SparkLink V2 lưu tham số", () => _ah.SlV2SaveParams()))));
+            _ahSlV2Card = Card(slv2Content);
+
+            var root = V(14,
+                Tb("Họ AULA Hub (Driver Pack 5)", "h1"),
+                warn,
+                idCard,
+                readCard,
+                _ahHfdCard,
+                _ahSlV1Card,
+                _ahSlV2Card);
+            return Scroll(root);
+        }
+
+        private void RefreshAulaHubPage()
+        {
+            var m = _selectedModel;
+            if (_ahHfdCard != null) _ahHfdCard.IsVisible = m.Family == "aulahub" && m.Stack == "HFD";
+            if (_ahSlV1Card != null) _ahSlV1Card.IsVisible = m.Family == "aulahub" && m.Stack == "SLV1";
+            if (_ahSlV2Card != null) _ahSlV2Card.IsVisible = m.Family == "aulahub" && m.Stack == "SLV2";
+            if (_ahModelInfo != null)
+            {
+                string ids = m.Ids.Count > 0
+                    ? string.Join(", ", m.Ids.Select(t => $"{t.Vid:X4}:{t.Pid:X4} ({t.Conn})"))
+                    : "(chưa có VID:PID trong registry)";
+                _ahModelInfo.Text = $"Model đang chọn: {m.Name} — họ {m.Stack}, {(m.HasHE ? "Hall-effect" : "cơ")}{(m.HasScreen ? ", màn hình " + (m.ScreenW > 0 ? $"{m.ScreenW}×{m.ScreenH}" : "dot-matrix") : ", không màn hình")}. VID:PID đã biết: {ids}. {m.IdNote}";
+            }
+        }
+
+        private async Task AhWriteAsync(string title, Action send)
+        {
+            if (_busy) { ShowToast("Đang bận thao tác trước — đợi một chút nhé."); return; }
+            _busy = true;
+            try
+            {
+                bool armed = _ah.Identified && _experimental && !_dryRun;
+                await Task.Run(send);
+                ShowToast(armed ? $"Đã gửi THẬT xuống phím: {title}" : $"[Chỉ log] {title} — chưa mở khoá đủ điều kiện ghi thật.");
+            }
+            catch (Exception ex) { AppendLog("LỖI ghi AULA Hub: " + ex.Message); ShowToast("Lỗi: " + ex.Message); }
             finally { _busy = false; }
         }
 
@@ -3711,7 +4114,7 @@ namespace TienKeyboardStudio3
             };
             var aboutTexts = V(4,
                 Tb("Tien Vu Keyboard Studio", "h2"),
-                Tb("Phiên bản 3.8.0 — bản thật: F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; lớp per-key/stream/nhạc là thử nghiệm có khoá an toàn (xem trang Per-key). Mới: Liquid Glass, hình nền + màu chủ đề, màn hình chào 3 phong cách, Chợ plugin, GameSense CS2 (GSI). v3.4 thêm Driver Pack 1: họ Sinowealth kb_by_v2 (AULA F75, Leobog Hi75, YUNZII Cake, GravaStar K1) — trang riêng, định danh bằng UUID 0x82 trước khi ghi, chưa kiểm chứng trên phần cứng thật. v3.5 thêm Driver Pack 2: nền tảng RongYuan (Akko, MonsGeek, EPOMAKER — 246 mục registry) — trang riêng, định danh bằng dev_id 0x8F trước khi ghi, mục chưa có dev_id đã kiểm chứng chỉ xem, chưa kiểm chứng trên phần cứng thật. v3.6 thêm Driver Pack 3: họ MCHOSE (31 model CZ: stack GLW Hall-effect + stack QHW; 18 model BY dùng chung kb_by_v2, chỉ xem vì chưa có UUID) — trang riêng, định danh bằng VID:PID registry + probe đọc trước khi ghi, checksum GLW là giả thuyết sum-mod-256 chưa kiểm chứng, stack legacy chỉ ghi log gói, chưa kiểm chứng trên phần cứng thật. v3.7 thêm Driver Pack 4: các họ SONiX anh em — S75 Pro/Nova75 (họ B, chung nền F75 Max; probe 0xF5 không phân biệt được với F75 Max nên ghi vẫn khoá sau công tắc thử nghiệm; Nova75 stream chỉ log), MAD60 (họ C, bắt tay fw protocol v9), HERO68 HE (họ D, chữ ký cmd 130 + checksum), WIN60 HE (họ E), WIN60 SE (họ F2, chỉ log — nhà sản xuất tự đánh dấu thử nghiệm) — và nền WitMod (Redragon K617 HE; định danh bằng probe 0x0D + khối support 0x01 sau khi quét bảng filter 36 cặp VID:PID). Cộng thêm tính năng cộng đồng: nút sao chép thông tin thiết bị (dán vào GitHub issue) và cập nhật bảng thiết bị từ repo khi bạn chủ động bấm. Tất cả Pack 4 chưa kiểm chứng trên phần cứng thật. Dry-run bật mặc định.", "sub"),
+                Tb("Phiên bản 3.9.0 — bản thật: F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; lớp per-key/stream/nhạc là thử nghiệm có khoá an toàn (xem trang Per-key). Mới: Liquid Glass, hình nền + màu chủ đề, màn hình chào 3 phong cách, Chợ plugin, GameSense CS2 (GSI). v3.4 thêm Driver Pack 1: họ Sinowealth kb_by_v2 (AULA F75, Leobog Hi75, YUNZII Cake, GravaStar K1) — trang riêng, định danh bằng UUID 0x82 trước khi ghi, chưa kiểm chứng trên phần cứng thật. v3.5 thêm Driver Pack 2: nền tảng RongYuan (Akko, MonsGeek, EPOMAKER — 246 mục registry) — trang riêng, định danh bằng dev_id 0x8F trước khi ghi, mục chưa có dev_id đã kiểm chứng chỉ xem, chưa kiểm chứng trên phần cứng thật. v3.6 thêm Driver Pack 3: họ MCHOSE (31 model CZ: stack GLW Hall-effect + stack QHW; 18 model BY dùng chung kb_by_v2, chỉ xem vì chưa có UUID) — trang riêng, định danh bằng VID:PID registry + probe đọc trước khi ghi, checksum GLW là giả thuyết sum-mod-256 chưa kiểm chứng, stack legacy chỉ ghi log gói, chưa kiểm chứng trên phần cứng thật. v3.7 thêm Driver Pack 4: các họ SONiX anh em — S75 Pro/Nova75 (họ B, chung nền F75 Max; probe 0xF5 không phân biệt được với F75 Max nên ghi vẫn khoá sau công tắc thử nghiệm; Nova75 stream chỉ log), MAD60 (họ C, bắt tay fw protocol v9), HERO68 HE (họ D, chữ ký cmd 130 + checksum), WIN60 HE (họ E), WIN60 SE (họ F2, chỉ log — nhà sản xuất tự đánh dấu thử nghiệm) — và nền WitMod (Redragon K617 HE; định danh bằng probe 0x0D + khối support 0x01 sau khi quét bảng filter 36 cặp VID:PID). Cộng thêm tính năng cộng đồng: nút sao chép thông tin thiết bị (dán vào GitHub issue) và cập nhật bảng thiết bị từ repo khi bạn chủ động bấm. Tất cả Pack 4 chưa kiểm chứng trên phần cứng thật. v3.9 thêm Driver Pack 5 (pack cuối): họ DareU — TG/TG-RT (lớp 13 Magnetic Axis đầy đủ cho EK75 RT và các mẫu TG-RT), OHID, JM/QF — định danh bằng registry 187 mục trích từ web driver chính hãng dr.dareu.com (PID lạ → chỉ xem); và các họ AULA Hub còn lại — HFD (gồm TFT NOVA98 240×135 + dongle 2.4G bộ lệnh riêng), SparkLink V1 (KB2, per-key bền, không stream), SparkLink V2 (DirectDrive + GIF stream + dot-matrix BOX 63) — định danh bằng VID:PID + usage page theo registry AULA Hub. Tất cả Pack 5 chưa kiểm chứng trên phần cứng thật; bản cài desktop của DareU chưa từng được kiểm toán (CDN của hãng chặn tải) — giao thức lấy từ bản web chính hãng. Dry-run bật mặc định.", "sub"),
                 Tb("v3.8: đổi tên thành Tien Vu Keyboard Studio + logo mới; Thư viện Online chuyển sang tải theo nhu cầu (không đóng gói GIF); thêm GIF từ link TikTok (thử nghiệm); app có chữ ký tác giả + tự kiểm tra toàn vẹn khi mở — bản bị chỉnh sửa sẽ hiện cảnh báo ở Trang chủ.", "sub"),
                 Tb("Phát triển bởi Vũ Minh Tiến — github.com/tiendz2k", "sub"),
                 Tb("Mã nguồn + bản chính thức: github.com/tiendz2k/T-Keyboard-Studio · " + AboutInfo.SignatureLine, "faint"),
