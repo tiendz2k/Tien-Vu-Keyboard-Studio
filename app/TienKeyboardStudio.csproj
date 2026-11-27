@@ -9,8 +9,8 @@
     <RootNamespace>TienKeyboardStudio3</RootNamespace>
     <Product>T Keyboard Studio</Product>
     <AssemblyTitle>T Keyboard Studio</AssemblyTitle>
-    <Description>T Keyboard Studio 3.3.0 — ứng dụng điều khiển bàn phím (AULA F75 Max hỗ trợ đầy đủ; các model khác xem trước). Giao diện Liquid Glass + hình nền + màn hình chào + Chợ plugin + GameSense CS2 (GSI). Dry-run bật mặc định.</Description>
-    <Version>3.3.0</Version>
+    <Description>T Keyboard Studio 3.4.0 — ứng dụng điều khiển bàn phím (AULA F75 Max hỗ trợ đầy đủ; các model khác xem trước). Giao diện Liquid Glass + hình nền + màn hình chào + Chợ plugin + GameSense CS2 (GSI). Driver Pack 1: họ Sinowealth kb_by_v2 (định danh UUID 0x82 trước khi ghi). Dry-run bật mặc định.</Description>
+    <Version>3.4.0</Version>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>app.ico</ApplicationIcon>
     <AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>

@@ -59,7 +59,7 @@
                               FontSize="11.5" Foreground="#E7EAF2" />
               </StackPanel>
             </Border>
-            <TextBlock Text="T Keyboard Studio · v3.3.0" FontSize="10.5" Foreground="#6F6C84"
+            <TextBlock Text="T Keyboard Studio · v3.4.0" FontSize="10.5" Foreground="#6F6C84"
                        HorizontalAlignment="Center" />
           </StackPanel>
 

@@ -30,6 +30,10 @@ namespace TienKeyboardStudio3
         // ================= Trang thai dung chung =================
         private readonly F75Device _device = new F75Device();
         private readonly ExperimentalDevice _exp = new ExperimentalDevice();
+        // v3.4 Driver Pack 1: ho Sinowealth kb_by_v2 (transport rieng, cung khoa an toan)
+        private readonly KbByV2Device _kb = new KbByV2Device();
+        private TextBlock _kbIdStatus;
+        private TextBlock _kbInfoStatus;
         private bool _dryRun = true;
         private bool _experimental = false;
         private bool _busy;
@@ -139,8 +143,10 @@ namespace TienKeyboardStudio3
 
             _device.Log = AppendLog;
             _exp.Log = AppendLog;
+            _kb.Log = AppendLog;
             _device.DryRun = true;
             _exp.DryRun = true;
+            _kb.DryRun = true;
 
             DryToggle.IsCheckedChanged += (s, e) => SetDryRun(DryToggle.IsChecked == true, fromUi: true);
 
@@ -166,6 +172,7 @@ namespace TienKeyboardStudio3
             _pages["gif"] = BuildGifPage();
             _pages["online"] = BuildOnlinePage();
             _pages["perkey"] = BuildPerKeyPage();
+            _pages["kbbyv2"] = BuildKbByV2Page();
             _pages["store"] = BuildStorePage();
             _pages["widget"] = BuildWidgetPage();
             _pages["settings"] = BuildSettingsPage();
@@ -222,7 +229,7 @@ namespace TienKeyboardStudio3
             RefreshNavVisibility();
             RefreshWriteStates();
             ShowPage("home");
-            AppendLog("T Keyboard Studio v3.3.0 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
+            AppendLog("T Keyboard Studio v3.4.0 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
             AppendLog("Lộ trình an toàn lần đầu: Quét thiết bị → thử RGB (dry-run) → tắt Dry-run → RGB thật → Cài đặt 04 17 → Đồng hồ → GIF TFT nhỏ → Đọc thử 0xF5.");
         }
 
@@ -237,6 +244,7 @@ namespace TienKeyboardStudio3
             try { _typing.Stop(); } catch { }
             try { _macros.Dispose(); } catch { }
             try { _exp.Dispose(); } catch { }
+            try { _kb.Dispose(); } catch { }
             try { _device.Dispose(); } catch { }
         }
 
@@ -363,6 +371,7 @@ namespace TienKeyboardStudio3
                 ("gif", "Màn hình GIF", "M4 4.5 A1.5 1.5 0 0 1 5.5 3h13A1.5 1.5 0 0 1 20 4.5v15a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19.5Z M8.3 10.2 a1.4 1.4 0 1 0 .1 0 M20 16.5 15.5 12 5 21"),
                 ("online", "Thư viện Online", "M12 12 m-9.5 0 a9.5 9.5 0 1 0 19 0 a9.5 9.5 0 1 0-19 0 M2.5 12h19 M12 2.5c2.9 2.7 4.4 5.9 4.4 9.5s-1.5 6.8-4.4 9.5c-2.9-2.7-4.4-5.9-4.4-9.5S9.1 5.2 12 2.5Z"),
                 ("perkey", "Per-key (thử nghiệm)", "M4 4h4v4H4z M10 4h4v4h-4z M16 4h4v4h-4z M4 10h4v4H4z M10 10h4v4h-4z M16 10h4v4h-4z M4 16h4v4H4z M10 16h4v4h-4z M16 16h4v4h-4z"),
+                ("kbbyv2", "Họ Sinowealth (kb_by_v2)", "M4 5h16M4 12h16M4 19h16 M7 5v14 M12 5v14 M17 5v14"),
                 ("store", "Chợ plugin", "M5.5 8h13l-.9 11.5A1.5 1.5 0 0 1 16.1 21H7.9a1.5 1.5 0 0 1-1.5-1.5L5.5 8Z M8.5 10.5V6.8a3.5 3.5 0 0 1 7 0v3.7"),
                 ("widget", "Widget TFT", "M4.5 15.5 A8.5 8.5 0 1 1 19.5 15.5 M12 15.5 16 10 M12 15.5 m-1.2 0 a1.2 1.2 0 1 0 2.4 0 a1.2 1.2 0 1 0-2.4 0"),
                 ("settings", "Đồng hồ & Cài đặt", "M12 12 m-9 0 a9 9 0 1 0 18 0 a9 9 0 1 0-18 0 M12 7v5.2l3.4 2"),
@@ -392,11 +401,13 @@ namespace TienKeyboardStudio3
                 bool show = true;
                 if (key == "gif" || key == "widget") show = _selectedModel.HasScreen;
                 if (key == "perkey") show = _selectedModel.FullSupport;
+                if (key == "kbbyv2") show = _selectedModel.Family == "kb_by_v2";
                 btn.IsVisible = show;
             }
             if (!_pages.ContainsKey(_currentPage)) return;
             bool curHidden = (_currentPage == "gif" || _currentPage == "widget") && !_selectedModel.HasScreen
-                             || _currentPage == "perkey" && !_selectedModel.FullSupport;
+                             || _currentPage == "perkey" && !_selectedModel.FullSupport
+                             || _currentPage == "kbbyv2" && _selectedModel.Family != "kb_by_v2";
             if (curHidden) ShowPage("home");
         }
 
@@ -487,6 +498,7 @@ namespace TienKeyboardStudio3
             _dryRun = on;
             _device.DryRun = on;
             _exp.DryRun = on;
+            _kb.DryRun = on;
             DryTitle.Text = on ? "Dry-run đang bật" : "ĐANG GHI THẬT XUỐNG PHÍM";
             DryTitle.Foreground = new SolidColorBrush(on ? Color.FromRgb(0x34, 0xD3, 0x99) : Color.FromRgb(0xF5, 0x9B, 0x9B));
             DryDesc.Text = on
@@ -507,6 +519,7 @@ namespace TienKeyboardStudio3
         {
             _experimental = on;
             _exp.ExperimentalEnabled = on;
+            _kb.ExperimentalEnabled = on;
             AppendLog(on
                 ? "Lớp THỬ NGHIỆM per-key: BẬT. Lệnh 0x23/0x20/0x78 sẽ gửi THẬT khi Dry-run cũng tắt. Đây là giao thức tài liệu hoá trên AULA L99 (cùng nền tảng), CHƯA kiểm chứng trên F75 Max."
                 : "Lớp THỬ NGHIỆM per-key: TẮT. Lệnh 0x23/0x20/0x78 chỉ ghi log gói sẽ gửi.");
@@ -645,7 +658,7 @@ namespace TienKeyboardStudio3
 
             var root = V(14,
                 Tb("Tổng quan", "h1"),
-                Tb("T Keyboard Studio v3.3.0 — bản thật: quét thiết bị HID thật, ghi xuống F75 Max qua giao thức đã kiểm chứng. Dry-run bật mặc định để an toàn.", "sub"),
+                Tb("T Keyboard Studio v3.4.0 — bản thật: quét thiết bị HID thật, ghi xuống F75 Max qua giao thức đã kiểm chứng; Driver Pack 1 thêm họ Sinowealth kb_by_v2 (định danh 0x82 trước khi ghi). Dry-run bật mặc định để an toàn.", "sub"),
                 connectCard,
                 heroCard,
                 stats,
@@ -730,7 +743,7 @@ namespace TienKeyboardStudio3
                 // 258A:010C dung chung cho nhieu phim — canh bao trung lap neu co
                 var shared = found.GroupBy(d => (d.Vid, d.Pid)).Where(g => g.Count() > 1).ToList();
                 foreach (var g in shared)
-                    _detectedPanel.Children.Add(Tb($"Lưu ý: VID {g.Key.Vid:X4}:{g.Key.Pid:X4} được dùng chung bởi {string.Join(" và ", g.Select(x => x.Model.Name))} — app sẽ không ghi xuống các mẫu này cho tới khi tích hợp driver riêng.", "faint"));
+                    _detectedPanel.Children.Add(Tb($"Lưu ý: VID {g.Key.Vid:X4}:{g.Key.Pid:X4} được dùng chung bởi {string.Join(" và ", g.Select(x => x.Model.Name))} — với họ kb_by_v2, app chỉ cho ghi sau khi định danh bằng lệnh 0x82 khớp registry (trang 'Họ Sinowealth'); các họ khác chờ driver riêng.", "faint"));
             }
             AppendLog($"Quét thiết bị: tìm thấy {found.Count} mẫu khớp ({string.Join(", ", found.Select(f => f.Model.Name))}).");
             if (!auto) ShowToast(found.Count > 0 ? $"Quét xong: {found.Count} thiết bị khớp." : "Không tìm thấy bàn phím hỗ trợ nào.");
@@ -745,9 +758,12 @@ namespace TienKeyboardStudio3
             AppendLog($"Đã chọn mẫu: {model.Name} — {model.ProtocolStatus}.");
             ShowToast(model.FullSupport
                 ? $"Đang dùng {model.Name} (hỗ trợ đầy đủ)."
-                : $"{model.Name}: chế độ XEM TRƯỚC — giao diện/hiệu ứng xem được, tính năng ghi xuống phím đang khoá vì driver cho mẫu này chưa tích hợp.");
+                : model.Family == "kb_by_v2"
+                    ? $"{model.Name}: thuộc họ Sinowealth (Driver Pack 1) — mở trang 'Họ Sinowealth (kb_by_v2)' và chạy Nhận diện (0x82) trước khi ghi."
+                    : $"{model.Name}: chế độ XEM TRƯỚC — giao diện/hiệu ứng xem được, tính năng ghi xuống phím đang khoá vì driver cho mẫu này chưa tích hợp.");
             if ((_currentPage == "gif" || _currentPage == "widget") && !model.HasScreen) ShowPage("home");
             if (_currentPage == "perkey" && !model.FullSupport) ShowPage("home");
+            if (_currentPage == "kbbyv2" && model.Family != "kb_by_v2") ShowPage("home");
         }
 
         private Control BuildModelGrid()
@@ -787,6 +803,120 @@ namespace TienKeyboardStudio3
                 wrap.Children.Add(card);
             }
             return wrap;
+        }
+
+        // ================= TRANG HO SINOWEALTH kb_by_v2 (Driver Pack 1, v3.4) =================
+        private Control BuildKbByV2Page()
+        {
+            var warn = new Border
+            {
+                Background = new SolidColorBrush(Color.FromArgb(0x2E, 0xF5, 0x9B, 0x9B)),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(0x66, 0xF5, 0x9B, 0x9B)),
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(12),
+                Padding = new Thickness(14, 10),
+                Child = Tb("Chưa kiểm chứng trên phần cứng thật — giao thức kb_by_v2 được tài liệu hoá từ driver chính hãng (YUNZII hub + app tham chiếu họ A), nhưng không ai trong đội sở hữu các mẫu phím này. Mọi lệnh ghi đều khoá sau: định danh 0x82 khớp registry + công tắc Thử nghiệm (trang Per-key) + tắt Dry-run. Đường dongle 2.4G hiện chỉ ghi log gói, chưa mở transport thật.", null, 12),
+            };
+
+            _kbIdStatus = Tb("Chưa nhận diện. Hãy cắm phím họ Sinowealth (VID 258A) bằng cáp USB rồi bấm Nhận diện.", "sub");
+            var idCard = Card(V(10,
+                Tb("1 · Nhận diện thiết bị (bắt buộc trước khi ghi)", "h2"),
+                Tb("VID:PID 258A:010C bị dùng chung bởi nhiều board khác nhau (AULA F75, Leobog Hi75, YUNZII C75/C98, GravaStar K1…). App đọc định danh từ chính thiết bị bằng lệnh 0x82 (chỉ đọc) và đối chiếu registry: khớp mới mở khoá ghi; không khớp hoặc không đọc được → chỉ xem. Leobog Hi75/Hi75C Pro chưa có UUID trong tài liệu đã trích nên luôn ở chế độ chỉ xem.", "sub"),
+                PrimaryBtn("Nhận diện thiết bị (đọc 0x82 — chỉ đọc)", async () =>
+                {
+                    if (_busy) { ShowToast("Đang bận thao tác trước — đợi một chút nhé."); return; }
+                    _busy = true;
+                    try
+                    {
+                        var (vid, pid, _) = _selectedModel.Ids.Count > 0 ? _selectedModel.Ids[0] : (0x258A, 0x010C, "");
+                        var id = await Task.Run(() => _kb.Identify(vid, pid));
+                        _kbIdStatus.Text = id.Known
+                            ? $"Đã định danh: {id.ModelName} — {id.Method} · UUID {id.UuidHex} · 6 byte: {id.IdHex}. {id.Note}"
+                            : $"Chưa định danh được. 6 byte đọc được: {id.IdHex}. {id.Note}";
+                        ShowToast(id.Known ? $"Đã định danh: {id.ModelName}" : "Không khớp registry — chế độ chỉ xem.");
+                    }
+                    catch (Exception ex) { AppendLog("LỖI nhận diện kb_by_v2: " + ex.Message); ShowToast("Lỗi: " + ex.Message); }
+                    finally { _busy = false; }
+                }),
+                _kbIdStatus));
+
+            _kbInfoStatus = Tb("", "sub");
+            var readCard = Card(V(10,
+                Tb("2 · Đọc thông tin (chỉ đọc — chạy live)", "h2"),
+                H(10,
+                    GhostBtn("Đọc Basic Info (0x84)", async () => await KbReadAsync("Basic Info", KbByV2Protocol.BuildGetBasicInfo())),
+                    GhostBtn("Đọc pin (0x87)", async () =>
+                    {
+                        var reply = await KbReadAsync("Pin", KbByV2Protocol.BuildGetBattery());
+                        if (reply != null)
+                        {
+                            var (b0, b1) = KbByV2Protocol.ParseBattery(reply);
+                            _kbInfoStatus.Text = $"Pin: 2 byte sau header = 0x{b0:X2} 0x{b1:X2} (ngữ nghĩa phần trăm/chế độ sạc cần kiểm chứng trên phím thật).";
+                        }
+                    }),
+                    GhostBtn("Đọc đèn từng phím (0x86)", async () => await KbReadAsync("Custom light", KbByV2Protocol.BuildGetCustomLight()))),
+                _kbInfoStatus));
+
+            var writeCard = Card(V(10,
+                Tb("3 · Ghi xuống phím (khoá an toàn 3 lớp)", "h2"),
+                Tb("Chỉ gửi thật khi: đã định danh khớp registry + công tắc Thử nghiệm BẬT + Dry-run TẮT. Thiếu một điều kiện, app chỉ ghi log gói sẽ gửi (hoặc từ chối nếu chưa định danh). Sau lệnh ghi keymap, app chờ 100 ms theo tài liệu gốc.", "sub"),
+                H(10,
+                    PrimaryBtn("Ghi đèn mẫu cầu vồng (0x06)", async () =>
+                    {
+                        var slots = new List<(byte R, byte G, byte B)>();
+                        for (int i = 0; i < 128; i++)
+                        {
+                            double h = i / 128.0;
+                            var c = KeyboardView.Hsv(h, 0.85, 0.9);
+                            slots.Add((c.R, c.G, c.B));
+                        }
+                        var planes = KbByV2Protocol.BuildCustomLightPlanes(slots);
+                        await KbWriteAsync("Ghi đèn mẫu cầu vồng (0x06)", () => _kb.SendWrite("Ghi den mau kb_by_v2", KbByV2Protocol.BuildSetCustomLight(planes)));
+                    }),
+                    GhostBtn("Khôi phục cài đặt gốc (0x11)", async () =>
+                        await KbWriteAsync("Khôi phục cài đặt gốc (0x11)", () => _kb.SendWrite("Factory reset kb_by_v2", KbByV2Protocol.BuildFactoryReset(), verifyEcho: false))),
+                    GhostBtn("Xem gói 2.4G send_batch (chỉ log)", () =>
+                    {
+                        var packets = KbByV2Wireless.BuildBatch(1, 0, new byte[KbByV2Protocol.KeymapLength + 8]);
+                        _kb.LogWirelessBatch("send_batch keymap lop 0 (dongle 2.4G)", packets);
+                        ShowToast("Đã ghi log gói 2.4G — dongle chưa mở transport thật ở bản này.");
+                    }))));
+
+            var root = V(14,
+                Tb("Họ Sinowealth (kb_by_v2)", "h1"),
+                warn,
+                idCard,
+                readCard,
+                writeCard);
+            return Scroll(root);
+        }
+
+        private async Task<byte[]> KbReadAsync(string title, byte[] packet)
+        {
+            if (_busy) { ShowToast("Đang bận thao tác trước — đợi một chút nhé."); return null; }
+            _busy = true;
+            try
+            {
+                var reply = await Task.Run(() => _kb.SendRead(title, packet));
+                if (reply != null && _kbInfoStatus != null)
+                    _kbInfoStatus.Text = $"{title}: nhận {reply.Length} byte, header echo: {string.Join(" ", reply.Take(7).Select(b => b.ToString("X2")))}…";
+                return reply;
+            }
+            catch (Exception ex) { AppendLog("LỖI đọc kb_by_v2: " + ex.Message); ShowToast("Lỗi: " + ex.Message); return null; }
+            finally { _busy = false; }
+        }
+
+        private async Task KbWriteAsync(string title, Func<bool> send)
+        {
+            if (_busy) { ShowToast("Đang bận thao tác trước — đợi một chút nhé."); return; }
+            _busy = true;
+            try
+            {
+                bool sent = await Task.Run(send);
+                ShowToast(sent ? $"Đã gửi THẬT xuống phím: {title}" : $"[Chỉ log] {title} — chưa mở khoá đủ điều kiện ghi thật.");
+            }
+            catch (Exception ex) { AppendLog("LỖI ghi kb_by_v2: " + ex.Message); ShowToast("Lỗi: " + ex.Message); }
+            finally { _busy = false; }
         }
 
         // ================= TRANG 2: ANH SANG RGB =================
@@ -2287,7 +2417,7 @@ namespace TienKeyboardStudio3
             };
             var aboutTexts = V(4,
                 Tb("T Keyboard Studio", "h2"),
-                Tb("Phiên bản 3.3.0 — bản thật: F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; lớp per-key/stream/nhạc là thử nghiệm có khoá an toàn (xem trang Per-key). Mới: Liquid Glass, hình nền + màu chủ đề, màn hình chào 3 phong cách, Chợ plugin, GameSense CS2 (GSI). Dry-run bật mặc định.", "sub"),
+                Tb("Phiên bản 3.4.0 — bản thật: F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; lớp per-key/stream/nhạc là thử nghiệm có khoá an toàn (xem trang Per-key). Mới: Liquid Glass, hình nền + màu chủ đề, màn hình chào 3 phong cách, Chợ plugin, GameSense CS2 (GSI). v3.4 thêm Driver Pack 1: họ Sinowealth kb_by_v2 (AULA F75, Leobog Hi75, YUNZII Cake, GravaStar K1) — trang riêng, định danh bằng UUID 0x82 trước khi ghi, chưa kiểm chứng trên phần cứng thật. Dry-run bật mặc định.", "sub"),
                 Tb("Logo Mẫu C — chữ “T” tạo hình từ phím spacebar — đã được người dùng duyệt.", "sub"),
                 Tb("Font chữ: Be Vietnam Pro (SIL OFL 1.1). GIF thư viện: tự làm cho Tiến. Giao thức per-key: Gavin Graham (AULA L99).", "faint"));
             var aboutCard = Card(H(14, logoWrap, aboutTexts));

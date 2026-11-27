@@ -22,6 +22,8 @@ namespace TienKeyboardStudio3
         public int ScreenSize;         // px (vuong), 0 = khong co
         public bool HasKnob;
         public bool FullSupport;       // ghi duoc that (chi F75 Max hien tai)
+        public string Family = "";     // ho giao thuc (vd "kb_by_v2"); "" = chua co driver pack
+        public string IdNote = "";     // cach dinh danh model (hien o trang ho giao thuc)
         // Cac cap VID:PID da biet cua model + nhan loai ket noi.
         public List<(int Vid, int Pid, string Conn)> Ids = new List<(int, int, string)>();
         // VID-only (Pid = -1): nhan dien theo hang (vd ho Keychron VIA).
@@ -42,16 +44,58 @@ namespace TienKeyboardStudio3
             new KeyboardModel
             {
                 Name = "AULA F75", Layout = "75% · 80 phím",
-                ProtocolStatus = "Đã có giao thức mở — sẽ tích hợp", StatusKind = 1,
-                HasScreen = false, HasKnob = true,
+                ProtocolStatus = "Driver Pack 1 (kb_by_v2) — chưa kiểm chứng phần cứng", StatusKind = 1,
+                HasScreen = false, HasKnob = true, Family = "kb_by_v2",
+                IdNote = "Định danh bằng chữ ký 0x82 [3,0,0,0,0,205] trước khi ghi",
+                Ids = { (0x258A, 0x010C, "USB có dây") },
+            },
+            new KeyboardModel
+            {
+                Name = "Leobog Hi75", Layout = "75% · 81 phím",
+                ProtocolStatus = "Driver Pack 1 (kb_by_v2) — chỉ xem (chưa có UUID)", StatusKind = 1,
+                HasScreen = false, HasKnob = true, Family = "kb_by_v2",
+                IdNote = "Chưa có UUID/chữ ký trong tài liệu đã trích — app chỉ cho xem, không cho ghi",
                 Ids = { (0x258A, 0x010C, "USB có dây") },
             },
             new KeyboardModel
             {
                 Name = "Leobog Hi75C Pro", Layout = "75% · 81 phím",
-                ProtocolStatus = "Chung giao thức F75 — sẽ tích hợp", StatusKind = 1,
-                HasScreen = false, HasKnob = true,
+                ProtocolStatus = "Driver Pack 1 (kb_by_v2) — chỉ xem (chưa có UUID)", StatusKind = 1,
+                HasScreen = false, HasKnob = true, Family = "kb_by_v2",
+                IdNote = "Chưa có UUID/chữ ký trong tài liệu đã trích — app chỉ cho xem, không cho ghi",
                 Ids = { (0x258A, 0x010C, "USB có dây") },
+            },
+            new KeyboardModel
+            {
+                Name = "YUNZII C75 Cake Meow", Layout = "75% · 85 phím",
+                ProtocolStatus = "Driver Pack 1 (kb_by_v2) — chưa kiểm chứng phần cứng", StatusKind = 1,
+                HasScreen = false, HasKnob = true, Family = "kb_by_v2",
+                IdNote = "Định danh bằng UUID 0x82 = 0x030000000377 trước khi ghi",
+                Ids = { (0x258A, 0x010C, "USB có dây") },
+            },
+            new KeyboardModel
+            {
+                Name = "YUNZII C98 Cake Meow (ANSI)", Layout = "98% · 101 phím",
+                ProtocolStatus = "Driver Pack 1 (kb_by_v2) — chưa kiểm chứng phần cứng", StatusKind = 1,
+                HasScreen = false, HasKnob = true, Family = "kb_by_v2",
+                IdNote = "Định danh bằng UUID 0x82 = 0x0300000003FA trước khi ghi (trùng VID:PID với C75)",
+                Ids = { (0x258A, 0x010C, "USB có dây") },
+            },
+            new KeyboardModel
+            {
+                Name = "YUNZII C98 Cake Meow ISO-DE", Layout = "98% · 102 phím",
+                ProtocolStatus = "Driver Pack 1 (kb_by_v2) — chưa kiểm chứng phần cứng", StatusKind = 1,
+                HasScreen = false, HasKnob = true, Family = "kb_by_v2",
+                IdNote = "Định danh bằng UUID 0x82 = 0x030000000538 trước khi ghi",
+                Ids = { (0x258A, 0x02DE, "USB có dây") },
+            },
+            new KeyboardModel
+            {
+                Name = "YUNZII C98 Cake Meow ISO-FR", Layout = "98% · 102 phím",
+                ProtocolStatus = "Driver Pack 1 (kb_by_v2) — chưa kiểm chứng phần cứng", StatusKind = 1,
+                HasScreen = false, HasKnob = true, Family = "kb_by_v2",
+                IdNote = "Định danh bằng UUID 0x82 = 0x030000000539 trước khi ghi",
+                Ids = { (0x258A, 0x02DF, "USB có dây") },
             },
             new KeyboardModel
             {
@@ -124,8 +168,10 @@ namespace TienKeyboardStudio3
             new KeyboardModel
             {
                 Name = "GravaStar Mercury K1", Layout = "75% · 79 phím",
-                ProtocolStatus = "Giao thức kín — để sau", StatusKind = 2,
-                HasScreen = false, HasKnob = true,
+                ProtocolStatus = "Driver Pack 1 (kb_by_v2) — chưa kiểm chứng phần cứng", StatusKind = 1,
+                HasScreen = false, HasKnob = true, Family = "kb_by_v2",
+                IdNote = "Định danh bằng chữ ký 0x82 [3,0,0,0,1,180] trước khi ghi (PID 0294 hoặc 010C)",
+                Ids = { (0x258A, 0x0294, "USB có dây"), (0x258A, 0x010C, "USB có dây") },
             },
             new KeyboardModel
             {
