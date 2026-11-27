@@ -119,6 +119,9 @@ Chi tiết: xem file [`LICENSE`](LICENSE). Các thư viện, font và nghiên c�
 
 ## Mã băm các bản phát hành chính thức (SHA-256)
 
+- v3.9.2 Light: `9186a2684e839460e61ee0966d352dfb861840e1eeae64aaaf4ddb6d44ba1778`
+- v3.9.2 Compressed: `384951ce944f384adf359caa00ac9a8614c13eade8e1d9da2f99cc41bc037330`
+
 - v3.9.1 Light: `bffb25e9caf22c7b315b745cf78a9ed7e1a5bca0ff167985a43837feb5a8f20f`
 - v3.9.1 Compressed: `232c9c7c3df4c14fdb33e3a1a4082559d96194afbdd8f80a4aa3e570a0c24337`
 

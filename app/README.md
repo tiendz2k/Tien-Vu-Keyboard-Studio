@@ -76,6 +76,7 @@ Tuy vậy: **chưa ai kiểm chứng các lệnh này trên F75 Max thật.** V�
 
 ## Tín nhiệm / nguồn giao thức
 
+- Giao thức F75 Max đã kiểm chứng (04 13 / 04 28 / kênh màn hình 0xFF68 / khối 04 17): đối chiếu từ hai driver mã nguồn mở độc lập của mohin7 (AULA Studio) và VitalyArt (Aula-F75-Max-Driver).
 - Giao thức per-key/stream/nhạc (lớp thử nghiệm): Gavin Graham — dự án AULA L99 (MIT).
 - Hiệu ứng ở Thư viện Online: thư viện hiệu ứng cộng đồng.
 - Font Be Vietnam Pro: SIL Open Font License 1.1.
