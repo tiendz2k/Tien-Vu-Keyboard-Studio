@@ -59,7 +59,7 @@
                               FontSize="11.5" Foreground="#E7EAF2" />
               </StackPanel>
             </Border>
-            <TextBlock Text="Tien Vu Keyboard Studio · v3.9.2" FontSize="10.5" Foreground="#6F6C84"
+            <TextBlock Text="Tien Vu Keyboard Studio · v3.10.0" FontSize="10.5" Foreground="#6F6C84"
                        HorizontalAlignment="Center" />
           </StackPanel>
 

@@ -176,6 +176,9 @@ namespace TienKeyboardStudio3
         private readonly LibrarySettings _ui = GifLibraryStore.Load();
         private static readonly Dictionary<string, Bitmap> SkinCache = new Dictionary<string, Bitmap>();
         private GreetingSweep _sweep;
+        private MossSceneControl _mossCtrl;
+        private ParticleMorphControl _particleCtrl;
+        private ReticleControl _reticle;
         private DispatcherTimer _greetingTimer;
         private DispatcherTimer _terminalTimer;
         private string _greetingStyleNow = GreetingStyles.Galaxy;
@@ -310,7 +313,7 @@ namespace TienKeyboardStudio3
             RefreshWriteStates();
             ShowPage("home");
             _ = RunIntegrityCheckAsync();
-            AppendLog("Tien Vu Keyboard Studio v3.9.2 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
+            AppendLog("Tien Vu Keyboard Studio v3.10.0 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
             AppendLog("Lộ trình an toàn lần đầu: Quét thiết bị → thử RGB (dry-run) → tắt Dry-run → RGB thật → Cài đặt 04 17 → Đồng hồ → GIF TFT nhỏ → Đọc thử 0xF5.");
         }
 
@@ -832,7 +835,7 @@ namespace TienKeyboardStudio3
             var root = V(14,
                 Tb("Tổng quan", "h1"),
                 _integrityBanner,
-                Tb("Tien Vu Keyboard Studio v3.9.1 — bản thật: quét thiết bị HID thật, ghi xuống F75 Max qua giao thức đã kiểm chứng; Driver Pack 1 thêm họ Sinowealth kb_by_v2 (định danh 0x82 trước khi ghi); Driver Pack 2 thêm nền tảng RongYuan — Akko/MonsGeek/EPOMAKER (định danh dev_id 0x8F trước khi ghi); Driver Pack 3 thêm họ MCHOSE — stack GLW/CZ + QHW (định danh bằng PID registry + probe đọc trước khi ghi; họ BY dùng chung Pack 1, chỉ xem); Driver Pack 4 thêm các họ SONiX anh em (S75 Pro/Nova75, MAD60, HERO68 HE, WIN60 HE/SE) và nền WitMod (Redragon K617 HE) — định danh bằng probe của từng họ trước khi ghi, chưa kiểm chứng trên phần cứng thật. Driver Pack 5 (v3.9, pack CUỐI) thêm họ DareU (TG/TG-RT + Magnetic Axis, OHID, JM/QF — định danh bằng registry PID từ web driver chính hãng) và các họ AULA Hub còn lại (HFD, SparkLink V1/V2 — định danh bằng VID:PID + usage page). v3.8: bản GỌN — Thư viện Online không còn đóng gói GIF (tải theo nhu cầu từ Google Drive của dự án), thêm GIF từ link TikTok (thử nghiệm), chữ ký tác giả + kiểm tra toàn vẹn bản phát hành. v3.9.1: panel nhật ký thao tác ẩn mặc định cho gọn — bật lại ở Cài đặt → Cài đặt app → “Hiện nhật ký thao tác”. v3.9.2: viết lại đường stream GIF→LED của F75 Max theo cơ chế của ứng dụng tham chiếu trên cùng nền tảng SONiX — bắt tay 0xF5→đọc bỏ 9 khối→0x02 khi mở phiên stream, chờ ACK theo thang poll qua reply toàn-0 (20/40/80/160/200/200/300 ms), header 0x20 bận thì gửi lại tối đa 3 lần rồi bỏ frame (stream không chết), lệnh 0x02 bận thì gửi lại sau 35 ms, pacer 2 ms trước mỗi khối, chọn đúng interface usage page 0xFF13, và sửa lấy mẫu màu GIF→LED (median theo vùng + ngưỡng đen 24 + đúng hệ toạ độ toàn canvas). Vẫn CHƯA kiểm chứng trên F75 Max thật — bản này chính là bản để kiểm chứng. Dry-run bật mặc định để an toàn.", "sub"),
+                Tb("Tien Vu Keyboard Studio v3.10.0 — bản thật: quét thiết bị HID thật, ghi xuống F75 Max qua giao thức đã kiểm chứng; Driver Pack 1 thêm họ Sinowealth kb_by_v2 (định danh 0x82 trước khi ghi); Driver Pack 2 thêm nền tảng RongYuan — Akko/MonsGeek/EPOMAKER (định danh dev_id 0x8F trước khi ghi); Driver Pack 3 thêm họ MCHOSE — stack GLW/CZ + QHW (định danh bằng PID registry + probe đọc trước khi ghi; họ BY dùng chung Pack 1, chỉ xem); Driver Pack 4 thêm các họ SONiX anh em (S75 Pro/Nova75, MAD60, HERO68 HE, WIN60 HE/SE) và nền WitMod (Redragon K617 HE) — định danh bằng probe của từng họ trước khi ghi, chưa kiểm chứng trên phần cứng thật. Driver Pack 5 (v3.9, pack CUỐI) thêm họ DareU (TG/TG-RT + Magnetic Axis, OHID, JM/QF — định danh bằng registry PID từ web driver chính hãng) và các họ AULA Hub còn lại (HFD, SparkLink V1/V2 — định danh bằng VID:PID + usage page). v3.8: bản GỌN — Thư viện Online không còn đóng gói GIF (tải theo nhu cầu từ Google Drive của dự án), thêm GIF từ link TikTok (thử nghiệm), chữ ký tác giả + kiểm tra toàn vẹn bản phát hành. v3.9.1: panel nhật ký thao tác ẩn mặc định cho gọn — bật lại ở Cài đặt → Cài đặt app → “Hiện nhật ký thao tác”. v3.9.2: viết lại đường stream GIF→LED của F75 Max theo cơ chế của ứng dụng tham chiếu trên cùng nền tảng SONiX — bắt tay 0xF5→đọc bỏ 9 khối→0x02 khi mở phiên stream, chờ ACK theo thang poll qua reply toàn-0 (20/40/80/160/200/200/300 ms), header 0x20 bận thì gửi lại tối đa 3 lần rồi bỏ frame (stream không chết), lệnh 0x02 bận thì gửi lại sau 35 ms, pacer 2 ms trước mỗi khối, chọn đúng interface usage page 0xFF13, và sửa lấy mẫu màu GIF→LED (median theo vùng + ngưỡng đen 24 + đúng hệ toạ độ toàn canvas). Vẫn CHƯA kiểm chứng trên F75 Max thật — bản này chính là bản để kiểm chứng. v3.10: Chợ plugin thêm 4 theme màn hình chào — 550C Boot + Thẻ ID (mã QR thật), DeepSeek Harness — Rhine Lab bản đầy đủ 6 hồi, MOSS · Ignition (tái hiện phong cách, vẽ thủ tục), Hạt Bụi TV (3.200 hạt tụ thành logo Mẫu F) — kèm khối ghi công MIT ở cuối trang Chợ plugin. Dry-run bật mặc định để an toàn.", "sub"),
                 connectCard,
                 heroCard,
                 stats,
@@ -4146,11 +4149,12 @@ namespace TienKeyboardStudio3
             };
             var aboutTexts = V(4,
                 Tb("Tien Vu Keyboard Studio", "h2"),
-                Tb("Phiên bản 3.9.1 — bản thật: F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; lớp per-key/stream/nhạc là thử nghiệm có khoá an toàn (xem trang Per-key). Mới: Liquid Glass, hình nền + màu chủ đề, màn hình chào 3 phong cách, Chợ plugin, GameSense CS2 (GSI). v3.4 thêm Driver Pack 1: họ Sinowealth kb_by_v2 (AULA F75, Leobog Hi75, YUNZII Cake, GravaStar K1) — trang riêng, định danh bằng UUID 0x82 trước khi ghi, chưa kiểm chứng trên phần cứng thật. v3.5 thêm Driver Pack 2: nền tảng RongYuan (Akko, MonsGeek, EPOMAKER — 246 mục registry) — trang riêng, định danh bằng dev_id 0x8F trước khi ghi, mục chưa có dev_id đã kiểm chứng chỉ xem, chưa kiểm chứng trên phần cứng thật. v3.6 thêm Driver Pack 3: họ MCHOSE (31 model CZ: stack GLW Hall-effect + stack QHW; 18 model BY dùng chung kb_by_v2, chỉ xem vì chưa có UUID) — trang riêng, định danh bằng VID:PID registry + probe đọc trước khi ghi, checksum GLW là giả thuyết sum-mod-256 chưa kiểm chứng, stack legacy chỉ ghi log gói, chưa kiểm chứng trên phần cứng thật. v3.7 thêm Driver Pack 4: các họ SONiX anh em — S75 Pro/Nova75 (họ B, chung nền F75 Max; probe 0xF5 không phân biệt được với F75 Max nên ghi vẫn khoá sau công tắc thử nghiệm; Nova75 stream chỉ log), MAD60 (họ C, bắt tay fw protocol v9), HERO68 HE (họ D, chữ ký cmd 130 + checksum), WIN60 HE (họ E), WIN60 SE (họ F2, chỉ log — nhà sản xuất tự đánh dấu thử nghiệm) — và nền WitMod (Redragon K617 HE; định danh bằng probe 0x0D + khối support 0x01 sau khi quét bảng filter 36 cặp VID:PID). Cộng thêm tính năng cộng đồng: nút sao chép thông tin thiết bị (dán vào GitHub issue) và cập nhật bảng thiết bị từ repo khi bạn chủ động bấm. Tất cả Pack 4 chưa kiểm chứng trên phần cứng thật. v3.9 thêm Driver Pack 5 (pack cuối): họ DareU — TG/TG-RT (lớp 13 Magnetic Axis đầy đủ cho EK75 RT và các mẫu TG-RT), OHID, JM/QF — định danh bằng registry 187 mục trích từ web driver chính hãng dr.dareu.com (PID lạ → chỉ xem); và các họ AULA Hub còn lại — HFD (gồm TFT NOVA98 240×135 + dongle 2.4G bộ lệnh riêng), SparkLink V1 (KB2, per-key bền, không stream), SparkLink V2 (DirectDrive + GIF stream + dot-matrix BOX 63) — định danh bằng VID:PID + usage page theo registry AULA Hub. Tất cả Pack 5 chưa kiểm chứng trên phần cứng thật; bản cài desktop của DareU chưa từng được kiểm toán (CDN của hãng chặn tải) — giao thức lấy từ bản web chính hãng. v3.9.1: panel nhật ký thao tác/gói tin ẩn mặc định (chỉ là thay đổi hiển thị — nhật ký vẫn ghi ngầm; bật lại ở Cài đặt → Cài đặt app → “Hiện nhật ký thao tác”). v3.9.2: viết lại đường stream GIF→LED của F75 Max theo cơ chế của ứng dụng tham chiếu trên cùng nền tảng SONiX — bắt tay 0xF5→đọc bỏ 9 khối→0x02 khi mở phiên stream, chờ ACK theo thang poll qua reply toàn-0 (20/40/80/160/200/200/300 ms), header 0x20 bận thì gửi lại tối đa 3 lần rồi bỏ frame (stream không chết), lệnh 0x02 bận thì gửi lại sau 35 ms, pacer 2 ms trước mỗi khối, chọn đúng interface usage page 0xFF13, và sửa lấy mẫu màu GIF→LED (median theo vùng + ngưỡng đen 24 + đúng hệ toạ độ toàn canvas). Vẫn CHƯA kiểm chứng trên F75 Max thật — bản này chính là bản để kiểm chứng. Dry-run bật mặc định.", "sub"),
+                Tb("Phiên bản 3.10.0 — bản thật: F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; lớp per-key/stream/nhạc là thử nghiệm có khoá an toàn (xem trang Per-key). Mới: Liquid Glass, hình nền + màu chủ đề, màn hình chào 3 phong cách, Chợ plugin, GameSense CS2 (GSI). v3.4 thêm Driver Pack 1: họ Sinowealth kb_by_v2 (AULA F75, Leobog Hi75, YUNZII Cake, GravaStar K1) — trang riêng, định danh bằng UUID 0x82 trước khi ghi, chưa kiểm chứng trên phần cứng thật. v3.5 thêm Driver Pack 2: nền tảng RongYuan (Akko, MonsGeek, EPOMAKER — 246 mục registry) — trang riêng, định danh bằng dev_id 0x8F trước khi ghi, mục chưa có dev_id đã kiểm chứng chỉ xem, chưa kiểm chứng trên phần cứng thật. v3.6 thêm Driver Pack 3: họ MCHOSE (31 model CZ: stack GLW Hall-effect + stack QHW; 18 model BY dùng chung kb_by_v2, chỉ xem vì chưa có UUID) — trang riêng, định danh bằng VID:PID registry + probe đọc trước khi ghi, checksum GLW là giả thuyết sum-mod-256 chưa kiểm chứng, stack legacy chỉ ghi log gói, chưa kiểm chứng trên phần cứng thật. v3.7 thêm Driver Pack 4: các họ SONiX anh em — S75 Pro/Nova75 (họ B, chung nền F75 Max; probe 0xF5 không phân biệt được với F75 Max nên ghi vẫn khoá sau công tắc thử nghiệm; Nova75 stream chỉ log), MAD60 (họ C, bắt tay fw protocol v9), HERO68 HE (họ D, chữ ký cmd 130 + checksum), WIN60 HE (họ E), WIN60 SE (họ F2, chỉ log — nhà sản xuất tự đánh dấu thử nghiệm) — và nền WitMod (Redragon K617 HE; định danh bằng probe 0x0D + khối support 0x01 sau khi quét bảng filter 36 cặp VID:PID). Cộng thêm tính năng cộng đồng: nút sao chép thông tin thiết bị (dán vào GitHub issue) và cập nhật bảng thiết bị từ repo khi bạn chủ động bấm. Tất cả Pack 4 chưa kiểm chứng trên phần cứng thật. v3.9 thêm Driver Pack 5 (pack cuối): họ DareU — TG/TG-RT (lớp 13 Magnetic Axis đầy đủ cho EK75 RT và các mẫu TG-RT), OHID, JM/QF — định danh bằng registry 187 mục trích từ web driver chính hãng dr.dareu.com (PID lạ → chỉ xem); và các họ AULA Hub còn lại — HFD (gồm TFT NOVA98 240×135 + dongle 2.4G bộ lệnh riêng), SparkLink V1 (KB2, per-key bền, không stream), SparkLink V2 (DirectDrive + GIF stream + dot-matrix BOX 63) — định danh bằng VID:PID + usage page theo registry AULA Hub. Tất cả Pack 5 chưa kiểm chứng trên phần cứng thật; bản cài desktop của DareU chưa từng được kiểm toán (CDN của hãng chặn tải) — giao thức lấy từ bản web chính hãng. v3.9.1: panel nhật ký thao tác/gói tin ẩn mặc định (chỉ là thay đổi hiển thị — nhật ký vẫn ghi ngầm; bật lại ở Cài đặt → Cài đặt app → “Hiện nhật ký thao tác”). v3.9.2: viết lại đường stream GIF→LED của F75 Max theo cơ chế của ứng dụng tham chiếu trên cùng nền tảng SONiX — bắt tay 0xF5→đọc bỏ 9 khối→0x02 khi mở phiên stream, chờ ACK theo thang poll qua reply toàn-0 (20/40/80/160/200/200/300 ms), header 0x20 bận thì gửi lại tối đa 3 lần rồi bỏ frame (stream không chết), lệnh 0x02 bận thì gửi lại sau 35 ms, pacer 2 ms trước mỗi khối, chọn đúng interface usage page 0xFF13, và sửa lấy mẫu màu GIF→LED (median theo vùng + ngưỡng đen 24 + đúng hệ toạ độ toàn canvas). Vẫn CHƯA kiểm chứng trên F75 Max thật — bản này chính là bản để kiểm chứng. v3.10.0: thêm 4 theme màn hình chào vào Chợ plugin — 550C Boot + Thẻ ID (thẻ truy cập cá nhân + mã QR thật), DeepSeek Harness — Rhine Lab bản đầy đủ 6 hồi, MOSS · Ignition (tái hiện phong cách, vẽ thủ tục 100%, không dùng tư liệu phim), Hạt Bụi TV (3.200 hạt tụ thành logo Mẫu F) — ghi công MIT đầy đủ ở cuối trang Chợ plugin và ngay dưới mục này. Dry-run bật mặc định.", "sub"),
                 Tb("v3.8: đổi tên thành Tien Vu Keyboard Studio + logo mới; Thư viện Online chuyển sang tải theo nhu cầu (không đóng gói GIF); thêm GIF từ link TikTok (thử nghiệm); app có chữ ký tác giả + tự kiểm tra toàn vẹn khi mở — bản bị chỉnh sửa sẽ hiện cảnh báo ở Trang chủ.", "sub"),
                 Tb("Phát triển bởi Vũ Minh Tiến — github.com/tiendz2k", "sub"),
                 Tb("Mã nguồn + bản chính thức: github.com/tiendz2k/T-Keyboard-Studio · " + AboutInfo.SignatureLine, "faint"),
-                Tb("Font chữ: Be Vietnam Pro (SIL OFL 1.1). GIF thư viện: tự làm cho Tiến. Giao thức per-key: Gavin Graham (AULA L99).", "faint"));
+                Tb("Font chữ: Be Vietnam Pro (SIL OFL 1.1). GIF thư viện: tự làm cho Tiến. Giao thức per-key: Gavin Graham (AULA L99).", "faint"),
+                Tb("Theme màn hình chào của cộng đồng (MIT, tái hiện bằng Avalonia): Rhine Lab six-act © 6shenhonghong9 (github.com/6shenhonghong9/dsh-startup-screen); 550C Boot © Ziyang Song + intro gốc của Voidpocket (github.com/yannicksong0106/dsh-550c-boot); MOSS · Ignition — tái hiện phong cách, tiết tấu từ QIFANAI (github.com/QIFANAI/dsh-startup-moss2), vẽ thủ tục 100%, không dùng tư liệu phim; Hạt Bụi TV — ý tưởng hạt biến hình từ INJU Particle Boot © inju0524 (github.com/inju0524/dsh-inju-boot). Chi tiết ghi công ở cuối trang Chợ plugin.", "faint"));
             var aboutCard = Card(H(14, logoWrap, aboutTexts));
 
             var root = V(14,
@@ -4594,7 +4598,7 @@ namespace TienKeyboardStudio3
         private List<string> EnabledBootPluginIds()
         {
             var ids = new List<string>();
-            foreach (var id in new[] { GreetingStyles.PluginGalaxy, GreetingStyles.PluginDeepSeek, GreetingStyles.Plugin550C })
+            foreach (var id in new[] { GreetingStyles.PluginGalaxy, GreetingStyles.PluginDeepSeek, GreetingStyles.Plugin550C, GreetingStyles.PluginMoss, GreetingStyles.PluginParticles })
                 if (GetPluginState(id).Enabled) ids.Add(id);
             return ids;
         }
@@ -4606,8 +4610,10 @@ namespace TienKeyboardStudio3
         {
             if (_greetingStyleText == null) return;
             string style = ResolveCurrentGreetingStyle();
-            string name = style == GreetingStyles.Terminal ? "DeepSeek Harness (terminal)"
-                        : style == GreetingStyles.Amber550 ? "550C Boot (CRT hổ phách)"
+            string name = style == GreetingStyles.Terminal ? "DeepSeek Harness — Rhine Lab (bản đầy đủ)"
+                        : style == GreetingStyles.Amber550 ? "550C Boot + Thẻ ID (CRT hổ phách)"
+                        : style == GreetingStyles.Moss ? "MOSS · Ignition"
+                        : style == GreetingStyles.Particles ? "Hạt Bụi TV"
                         : style == GreetingStyles.Galaxy ? "Tien Galaxy Boot (vệt sáng)"
                         : "Không hiệu ứng (chỉ logo)";
             _greetingStyleText.Text = "Phong cách đang dùng: " + name + " — đổi tại trang Chợ plugin (bật plugin khởi động bạn muốn).";
@@ -4624,7 +4630,9 @@ namespace TienKeyboardStudio3
             GreetingOverlay.Opacity = 1;
             GreetingStatus.Text = "Đang nạp giao diện…";
             _greetingTimer?.Stop();
-            _greetingTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(style == GreetingStyles.Terminal ? 2600 : 2000) };
+            // v3.10: thoi luong theo dung trinh tu cua tung theme
+            // (GreetingSequence la nguon su that duy nhat cho cac hoi).
+            _greetingTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(GreetingSequence.For(style).TotalMs) };
             _greetingTimer.Tick += (s, e) =>
             {
                 _greetingTimer.Stop();
@@ -4634,68 +4642,29 @@ namespace TienKeyboardStudio3
             _greetingTimer.Start();
         }
 
-        private void BuildGreetingBody(string style)
+        private void StopGreetingAnims()
         {
             _terminalTimer?.Stop();
             _sweep?.Stop();
-            GreetingBodyHost.Children.Clear();
+            _mossCtrl?.Stop();
+            _particleCtrl?.Stop();
+            _reticle?.Stop();
+        }
 
-            if (style == GreetingStyles.Terminal)
-            {
-                GreetingSub.Text = "DeepSeek Harness — màn chào kiểu terminal";
-                var st = GetPluginState(GreetingStyles.PluginDeepSeek);
-                string name = st.GetCfg("name", "T OPERATOR");
-                string code = st.GetCfg("code", "TKB-001");
-                var lines = new[]
-                {
-                    "T KEYBOARD // DEEPSEEK HARNESS v1.2.0",
-                    "[ok] nap module rgb ............ OK",
-                    "[ok] nap module tft + widget ... OK",
-                    "[ok] quet thiet bi HID ......... OK",
-                    $"[ok] identity: {name} · {code}",
-                    "READY _",
-                };
-                var text = new TextBlock
-                {
-                    FontFamily = new FontFamily("Consolas, 'Courier New', monospace"),
-                    FontSize = 12.5,
-                    Foreground = new SolidColorBrush(Color.FromRgb(0x4A, 0xDE, 0x80)),
-                    LineHeight = 18,
-                };
-                var panel = new Border
-                {
-                    Background = new SolidColorBrush(Color.FromRgb(0x05, 0x08, 0x07)),
-                    BorderBrush = new SolidColorBrush(Color.FromArgb(0x40, 0x4A, 0xDE, 0x80)),
-                    BorderThickness = new Thickness(1),
-                    CornerRadius = new CornerRadius(10),
-                    Padding = new Thickness(14, 10),
-                    Child = text,
-                };
-                GreetingBodyHost.Children.Add(panel);
-                int shown = 0;
-                _terminalTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(240) };
-                _terminalTimer.Tick += (s, e) =>
-                {
-                    if (shown >= lines.Length) { _terminalTimer.Stop(); return; }
-                    text.Text = string.Join("\n", lines.Take(shown + 1));
-                    shown++;
-                };
-                _terminalTimer.Start();
-            }
-            else if (style == GreetingStyles.Amber550)
-            {
-                GreetingSub.Text = "550C Boot — đồng hồ CRT hổ phách";
-                _sweep = new GreetingSweep { AmberMode = true, Height = 30, VerticalAlignment = VerticalAlignment.Center };
-                var stack = new StackPanel { Spacing = 8, VerticalAlignment = VerticalAlignment.Center };
-                stack.Children.Add(_sweep);
-                var lbl = Tb("5 5 0 C", null, 12);
-                lbl.Foreground = new SolidColorBrush(Color.FromRgb(0xFF, 0xB0, 0x20));
-                lbl.HorizontalAlignment = HorizontalAlignment.Center;
-                lbl.FontFamily = new FontFamily("Consolas, 'Courier New', monospace");
-                stack.Children.Add(lbl);
-                GreetingBodyHost.Children.Add(stack);
-                _sweep.Play();
-            }
+        private void BuildGreetingBody(string style)
+        {
+            StopGreetingAnims();
+            GreetingBodyHost.Children.Clear();
+            // v3.10: cac theme giau (Rhine day du / 550C+The ID / MOSS / Hat
+            // Bui) can san khau cao 302px; theme cu giu 118px nhu truoc.
+            bool rich = style == GreetingStyles.Terminal || style == GreetingStyles.Amber550
+                     || style == GreetingStyles.Moss || style == GreetingStyles.Particles;
+            GreetingBodyHost.Height = rich ? 302 : 118;
+
+            if (style == GreetingStyles.Terminal) BuildRhineGreeting();
+            else if (style == GreetingStyles.Amber550) Build550CGreeting();
+            else if (style == GreetingStyles.Moss) BuildMossGreeting();
+            else if (style == GreetingStyles.Particles) BuildParticlesGreeting();
             else if (style == GreetingStyles.Galaxy)
             {
                 GreetingSub.Text = "Chào mừng bạn trở lại";
@@ -4713,12 +4682,297 @@ namespace TienKeyboardStudio3
             }
         }
 
+        // ----- v3.10: DeepSeek Harness — Rhine Lab, BAN DAY DU 6 hoi -----
+        // Cau truc 6 hoi cua ban goc (MIT, 6shenhonghong9/dsh-startup-screen)
+        // tai hien bang Avalonia: bien den tieu de -> trang xoa -> ho so
+        // tong am -> cap quyen 5 buoc -> lo dien sac do -> san sang.
+        // Toan bo chu/thuong hieu fan-work da thay bang noi dung cua app.
+        private void BuildRhineGreeting()
+        {
+            GreetingSub.Text = "DeepSeek Harness — Rhine Lab · cấp quyền 6 hồi";
+            var st = GetPluginState(GreetingStyles.PluginDeepSeek);
+            string name = st.GetCfg("name", "T OPERATOR");
+            string code = st.GetCfg("code", "TKB-001");
+            var mono = new FontFamily("Consolas, 'Courier New', monospace");
+            var warm = Color.FromRgb(0xE8, 0xB4, 0x6A);
+
+            var actLabel = new TextBlock
+            {
+                FontFamily = mono, FontSize = 11, LetterSpacing = 2,
+                Foreground = new SolidColorBrush(warm), Text = "ACT I — TITLE SLATE",
+            };
+            // Tieu de 3 lop cho hoi lo dien sac do (do / trang / cyan lech nhau)
+            var titleGrid = new Grid { HorizontalAlignment = HorizontalAlignment.Left };
+            TextBlock TitleLayer(Color c, double dx) => new TextBlock
+            {
+                Text = "RHINE LAB // LIFE SCIENCES", FontFamily = mono, FontSize = 16.5,
+                FontWeight = FontWeight.Bold, Foreground = new SolidColorBrush(c),
+                Margin = new Thickness(dx, 0, 0, 0),
+            };
+            var layerR = TitleLayer(Color.FromRgb(0xFF, 0x4D, 0x4D), -1.6);
+            var layerC = TitleLayer(Color.FromRgb(0x4D, 0xE8, 0xFF), 1.6);
+            var layerW = TitleLayer(Color.FromRgb(0xF4, 0xF4, 0xF8), 0);
+            layerR.Opacity = 0; layerC.Opacity = 0;
+            titleGrid.Children.Add(layerR); titleGrid.Children.Add(layerC); titleGrid.Children.Add(layerW);
+
+            _reticle = new ReticleControl { Width = 62, Height = 62, RingColor = warm };
+            var dossier = new Border
+            {
+                Background = new SolidColorBrush(Color.FromRgb(0x1A, 0x13, 0x0A)),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(0x59, 0xE8, 0xB4, 0x6A)),
+                BorderThickness = new Thickness(1), CornerRadius = new CornerRadius(10),
+                Padding = new Thickness(12, 9), Opacity = 0,
+                Child = V(3,
+                    Tb("HỒ SƠ NHÂN SỰ — RHINE LAB", null, 10.5),
+                    Tb(name + " · " + code, null, 13),
+                    Tb("Chức danh: OPERATOR · Cấp quyền: LEVEL 5", "faint", 11)),
+            };
+            ((TextBlock)((StackPanel)dossier.Child).Children[0]).Foreground = new SolidColorBrush(warm);
+            ((TextBlock)((StackPanel)dossier.Child).Children[0]).FontFamily = mono;
+            ((TextBlock)((StackPanel)dossier.Child).Children[1]).FontWeight = FontWeight.Bold;
+            var dossierRow = H(12, _reticle, dossier);
+            dossierRow.VerticalAlignment = VerticalAlignment.Center;
+
+            var checkText = new TextBlock
+            {
+                FontFamily = mono, FontSize = 12, LineHeight = 18, Height = 92,
+                Foreground = new SolidColorBrush(Color.FromRgb(0xB8, 0xE6, 0xA0)),
+            };
+            var barInner = new Border
+            {
+                Background = UiBrushes.AccentGradient(), CornerRadius = new CornerRadius(3),
+                Height = 6, Width = 0, HorizontalAlignment = HorizontalAlignment.Left,
+            };
+            var barOuter = new Border
+            {
+                Background = new SolidColorBrush(Color.FromArgb(0x22, 0xFF, 0xFF, 0xFF)),
+                CornerRadius = new CornerRadius(3), Height = 6, Child = barInner,
+            };
+            var flash = new Border { Background = Brushes.White, Opacity = 0, IsHitTestVisible = false };
+
+            var stack = new StackPanel { Spacing = 9 };
+            stack.Children.Add(actLabel);
+            stack.Children.Add(titleGrid);
+            stack.Children.Add(dossierRow);
+            stack.Children.Add(checkText);
+            stack.Children.Add(barOuter);
+            var grid = new Grid();
+            grid.Children.Add(stack);
+            grid.Children.Add(flash);
+            GreetingBodyHost.Children.Add(grid);
+
+            var checks = new[]
+            {
+                "[1/5] xác thực danh tính ........ OK",
+                "[2/5] đồng bộ hồ sơ thiết bị .... OK",
+                "[3/5] nạp module RGB + TFT ...... OK",
+                "[4/5] kiểm tra kênh HID ......... OK",
+                "[5/5] cấp quyền OPERATOR ........ OK",
+            };
+            var acts = new[]
+            {
+                "ACT I — TITLE SLATE", "ACT II — WHITEOUT", "ACT III — DOSSIER",
+                "ACT IV — AUTHORIZATION", "ACT V — CHROMATIC REVEAL", "ACT VI — READY",
+            };
+            int step = 0;
+            const int totalSteps = 10;
+            _terminalTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(300) };
+            _terminalTimer.Tick += (s, e) =>
+            {
+                step++;
+                barInner.Width = 500.0 * Math.Min(1, (double)step / totalSteps);
+                if (step == 1) { actLabel.Text = acts[1]; flash.Opacity = 0.92; }
+                else if (step == 2) { actLabel.Text = acts[2]; flash.Opacity = 0; dossier.Opacity = 1; _reticle.Play(); }
+                else if (step >= 3 && step <= 7)
+                {
+                    actLabel.Text = acts[3];
+                    checkText.Text = string.Join("\n", checks.Take(step - 2));
+                }
+                else if (step == 8) { actLabel.Text = acts[4]; layerR.Opacity = 0.85; layerC.Opacity = 0.85; }
+                else if (step == 9) { actLabel.Text = acts[5]; layerR.Opacity = 0; layerC.Opacity = 0; }
+                else if (step >= 10)
+                {
+                    checkText.Text = string.Join("\n", checks) + $"\nACCESS GRANTED — WELCOME, {name}";
+                    _terminalTimer.Stop();
+                }
+            };
+            _terminalTimer.Start();
+        }
+
+        // ----- v3.10: 550C Boot + The ID -----
+        // Boot terminal phoshor ho phach (co scanline) -> dang nhap UEG ->
+        // THE ID ca nhan: ten + ma + serial suy ra tu dinh danh + ma QR THAT
+        // (QRCoder) chua noi dung nguoi dung nhap. Ban goc MIT cua Ziyang
+        // Song (intro 550C goc: Voidpocket) — tai hien bang Avalonia.
+        private void Build550CGreeting()
+        {
+            GreetingSub.Text = "550C Boot + Thẻ ID — terminal hổ phách & thẻ truy cập cá nhân";
+            var st = GetPluginState(GreetingStyles.Plugin550C);
+            string name = st.GetCfg("name", "T OPERATOR");
+            string code = st.GetCfg("code", "TKB-001");
+            string serial = IdCardSerial.Build(name, code);
+            var mono = new FontFamily("Consolas, 'Courier New', monospace");
+            var amber = Color.FromRgb(0xFF, 0xB0, 0x20);
+
+            var termText = new TextBlock
+            {
+                FontFamily = mono, FontSize = 12.5, LineHeight = 19,
+                Foreground = new SolidColorBrush(amber),
+            };
+            var termInner = new Grid();
+            termInner.Children.Add(termText);
+            termInner.Children.Add(new ScanlineOverlay());
+            var termPanel = new Border
+            {
+                Background = new SolidColorBrush(Color.FromRgb(0x0D, 0x08, 0x02)),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(0x59, 0xFF, 0xB0, 0x20)),
+                BorderThickness = new Thickness(1), CornerRadius = new CornerRadius(10),
+                Padding = new Thickness(14, 11), Child = termInner, Height = 218,
+            };
+
+            // --- The ID ---
+            Bitmap qrBmp = null;
+            try
+            {
+                var gen = new QRCodeGenerator();
+                var data = gen.CreateQrCode(QrPayloadBuilder.Build(name, code, st.GetCfg("qrtext", "")), QRCodeGenerator.ECCLevel.M);
+                var png = new PngByteQRCode(data).GetGraphic(8);
+                qrBmp = new Bitmap(new System.IO.MemoryStream(png));
+            }
+            catch { qrBmp = null; }
+            var avatar = new Border
+            {
+                Width = 58, Height = 58, CornerRadius = new CornerRadius(10),
+                Background = UiBrushes.AccentGradient(),
+                Child = new TextBlock
+                {
+                    Text = (name.Length > 0 ? name.Substring(0, 1) : "T").ToUpperInvariant(),
+                    FontSize = 24, FontWeight = FontWeight.Bold, Foreground = Brushes.White,
+                    HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center,
+                },
+            };
+            var idTexts = V(3,
+                Tb(name, null, 16),
+                Tb("Mã: " + code + " · Serial: " + serial, "sub", 11.5),
+                Tb("Cấp quyền: OPERATOR · Đơn vị: TIEN VU LAB", "faint", 11));
+            ((TextBlock)((StackPanel)idTexts).Children[0]).FontWeight = FontWeight.Bold;
+            var qrBox = new Border
+            {
+                Background = Brushes.White, CornerRadius = new CornerRadius(8),
+                Padding = new Thickness(5), Width = 118, Height = 118,
+                Child = qrBmp != null
+                    ? (Control)new Avalonia.Controls.Image { Source = qrBmp, Width = 108, Height = 108 }
+                    : new QrMock { Width = 108, Height = 108 },
+            };
+            var granted = Tb("ACCESS GRANTED", null, 12.5);
+            granted.Foreground = new SolidColorBrush(Color.FromRgb(0x4A, 0xDE, 0x80));
+            granted.FontFamily = mono; granted.FontWeight = FontWeight.Bold;
+            var idCard = new Border
+            {
+                Background = new SolidColorBrush(Color.FromRgb(0x10, 0x14, 0x20)),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(0x59, 0x67, 0xE8, 0xF9)),
+                BorderThickness = new Thickness(1), CornerRadius = new CornerRadius(14),
+                Padding = new Thickness(16, 13), IsVisible = false,
+                Child = V(9,
+                    H(8, Tb("TV ACCESS CARD", null, 13), Tb("· TIEN VU KEYBOARD STUDIO", "faint", 11)),
+                    H(14, avatar, idTexts, qrBox),
+                    H(8, granted, Tb("Quét mã QR để xem nội dung thẻ", "faint", 10.5))),
+            };
+            ((TextBlock)((StackPanel)((StackPanel)idCard.Child).Children[0]).Children[0]).FontWeight = FontWeight.Bold;
+
+            var host = new Grid();
+            host.Children.Add(termPanel);
+            host.Children.Add(idCard);
+            GreetingBodyHost.Children.Add(host);
+
+            var lines = new[]
+            {
+                "550C PERSONAL TERMINAL — PHOSPHOR BIOS v2.7",
+                "MEM CHECK ............ 640K OK",
+                "CRT TUBE ............. AMBER · WARM-UP OK",
+                "KEYBOARD LINK ........ HID 0C45:800A OK",
+                $"OPERATOR ............. {name} · {code}",
+                "LOADING UEG LOGIN ...",
+            };
+            int step = 0;
+            _terminalTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(250) };
+            _terminalTimer.Tick += (s, e) =>
+            {
+                step++;
+                if (step <= lines.Length)
+                    termText.Text = string.Join("\n", lines.Take(step)) + (step < lines.Length ? "\n_" : "");
+                else if (step == lines.Length + 2)
+                {
+                    termText.Text = string.Join("\n", lines) + "\nUEG LOGIN: VERIFYING ... OK";
+                }
+                else if (step == lines.Length + 4)
+                {
+                    termPanel.IsVisible = false;
+                    idCard.IsVisible = true;
+                    _terminalTimer.Stop();
+                }
+            };
+            _terminalTimer.Start();
+        }
+
+        // ----- v3.10: MOSS · Ignition (tai hien phong cach, ve thu tuc) -----
+        private void BuildMossGreeting()
+        {
+            GreetingSub.Text = "MOSS · Ignition — tái hiện phong cách, vẽ thủ tục 100%";
+            var st = GetPluginState(GreetingStyles.PluginMoss);
+            _mossCtrl = new MossSceneControl { PilotName = st.GetCfg("name", "T OPERATOR"), Height = 302 };
+            var wrap = new Border
+            {
+                CornerRadius = new CornerRadius(12), ClipToBounds = true,
+                BorderBrush = new SolidColorBrush(Color.FromArgb(0x40, 0xFF, 0x3B, 0x30)),
+                BorderThickness = new Thickness(1), Child = _mossCtrl,
+            };
+            GreetingBodyHost.Children.Add(wrap);
+            _mossCtrl.Play();
+        }
+
+        // ----- v3.10: Hat Bui TV (hat tu thanh logo Mau F) -----
+        private static List<LogoParticleSampler.TargetPoint> _logoTargetsCache;
+
+        private static List<LogoParticleSampler.TargetPoint> LogoTargets()
+        {
+            if (_logoTargetsCache != null) return _logoTargetsCache;
+            _logoTargetsCache = new List<LogoParticleSampler.TargetPoint>();
+            try
+            {
+                using (var s = AssetLoader.Open(GifTools.Asset("Assets/logo.png")))
+                using (var img = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(s))
+                {
+                    img.Mutate(m => m.Resize(240, 240));
+                    var rgba = new byte[240 * 240 * 4];
+                    img.CopyPixelDataTo(rgba);
+                    _logoTargetsCache = LogoParticleSampler.Sample(rgba, 240, 240, ParticleMorphControl.ParticleCount, 20261127);
+                }
+            }
+            catch { /* loi doc logo: control tu dung dich vong xoan du phong */ }
+            return _logoTargetsCache;
+        }
+
+        private void BuildParticlesGreeting()
+        {
+            GreetingSub.Text = $"Hạt Bụi TV — {ParticleMorphControl.ParticleCount:N0} hạt tụ thành logo Mẫu F";
+            _particleCtrl = new ParticleMorphControl { Height = 302 };
+            _particleCtrl.SetTargets(LogoTargets());
+            var wrap = new Border
+            {
+                CornerRadius = new CornerRadius(12), ClipToBounds = true,
+                BorderBrush = new SolidColorBrush(Color.FromArgb(0x40, 0x7C, 0x3A, 0xED)),
+                BorderThickness = new Thickness(1), Child = _particleCtrl,
+            };
+            GreetingBodyHost.Children.Add(wrap);
+            _particleCtrl.Play();
+        }
+
         public void DismissGreeting()
         {
             if (!GreetingOverlay.IsVisible) return;
             _greetingTimer?.Stop();
-            _terminalTimer?.Stop();
-            _sweep?.Stop();
+            StopGreetingAnims();
             GreetingOverlay.Opacity = 0;
             var t = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(230) };
             t.Tick += (s, e) => { t.Stop(); GreetingOverlay.IsVisible = false; };
@@ -4989,6 +5243,7 @@ namespace TienKeyboardStudio3
         private sealed class PluginItem
         {
             public string Id, Name, Author, Cat, CatLabel, Desc, Detail, Meta, Thumb;
+            public string Attribution; // v3.10: dong ghi cong ben thu ba (modal chi tiet)
             public bool BuiltIn;
             public bool Idea; // true = "Y tuong/dang phat trien": nhan ro, khoa bat
         }
@@ -5011,18 +5266,38 @@ namespace TienKeyboardStudio3
             new PluginItem
             {
                 Id = "deepseek-harness",
-                Name = "DeepSeek Harness Boot", Author = "Cộng đồng GitHub", Cat = "boot", CatLabel = "Hiệu ứng khởi động",
-                Desc = "Màn hình chào kiểu terminal “AI harness”: chuỗi bước xác nhận nạp module, có đọc bằng giọng nói.",
-                Detail = "Mỗi lần khởi động, app chạy chuỗi xác nhận từng bước (nạp module → kiểm tra thiết bị → sẵn sàng) trên màn hình chào kiểu terminal. Tên và mã định danh của bạn hiển thị thật trong chuỗi khởi động. Tuỳ chọn đọc bằng giọng nói đang được phát triển — cấu hình được lưu sẵn, giọng đọc sẽ có ở bản sau.",
-                Meta = "Phiên bản 1.2.0 · Có sẵn trong app · Miễn phí", Thumb = "thumb-ds-harness.png",
+                Name = "DeepSeek Harness — Rhine Lab (bản đầy đủ)", Author = "6shenhonghong9", Cat = "boot", CatLabel = "Hiệu ứng khởi động",
+                Desc = "Màn chào cấp quyền 6 hồi kiểu hồ sơ khoa học: biển tiêu đề → trắng xoá → hồ sơ → cấp quyền 5 bước → lộ diện sắc độ.",
+                Detail = "Bản ĐẦY ĐỦ (v3.10) của màn chào terminal: 6 hồi như bản gốc cộng đồng — biển đen tiêu đề, flash trắng, thẻ hồ sơ tông ấm có vòng reticle xoay, checklist cấp quyền 5 bước tích lần lượt, kết thúc bằng lộ diện sắc độ và ACCESS GRANTED với tên/mã định danh của bạn. Cấu trúc 6 hồi được tái hiện bằng Avalonia theo bản gốc MIT; toàn bộ chữ/thương hiệu fan-work đã thay bằng nội dung của app. Tuỳ chọn đọc bằng giọng nói đang được phát triển — cấu hình được lưu sẵn.",
+                Meta = "Phiên bản 2.0.0 · Có sẵn trong app · Miễn phí · MIT", Thumb = "thumb-ds-harness.png",
+                Attribution = GreetingThemeRegistry.Find("deepseek-harness")?.Attribution,
             },
             new PluginItem
             {
                 Id = "550c-boot",
-                Name = "550C Boot", Author = "Cộng đồng GitHub", Cat = "boot", CatLabel = "Hiệu ứng khởi động",
-                Desc = "Màn hình chào giả lập 550C: đồng hồ CRT màu hổ phách, kim quét một vòng rồi hiện logo.",
-                Detail = "Bản cổng cộng đồng của hiệu ứng boot 550C: nền CRT hổ phách, vệt quét chạy ngang kèm phát sáng, kết thúc bằng logo app. Thời lượng ~2 giây, bỏ qua được bằng Esc.",
-                Meta = "Phiên bản 1.0.3 · Có sẵn trong app · Miễn phí", Thumb = "thumb-550c.png",
+                Name = "550C Boot + Thẻ ID", Author = "yannicksong0106 (Ziyang Song)", Cat = "boot", CatLabel = "Hiệu ứng khởi động",
+                Desc = "Boot terminal phosphor hổ phách kiểu 550C, đăng nhập UEG, rồi in THẺ ID cá nhân có mã QR thật của bạn.",
+                Detail = "Bản nâng cấp đầy đủ (v3.10): terminal CRT hổ phách có scanline chạy chuỗi boot (kiểm tra bộ nhớ → ống CRT → liên kết bàn phím → định danh), chuyển sang đăng nhập UEG và hiện THẺ TRUY CẬP cá nhân: tên, mã, serial suy ra từ định danh của bạn và mã QR THẬT chứa nội dung bạn tự nhập ở phần cấu hình (để trống thì QR chứa tên + mã định danh). Bỏ qua được bằng click/Esc như mọi màn chào.",
+                Meta = "Phiên bản 2.0.0 · Có sẵn trong app · Miễn phí · MIT", Thumb = "thumb-550c.png",
+                Attribution = GreetingThemeRegistry.Find("550c-boot")?.Attribution,
+            },
+            new PluginItem
+            {
+                Id = "moss-ignition",
+                Name = "MOSS · Ignition", Author = "Tái hiện phong cách — QIFANAI", Cat = "boot", CatLabel = "Hiệu ứng khởi động",
+                Desc = "Màn chào điện ảnh 4 hồi: liên kết thần kinh → mắt đỏ khoá mục tiêu → tách đôi → hành tinh bốc cháy.",
+                Detail = "Bản TÁI HIỆN PHONG CÁCH (v3.10), vẽ thủ tục 100% bằng Avalonia — không dùng bất kỳ video/hình ảnh nào của bản gốc: lưới điểm + vòng quét đồng bộ thần kinh, mắt đỏ pulse khoá tâm ngắm, màn hình tách đôi, rồi hành tinh vẽ gradient với vòng quỹ đạo và 420 hạt lửa bốc lên, kết bằng tên app. Tiết tấu học từ theme MOSS 550W của cộng đồng DSH (MIT).",
+                Meta = "Phiên bản 1.0.0 · Có sẵn trong app · Miễn phí", Thumb = "thumb-moss-ignition.png",
+                Attribution = GreetingThemeRegistry.Find("moss-ignition")?.Attribution,
+            },
+            new PluginItem
+            {
+                Id = "hat-bui-tv",
+                Name = "Hạt Bụi TV", Author = "Ý tưởng: inju0524 (INJU Particle Boot)", Cat = "boot", CatLabel = "Hiệu ứng khởi động",
+                Desc = "3.200 hạt bụi xoay xoắn ốc rồi TỤ THÀNH đúng logo Mẫu F của app, mang màu chrome ngũ sắc của logo.",
+                Detail = "Theme “của nhà trồng được” (v3.10): một trường 3.200 hạt vẽ bằng DrawingContext xoay theo xoắn ốc phyllotaxis, sau đó biến hình (morph) về các điểm đích lấy mẫu trực tiếp từ ảnh logo Mẫu F — hạt mang đúng màu của logo — rồi lắng xuống và lộ tên app. Ý tưởng hạt biến hình từ INJU Particle Boot (MIT); hình ảnh sinh 100% bằng code, không vay mượn asset của ai.",
+                Meta = "Phiên bản 1.0.0 · Có sẵn trong app · Miễn phí · MIT", Thumb = "thumb-hat-bui.png",
+                Attribution = GreetingThemeRegistry.Find("hat-bui-tv")?.Attribution,
             },
             new PluginItem
             {
@@ -5044,7 +5319,7 @@ namespace TienKeyboardStudio3
             {
                 Id = "tien-galaxy-boot",
                 Name = "Tien Galaxy Boot", Author = "T Keyboard Team", Cat = "boot", CatLabel = "Hiệu ứng khởi động",
-                Desc = "Màn hình chào riêng của T Keyboard: vệt sáng cầu vồng quét qua hàng phím + logo Mẫu C.",
+                Desc = "Màn hình chào riêng của Tien Vu: vệt sáng cầu vồng quét qua hàng phím + logo Mẫu F.",
                 Detail = "Đây là màn hình chào mặc định của app — vệt sáng quét ngang hàng phím trong ~2 giây, bấm hoặc nhấn Esc để bỏ qua. Xem lại bất cứ lúc nào ở Cài đặt → Giao diện.",
                 Meta = "Phiên bản 1.0.0 · Có sẵn trong app · Miễn phí", Thumb = "thumb-tien-galaxy.png", BuiltIn = true,
             },
@@ -5160,12 +5435,21 @@ namespace TienKeyboardStudio3
                 filterRow.Children.Add(b);
             }
 
+            // v3.10: khoi ghi cong ben thu ba (MIT) — nghia vu phap ly toi
+            // thieu khi phan phoi ban tai hien/dan xuat tu code cong dong.
+            var creditTexts = new List<Control> { Tb("Ghi công / Credits — theme cộng đồng (MIT)", "h3") };
+            foreach (var line in GreetingThemeRegistry.CreditLines())
+                creditTexts.Add(Tb("• " + line, "faint"));
+            creditTexts.Add(Tb("Mọi theme đều được viết lại bằng Avalonia trong app này; app không tải hay chạy mã của bên thứ ba.", "faint"));
+            var creditsCard = CardFlat(V(6, creditTexts.ToArray()));
+
             var root = V(14,
                 Tb("Chợ plugin", "h1"),
                 Tb("Kho cộng đồng: hiệu ứng khởi động, công cụ hình nền và gói hiệu ứng đèn — bấm vào một thẻ để mở panel chi tiết: bật/tắt, cấu hình và xem trước.", "sub"),
                 filterRow,
                 wrap,
-                CardFlat(Tb("Cơ chế thật của trang này: 3 plugin khởi động là tính năng THẬT của app — plugin đang bật sẽ quyết định màn hình chào mỗi lần mở app, cấu hình lưu trong settings.json. Hai mục gắn nhãn “Ý tưởng · đang phát triển” chỉ là ý tưởng đang làm — chưa bật được, không có chức năng ẩn và app không tải/cài bất cứ thứ gì từ mạng.", "faint")));
+                CardFlat(Tb("Cơ chế thật của trang này: các plugin khởi động là tính năng THẬT của app — plugin đang bật sẽ quyết định màn hình chào mỗi lần mở app, cấu hình lưu trong settings.json. Hai mục gắn nhãn “Ý tưởng · đang phát triển” chỉ là ý tưởng đang làm — chưa bật được, không có chức năng ẩn và app không tải/cài bất cứ thứ gì từ mạng.", "faint")),
+                creditsCard);
             return Scroll(root);
         }
 
@@ -5228,6 +5512,8 @@ namespace TienKeyboardStudio3
             inner.Children.Add(preview);
             inner.Children.Add(Tb(it.CatLabel + " · " + it.Author + " · " + it.Meta, "faint"));
             inner.Children.Add(Tb(it.Detail, "sub"));
+            if (!string.IsNullOrEmpty(it.Attribution))
+                inner.Children.Add(Tb("Ghi công: " + it.Attribution, "faint"));
             inner.Children.Add(new Border { Height = 1, Background = new SolidColorBrush(Color.FromArgb(0x14, 0xFF, 0xFF, 0xFF)) });
             inner.Children.Add(enableRow);
             foreach (var row in PluginConfigRows(it, state)) inner.Children.Add(row);
@@ -5306,7 +5592,16 @@ namespace TienKeyboardStudio3
                 rows.Add(Row("Mã định danh", codeBox));
 
                 if (it.Id == GreetingStyles.PluginDeepSeek)
-                    rows.Add(Tb("Tên + mã định danh hiển thị thật trong chuỗi khởi động của màn chào terminal.", "faint"));
+                    rows.Add(Tb("Tên + mã định danh hiển thị thật trong hồ sơ và dòng ACCESS GRANTED của màn chào Rhine Lab.", "faint"));
+
+                if (it.Id == GreetingStyles.Plugin550C)
+                {
+                    var qrBox = new TextBox { Text = state.GetCfg("qrtext", ""), Width = 220, Watermark = "Để trống = tên + mã của bạn" };
+                    qrBox.Classes.Add("search");
+                    qrBox.LostFocus += (s, e) => { state.Config["qrtext"] = (qrBox.Text ?? "").Trim(); SaveUi(); };
+                    rows.Add(Row("Nội dung mã QR trên thẻ", qrBox));
+                    rows.Add(Tb("Mã QR trên thẻ ID là QR THẬT, quét được: chứa đúng nội dung bạn nhập (link, chữ…). Serial của thẻ tự suy ra từ tên + mã định danh.", "faint"));
+                }
             }
             return rows;
         }

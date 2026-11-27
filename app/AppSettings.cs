@@ -106,11 +106,15 @@ namespace TienKeyboardStudio3
         public const string Galaxy = "galaxy";
         public const string Terminal = "terminal";
         public const string Amber550 = "550c";
+        public const string Moss = "moss";
+        public const string Particles = "particles";
         public const string None = "none";
 
         public const string PluginGalaxy = "tien-galaxy-boot";
         public const string PluginDeepSeek = "deepseek-harness";
         public const string Plugin550C = "550c-boot";
+        public const string PluginMoss = "moss-ignition";
+        public const string PluginParticles = "hat-bui-tv";
 
         public static string StyleForPlugin(string pluginId)
         {
@@ -118,6 +122,8 @@ namespace TienKeyboardStudio3
             {
                 case PluginDeepSeek: return Terminal;
                 case Plugin550C: return Amber550;
+                case PluginMoss: return Moss;
+                case PluginParticles: return Particles;
                 case PluginGalaxy: return Galaxy;
                 default: return None;
             }
