@@ -110,6 +110,10 @@ namespace TienKeyboardStudio3
         private readonly List<string> _logLines = new List<string>();
         private TextBox _logBox;
         private TextBox _expLogBox;
+        // v3.9.1: hai the chua panel nhat ky — an mac dinh theo cai dat
+        // ShowOperationLog (chi an HIEN THI; _logLines van thu thap lien tuc).
+        private Border _homeLogCard;
+        private Border _expLogCard;
 
         // Trang chu
         private Border _integrityBanner;
@@ -306,7 +310,7 @@ namespace TienKeyboardStudio3
             RefreshWriteStates();
             ShowPage("home");
             _ = RunIntegrityCheckAsync();
-            AppendLog("Tien Vu Keyboard Studio v3.9.0 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
+            AppendLog("Tien Vu Keyboard Studio v3.9.1 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
             AppendLog("Lộ trình an toàn lần đầu: Quét thiết bị → thử RGB (dry-run) → tắt Dry-run → RGB thật → Cài đặt 04 17 → Đồng hồ → GIF TFT nhỏ → Đọc thử 0xF5.");
         }
 
@@ -617,6 +621,24 @@ namespace TienKeyboardStudio3
             if (_expLogBox != null) { _expLogBox.Text = text; _expLogBox.CaretIndex = text.Length; }
         }
 
+        // v3.9.1: ap dung cai dat an/hien nhat ky NGAY khi doi cong tac trong
+        // Cai dat (khong can khoi dong lai). Panel an bang IsVisible=false
+        // trong StackPanel se tu nhuong lai khoang trong cho noi dung khac.
+        // Khi vua bat lai, dong bo noi dung tu bo dem _logLines (bo dem nay
+        // van duoc AppendLog cap nhat lien tuc ke ca khi panel dang an).
+        private void ApplyLogVisibility()
+        {
+            bool show = _ui.ShowOperationLog;
+            if (show)
+            {
+                string text = string.Join("\n", _logLines);
+                if (_logBox != null) { _logBox.Text = text; _logBox.CaretIndex = text.Length; }
+                if (_expLogBox != null) { _expLogBox.Text = text; _expLogBox.CaretIndex = text.Length; }
+            }
+            if (_homeLogCard != null) _homeLogCard.IsVisible = show;
+            if (_expLogCard != null) _expLogCard.IsVisible = show;
+        }
+
         // ================= Dry-run toan cuc =================
         private void SetDryRun(bool on, bool fromUi)
         {
@@ -794,6 +816,8 @@ namespace TienKeyboardStudio3
                 Text = string.Join("\n", _logLines),
             };
             var logCard = Card(V(8, Tb("Nhật ký thao tác", "h2"), _logBox));
+            _homeLogCard = logCard;
+            logCard.IsVisible = _ui.ShowOperationLog; // v3.9.1: an mac dinh
 
             _integrityBanner = new Border
             {
@@ -808,7 +832,7 @@ namespace TienKeyboardStudio3
             var root = V(14,
                 Tb("Tổng quan", "h1"),
                 _integrityBanner,
-                Tb("Tien Vu Keyboard Studio v3.9.0 — bản thật: quét thiết bị HID thật, ghi xuống F75 Max qua giao thức đã kiểm chứng; Driver Pack 1 thêm họ Sinowealth kb_by_v2 (định danh 0x82 trước khi ghi); Driver Pack 2 thêm nền tảng RongYuan — Akko/MonsGeek/EPOMAKER (định danh dev_id 0x8F trước khi ghi); Driver Pack 3 thêm họ MCHOSE — stack GLW/CZ + QHW (định danh bằng PID registry + probe đọc trước khi ghi; họ BY dùng chung Pack 1, chỉ xem); Driver Pack 4 thêm các họ SONiX anh em (S75 Pro/Nova75, MAD60, HERO68 HE, WIN60 HE/SE) và nền WitMod (Redragon K617 HE) — định danh bằng probe của từng họ trước khi ghi, chưa kiểm chứng trên phần cứng thật. Driver Pack 5 (v3.9, pack CUỐI) thêm họ DareU (TG/TG-RT + Magnetic Axis, OHID, JM/QF — định danh bằng registry PID từ web driver chính hãng) và các họ AULA Hub còn lại (HFD, SparkLink V1/V2 — định danh bằng VID:PID + usage page). v3.8: bản GỌN — Thư viện Online không còn đóng gói GIF (tải theo nhu cầu từ Google Drive của dự án), thêm GIF từ link TikTok (thử nghiệm), chữ ký tác giả + kiểm tra toàn vẹn bản phát hành. Dry-run bật mặc định để an toàn.", "sub"),
+                Tb("Tien Vu Keyboard Studio v3.9.1 — bản thật: quét thiết bị HID thật, ghi xuống F75 Max qua giao thức đã kiểm chứng; Driver Pack 1 thêm họ Sinowealth kb_by_v2 (định danh 0x82 trước khi ghi); Driver Pack 2 thêm nền tảng RongYuan — Akko/MonsGeek/EPOMAKER (định danh dev_id 0x8F trước khi ghi); Driver Pack 3 thêm họ MCHOSE — stack GLW/CZ + QHW (định danh bằng PID registry + probe đọc trước khi ghi; họ BY dùng chung Pack 1, chỉ xem); Driver Pack 4 thêm các họ SONiX anh em (S75 Pro/Nova75, MAD60, HERO68 HE, WIN60 HE/SE) và nền WitMod (Redragon K617 HE) — định danh bằng probe của từng họ trước khi ghi, chưa kiểm chứng trên phần cứng thật. Driver Pack 5 (v3.9, pack CUỐI) thêm họ DareU (TG/TG-RT + Magnetic Axis, OHID, JM/QF — định danh bằng registry PID từ web driver chính hãng) và các họ AULA Hub còn lại (HFD, SparkLink V1/V2 — định danh bằng VID:PID + usage page). v3.8: bản GỌN — Thư viện Online không còn đóng gói GIF (tải theo nhu cầu từ Google Drive của dự án), thêm GIF từ link TikTok (thử nghiệm), chữ ký tác giả + kiểm tra toàn vẹn bản phát hành. v3.9.1: panel nhật ký thao tác ẩn mặc định cho gọn — bật lại ở Cài đặt → Cài đặt app → “Hiện nhật ký thao tác”. Dry-run bật mặc định để an toàn.", "sub"),
                 connectCard,
                 heroCard,
                 stats,
@@ -3723,6 +3747,8 @@ namespace TienKeyboardStudio3
                 Text = string.Join("\n", _logLines),
             };
             var logCard = Card(V(8, Tb("Nhật ký gói tin", "h2"), _expLogBox));
+            _expLogCard = logCard;
+            logCard.IsVisible = _ui.ShowOperationLog; // v3.9.1: an mac dinh
 
             var root = V(14,
                 Tb("Per-key (thử nghiệm)", "h1"),
@@ -4029,6 +4055,12 @@ namespace TienKeyboardStudio3
                     if (_syncingDry) return;
                     SetDryRun(v, fromUi: true);
                 }).Also(c => _drySwitch = FindPill(c)),
+                SettingRow("Hiện nhật ký thao tác", "Hiện panel nhật ký ở Trang chủ và trang Per-key — chỉ cần khi kiểm tra/gỡ lỗi. Mặc định tắt cho gọn giao diện; nhật ký vẫn được ghi ngầm bên trong, bật lên là thấy lịch sử gần đây.", _ui.ShowOperationLog, v =>
+                {
+                    _ui.ShowOperationLog = v;
+                    SaveUi();
+                    ApplyLogVisibility();
+                }),
                 SettingRow("Khởi động cùng Windows", "Tự mở app khi đăng nhập Windows (ghi vào HKCU Run)", GetAutostart(), v => SetAutostart(v)),
                 SettingRow("Thu nhỏ xuống khay hệ thống", "Đóng cửa sổ thì app vẫn chạy nền ở khay", true, v => _trayEnabled = v),
                 Tb("App không tự kiểm tra cập nhật và không gọi mạng nào ngoài: tải GIF bạn chủ động bấm, thời tiết khi mở trang Widget, server điều khiển qua LAN khi bạn bật, và tải bảng thiết bị khi bạn bấm nút kiểm tra ở thẻ 'Bảng thiết bị cộng đồng' bên dưới.", "faint")));
@@ -4114,7 +4146,7 @@ namespace TienKeyboardStudio3
             };
             var aboutTexts = V(4,
                 Tb("Tien Vu Keyboard Studio", "h2"),
-                Tb("Phiên bản 3.9.0 — bản thật: F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; lớp per-key/stream/nhạc là thử nghiệm có khoá an toàn (xem trang Per-key). Mới: Liquid Glass, hình nền + màu chủ đề, màn hình chào 3 phong cách, Chợ plugin, GameSense CS2 (GSI). v3.4 thêm Driver Pack 1: họ Sinowealth kb_by_v2 (AULA F75, Leobog Hi75, YUNZII Cake, GravaStar K1) — trang riêng, định danh bằng UUID 0x82 trước khi ghi, chưa kiểm chứng trên phần cứng thật. v3.5 thêm Driver Pack 2: nền tảng RongYuan (Akko, MonsGeek, EPOMAKER — 246 mục registry) — trang riêng, định danh bằng dev_id 0x8F trước khi ghi, mục chưa có dev_id đã kiểm chứng chỉ xem, chưa kiểm chứng trên phần cứng thật. v3.6 thêm Driver Pack 3: họ MCHOSE (31 model CZ: stack GLW Hall-effect + stack QHW; 18 model BY dùng chung kb_by_v2, chỉ xem vì chưa có UUID) — trang riêng, định danh bằng VID:PID registry + probe đọc trước khi ghi, checksum GLW là giả thuyết sum-mod-256 chưa kiểm chứng, stack legacy chỉ ghi log gói, chưa kiểm chứng trên phần cứng thật. v3.7 thêm Driver Pack 4: các họ SONiX anh em — S75 Pro/Nova75 (họ B, chung nền F75 Max; probe 0xF5 không phân biệt được với F75 Max nên ghi vẫn khoá sau công tắc thử nghiệm; Nova75 stream chỉ log), MAD60 (họ C, bắt tay fw protocol v9), HERO68 HE (họ D, chữ ký cmd 130 + checksum), WIN60 HE (họ E), WIN60 SE (họ F2, chỉ log — nhà sản xuất tự đánh dấu thử nghiệm) — và nền WitMod (Redragon K617 HE; định danh bằng probe 0x0D + khối support 0x01 sau khi quét bảng filter 36 cặp VID:PID). Cộng thêm tính năng cộng đồng: nút sao chép thông tin thiết bị (dán vào GitHub issue) và cập nhật bảng thiết bị từ repo khi bạn chủ động bấm. Tất cả Pack 4 chưa kiểm chứng trên phần cứng thật. v3.9 thêm Driver Pack 5 (pack cuối): họ DareU — TG/TG-RT (lớp 13 Magnetic Axis đầy đủ cho EK75 RT và các mẫu TG-RT), OHID, JM/QF — định danh bằng registry 187 mục trích từ web driver chính hãng dr.dareu.com (PID lạ → chỉ xem); và các họ AULA Hub còn lại — HFD (gồm TFT NOVA98 240×135 + dongle 2.4G bộ lệnh riêng), SparkLink V1 (KB2, per-key bền, không stream), SparkLink V2 (DirectDrive + GIF stream + dot-matrix BOX 63) — định danh bằng VID:PID + usage page theo registry AULA Hub. Tất cả Pack 5 chưa kiểm chứng trên phần cứng thật; bản cài desktop của DareU chưa từng được kiểm toán (CDN của hãng chặn tải) — giao thức lấy từ bản web chính hãng. Dry-run bật mặc định.", "sub"),
+                Tb("Phiên bản 3.9.1 — bản thật: F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; lớp per-key/stream/nhạc là thử nghiệm có khoá an toàn (xem trang Per-key). Mới: Liquid Glass, hình nền + màu chủ đề, màn hình chào 3 phong cách, Chợ plugin, GameSense CS2 (GSI). v3.4 thêm Driver Pack 1: họ Sinowealth kb_by_v2 (AULA F75, Leobog Hi75, YUNZII Cake, GravaStar K1) — trang riêng, định danh bằng UUID 0x82 trước khi ghi, chưa kiểm chứng trên phần cứng thật. v3.5 thêm Driver Pack 2: nền tảng RongYuan (Akko, MonsGeek, EPOMAKER — 246 mục registry) — trang riêng, định danh bằng dev_id 0x8F trước khi ghi, mục chưa có dev_id đã kiểm chứng chỉ xem, chưa kiểm chứng trên phần cứng thật. v3.6 thêm Driver Pack 3: họ MCHOSE (31 model CZ: stack GLW Hall-effect + stack QHW; 18 model BY dùng chung kb_by_v2, chỉ xem vì chưa có UUID) — trang riêng, định danh bằng VID:PID registry + probe đọc trước khi ghi, checksum GLW là giả thuyết sum-mod-256 chưa kiểm chứng, stack legacy chỉ ghi log gói, chưa kiểm chứng trên phần cứng thật. v3.7 thêm Driver Pack 4: các họ SONiX anh em — S75 Pro/Nova75 (họ B, chung nền F75 Max; probe 0xF5 không phân biệt được với F75 Max nên ghi vẫn khoá sau công tắc thử nghiệm; Nova75 stream chỉ log), MAD60 (họ C, bắt tay fw protocol v9), HERO68 HE (họ D, chữ ký cmd 130 + checksum), WIN60 HE (họ E), WIN60 SE (họ F2, chỉ log — nhà sản xuất tự đánh dấu thử nghiệm) — và nền WitMod (Redragon K617 HE; định danh bằng probe 0x0D + khối support 0x01 sau khi quét bảng filter 36 cặp VID:PID). Cộng thêm tính năng cộng đồng: nút sao chép thông tin thiết bị (dán vào GitHub issue) và cập nhật bảng thiết bị từ repo khi bạn chủ động bấm. Tất cả Pack 4 chưa kiểm chứng trên phần cứng thật. v3.9 thêm Driver Pack 5 (pack cuối): họ DareU — TG/TG-RT (lớp 13 Magnetic Axis đầy đủ cho EK75 RT và các mẫu TG-RT), OHID, JM/QF — định danh bằng registry 187 mục trích từ web driver chính hãng dr.dareu.com (PID lạ → chỉ xem); và các họ AULA Hub còn lại — HFD (gồm TFT NOVA98 240×135 + dongle 2.4G bộ lệnh riêng), SparkLink V1 (KB2, per-key bền, không stream), SparkLink V2 (DirectDrive + GIF stream + dot-matrix BOX 63) — định danh bằng VID:PID + usage page theo registry AULA Hub. Tất cả Pack 5 chưa kiểm chứng trên phần cứng thật; bản cài desktop của DareU chưa từng được kiểm toán (CDN của hãng chặn tải) — giao thức lấy từ bản web chính hãng. v3.9.1: panel nhật ký thao tác/gói tin ẩn mặc định (chỉ là thay đổi hiển thị — nhật ký vẫn ghi ngầm; bật lại ở Cài đặt → Cài đặt app → “Hiện nhật ký thao tác”). Dry-run bật mặc định.", "sub"),
                 Tb("v3.8: đổi tên thành Tien Vu Keyboard Studio + logo mới; Thư viện Online chuyển sang tải theo nhu cầu (không đóng gói GIF); thêm GIF từ link TikTok (thử nghiệm); app có chữ ký tác giả + tự kiểm tra toàn vẹn khi mở — bản bị chỉnh sửa sẽ hiện cảnh báo ở Trang chủ.", "sub"),
                 Tb("Phát triển bởi Vũ Minh Tiến — github.com/tiendz2k", "sub"),
                 Tb("Mã nguồn + bản chính thức: github.com/tiendz2k/T-Keyboard-Studio · " + AboutInfo.SignatureLine, "faint"),

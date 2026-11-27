@@ -33,6 +33,13 @@ namespace TienKeyboardStudio3
         public string GreetingPlugin { get; set; } = "tien-galaxy-boot"; // plugin boot dang chon lam man chao
         public Dictionary<string, PluginState> Plugins { get; set; } = new Dictionary<string, PluginState>();
         public GameSenseSettings GameSense { get; set; } = new GameSenseSettings();
+
+        // --- v3.9.1: an/hien nhat ky thao tac. MAC DINH AN (false) — file
+        // settings.json cu khong co truong nay se nap thanh false, dung y
+        // nguoi dung: panel nhat ky khong con hien san tren giao dien.
+        // Day CHI la thay doi hien thi: bo dem nhat ky trong app van thu
+        // thap lien tuc, bat cong tac nay len la thay lich su gan day.
+        public bool ShowOperationLog { get; set; } = false;
     }
 
     /// <summary>Thu muc luu anh nen nguoi dung tu chon (v3.3).</summary>
