@@ -34,6 +34,15 @@ namespace TienKeyboardStudio3
         private readonly KbByV2Device _kb = new KbByV2Device();
         private TextBlock _kbIdStatus;
         private TextBlock _kbInfoStatus;
+        // v3.5 Driver Pack 2: nen tang RongYuan (Akko/MonsGeek/EPOMAKER)
+        private readonly RongYuanDevice _ry = new RongYuanDevice();
+        private TextBlock _ryIdStatus;
+        private TextBlock _ryInfoStatus;
+        private TextBlock _ryModelInfo;
+        private TextBlock _ryCalStatus;
+        private Border _ryHeCard;
+        private Border _ryScreenCard;
+        private int _ryScale = RongYuanHe.DefaultScale;
         private bool _dryRun = true;
         private bool _experimental = false;
         private bool _busy;
@@ -144,9 +153,11 @@ namespace TienKeyboardStudio3
             _device.Log = AppendLog;
             _exp.Log = AppendLog;
             _kb.Log = AppendLog;
+            _ry.Log = AppendLog;
             _device.DryRun = true;
             _exp.DryRun = true;
             _kb.DryRun = true;
+            _ry.DryRun = true;
 
             DryToggle.IsCheckedChanged += (s, e) => SetDryRun(DryToggle.IsChecked == true, fromUi: true);
 
@@ -173,6 +184,7 @@ namespace TienKeyboardStudio3
             _pages["online"] = BuildOnlinePage();
             _pages["perkey"] = BuildPerKeyPage();
             _pages["kbbyv2"] = BuildKbByV2Page();
+            _pages["rongyuan"] = BuildRongYuanPage();
             _pages["store"] = BuildStorePage();
             _pages["widget"] = BuildWidgetPage();
             _pages["settings"] = BuildSettingsPage();
@@ -229,7 +241,7 @@ namespace TienKeyboardStudio3
             RefreshNavVisibility();
             RefreshWriteStates();
             ShowPage("home");
-            AppendLog("T Keyboard Studio v3.4.0 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
+            AppendLog("T Keyboard Studio v3.5.0 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
             AppendLog("Lộ trình an toàn lần đầu: Quét thiết bị → thử RGB (dry-run) → tắt Dry-run → RGB thật → Cài đặt 04 17 → Đồng hồ → GIF TFT nhỏ → Đọc thử 0xF5.");
         }
 
@@ -245,6 +257,7 @@ namespace TienKeyboardStudio3
             try { _macros.Dispose(); } catch { }
             try { _exp.Dispose(); } catch { }
             try { _kb.Dispose(); } catch { }
+            try { _ry.Dispose(); } catch { }
             try { _device.Dispose(); } catch { }
         }
 
@@ -372,6 +385,7 @@ namespace TienKeyboardStudio3
                 ("online", "Thư viện Online", "M12 12 m-9.5 0 a9.5 9.5 0 1 0 19 0 a9.5 9.5 0 1 0-19 0 M2.5 12h19 M12 2.5c2.9 2.7 4.4 5.9 4.4 9.5s-1.5 6.8-4.4 9.5c-2.9-2.7-4.4-5.9-4.4-9.5S9.1 5.2 12 2.5Z"),
                 ("perkey", "Per-key (thử nghiệm)", "M4 4h4v4H4z M10 4h4v4h-4z M16 4h4v4h-4z M4 10h4v4H4z M10 10h4v4h-4z M16 10h4v4h-4z M4 16h4v4H4z M10 16h4v4h-4z M16 16h4v4h-4z"),
                 ("kbbyv2", "Họ Sinowealth (kb_by_v2)", "M4 5h16M4 12h16M4 19h16 M7 5v14 M12 5v14 M17 5v14"),
+                ("rongyuan", "Họ RongYuan", "M12 3.5 4 8v8l8 4.5 8-4.5V8Z M12 12 4 8 M12 12l8-4 M12 12v8.5"),
                 ("store", "Chợ plugin", "M5.5 8h13l-.9 11.5A1.5 1.5 0 0 1 16.1 21H7.9a1.5 1.5 0 0 1-1.5-1.5L5.5 8Z M8.5 10.5V6.8a3.5 3.5 0 0 1 7 0v3.7"),
                 ("widget", "Widget TFT", "M4.5 15.5 A8.5 8.5 0 1 1 19.5 15.5 M12 15.5 16 10 M12 15.5 m-1.2 0 a1.2 1.2 0 1 0 2.4 0 a1.2 1.2 0 1 0-2.4 0"),
                 ("settings", "Đồng hồ & Cài đặt", "M12 12 m-9 0 a9 9 0 1 0 18 0 a9 9 0 1 0-18 0 M12 7v5.2l3.4 2"),
@@ -402,12 +416,14 @@ namespace TienKeyboardStudio3
                 if (key == "gif" || key == "widget") show = _selectedModel.HasScreen;
                 if (key == "perkey") show = _selectedModel.FullSupport;
                 if (key == "kbbyv2") show = _selectedModel.Family == "kb_by_v2";
+                if (key == "rongyuan") show = _selectedModel.Family == "rongyuan";
                 btn.IsVisible = show;
             }
             if (!_pages.ContainsKey(_currentPage)) return;
             bool curHidden = (_currentPage == "gif" || _currentPage == "widget") && !_selectedModel.HasScreen
                              || _currentPage == "perkey" && !_selectedModel.FullSupport
-                             || _currentPage == "kbbyv2" && _selectedModel.Family != "kb_by_v2";
+                             || _currentPage == "kbbyv2" && _selectedModel.Family != "kb_by_v2"
+                             || _currentPage == "rongyuan" && _selectedModel.Family != "rongyuan";
             if (curHidden) ShowPage("home");
         }
 
@@ -447,6 +463,7 @@ namespace TienKeyboardStudio3
             _widgetTimer.IsEnabled = key == "widget";
             _clockTimer.IsEnabled = key == "settings";
             if (key == "widget") RenderWidgetFrame();
+            if (key == "rongyuan") RefreshRyPage();
             if (key == "settings") { UpdateClockLabels(); RefreshTypingLabels(); RefreshGreetingStyleText(); }
             if (key != "perkey") _ledPlayer?.Stop();
             if (key != "online") _onlineLedPlayer?.Stop();
@@ -499,6 +516,7 @@ namespace TienKeyboardStudio3
             _device.DryRun = on;
             _exp.DryRun = on;
             _kb.DryRun = on;
+            _ry.DryRun = on;
             DryTitle.Text = on ? "Dry-run đang bật" : "ĐANG GHI THẬT XUỐNG PHÍM";
             DryTitle.Foreground = new SolidColorBrush(on ? Color.FromRgb(0x34, 0xD3, 0x99) : Color.FromRgb(0xF5, 0x9B, 0x9B));
             DryDesc.Text = on
@@ -520,6 +538,7 @@ namespace TienKeyboardStudio3
             _experimental = on;
             _exp.ExperimentalEnabled = on;
             _kb.ExperimentalEnabled = on;
+            _ry.ExperimentalEnabled = on;
             AppendLog(on
                 ? "Lớp THỬ NGHIỆM per-key: BẬT. Lệnh 0x23/0x20/0x78 sẽ gửi THẬT khi Dry-run cũng tắt. Đây là giao thức tài liệu hoá trên AULA L99 (cùng nền tảng), CHƯA kiểm chứng trên F75 Max."
                 : "Lớp THỬ NGHIỆM per-key: TẮT. Lệnh 0x23/0x20/0x78 chỉ ghi log gói sẽ gửi.");
@@ -658,7 +677,7 @@ namespace TienKeyboardStudio3
 
             var root = V(14,
                 Tb("Tổng quan", "h1"),
-                Tb("T Keyboard Studio v3.4.0 — bản thật: quét thiết bị HID thật, ghi xuống F75 Max qua giao thức đã kiểm chứng; Driver Pack 1 thêm họ Sinowealth kb_by_v2 (định danh 0x82 trước khi ghi). Dry-run bật mặc định để an toàn.", "sub"),
+                Tb("T Keyboard Studio v3.5.0 — bản thật: quét thiết bị HID thật, ghi xuống F75 Max qua giao thức đã kiểm chứng; Driver Pack 1 thêm họ Sinowealth kb_by_v2 (định danh 0x82 trước khi ghi); Driver Pack 2 thêm nền tảng RongYuan — Akko/MonsGeek/EPOMAKER (định danh dev_id 0x8F trước khi ghi). Dry-run bật mặc định để an toàn.", "sub"),
                 connectCard,
                 heroCard,
                 stats,
@@ -743,7 +762,7 @@ namespace TienKeyboardStudio3
                 // 258A:010C dung chung cho nhieu phim — canh bao trung lap neu co
                 var shared = found.GroupBy(d => (d.Vid, d.Pid)).Where(g => g.Count() > 1).ToList();
                 foreach (var g in shared)
-                    _detectedPanel.Children.Add(Tb($"Lưu ý: VID {g.Key.Vid:X4}:{g.Key.Pid:X4} được dùng chung bởi {string.Join(" và ", g.Select(x => x.Model.Name))} — với họ kb_by_v2, app chỉ cho ghi sau khi định danh bằng lệnh 0x82 khớp registry (trang 'Họ Sinowealth'); các họ khác chờ driver riêng.", "faint"));
+                    _detectedPanel.Children.Add(Tb($"Lưu ý: VID {g.Key.Vid:X4}:{g.Key.Pid:X4} được dùng chung bởi {string.Join(" và ", g.Select(x => x.Model.Name))} — với họ kb_by_v2, app chỉ cho ghi sau khi định danh bằng lệnh 0x82 khớp registry (trang 'Họ Sinowealth'); với nền tảng RongYuan, app chỉ cho ghi sau khi định danh bằng dev_id 0x8F khớp registry (trang 'Họ RongYuan'); các họ khác chờ driver riêng.", "faint"));
             }
             AppendLog($"Quét thiết bị: tìm thấy {found.Count} mẫu khớp ({string.Join(", ", found.Select(f => f.Model.Name))}).");
             if (!auto) ShowToast(found.Count > 0 ? $"Quét xong: {found.Count} thiết bị khớp." : "Không tìm thấy bàn phím hỗ trợ nào.");
@@ -760,10 +779,14 @@ namespace TienKeyboardStudio3
                 ? $"Đang dùng {model.Name} (hỗ trợ đầy đủ)."
                 : model.Family == "kb_by_v2"
                     ? $"{model.Name}: thuộc họ Sinowealth (Driver Pack 1) — mở trang 'Họ Sinowealth (kb_by_v2)' và chạy Nhận diện (0x82) trước khi ghi."
-                    : $"{model.Name}: chế độ XEM TRƯỚC — giao diện/hiệu ứng xem được, tính năng ghi xuống phím đang khoá vì driver cho mẫu này chưa tích hợp.");
+                    : model.Family == "rongyuan"
+                        ? $"{model.Name}: thuộc nền tảng RongYuan (Driver Pack 2) — mở trang 'Họ RongYuan' và chạy Nhận diện (0x8F) trước khi ghi."
+                        : $"{model.Name}: chế độ XEM TRƯỚC — giao diện/hiệu ứng xem được, tính năng ghi xuống phím đang khoá vì driver cho mẫu này chưa tích hợp.");
             if ((_currentPage == "gif" || _currentPage == "widget") && !model.HasScreen) ShowPage("home");
             if (_currentPage == "perkey" && !model.FullSupport) ShowPage("home");
             if (_currentPage == "kbbyv2" && model.Family != "kb_by_v2") ShowPage("home");
+            if (_currentPage == "rongyuan" && model.Family != "rongyuan") ShowPage("home");
+            if (_currentPage == "rongyuan") RefreshRyPage();
         }
 
         private Control BuildModelGrid()
@@ -917,6 +940,272 @@ namespace TienKeyboardStudio3
             }
             catch (Exception ex) { AppendLog("LỖI ghi kb_by_v2: " + ex.Message); ShowToast("Lỗi: " + ex.Message); }
             finally { _busy = false; }
+        }
+
+        // ================= TRANG HO RONGYUAN (Driver Pack 2, v3.5) =================
+        // Nen tang dung chung cua Akko Cloud v4 / MonsGeek V4 / EPOMAKER
+        // Driver. Trang chi hien khi model dang chon co Family == "rongyuan";
+        // muc HE chi hien voi model Hall-effect, muc man hinh chi hien voi
+        // model co man hinh (quy tac capability). Noi dung cac muc duoc lam
+        // moi theo model dang chon trong RefreshRyPage().
+        private Control BuildRongYuanPage()
+        {
+            var warn = new Border
+            {
+                Background = new SolidColorBrush(Color.FromArgb(0x2E, 0xF5, 0x9B, 0x9B)),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(0x66, 0xF5, 0x9B, 0x9B)),
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(12),
+                Padding = new Thickness(14, 10),
+                Child = Tb("Chưa kiểm chứng trên phần cứng thật — giao thức RongYuan được tài liệu hoá từ driver chính hãng (Akko Cloud v4, MonsGeek V4, EPOMAKER Driver đều là cùng một nền tảng OEM), nhưng không ai trong đội sở hữu các mẫu phím này. Mọi lệnh ghi đều khoá sau: định danh dev_id 0x8F khớp registry + công tắc Thử nghiệm (trang Per-key) + tắt Dry-run. Model chưa có dev_id đã kiểm chứng trong registry (toàn bộ EPOMAKER và phần lớn Akko) luôn ở chế độ CHỈ XEM.", null, 12),
+            };
+
+            _ryModelInfo = Tb("", "sub");
+            _ryIdStatus = Tb("Chưa nhận diện. Hãy cắm phím nền RongYuan (VID 3151…) bằng cáp USB rồi bấm Nhận diện.", "sub");
+            var idCard = Card(V(10,
+                Tb("1 · Nhận diện thiết bị (bắt buộc trước khi ghi)", "h2"),
+                _ryModelInfo,
+                Tb("VID:PID của nền này bị dùng chung rất rộng (riêng PID 0x5030 dùng cho gần như toàn bộ dòng RY5088 của cả Akko lẫn MonsGeek). App đọc dev_id 32-bit từ chính thiết bị bằng lệnh 0x8F (chỉ đọc) và đối chiếu registry 246 mục đã trích từ driver chính hãng: chỉ 52 mục MonsGeek có sẵn dev_id đã kiểm chứng — khớp một trong số đó mới mở khoá ghi; ngoài ra (kể cả khi đọc được dev_id lạ) → chỉ xem, app không suy đoán.", "sub"),
+                PrimaryBtn("Nhận diện thiết bị (đọc 0x8F — chỉ đọc)", async () =>
+                {
+                    if (_busy) { ShowToast("Đang bận thao tác trước — đợi một chút nhé."); return; }
+                    _busy = true;
+                    try
+                    {
+                        var (vid, pid, _) = _selectedModel.Ids.Count > 0 ? _selectedModel.Ids[0] : (0x3151, 0x5030, "");
+                        var id = await Task.Run(() => _ry.Identify(vid, pid));
+                        _ryIdStatus.Text = id.Known
+                            ? $"Đã định danh: {id.ModelName} — dev_id {id.DevIdHex} (chip {id.Entry.ChipFamily}, VID {id.Entry.Vid:X4}). {id.Note}"
+                            : $"Chưa định danh được. dev_id đọc được: {id.DevIdHex}. {id.Note}";
+                        ShowToast(id.Known ? $"Đã định danh: {id.ModelName}" : "Không khớp registry — chế độ chỉ xem.");
+                    }
+                    catch (Exception ex) { AppendLog("LỖI nhận diện RongYuan: " + ex.Message); ShowToast("Lỗi: " + ex.Message); }
+                    finally { _busy = false; }
+                }),
+                _ryIdStatus));
+
+            _ryInfoStatus = Tb("", "sub");
+            var readCard = Card(V(10,
+                Tb("2 · Đọc thông tin (chỉ đọc — chạy live)", "h2"),
+                H(10,
+                    GhostBtn("Danh sách tính năng (230)", async () =>
+                    {
+                        var reply = await RyReadAsync("Feature list", RongYuanProtocol.BuildGetFeatureList());
+                        if (reply != null)
+                            _ryInfoStatus.Text = RongYuanProtocol.CheckFeatureListAck(reply)
+                                ? "Feature list: thiết bị trả lời hợp lệ (resp[1] = 0xAA) — bitmap tính năng nằm ở các byte tiếp theo, ngữ nghĩa từng bit cần kiểm chứng trên phím thật."
+                                : "Feature list: đáp trả không có dấu 0xAA ở byte 1 — có thể model này không hỗ trợ lệnh 230.";
+                    }),
+                    GhostBtn("Đọc profile hiện tại (132)", async () => await RyReadAsync("Profile", RongYuanProtocol.BuildGetProfile())),
+                    GhostBtn("Đọc keymap manh 0 (138)", async () => await RyReadAsync("Keymap chunk 0", RongYuanProtocol.BuildKeymatrixReadChunk(0, 0)))),
+                _ryInfoStatus));
+
+            var profileSeg = Segmented(new[] { "Profile 0", "Profile 1", "Profile 2", "Profile 3" }, 0, async idx =>
+                await RyWriteAsync($"Chọn profile {idx} (0x04)", () => _ry.SendWrite("Chon profile RongYuan", RongYuanProtocol.BuildSetProfile(idx))));
+            var writeCard = Card(V(10,
+                Tb("3 · Ghi xuống phím (khoá an toàn 3 lớp)", "h2"),
+                Tb("Chỉ gửi thật khi: đã định danh khớp registry (dev_id) + công tắc Thử nghiệm BẬT + Dry-run TẮT. Thiếu một điều kiện, app chỉ ghi log gói sẽ gửi (hoặc từ chối nếu chưa định danh).", "sub"),
+                Tb("Chọn profile đang hoạt động:", "sub"),
+                profileSeg.Root,
+                H(10,
+                    PrimaryBtn("Ghi đèn từng phím cầu vồng (0x0C)", async () =>
+                    {
+                        int keys = RyKeyCount();
+                        var slots = new List<(byte R, byte G, byte B)>();
+                        for (int i = 0; i < keys; i++)
+                        {
+                            var c = KeyboardView.Hsv(i / (double)Math.Max(1, keys), 0.85, 0.9);
+                            slots.Add((c.R, c.G, c.B));
+                        }
+                        var data = RongYuanProtocol.FlattenRgb(slots);
+                        var packets = RongYuanProtocol.BuildUserPicWrite(0, data);
+                        await RyWriteAsync("Ghi đèn từng phím cầu vồng (0x0C)", () => _ry.SendChunkedWrite("UserPic cau vong RongYuan", packets));
+                    }),
+                    GhostBtn("Đèn chính: tĩnh, tím, sáng 4/5 (0x07)", async () =>
+                        await RyWriteAsync("Đèn chính tĩnh tím (0x07)", () => _ry.SendWrite("LED chinh RongYuan", RongYuanProtocol.BuildSetLed(0, 0, 4, 0, false, 0x7C, 0x3A, 0xED)))),
+                    GhostBtn("Xoá flash màn hình (0x2C)", async () =>
+                        await RyWriteAsync("Xoá flash (0x2C)", () => _ry.SendWrite("Flash erase RongYuan", RongYuanProtocol.BuildFlashErase()))))));
+
+            // --- Muc Hall-effect: chi hien voi model HE (RefreshRyPage) ---
+            var scaleSeg = Segmented(new[] { "Hệ số ×100", "Hệ số ×200", "Hệ số ×1000", "Hệ số ×10" }, 0, idx =>
+            {
+                _ryScale = new[] { 100, 200, 1000, 10 }[idx];
+                AppendLog($"[RONGYUAN] He so quy doi hanh trinh HE: x{_ryScale} (chon theo lop firmware — mac dinh x100 la pho bien nhat).");
+            });
+            var actSeg = Segmented(new[] { "0.5 mm", "1.0 mm", "1.5 mm", "2.0 mm" }, 1, async idx =>
+            {
+                double mm = new[] { 0.5, 1.0, 1.5, 2.0 }[idx];
+                await RyWriteHeBulkAsync($"Điểm kích hoạt {mm:0.0} mm mọi phím", RongYuanHe.SubActuation,
+                    RongYuanHe.SerializeU16(RyRepeatRaw(RongYuanHe.MmToRaw(mm, _ryScale))));
+            });
+            _ryCalStatus = Tb("Hiệu chuẩn chỉ chạy khi cắm dây. Luồng theo driver gốc: bật báo cáo (27) → ghi mốc MIN (28, thả hết phím, chờ ~2 giây) → ghi mốc MAX (30, nhấn hết cỡ) → tắt báo cáo.", "sub");
+            var heContent = V(10,
+                Tb("4 · Hall-effect (lệnh gộp 0x65/0xE5)", "h2"),
+                Tb("Toàn bộ cấu hình từ tính đi qua một lệnh gộp với sub-op theo từng mảng: 0=điểm kích hoạt, 1=điểm nhả, 2/3=Rapid Trigger nhấn/nhả, 4=DKS, 5=Mod-Tap (lượng tử 10 ms), 6=vùng chết đáy, 7=mode byte (bit7 = Rapid Trigger, 7 = Snap/SOCD), 251=vùng chết đỉnh, 252=loại switch, 254/255=đọc realtime. Giá trị = mm × hệ số theo firmware; dải phổ biến 0.1–3.3 mm (bản Ultra/TMR tối đa 3.4 mm).", "sub"),
+                Tb("Hệ số quy đổi theo lớp firmware:", "sub"),
+                scaleSeg.Root,
+                Tb("Điểm kích hoạt cho mọi phím:", "sub"),
+                actSeg.Root,
+                H(10,
+                    GhostBtn("Bật Rapid Trigger mọi phím", async () =>
+                        await RyWriteHeBulkAsync("Bật Rapid Trigger mọi phím", RongYuanHe.SubMode,
+                            RyRepeatByte(RongYuanHe.EncodeModeByte(RongYuanHe.ModeNormal, true)))),
+                    GhostBtn("Tắt Rapid Trigger", async () =>
+                        await RyWriteHeBulkAsync("Tắt Rapid Trigger", RongYuanHe.SubMode,
+                            RyRepeatByte(RongYuanHe.EncodeModeByte(RongYuanHe.ModeNormal, false)))),
+                    GhostBtn("Vùng chết đáy 0.3 mm", async () =>
+                        await RyWriteHeBulkAsync("Vùng chết đáy 0.3 mm", RongYuanHe.SubDeadZone,
+                            RongYuanHe.SerializeU16(RyRepeatRaw(RongYuanHe.MmToRaw(0.3, _ryScale))))),
+                    GhostBtn("Đọc hành trình realtime (254)", async () =>
+                    {
+                        var data = await RyReadChunksAsync("Hành trình realtime (254)",
+                            i => RongYuanHe.BuildBulkReadChunk(RongYuanHe.SubRealtimeTravel, i),
+                            RongYuanHe.ChunksForBytes(RyKeyCount() * 2));
+                        if (data != null && data.Length >= 2)
+                        {
+                            var vals = RongYuanHe.ParseU16(data, Math.Min(RyKeyCount(), data.Length / 2));
+                            _ryInfoStatus.Text = $"Realtime 254: {vals.Length} phím, giá trị thô đầu tiên: {string.Join(", ", vals.Take(8))} (chia cho hệ số ×{_ryScale} ra mm).";
+                        }
+                    })),
+                Tb("Hiệu chuẩn switch từ tính (theo luồng driver gốc):", "h3"),
+                H(10,
+                    PrimaryBtn("Bước 1 · Bắt đầu: mốc MIN", async () =>
+                    {
+                        await RyWriteAsync("Hiệu chuẩn: bật báo cáo (27)", () => _ry.SendWrite("Calib report on", RongYuanHe.BuildSetCalibrationReport(true)));
+                        await RyWriteAsync("Hiệu chuẩn: ghi mốc MIN (28)", () => _ry.SendWrite("Calib min on", RongYuanHe.BuildSetCalibrationMin(true)));
+                        _ryCalStatus.Text = "Đang ghi mốc MIN — THẢ HẾT PHÍM ra, chờ khoảng 2 giây rồi sang Bước 2.";
+                    }),
+                    GhostBtn("Bước 2 · Sang mốc MAX", async () =>
+                    {
+                        await RyWriteAsync("Hiệu chuẩn: tắt mốc MIN (28)", () => _ry.SendWrite("Calib min off", RongYuanHe.BuildSetCalibrationMin(false)));
+                        await RyWriteAsync("Hiệu chuẩn: ghi mốc MAX (30)", () => _ry.SendWrite("Calib max on", RongYuanHe.BuildSetCalibrationMax(true)));
+                        _ryCalStatus.Text = "Đang ghi mốc MAX — NHẤN HẾT CỠ từng phím một lượt rồi sang Bước 3.";
+                    }),
+                    GhostBtn("Bước 3 · Kết thúc", async () =>
+                    {
+                        await RyWriteAsync("Hiệu chuẩn: tắt mốc MAX (30)", () => _ry.SendWrite("Calib max off", RongYuanHe.BuildSetCalibrationMax(false)));
+                        await RyWriteAsync("Hiệu chuẩn: tắt báo cáo (27)", () => _ry.SendWrite("Calib report off", RongYuanHe.BuildSetCalibrationReport(false)));
+                        _ryCalStatus.Text = "Đã kết thúc hiệu chuẩn (nếu các lệnh đã gửi thật). Nên đọc lại hành trình realtime (254) để đối chiếu.";
+                    })),
+                _ryCalStatus);
+            _ryHeCard = Card(heContent);
+
+            // --- Muc man hinh: chi hien voi model co man hinh (RefreshRyPage) ---
+            var screenContent = V(10,
+                Tb("5 · Màn hình TFT", "h2"),
+                Tb("Đường nạp theo hồ sơ EPOMAKER (mức byte): xoá flash (0x2C, ACK magic AA AA 55 55) → gói chuẩn bị 165 (RGB565) / 169 (RGB888) chờ ACK resp[1]==1 → dữ liệu 37/41 theo mảnh 56 byte, nhịp ~3 ms. Lưu ý trung thực: thứ tự quét pixel (hàng/cột) và chiều byte RGB565 của từng firmware chưa tái dựng dứt khoát trong hồ sơ — bản này đóng gói RGB565 big-endian theo hàng (row-major); ảnh nạp lên có thể bị lệch/xoay trên phím thật cho tới khi kiểm chứng được bằng thiết bị.", "sub"),
+                H(10,
+                    PrimaryBtn("Nạp ảnh mẫu (gradient) lên màn hình", async () =>
+                    {
+                        var m = _selectedModel;
+                        int w = m.ScreenW > 0 ? m.ScreenW : 128;
+                        int h = m.ScreenH > 0 ? m.ScreenH : 128;
+                        bool rgb888 = m.ScreenRgb888;
+                        var rgb = RongYuanScreen.BuildTestPatternRgb(w, h);
+                        var data = rgb888 ? rgb : RongYuanScreen.PackRgb565BE(rgb);
+                        await RyWriteAsync($"Nạp ảnh mẫu {w}x{h}", () => _ry.UploadScreenFrame("Anh mau RongYuan", rgb888, data, w, h, eraseFirst: false));
+                    }),
+                    GhostBtn("Đồng bộ đồng hồ màn hình (0x28)", async () =>
+                        await RyWriteAsync("Đồng bộ đồng hồ (0x28)", () => _ry.SendWrite("OLED clock RongYuan", RongYuanScreen.BuildOledClock(DateTime.Now))))));
+            _ryScreenCard = Card(screenContent);
+
+            var root = V(14,
+                Tb("Họ RongYuan (Akko · MonsGeek · EPOMAKER)", "h1"),
+                warn,
+                idCard,
+                readCard,
+                writeCard,
+                _ryHeCard,
+                _ryScreenCard);
+            return Scroll(root);
+        }
+
+        /// <summary>Lam moi trang RongYuan theo model dang chon: an/hien muc HE va man hinh theo capability.</summary>
+        private void RefreshRyPage()
+        {
+            var m = _selectedModel;
+            if (_ryHeCard != null) _ryHeCard.IsVisible = m.Family == "rongyuan" && m.HasHE;
+            if (_ryScreenCard != null) _ryScreenCard.IsVisible = m.Family == "rongyuan" && m.HasScreen;
+            if (_ryModelInfo != null)
+            {
+                string caps = (m.HasHE ? "Hall-effect" : "Cơ/thường")
+                    + (m.HasScreen ? $" · màn hình {m.ScreenW}x{m.ScreenH} {(m.ScreenRgb888 ? "RGB888" : "RGB565")}" : " · không màn hình")
+                    + (m.HasKnob ? " · núm xoay" : "");
+                string ids = m.Ids.Count > 0
+                    ? string.Join(", ", m.Ids.Select(t => $"{t.Vid:X4}:{t.Pid:X4}"))
+                    : "(chưa có VID:PID trong registry)";
+                _ryModelInfo.Text = $"Model đang chọn: {m.Name} — {caps}. VID:PID đã biết: {ids}. " +
+                    (m.DevIds.Count > 0
+                        ? $"dev_id đã kiểm chứng: {string.Join(", ", m.DevIds.Select(d => "0x" + d.ToString("X8")))}."
+                        : "Model này CHƯA có dev_id đã kiểm chứng — chỉ xem.");
+            }
+        }
+
+        /// <summary>So phim cua model RongYuan dang chon (tu registry; mac dinh 126 o nhu driver goc).</summary>
+        private int RyKeyCount()
+        {
+            int keys = 0;
+            foreach (var e in RongYuanRegistryData.Entries)
+                if (string.Equals(e.DisplayName, _selectedModel.Name, StringComparison.OrdinalIgnoreCase))
+                    keys = Math.Max(keys, e.Keys);
+            return keys > 0 ? keys : 126;
+        }
+
+        private ushort[] RyRepeatRaw(ushort raw)
+        {
+            var arr = new ushort[RyKeyCount()];
+            for (int i = 0; i < arr.Length; i++) arr[i] = raw;
+            return arr;
+        }
+
+        private byte[] RyRepeatByte(byte value)
+        {
+            var arr = new byte[RyKeyCount()];
+            for (int i = 0; i < arr.Length; i++) arr[i] = value;
+            return arr;
+        }
+
+        private async Task<byte[]> RyReadAsync(string title, byte[] packet)
+        {
+            if (_busy) { ShowToast("Đang bận thao tác trước — đợi một chút nhé."); return null; }
+            _busy = true;
+            try
+            {
+                var reply = await Task.Run(() => _ry.SendRead(title, packet));
+                if (reply != null && _ryInfoStatus != null)
+                    _ryInfoStatus.Text = $"{title}: nhận 64 byte, đầu gói: {string.Join(" ", reply.Take(12).Select(b => b.ToString("X2")))}…";
+                return reply;
+            }
+            catch (Exception ex) { AppendLog("LỖI đọc RongYuan: " + ex.Message); ShowToast("Lỗi: " + ex.Message); return null; }
+            finally { _busy = false; }
+        }
+
+        private async Task<byte[]> RyReadChunksAsync(string title, Func<int, byte[]> requestForChunk, int chunkCount)
+        {
+            if (_busy) { ShowToast("Đang bận thao tác trước — đợi một chút nhé."); return null; }
+            _busy = true;
+            try { return await Task.Run(() => _ry.SendReadChunks(title, requestForChunk, chunkCount)); }
+            catch (Exception ex) { AppendLog("LỖI đọc RongYuan: " + ex.Message); ShowToast("Lỗi: " + ex.Message); return null; }
+            finally { _busy = false; }
+        }
+
+        private async Task RyWriteAsync(string title, Func<bool> send)
+        {
+            if (_busy) { ShowToast("Đang bận thao tác trước — đợi một chút nhé."); return; }
+            _busy = true;
+            try
+            {
+                bool sent = await Task.Run(send);
+                ShowToast(sent ? $"Đã gửi THẬT xuống phím: {title}" : $"[Chỉ log] {title} — chưa mở khoá đủ điều kiện ghi thật.");
+            }
+            catch (Exception ex) { AppendLog("LỖI ghi RongYuan: " + ex.Message); ShowToast("Lỗi: " + ex.Message); }
+            finally { _busy = false; }
+        }
+
+        private async Task RyWriteHeBulkAsync(string title, byte subOp, byte[] data)
+        {
+            var packets = RongYuanHe.BuildBulkWrite(subOp, data);
+            await RyWriteAsync(title, () => _ry.SendChunkedWrite(title, packets));
         }
 
         // ================= TRANG 2: ANH SANG RGB =================
@@ -2417,7 +2706,7 @@ namespace TienKeyboardStudio3
             };
             var aboutTexts = V(4,
                 Tb("T Keyboard Studio", "h2"),
-                Tb("Phiên bản 3.4.0 — bản thật: F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; lớp per-key/stream/nhạc là thử nghiệm có khoá an toàn (xem trang Per-key). Mới: Liquid Glass, hình nền + màu chủ đề, màn hình chào 3 phong cách, Chợ plugin, GameSense CS2 (GSI). v3.4 thêm Driver Pack 1: họ Sinowealth kb_by_v2 (AULA F75, Leobog Hi75, YUNZII Cake, GravaStar K1) — trang riêng, định danh bằng UUID 0x82 trước khi ghi, chưa kiểm chứng trên phần cứng thật. Dry-run bật mặc định.", "sub"),
+                Tb("Phiên bản 3.5.0 — bản thật: F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; lớp per-key/stream/nhạc là thử nghiệm có khoá an toàn (xem trang Per-key). Mới: Liquid Glass, hình nền + màu chủ đề, màn hình chào 3 phong cách, Chợ plugin, GameSense CS2 (GSI). v3.4 thêm Driver Pack 1: họ Sinowealth kb_by_v2 (AULA F75, Leobog Hi75, YUNZII Cake, GravaStar K1) — trang riêng, định danh bằng UUID 0x82 trước khi ghi, chưa kiểm chứng trên phần cứng thật. v3.5 thêm Driver Pack 2: nền tảng RongYuan (Akko, MonsGeek, EPOMAKER — 246 mục registry) — trang riêng, định danh bằng dev_id 0x8F trước khi ghi, mục chưa có dev_id đã kiểm chứng chỉ xem, chưa kiểm chứng trên phần cứng thật. Dry-run bật mặc định.", "sub"),
                 Tb("Logo Mẫu C — chữ “T” tạo hình từ phím spacebar — đã được người dùng duyệt.", "sub"),
                 Tb("Font chữ: Be Vietnam Pro (SIL OFL 1.1). GIF thư viện: tự làm cho Tiến. Giao thức per-key: Gavin Graham (AULA L99).", "faint"));
             var aboutCard = Card(H(14, logoWrap, aboutTexts));

@@ -20,6 +20,11 @@ namespace TienKeyboardStudio3
         public int StatusKind;         // 0 = ho tro day du, 1 = se tich hop, 2 = kin/de sau
         public bool HasScreen;
         public int ScreenSize;         // px (vuong), 0 = khong co
+        public int ScreenW, ScreenH;   // kich thuoc man hinh chu nhat (Driver Pack 2), 0 = khong co
+        public bool ScreenRgb888;      // man hinh dung RGB888 thay vi RGB565
+        public bool HasHE;             // Hall-effect (Driver Pack 2)
+        public string Brand = "";      // hang (Driver Pack 2)
+        public List<uint> DevIds = new List<uint>(); // dev_id 0x8F da kiem chung (Driver Pack 2)
         public bool HasKnob;
         public bool FullSupport;       // ghi duoc that (chi F75 Max hien tai)
         public string Family = "";     // ho giao thuc (vd "kb_by_v2"); "" = chua co driver pack
@@ -162,8 +167,9 @@ namespace TienKeyboardStudio3
             new KeyboardModel
             {
                 Name = "Akko 5075B", Layout = "75% · núm xoay",
-                ProtocolStatus = "Giao thức kín — để sau", StatusKind = 2,
-                HasScreen = false, HasKnob = true,
+                ProtocolStatus = "Driver Pack 2 (RongYuan) — chỉ xem (chưa có dev_id)", StatusKind = 1,
+                HasScreen = false, HasKnob = true, Family = "rongyuan", Brand = "Akko",
+                IdNote = "Thuộc nền tảng RongYuan (Driver Pack 2) nhưng chưa có dev_id đã kiểm chứng cho 5075B trong tài liệu đã trích — app chỉ cho xem, không cho ghi",
             },
             new KeyboardModel
             {
@@ -176,10 +182,94 @@ namespace TienKeyboardStudio3
             new KeyboardModel
             {
                 Name = "MonsGeek M1", Layout = "75% · núm xoay",
-                ProtocolStatus = "Giao thức kín — để sau", StatusKind = 2,
-                HasScreen = false, HasKnob = true,
+                ProtocolStatus = "Driver Pack 2 (RongYuan) — chỉ xem (chưa có dev_id)", StatusKind = 1,
+                HasScreen = false, HasKnob = true, Family = "rongyuan", Brand = "MonsGeek",
+                IdNote = "M1 đời đầu (họ yc3121) thuộc nền tảng RongYuan nhưng chưa có dev_id đã kiểm chứng trong tài liệu đã trích — app chỉ cho xem, không cho ghi",
+                Ids = { (0x3151, 0x4015, "USB có dây") },
             },
         };
+
+        // v3.5 Driver Pack 2: nap cac model RongYuan (Akko + MonsGeek +
+        // EPOMAKER) tu registry da trich (RongYuanRegistryData — 246 muc,
+        // gop cac bien the trung ten hien thi thanh mot model, giu union
+        // VID:PID va toan bo dev_id da biet). Muc trung ten voi danh sach
+        // viet tay o tren thi bo qua.
+        static ModelDatabase()
+        {
+            foreach (var m in BuildRongYuanModels())
+                if (!All.Any(x => string.Equals(x.Name, m.Name, StringComparison.OrdinalIgnoreCase)))
+                    All.Add(m);
+        }
+
+        private static string LayoutGuess(int keys)
+        {
+            if (keys >= 104) return "Full-size";
+            if (keys >= 96) return "98%";
+            if (keys >= 87) return "TKL";
+            if (keys >= 75) return "75%";
+            if (keys >= 65) return "65%";
+            if (keys >= 60) return "60%";
+            return "";
+        }
+
+        private static List<KeyboardModel> BuildRongYuanModels()
+        {
+            var byName = new Dictionary<string, KeyboardModel>(StringComparer.OrdinalIgnoreCase);
+            var order = new List<KeyboardModel>();
+            foreach (var e in RongYuanRegistryData.Entries)
+            {
+                if (e.ChipFamily == "mouse") continue; // 3 muc chuot EPOMAKER — ngoai pham vi phim
+                string display = e.DisplayName;
+                if (!byName.TryGetValue(display, out var m))
+                {
+                    m = new KeyboardModel
+                    {
+                        Name = display,
+                        Brand = e.Brand,
+                        Family = "rongyuan",
+                        StatusKind = 1,
+                    };
+                    byName[display] = m;
+                    order.Add(m);
+                }
+                foreach (var pid in e.Pids)
+                    if (!m.Ids.Any(t => t.Vid == e.Vid && t.Pid == pid))
+                        m.Ids.Add((e.Vid, pid, "USB có dây"));
+                if (e.DevId.HasValue && !m.DevIds.Contains(e.DevId.Value)) m.DevIds.Add(e.DevId.Value);
+                if (e.HasHE) m.HasHE = true;
+                if (e.HasKnob) m.HasKnob = true;
+                if (e.HasScreen && !m.HasScreen)
+                {
+                    m.HasScreen = true;
+                    m.ScreenW = e.ScreenW;
+                    m.ScreenH = e.ScreenH;
+                    m.ScreenSize = Math.Max(e.ScreenW, e.ScreenH);
+                    m.ScreenRgb888 = e.ScreenRgb888;
+                }
+                if (e.Keys > 0 && string.IsNullOrEmpty(m.Layout))
+                {
+                    string g = LayoutGuess(e.Keys);
+                    m.Layout = (g.Length > 0 ? g + " · " : "") + e.Keys + " phím";
+                }
+            }
+            foreach (var m in order)
+            {
+                if (string.IsNullOrEmpty(m.Layout)) m.Layout = "Bàn phím";
+                if (m.DevIds.Count > 0)
+                {
+                    m.ProtocolStatus = "Driver Pack 2 (RongYuan) — chưa kiểm chứng phần cứng";
+                    m.IdNote = "Định danh bằng dev_id 0x8F (" +
+                        string.Join(", ", m.DevIds.Select(d => "0x" + d.ToString("X8"))) +
+                        ") trước khi ghi — VID:PID bị dùng chung giữa nhiều model";
+                }
+                else
+                {
+                    m.ProtocolStatus = "Driver Pack 2 (RongYuan) — chỉ xem (chưa có dev_id)";
+                    m.IdNote = "Chưa có dev_id đã kiểm chứng trong tài liệu đã trích — app chỉ cho xem, không cho ghi (không suy đoán dev_id)";
+                }
+            }
+            return order;
+        }
 
         public static KeyboardModel F75Max => All[0];
 
