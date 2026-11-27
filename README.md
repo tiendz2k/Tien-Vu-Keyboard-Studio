@@ -2,6 +2,10 @@
 
 Phần mềm điều khiển bàn phím cơ trên Windows: đèn RGB, màn hình TFT, macro, nhạc, màn hình chào và nhiều hãng phím (AULA, Akko, MonsGeek, MCHOSE, DareU, Leobog, YUNZII...).
 
+## Tải về
+
+- **Bản Light (khuyên dùng):** [Tien-Vu-Keyboard-Studio-v3.11.1-Light.zip](https://drive.google.com/file/d/1Zcm076HtTCFmublMRIZJBhrzXKl0rDbn/view?usp=drivesdk) — cần .NET 8 Desktop Runtime.
+
 ## Cài đặt
 
 1. Giải nén file zip vào một thư mục bất kỳ.
