@@ -28,6 +28,7 @@ namespace TienKeyboardStudio3
         public bool HasKnob;
         public bool FullSupport;       // ghi duoc that (chi F75 Max hien tai)
         public string Family = "";     // ho giao thuc (vd "kb_by_v2"); "" = chua co driver pack
+        public string Stack = "";      // stack con trong ho (Driver Pack 3 MCHOSE: "GLW" / "QHW" / "BY")
         public string IdNote = "";     // cach dinh danh model (hien o trang ho giao thuc)
         // Cac cap VID:PID da biet cua model + nhan loai ket noi.
         public List<(int Vid, int Pid, string Conn)> Ids = new List<(int, int, string)>();
@@ -199,6 +200,79 @@ namespace TienKeyboardStudio3
             foreach (var m in BuildRongYuanModels())
                 if (!All.Any(x => string.Equals(x.Name, m.Name, StringComparison.OrdinalIgnoreCase)))
                     All.Add(m);
+            foreach (var m in BuildMchoseModels())
+                if (!All.Any(x => string.Equals(x.Name, m.Name, StringComparison.OrdinalIgnoreCase)))
+                    All.Add(m);
+        }
+
+        private static string MchoseLayoutGuess(string name)
+        {
+            if (name.Contains("98") || name.Contains("99")) return "98%";
+            if (name.Contains("87")) return "TKL";
+            if (name.Contains("75")) return "75%";
+            if (name.Contains("68")) return "65%";
+            if (name.Contains("60")) return "60%";
+            return "Bàn phím";
+        }
+
+        // v3.6 Driver Pack 3: nap cac model MCHOSE tu registry da trich
+        // (MchoseRegistryData — 31 muc CZ + 18 muc BY). Ho CZ -> Family
+        // "mchose" (trang rieng, dinh danh bang PID registry + probe doc);
+        // ho BY -> Family "kb_by_v2" (dung chung Driver Pack 1) nhung
+        // CHI XEM: tai lieu cua hang phan biet cac model BY bang
+        // productName USB, registry kb_by_v2 khong co UUID/chu ky cho
+        // bat ky model MCHOSE BY nao — khong suy doan, nhu Leobog.
+        // Khong model MCHOSE nao co man hinh (HasScreen luon false);
+        // "GIF" cua QHW la hieu ung LED toan phim, khong phai man hinh.
+        private static List<KeyboardModel> BuildMchoseModels()
+        {
+            var order = new List<KeyboardModel>();
+            foreach (var e in MchoseRegistryData.CzEntries)
+            {
+                var m = new KeyboardModel
+                {
+                    Name = e.DisplayName,
+                    Brand = "MCHOSE",
+                    Family = "mchose",
+                    Stack = e.Stack,
+                    StatusKind = 1,
+                    HasScreen = false,
+                    HasHE = e.IsGlw,   // chi stack GLW co lenh trigger/HE; QHW khong co lenh HE trong kenh vendor
+                    HasKnob = false,
+                    Layout = MchoseLayoutGuess(e.Name) + (e.IsGlw ? " · Hall-effect" : " · cơ"),
+                    ProtocolStatus = e.IsGlw
+                        ? "Driver Pack 3 (MCHOSE GLW/CZ) — chưa kiểm chứng phần cứng"
+                        : "Driver Pack 3 (MCHOSE QHW) — chưa kiểm chứng phần cứng",
+                    IdNote = e.IsGlw
+                        ? "Định danh bằng VID:PID theo registry CZ + probe đọc getInfo (cmd 3, đáp 0xAA) trước khi ghi. Checksum GLW là giả thuyết sum-mod-256 (hàm gốc chưa thu hồi được) — xem BUILD-INFO."
+                        : "Định danh bằng VID:PID theo registry CZ + probe đọc getBaseInfo (0x0900) — VID/PID thiết bị tự khai phải khớp registry trước khi ghi.",
+                };
+                m.Ids.Add((e.Vid, e.PidMain, "USB có dây"));
+                if (e.PidVendor != e.PidMain)
+                    m.Ids.Add((e.Vid, e.PidVendor, "Kênh vendor/boot"));
+                order.Add(m);
+            }
+            foreach (var e in MchoseRegistryData.ByEntries)
+            {
+                var m = new KeyboardModel
+                {
+                    Name = e.DisplayName,
+                    Brand = "MCHOSE",
+                    Family = "kb_by_v2",
+                    Stack = "BY",
+                    StatusKind = 1,
+                    HasScreen = false,
+                    HasHE = false,
+                    Layout = MchoseLayoutGuess(e.Name) + " · cơ",
+                    ProtocolStatus = "Driver Pack 3 (MCHOSE BY qua kb_by_v2) — chỉ xem (chưa có UUID)",
+                    IdNote = "Model MCHOSE họ BY dùng chung họ kb_by_v2 (Driver Pack 1). Tài liệu của hãng phân biệt các model này bằng productName USB (nhiều model dùng chung 258A:010C); registry kb_by_v2 không có UUID/chữ ký cho model MCHOSE BY nào nên app chỉ cho xem — không suy đoán, giống Leobog.",
+                };
+                foreach (var (vid, pid) in e.Ids)
+                    if (!m.Ids.Any(t => t.Vid == vid && t.Pid == pid))
+                        m.Ids.Add((vid, pid, "USB có dây"));
+                order.Add(m);
+            }
+            return order;
         }
 
         private static string LayoutGuess(int keys)

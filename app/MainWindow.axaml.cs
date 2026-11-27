@@ -43,6 +43,14 @@ namespace TienKeyboardStudio3
         private Border _ryHeCard;
         private Border _ryScreenCard;
         private int _ryScale = RongYuanHe.DefaultScale;
+        // v3.6 Driver Pack 3: MCHOSE (stack GLW/CZ + QHW; ho BY dung chung Pack 1)
+        private readonly MchoseDevice _mc = new MchoseDevice();
+        private TextBlock _mcIdStatus;
+        private TextBlock _mcInfoStatus;
+        private TextBlock _mcModelInfo;
+        private Border _mcHeCard;
+        private Border _mcQhwCard;
+        private int _mcProfile;
         private bool _dryRun = true;
         private bool _experimental = false;
         private bool _busy;
@@ -154,10 +162,12 @@ namespace TienKeyboardStudio3
             _exp.Log = AppendLog;
             _kb.Log = AppendLog;
             _ry.Log = AppendLog;
+            _mc.Log = AppendLog;
             _device.DryRun = true;
             _exp.DryRun = true;
             _kb.DryRun = true;
             _ry.DryRun = true;
+            _mc.DryRun = true;
 
             DryToggle.IsCheckedChanged += (s, e) => SetDryRun(DryToggle.IsChecked == true, fromUi: true);
 
@@ -185,6 +195,7 @@ namespace TienKeyboardStudio3
             _pages["perkey"] = BuildPerKeyPage();
             _pages["kbbyv2"] = BuildKbByV2Page();
             _pages["rongyuan"] = BuildRongYuanPage();
+            _pages["mchose"] = BuildMchosePage();
             _pages["store"] = BuildStorePage();
             _pages["widget"] = BuildWidgetPage();
             _pages["settings"] = BuildSettingsPage();
@@ -241,7 +252,7 @@ namespace TienKeyboardStudio3
             RefreshNavVisibility();
             RefreshWriteStates();
             ShowPage("home");
-            AppendLog("T Keyboard Studio v3.5.0 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
+            AppendLog("T Keyboard Studio v3.6.0 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
             AppendLog("Lộ trình an toàn lần đầu: Quét thiết bị → thử RGB (dry-run) → tắt Dry-run → RGB thật → Cài đặt 04 17 → Đồng hồ → GIF TFT nhỏ → Đọc thử 0xF5.");
         }
 
@@ -258,6 +269,7 @@ namespace TienKeyboardStudio3
             try { _exp.Dispose(); } catch { }
             try { _kb.Dispose(); } catch { }
             try { _ry.Dispose(); } catch { }
+            try { _mc.Dispose(); } catch { }
             try { _device.Dispose(); } catch { }
         }
 
@@ -386,6 +398,7 @@ namespace TienKeyboardStudio3
                 ("perkey", "Per-key (thử nghiệm)", "M4 4h4v4H4z M10 4h4v4h-4z M16 4h4v4h-4z M4 10h4v4H4z M10 10h4v4h-4z M16 10h4v4h-4z M4 16h4v4H4z M10 16h4v4h-4z M16 16h4v4h-4z"),
                 ("kbbyv2", "Họ Sinowealth (kb_by_v2)", "M4 5h16M4 12h16M4 19h16 M7 5v14 M12 5v14 M17 5v14"),
                 ("rongyuan", "Họ RongYuan", "M12 3.5 4 8v8l8 4.5 8-4.5V8Z M12 12 4 8 M12 12l8-4 M12 12v8.5"),
+                ("mchose", "Họ MCHOSE", "M12 21s-7.5-4.6-7.5-10.5A7.5 7.5 0 0 1 19.5 10.5C19.5 16.4 12 21 12 21Z M12 12.8v-5 M9.8 10.2 12 7.8l2.2 2.4"),
                 ("store", "Chợ plugin", "M5.5 8h13l-.9 11.5A1.5 1.5 0 0 1 16.1 21H7.9a1.5 1.5 0 0 1-1.5-1.5L5.5 8Z M8.5 10.5V6.8a3.5 3.5 0 0 1 7 0v3.7"),
                 ("widget", "Widget TFT", "M4.5 15.5 A8.5 8.5 0 1 1 19.5 15.5 M12 15.5 16 10 M12 15.5 m-1.2 0 a1.2 1.2 0 1 0 2.4 0 a1.2 1.2 0 1 0-2.4 0"),
                 ("settings", "Đồng hồ & Cài đặt", "M12 12 m-9 0 a9 9 0 1 0 18 0 a9 9 0 1 0-18 0 M12 7v5.2l3.4 2"),
@@ -417,13 +430,15 @@ namespace TienKeyboardStudio3
                 if (key == "perkey") show = _selectedModel.FullSupport;
                 if (key == "kbbyv2") show = _selectedModel.Family == "kb_by_v2";
                 if (key == "rongyuan") show = _selectedModel.Family == "rongyuan";
+                if (key == "mchose") show = _selectedModel.Family == "mchose";
                 btn.IsVisible = show;
             }
             if (!_pages.ContainsKey(_currentPage)) return;
             bool curHidden = (_currentPage == "gif" || _currentPage == "widget") && !_selectedModel.HasScreen
                              || _currentPage == "perkey" && !_selectedModel.FullSupport
                              || _currentPage == "kbbyv2" && _selectedModel.Family != "kb_by_v2"
-                             || _currentPage == "rongyuan" && _selectedModel.Family != "rongyuan";
+                             || _currentPage == "rongyuan" && _selectedModel.Family != "rongyuan"
+                             || _currentPage == "mchose" && _selectedModel.Family != "mchose";
             if (curHidden) ShowPage("home");
         }
 
@@ -464,6 +479,7 @@ namespace TienKeyboardStudio3
             _clockTimer.IsEnabled = key == "settings";
             if (key == "widget") RenderWidgetFrame();
             if (key == "rongyuan") RefreshRyPage();
+            if (key == "mchose") RefreshMcPage();
             if (key == "settings") { UpdateClockLabels(); RefreshTypingLabels(); RefreshGreetingStyleText(); }
             if (key != "perkey") _ledPlayer?.Stop();
             if (key != "online") _onlineLedPlayer?.Stop();
@@ -517,6 +533,7 @@ namespace TienKeyboardStudio3
             _exp.DryRun = on;
             _kb.DryRun = on;
             _ry.DryRun = on;
+            _mc.DryRun = on;
             DryTitle.Text = on ? "Dry-run đang bật" : "ĐANG GHI THẬT XUỐNG PHÍM";
             DryTitle.Foreground = new SolidColorBrush(on ? Color.FromRgb(0x34, 0xD3, 0x99) : Color.FromRgb(0xF5, 0x9B, 0x9B));
             DryDesc.Text = on
@@ -539,6 +556,7 @@ namespace TienKeyboardStudio3
             _exp.ExperimentalEnabled = on;
             _kb.ExperimentalEnabled = on;
             _ry.ExperimentalEnabled = on;
+            _mc.ExperimentalEnabled = on;
             AppendLog(on
                 ? "Lớp THỬ NGHIỆM per-key: BẬT. Lệnh 0x23/0x20/0x78 sẽ gửi THẬT khi Dry-run cũng tắt. Đây là giao thức tài liệu hoá trên AULA L99 (cùng nền tảng), CHƯA kiểm chứng trên F75 Max."
                 : "Lớp THỬ NGHIỆM per-key: TẮT. Lệnh 0x23/0x20/0x78 chỉ ghi log gói sẽ gửi.");
@@ -677,7 +695,7 @@ namespace TienKeyboardStudio3
 
             var root = V(14,
                 Tb("Tổng quan", "h1"),
-                Tb("T Keyboard Studio v3.5.0 — bản thật: quét thiết bị HID thật, ghi xuống F75 Max qua giao thức đã kiểm chứng; Driver Pack 1 thêm họ Sinowealth kb_by_v2 (định danh 0x82 trước khi ghi); Driver Pack 2 thêm nền tảng RongYuan — Akko/MonsGeek/EPOMAKER (định danh dev_id 0x8F trước khi ghi). Dry-run bật mặc định để an toàn.", "sub"),
+                Tb("T Keyboard Studio v3.6.0 — bản thật: quét thiết bị HID thật, ghi xuống F75 Max qua giao thức đã kiểm chứng; Driver Pack 1 thêm họ Sinowealth kb_by_v2 (định danh 0x82 trước khi ghi); Driver Pack 2 thêm nền tảng RongYuan — Akko/MonsGeek/EPOMAKER (định danh dev_id 0x8F trước khi ghi); Driver Pack 3 thêm họ MCHOSE — stack GLW/CZ + QHW (định danh bằng PID registry + probe đọc trước khi ghi; họ BY dùng chung Pack 1, chỉ xem). Dry-run bật mặc định để an toàn.", "sub"),
                 connectCard,
                 heroCard,
                 stats,
@@ -781,12 +799,16 @@ namespace TienKeyboardStudio3
                     ? $"{model.Name}: thuộc họ Sinowealth (Driver Pack 1) — mở trang 'Họ Sinowealth (kb_by_v2)' và chạy Nhận diện (0x82) trước khi ghi."
                     : model.Family == "rongyuan"
                         ? $"{model.Name}: thuộc nền tảng RongYuan (Driver Pack 2) — mở trang 'Họ RongYuan' và chạy Nhận diện (0x8F) trước khi ghi."
-                        : $"{model.Name}: chế độ XEM TRƯỚC — giao diện/hiệu ứng xem được, tính năng ghi xuống phím đang khoá vì driver cho mẫu này chưa tích hợp.");
+                        : model.Family == "mchose"
+                            ? $"{model.Name}: thuộc họ MCHOSE (Driver Pack 3, stack {model.Stack}) — mở trang 'Họ MCHOSE' và chạy Nhận diện trước khi ghi."
+                            : $"{model.Name}: chế độ XEM TRƯỚC — giao diện/hiệu ứng xem được, tính năng ghi xuống phím đang khoá vì driver cho mẫu này chưa tích hợp.");
             if ((_currentPage == "gif" || _currentPage == "widget") && !model.HasScreen) ShowPage("home");
             if (_currentPage == "perkey" && !model.FullSupport) ShowPage("home");
             if (_currentPage == "kbbyv2" && model.Family != "kb_by_v2") ShowPage("home");
             if (_currentPage == "rongyuan" && model.Family != "rongyuan") ShowPage("home");
+            if (_currentPage == "mchose" && model.Family != "mchose") ShowPage("home");
             if (_currentPage == "rongyuan") RefreshRyPage();
+            if (_currentPage == "mchose") RefreshMcPage();
         }
 
         private Control BuildModelGrid()
@@ -1206,6 +1228,276 @@ namespace TienKeyboardStudio3
         {
             var packets = RongYuanHe.BuildBulkWrite(subOp, data);
             await RyWriteAsync(title, () => _ry.SendChunkedWrite(title, packets));
+        }
+
+        // ================= TRANG HO MCHOSE (Driver Pack 3, v3.6) =================
+        // Bon stack cua M HUB: GLW/CZ (Hall-effect, trang nay), QHW (trang
+        // nay), BY = kb_by_v2 (dung chung trang Ho Sinowealth — cac model
+        // MCHOSE BY chi xem vi khong co UUID), legacy 0x11/0x12 (chi log).
+        // Trang chi hien khi model dang chon co Family == "mchose"; muc HE
+        // chi hien voi stack GLW, muc QHW chi hien voi stack QHW (quy tac
+        // capability). Khong model MCHOSE nao co man hinh.
+        private Control BuildMchosePage()
+        {
+            var warn = new Border
+            {
+                Background = new SolidColorBrush(Color.FromArgb(0x2E, 0xF5, 0x9B, 0x9B)),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(0x66, 0xF5, 0x9B, 0x9B)),
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(12),
+                Padding = new Thickness(14, 10),
+                Child = Tb("Chưa kiểm chứng trên phần cứng thật — giao thức MCHOSE được tài liệu hoá từ M HUB chính hãng đã giải phẫu (4 stack: BY, GLW/CZ, QHW, legacy), nhưng không ai trong đội sở hữu các mẫu phím này. Mọi lệnh ghi đều khoá sau: định danh khớp registry + công tắc Thử nghiệm (trang Per-key) + tắt Dry-run. ĐẶC BIỆT: checksum của stack GLW là GIẢ THUYẾT tổng-byte-mod-256 — hàm checksum gốc nằm trong một module không có trong các file đã thu thập; nếu giả thuyết sai, firmware sẽ từ chối mọi gói GLW (đọc cũng không chạy). Hãy thử đọc trước và đối chiếu log.", null, 12),
+            };
+
+            _mcModelInfo = Tb("", "sub");
+            _mcIdStatus = Tb("Chưa nhận diện. Hãy cắm phím MCHOSE bằng cáp USB rồi bấm Nhận diện.", "sub");
+            var idCard = Card(V(10,
+                Tb("1 · Nhận diện thiết bị (bắt buộc trước khi ghi)", "h2"),
+                _mcModelInfo,
+                Tb("Định danh hai lớp: (a) VID:PID + usage page khớp registry CZ đã trích từ cardList/SDK của hãng; (b) probe đọc từ chính thiết bị — stack GLW đọc getInfo (cmd 3) và đòi đáp trả đúng khuôn 0xAA/cmd/offset, stack QHW đọc getBaseInfo (0x0900) và đòi VID/PID thiết bị tự khai khớp registry. Không khớp một trong hai lớp → chỉ xem, app không suy đoán.", "sub"),
+                PrimaryBtn("Nhận diện thiết bị (probe đọc — chỉ đọc)", async () =>
+                {
+                    if (_busy) { ShowToast("Đang bận thao tác trước — đợi một chút nhé."); return; }
+                    _busy = true;
+                    try
+                    {
+                        var (vid, pid, _) = _selectedModel.Ids.Count > 0 ? _selectedModel.Ids[0] : (0, 0, "");
+                        var id = await Task.Run(() => _mc.Identify(vid, pid));
+                        _mcIdStatus.Text = id.Known
+                            ? $"Đã định danh: {id.ModelName} (stack {id.Entry.Stack}). {id.Note}"
+                            : $"Chưa định danh được. {id.Note}";
+                        ShowToast(id.Known ? $"Đã định danh: {id.ModelName}" : "Không khớp registry — chế độ chỉ xem.");
+                    }
+                    catch (Exception ex) { AppendLog("LỖI nhận diện MCHOSE: " + ex.Message); ShowToast("Lỗi: " + ex.Message); }
+                    finally { _busy = false; }
+                }),
+                _mcIdStatus));
+
+            _mcInfoStatus = Tb("", "sub");
+            var readCard = Card(V(10,
+                Tb("2 · Đọc thông tin (chỉ đọc — chạy live, cần Nhận diện trước)", "h2"),
+                Tb("Stack GLW (Ace/Jet/G-series HE):", "h3"),
+                H(10,
+                    GhostBtn("Thông tin FW (cmd 3)", async () =>
+                    {
+                        var reply = await McGlwTransactAsync("getInfo", GlwProtocol.BuildRead(GlwProtocol.CmdGetInfo, 0, 56));
+                        if (reply != null)
+                        {
+                            var info = GlwProtocol.ParseInfo(GlwProtocol.ReplyData(reply));
+                            _mcInfoStatus.Text = $"GLW getInfo: FW = {info.FwVer}, FW RF = {info.RfFwVer}, report-rate-enhanced = {info.ReportRateEnhanced}, U3 mode = {info.U3Mode}.";
+                        }
+                    }),
+                    GhostBtn("Thứ tự profile (cmd 4)", async () =>
+                    {
+                        var reply = await McGlwTransactAsync("getBase", GlwProtocol.BuildRead(GlwProtocol.CmdGetBase, 0, 56));
+                        if (reply != null)
+                        {
+                            var b = GlwProtocol.ParseBase(GlwProtocol.ReplyData(reply));
+                            _mcInfoStatus.Text = $"GLW getBase: profile đang dùng = {b.ProfileIndex}, số profile = {b.ProfileLength}, thứ tự = [{string.Join(", ", b.Order)}].";
+                        }
+                    }),
+                    GhostBtn("Cấu hình chức năng (cmd 5)", async () =>
+                    {
+                        var data = await McGlwReadRegionAsync("getFuncConfig", GlwProtocol.CmdGetFuncConfig, GlwProtocol.FuncConfigOffset(_mcProfile), GlwProtocol.FuncConfigBytes);
+                        if (data != null)
+                        {
+                            var c = GlwProtocol.ParseFuncConfig(data);
+                            _mcInfoStatus.Text = $"GLW FuncConfig (profile {_mcProfile}): pin {c.BatteryPercent}%{(c.Charging ? " (đang sạc)" : "")}, chỉ số polling = {c.ReportRateIndex}, vùng chết chung = {c.GlobalDeadZone}, khoá Win = {c.LockWin}, chế độ Mac = {c.MacMode}, RT đáy = {c.BottomRapidTrigger}.";
+                        }
+                    }),
+                    GhostBtn("Đọc vùng trigger (0xA0)", async () =>
+                    {
+                        var data = await McGlwReadRegionAsync("getKeyTrigger", GlwProtocol.CmdGetKeyTrigger, GlwProtocol.TriggerRegionOffset(_mcProfile), GlwProtocol.TriggerRegionBytes);
+                        if (data != null && data.Length >= 8)
+                        {
+                            var t = GlwProtocol.GlwTrigger.Decode(data, 0);
+                            _mcInfoStatus.Text = $"GLW trigger (profile {_mcProfile}, phím 0): hành trình thô = {t.Actuation}, RT nhấn thô = {t.RtPress}, vùng chết nhấn = {t.PressDeadZone}, mode = {t.KeyMode}. Đơn vị là giá trị thô 9-bit (lưu −1) — quy đổi sang mm nằm ở tầng giao diện của hãng và chưa thu hồi được, app không hiển thị mm như sự thật.";
+                        }
+                    })),
+                Tb("Stack QHW (G87 V3 / G98 V3 / K87 V3):", "h3"),
+                H(10,
+                    GhostBtn("Thông tin nền (0x0900)", async () =>
+                    {
+                        var data = await McQhwTransactAsync("getBaseInfo", QhwProtocol.CmdGetBaseInfo, null);
+                        if (data != null)
+                        {
+                            var b = QhwProtocol.ParseBaseInfo(data);
+                            _mcInfoStatus.Text = $"QHW baseInfo: thiết bị tự khai {b.Vid:X4}:{b.Pid:X4}, số profile tối đa = {b.MaxProfileLength}, pin = {b.BatteryLevel}%, kết nối = {(b.ConnectStatus == 1 ? "có dây" : b.ConnectStatus == 2 ? "không dây" : b.ConnectStatus.ToString())}, macro {(b.MacroShared ? "dùng chung" : "độc lập")}.";
+                        }
+                    }),
+                    GhostBtn("Phiên bản FW (0x0901)", async () =>
+                        await McQhwTransactAsync("getFwVersion", QhwProtocol.CmdGetFwVersion, new byte[] { 0 })),
+                    GhostBtn("Pin (0x0904)", async () =>
+                    {
+                        var data = await McQhwTransactAsync("getBattery", QhwProtocol.CmdGetBattery, null);
+                        if (data != null)
+                        {
+                            var (charge, level) = QhwProtocol.ParseBattery(data);
+                            _mcInfoStatus.Text = $"QHW pin: {level}% — trạng thái sạc = {charge} (0 = không sạc, 1 = đang sạc, 2 = đầy).";
+                        }
+                    })),
+                _mcInfoStatus));
+
+            var profileSeg = Segmented(new[] { "Profile 0", "Profile 1", "Profile 2", "Profile 3" }, 0, idx =>
+            {
+                _mcProfile = idx;
+                AppendLog($"[MCHOSE] Profile lam viec tren trang MCHOSE: {idx} (offset vung trigger = {GlwProtocol.TriggerRegionOffset(idx)}, FuncConfig = {GlwProtocol.FuncConfigOffset(idx)}).");
+            });
+
+            // --- Muc Hall-effect GLW: chi hien voi stack GLW (RefreshMcPage) ---
+            var actSeg = Segmented(new[] { "Thô 150", "Thô 250", "Thô 350" }, 1, async idx =>
+            {
+                int raw = new[] { 150, 250, 350 }[idx];
+                var keys = new GlwProtocol.GlwTrigger[GlwProtocol.MaxKeys];
+                for (int i = 0; i < keys.Length; i++)
+                    keys[i] = new GlwProtocol.GlwTrigger { Actuation = raw, RtPress = raw, RtRelease = raw, PressDeadZone = 10, ReleaseDeadZone = 10 };
+                var region = GlwProtocol.BuildTriggerRegion(keys);
+                await McWriteAsync($"Ghi vùng trigger đồng nhất (hành trình thô {raw})",
+                    () => _mc.GlwWriteRegion("setKeyTrigger", GlwProtocol.CmdSetKeyTrigger, GlwProtocol.TriggerRegionOffset(_mcProfile), region));
+            });
+            var heContent = V(10,
+                Tb("3 · Hall-effect GLW (cmd 0xA0/0xA1 + hiệu chuẩn)", "h2"),
+                Tb("Vùng trigger: 128 phím × 8 byte tại offset 1024×profile. Mỗi bản ghi: loại switch (4 bit), mode phím, hành trình nhấn/RT nhấn/RT nhả dạng 9-bit lưu −1, độ chính xác nhấn/nhả 2 bit, vùng chết 7-bit/phim. Ngoài ra SDK còn có DKS (0xA2, 32 slot × 24 byte), Mod-Tap (0xA4) và Toggle (0xA6) — bản này đã có builder + unit test cho cả ba, giao diện ghi DKS/MT/TGL để đợt sau. Giá trị dưới đây là ĐƠN VỊ THÔ: quy đổi thô→mm nằm ở tầng giao diện của hãng (mỗi model một bảng hệ số) và chưa thu hồi được.", "sub"),
+                Tb("Profile làm việc (dùng cho cả mục Đọc và mục này):", "sub"),
+                profileSeg.Root,
+                Tb("Ghi đồng nhất cả 128 phím — CẨN THẬN: ghi đè toàn bộ vùng trigger của profile, kể cả các phím bạn đã tinh chỉnh riêng. Nên đọc vùng trigger hiện tại (mục 2) trước:", "sub"),
+                actSeg.Root,
+                H(10,
+                    PrimaryBtn("Hiệu chuẩn: bắt đầu (168)", async () =>
+                        await McWriteAsync("Bắt đầu hiệu chuẩn (168)", () => _mc.GlwWriteSingle("startCalibration", GlwProtocol.BuildCalibration(GlwProtocol.CmdStartCalibration)))),
+                    GhostBtn("Hiệu chuẩn: kết thúc (169)", async () =>
+                        await McWriteAsync("Kết thúc hiệu chuẩn (169)", () => _mc.GlwWriteSingle("endCalibration", GlwProtocol.BuildCalibration(GlwProtocol.CmdEndCalibration)))),
+                    GhostBtn("Hiệu chuẩn: khởi động lại (177)", async () =>
+                        await McWriteAsync("Khởi động lại hiệu chuẩn (177)", () => _mc.GlwWriteSingle("reStartCalibration", GlwProtocol.BuildCalibration(GlwProtocol.CmdRestartCalibration)))),
+                    GhostBtn("Khôi phục cài đặt gốc (238)", async () =>
+                        await McWriteAsync("Khôi phục cài đặt gốc GLW (238)", () => _mc.GlwWriteSingle("restoreFactorySettings", GlwProtocol.BuildFactoryResetAll())))));
+            _mcHeCard = Card(heContent);
+
+            // --- Muc QHW: chi hien voi stack QHW (RefreshMcPage) ---
+            var qhwContent = V(10,
+                Tb("3 · QHW: đèn LED + hiệu ứng LED toàn phím", "h2"),
+                Tb("Stack QHW KHÔNG có lệnh Hall-effect/trigger nào trong kênh vendor (đã rà toàn bộ SDK — đây là khoảng trống đã tài liệu hoá, không phải thiếu sót của app). “GIF” của QHW là HIỆU ỨNG LED TOÀN PHÍM: chuỗi khung delta (chỉ ghi phím đổi màu) + thời lượng, tối đa 36.800 byte, kèm meta CRC32 — không phải màn hình (không model MCHOSE nào có màn hình). Định dạng offset của từng gói ghi nội dung GIF chưa được tái dựng dứt khoát trong hồ sơ nên bản này chỉ dựng + ghi log bản mẫu, chưa gửi xuống phím.", "sub"),
+                H(10,
+                    PrimaryBtn("Gửi màu cầu vồng realtime 5 phím đầu (0x0306)", async () =>
+                    {
+                        var colors = new List<(byte, byte, byte, byte)>();
+                        for (int i = 0; i < 5; i++)
+                        {
+                            var c = KeyboardView.Hsv(i / 5.0, 0.85, 0.9);
+                            colors.Add(((byte)i, c.R, c.G, c.B));
+                        }
+                        var payload = QhwProtocol.BuildKeyColors(colors);
+                        await McWriteAsync("Màu realtime QHW (0x0306)", () => _mc.QhwWrite("setKeyColorsRealtime", QhwProtocol.CmdSetKeyColorsRealtime, payload));
+                    }),
+                    GhostBtn("Xem trước bản mẫu GIF-LED (chỉ log)", () =>
+                    {
+                        var frames = new List<(int, IReadOnlyList<(byte, byte, byte, byte)>)>
+                        {
+                            (30, new List<(byte, byte, byte, byte)>()),
+                            (30, new List<(byte, byte, byte, byte)> { (2, 255, 0, 0) }),
+                        };
+                        var content = QhwProtocol.EncodeGifFrames(frames);
+                        var meta = QhwProtocol.BuildGifMeta(content, completed: true);
+                        AppendLog($"[MCHOSE-QHW - CHI LOG] GIF-LED mau: noi dung {content.Length} byte, CRC32 = 0x{Crc32.Compute(content):X8}.");
+                        AppendLog($"    meta -> {F75Device.Hex(meta, 7)}");
+                        AppendLog($"    content -> {F75Device.Hex(content, 16)}");
+                        ShowToast("Đã ghi log bản mẫu GIF-LED (chưa gửi — định dạng gói ghi nội dung chưa tái dựng dứt khoát).");
+                    }),
+                    GhostBtn("Khôi phục cài đặt gốc (0x030C)", async () =>
+                        await McWriteAsync("Khôi phục cài đặt gốc QHW (0x030C)", () => _mc.QhwWrite("restoreFactorySettings", QhwProtocol.CmdRestore, QhwProtocol.RestoreAllPayload(), 8000)))));
+            _mcQhwCard = Card(qhwContent);
+
+            // --- Muc legacy: builders + log-only ---
+            var legacyCard = Card(V(10,
+                Tb("4 · Stack legacy (0x11/0x12, XOR 0xFF) — chỉ xem trước gói", "h2"),
+                Tb("Stack cổ của hãng (chuột + phím đời cũ): feature report, mọi byte dữ liệu XOR 0xFF. Bản này chỉ có builder + giải mã đã qua unit test; TRANSPORT CHƯA MỞ — các nút dưới đây chỉ ghi log gói logic và dạng dây, không gửi gì xuống thiết bị (dry-run-only).", "sub"),
+                H(10,
+                    GhostBtn("Gói đọc thông tin + pin (0x11 0x06)", () =>
+                    {
+                        _mc.LegacyLogOnly("Đọc thông tin thiết bị legacy (0x11 0x06)", MchoseLegacyProtocol.BuildLogical(MchoseLegacyProtocol.RidShort, MchoseLegacyProtocol.Cmd11DeviceInfo));
+                        ShowToast("Đã ghi log gói legacy (transport chưa mở).");
+                    }),
+                    GhostBtn("Gói ghi macro mẫu (0x12 0x55)", () =>
+                    {
+                        var events = new List<byte>();
+                        events.AddRange(MchoseLegacyProtocol.MacroEventKeyDown(0x04, 0));
+                        events.AddRange(MchoseLegacyProtocol.MacroEventDelay(50));
+                        events.AddRange(MchoseLegacyProtocol.MacroEventKeyUp(0x04, 0));
+                        var packet = MchoseLegacyProtocol.BuildMacroPacket(0, false, 0, events.ToArray());
+                        _mc.LegacyLogOnly("Ghi macro legacy mẫu: nhấn A, chờ 50 ms, nhả A (0x12 0x55)", packet);
+                        ShowToast("Đã ghi log gói macro legacy (transport chưa mở).");
+                    }))));
+
+            var root = V(14,
+                Tb("Họ MCHOSE (Driver Pack 3)", "h1"),
+                warn,
+                idCard,
+                readCard,
+                _mcHeCard,
+                _mcQhwCard,
+                legacyCard);
+            return Scroll(root);
+        }
+
+        /// <summary>Lam moi trang MCHOSE theo model dang chon: an/hien muc HE (GLW) va muc QHW theo stack.</summary>
+        private void RefreshMcPage()
+        {
+            var m = _selectedModel;
+            if (_mcHeCard != null) _mcHeCard.IsVisible = m.Family == "mchose" && m.Stack == "GLW";
+            if (_mcQhwCard != null) _mcQhwCard.IsVisible = m.Family == "mchose" && m.Stack == "QHW";
+            if (_mcModelInfo != null)
+            {
+                string ids = m.Ids.Count > 0
+                    ? string.Join(", ", m.Ids.Select(t => $"{t.Vid:X4}:{t.Pid:X4} ({t.Conn})"))
+                    : "(chưa có VID:PID trong registry)";
+                _mcModelInfo.Text = $"Model đang chọn: {m.Name} — stack {m.Stack}, {(m.HasHE ? "Hall-effect" : "không có lệnh HE trong kênh vendor")}, không màn hình. VID:PID đã biết: {ids}. {m.IdNote}";
+            }
+        }
+
+        private async Task<byte[]> McGlwTransactAsync(string title, byte[] packet)
+        {
+            if (_busy) { ShowToast("Đang bận thao tác trước — đợi một chút nhé."); return null; }
+            _busy = true;
+            try { return await Task.Run(() => _mc.GlwTransact(title, packet)); }
+            catch (Exception ex) { AppendLog("LỖI đọc MCHOSE GLW: " + ex.Message); ShowToast("Lỗi: " + ex.Message); return null; }
+            finally { _busy = false; }
+        }
+
+        private async Task<byte[]> McGlwReadRegionAsync(string title, byte cmd, int baseOffset, int total)
+        {
+            if (_busy) { ShowToast("Đang bận thao tác trước — đợi một chút nhé."); return null; }
+            _busy = true;
+            try { return await Task.Run(() => _mc.GlwReadRegion(title, cmd, baseOffset, total)); }
+            catch (Exception ex) { AppendLog("LỖI đọc MCHOSE GLW: " + ex.Message); ShowToast("Lỗi: " + ex.Message); return null; }
+            finally { _busy = false; }
+        }
+
+        private async Task<byte[]> McQhwTransactAsync(string title, ushort cmd, byte[] payload)
+        {
+            if (_busy) { ShowToast("Đang bận thao tác trước — đợi một chút nhé."); return null; }
+            _busy = true;
+            try
+            {
+                var data = await Task.Run(() => _mc.QhwTransact(title, cmd, payload));
+                if (_mcInfoStatus != null)
+                    _mcInfoStatus.Text = $"QHW {title}: nhận {data.Length} byte payload: {string.Join(" ", data.Take(16).Select(b => b.ToString("X2")))}…";
+                return data;
+            }
+            catch (Exception ex) { AppendLog("LỖI đọc MCHOSE QHW: " + ex.Message); ShowToast("Lỗi: " + ex.Message); return null; }
+            finally { _busy = false; }
+        }
+
+        private async Task McWriteAsync(string title, Func<bool> send)
+        {
+            if (_busy) { ShowToast("Đang bận thao tác trước — đợi một chút nhé."); return; }
+            _busy = true;
+            try
+            {
+                bool sent = await Task.Run(send);
+                ShowToast(sent ? $"Đã gửi THẬT xuống phím: {title}" : $"[Chỉ log] {title} — chưa mở khoá đủ điều kiện ghi thật.");
+            }
+            catch (Exception ex) { AppendLog("LỖI ghi MCHOSE: " + ex.Message); ShowToast("Lỗi: " + ex.Message); }
+            finally { _busy = false; }
         }
 
         // ================= TRANG 2: ANH SANG RGB =================
@@ -2706,7 +2998,7 @@ namespace TienKeyboardStudio3
             };
             var aboutTexts = V(4,
                 Tb("T Keyboard Studio", "h2"),
-                Tb("Phiên bản 3.5.0 — bản thật: F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; lớp per-key/stream/nhạc là thử nghiệm có khoá an toàn (xem trang Per-key). Mới: Liquid Glass, hình nền + màu chủ đề, màn hình chào 3 phong cách, Chợ plugin, GameSense CS2 (GSI). v3.4 thêm Driver Pack 1: họ Sinowealth kb_by_v2 (AULA F75, Leobog Hi75, YUNZII Cake, GravaStar K1) — trang riêng, định danh bằng UUID 0x82 trước khi ghi, chưa kiểm chứng trên phần cứng thật. v3.5 thêm Driver Pack 2: nền tảng RongYuan (Akko, MonsGeek, EPOMAKER — 246 mục registry) — trang riêng, định danh bằng dev_id 0x8F trước khi ghi, mục chưa có dev_id đã kiểm chứng chỉ xem, chưa kiểm chứng trên phần cứng thật. Dry-run bật mặc định.", "sub"),
+                Tb("Phiên bản 3.6.0 — bản thật: F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; lớp per-key/stream/nhạc là thử nghiệm có khoá an toàn (xem trang Per-key). Mới: Liquid Glass, hình nền + màu chủ đề, màn hình chào 3 phong cách, Chợ plugin, GameSense CS2 (GSI). v3.4 thêm Driver Pack 1: họ Sinowealth kb_by_v2 (AULA F75, Leobog Hi75, YUNZII Cake, GravaStar K1) — trang riêng, định danh bằng UUID 0x82 trước khi ghi, chưa kiểm chứng trên phần cứng thật. v3.5 thêm Driver Pack 2: nền tảng RongYuan (Akko, MonsGeek, EPOMAKER — 246 mục registry) — trang riêng, định danh bằng dev_id 0x8F trước khi ghi, mục chưa có dev_id đã kiểm chứng chỉ xem, chưa kiểm chứng trên phần cứng thật. v3.6 thêm Driver Pack 3: họ MCHOSE (31 model CZ: stack GLW Hall-effect + stack QHW; 18 model BY dùng chung kb_by_v2, chỉ xem vì chưa có UUID) — trang riêng, định danh bằng VID:PID registry + probe đọc trước khi ghi, checksum GLW là giả thuyết sum-mod-256 chưa kiểm chứng, stack legacy chỉ ghi log gói, chưa kiểm chứng trên phần cứng thật. Dry-run bật mặc định.", "sub"),
                 Tb("Logo Mẫu C — chữ “T” tạo hình từ phím spacebar — đã được người dùng duyệt.", "sub"),
                 Tb("Font chữ: Be Vietnam Pro (SIL OFL 1.1). GIF thư viện: tự làm cho Tiến. Giao thức per-key: Gavin Graham (AULA L99).", "faint"));
             var aboutCard = Card(H(14, logoWrap, aboutTexts));
