@@ -1,21 +1,71 @@
-MIT License
+Tien Vu Keyboard Studio — Source-Available License
 
-Copyright (c) 2026 Vũ Minh Tiến
+Copyright (c) 2026 Vu Minh Tien (Vũ Minh Tiến, "tiendz2k"). All rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This project is SOURCE-AVAILABLE, not open source. The source code is published
+publicly so that anyone can inspect and verify that the software does not
+contain malicious code. Publication does not grant the rights that an
+open-source license (such as MIT or GPL) would grant.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+1. What you MAY do
+   - Read and audit the source code in this repository for transparency and
+     security review.
+   - Download and use the official binary releases of Tien Vu Keyboard Studio
+     for personal, non-commercial purposes.
+   - Personalise the software through its built-in features (backgrounds, GIF
+     library, profiles, macros, plugins and settings).
+   - Create and share, for non-commercial purposes, content made with the app
+     (for example GIF effects, lighting profiles and configuration files), as
+     long as you do not present that content as the software itself.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+2. What you may NOT do without prior written permission from the author
+   - Copy, redistribute, re-upload or sell the source code or the compiled
+     binaries, in whole or in part, other than downloading official releases
+     from this repository or the author's official channels.
+   - Modify the software and publish, distribute or release the modified
+     version, under any name.
+   - Rebrand the software, or present it (modified or not) as your own work
+     or as a product of anyone other than the author.
+   - Use the software, or any substantial part of it, for commercial purposes.
+   - Remove, alter or hide the author's copyright notices, the "cre
+     tiendz2k" signature, the application name, or the built-in integrity
+     information.
+
+3. Name and logo
+   The names "Tien Vu Keyboard Studio" and "T Keyboard Studio", the "TV"
+   logo, and the "cre tiendz2k" signature are the author's identifiers. This
+   license grants no right to use them for any distributed product or service.
+
+4. Third-party components
+   This project builds on third-party libraries, fonts and published protocol
+   research that remain under their own licenses. They are listed in the
+   NOTICE file. This license covers only the author's own work; it does not
+   change the rights of any third party.
+
+5. No warranty
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+   THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING
+   FROM THE USE OF THE SOFTWARE.
+
+6. Permission requests
+   To request permission for anything not allowed above, contact the author
+   through this GitHub repository (github.com/tiendz2k/Tien-Vu-Keyboard-Studio).
+
+--------------------------------------------------------------------------
+
+TÓM TẮT TIẾNG VIỆT (chỉ để tham khảo nhanh — bản tiếng Anh ở trên là bản có
+giá trị áp dụng):
+
+Dự án này CÔNG KHAI MÃ NGUỒN ĐỂ KIỂM CHỨNG, không phải mã nguồn mở tự do.
+Bạn được: đọc/kiểm tra code; tải và dùng bản phát hành chính thức cho mục
+đích cá nhân, phi thương mại; tuỳ biến bằng các tính năng có sẵn trong app;
+chia sẻ phi thương mại nội dung bạn tạo bằng app (GIF, profile đèn...).
+Bạn KHÔNG được, khi chưa có sự đồng ý bằng văn bản của tác giả: sao chép /
+phân phối lại / bán mã nguồn hay bản biên dịch; sửa rồi phát hành bản sửa
+dưới bất kỳ tên nào; đổi tên/nhận vơ sản phẩm này là của mình; dùng vào mục
+đích thương mại; xoá tên tác giả, chữ ký "cre tiendz2k" hay tên app.
+Tên "Tien Vu Keyboard Studio", logo TV và chữ ký tác giả thuộc về tác giả.
+Các thư viện/font/nghiên cứu giao thức của bên thứ ba giữ nguyên giấy phép
+riêng của chúng (xem file NOTICE).

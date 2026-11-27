@@ -1,0 +1,30 @@
+NOTICE — Third-party components
+
+Tien Vu Keyboard Studio is licensed under the Source-Available License in the
+LICENSE file. That license covers only the author's own work. The following
+third-party components remain under their own licenses and are NOT covered by
+it:
+
+Software libraries
+- Avalonia UI — MIT License (AvaloniaUI)
+- HidSharp — MIT License (James F. Bellinger)
+- QRCoder — MIT License (Raffael Herrmann)
+
+Fonts
+- Be Vietnam Pro — SIL Open Font License 1.1
+
+Published protocol research the implementation was verified against
+(documentation/knowledge only; see README "Nguồn giao thức & lời cảm ơn"):
+- mohin7/aula-f75max (AULA Studio) — open-source F75 Max driver
+- VitalyArt/Aula-F75-Max-Driver — independent F75 Max driver
+- Gavin Graham / Revisory676 — aula-l99-linux (MIT) — per-key (0x23),
+  read-back (0xF5), realtime streaming (0x20) and music channel (0x78)
+  protocol research for the shared SONiX platform
+- keylux (SibteProf) — UX and protocol reference for the wired AULA F75
+  (Sinowealth platform)
+- dot-agi/ry5088-flasher (MIT) — referenced in docs/PROTOCOLS-RONGYUAN.md
+
+All product names, keyboard models and brand names mentioned in this project
+belong to their respective owners. This is a personal project and is not
+affiliated with AULA, Leobog, Keychron, Wooting, EPOMAKER, MCHOSE, DareU or
+any other keyboard manufacturer.

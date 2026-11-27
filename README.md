@@ -125,7 +125,12 @@ Font chữ Be Vietnam Pro (SIL Open Font License 1.1) được dùng trong giao 
 
 ## Giấy phép
 
-MIT — xem file [`LICENSE`](LICENSE).
+**Công khai mã nguồn để kiểm chứng — không phải mã nguồn mở tự do.**
+© 2026 Vũ Minh Tiến (tiendz2k) — giữ mọi quyền.
+
+Mã nguồn được công khai để bất kỳ ai cũng có thể đọc và tự kiểm chứng phần mềm không chứa mã độc. Bạn được tải và dùng bản phát hành chính thức cho mục đích cá nhân, phi thương mại, và tuỳ biến thoải mái bằng các tính năng có sẵn trong app. Bạn **không** được sao chép/phân phối lại, phát hành bản sửa đổi dưới tên khác, dùng vào mục đích thương mại, hay xoá tên/chữ ký tác giả — trừ khi được tác giả đồng ý bằng văn bản.
+
+Chi tiết: xem file [`LICENSE`](LICENSE). Các thư viện, font và nghiên cứu giao thức của bên thứ ba giữ nguyên giấy phép riêng — xem file [`NOTICE`](NOTICE).
 
 ---
 
