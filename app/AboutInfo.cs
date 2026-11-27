@@ -10,7 +10,7 @@ namespace TienKeyboardStudio3
     public static class AboutInfo
     {
         public const string AppName = "Tien Vu Keyboard Studio";
-        public const string Version = "3.11.0";
+        public const string Version = "3.11.1";
         public const string Author = "tiendz2k";
         public const string AuthorFullName = "Vũ Minh Tiến";
         public const string SignatureLine = "cre tiendz2k";

@@ -57,6 +57,7 @@ namespace TienKeyboardStudio3
 
         // --- Thoi tiet ---
         private TextBlock _weatherLocText;
+        private TextBlock _weatherStatusText; // v3.11.1: dong trang thai tai thoi tiet (hien ro loi)
         private TextBox _weatherCityBox;
         private string _weatherPlace = "Hà Nội";
 
@@ -371,6 +372,22 @@ namespace TienKeyboardStudio3
         }
 
         // ---------- Muc 5: Gioi thieu ----------
+        // v3.11.1: ghi cong MIT gom ve MOT noi duy nhat trong UI — khoi
+        // nay o muc Gioi thieu cua panel Cai dat (trang Cho plugin va
+        // modal chi tiet khong con dong ghi cong). Ban day du nam trong
+        // README/NOTICE di kem ban phat hanh — nhu vay van dung nghia vu
+        // ghi cong cua giay phep MIT.
+        private Control BuildAboutCredits()
+        {
+            var lines = new List<Control> { Tb("Nguồn theme & giấy phép", "h3") };
+            foreach (var line in GreetingThemeRegistry.AboutCreditLines())
+                lines.Add(Tb(line, "faint"));
+            var creditsClosing = Tb("Mọi theme đều được viết lại bằng Avalonia trong app này; app không tải hay chạy mã của bên thứ ba. Bản đầy đủ của các giấy phép nằm trong README đi kèm bản phát hành.", "faint");
+            creditsClosing.MaxWidth = 640;
+            lines.Add(creditsClosing);
+            return V(3, lines.ToArray());
+        }
+
         private Control BuildAboutSectionReal()
         {
             var logoImg = new Avalonia.Controls.Image
@@ -383,13 +400,15 @@ namespace TienKeyboardStudio3
                 CornerRadius = new CornerRadius(14), ClipToBounds = true,
                 Width = 64, Height = 64, Child = logoImg,
             };
+            var aboutPara = Tb("Phiên bản 3.11.1 — bản sửa lỗi + gọn giao diện theo phản hồi dùng thật trên máy của Tiến: thời tiết widget sửa tận gốc (mọi lỗi đều HIỆN rõ kèm loại lỗi và tự thử lại thay vì im lặng như trước; đo vị trí qua IP thêm nhà cung cấp dự phòng khi bị giới hạn tần suất; bỏ chữ “Hà Nội” viết cứng ở thẻ widget và ở đường đẩy lên màn hình TFT); panel Cài đặt làm đặc hơn để chữ không bị nội dung phía sau xuyên qua; thanh bên cuộn được khi cửa sổ thấp và hàng thẻ widget tự xuống dòng khi cửa sổ hẹp; trang Tổng quan bỏ hẳn đoạn giới thiệu dài, danh sách mẫu gom theo hãng chỉ còn tên + pill Hỗ trợ/Chưa hỗ trợ; ghi công theme gom về duy nhất mục Giới thiệu này (+ README đi kèm); thẻ “Kiểm tra đầu thu 2.4G” đã GỠ — Tiến đã chạy thử trên đầu thu thật và kết quả đúng như nghiên cứu: đầu thu không có kênh màn hình. Nền tảng giữ nguyên từ v3.11 (giao diện kiểu AULA Hub, nền động từ video ngắn ≤12 giây, nhập plugin thủ công dữ liệu thuần, thời tiết tự động theo mạng, 4 theme chào của v3.10, Driver Pack 1–5). F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; các họ còn lại định danh bằng probe đọc trước khi ghi và chưa kiểm chứng trên phần cứng thật. Dry-run bật mặc định.", "sub");
+            aboutPara.MaxWidth = 640; // cot ngang H() cho chieu rong vo han — gioi han de chu xuong dong trong the
             var aboutTexts = V(4,
                 Tb("Tien Vu Keyboard Studio", "h2"),
-                Tb("Phiên bản 3.11.0 — bản giao diện AULA: panel Cài đặt phủ với mini-sidebar (Cài đặt chung / Giao diện chủ đề / GameSense / Phản hồi / Giới thiệu), 5 ô màu chủ đề lớn gồm cả “Nguyên bản” (chrome gradient của bản trước), hình nền phủ toàn cửa sổ + 2 tranh mực gốc, NỀN ĐỘNG từ video ngắn (tối đa 12 giây, chuyển bằng ffmpeg tải-khi-cần thành GIF vòng lặp), Chợ plugin thêm NHẬP PLUGIN THỦ CÔNG (gói dữ liệu thuần: manifest + ảnh/GIF, kiểm tra nghiêm ngặt, không bao giờ chạy mã ngoài) và thời tiết widget TỰ ĐỘNG THEO MẠNG (đo vị trí qua IP, cache 24 giờ, chọn tay là ghi đè). Các bản trước: v3.10 thêm 4 theme màn hình chào (550C Boot + Thẻ ID có QR thật, DeepSeek Harness — Rhine Lab bản đầy đủ 6 hồi, MOSS · Ignition tái hiện phong cách vẽ thủ tục, Hạt Bụi TV 3.200 hạt tụ thành logo Mẫu F) kèm ghi công MIT; v3.9 Driver Pack 5 (họ DareU + AULA Hub còn lại); v3.9.2 viết lại đường stream GIF→LED của F75 Max (bắt tay 0xF5, ACK poll/gửi lại, pacer 2 ms, interface 0xFF13, lấy mẫu median + blackLevel 24) — vẫn CHƯA kiểm chứng trên F75 Max thật. F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; lớp per-key/stream/nhạc là thử nghiệm có khoá an toàn (xem trang Per-key); các Driver Pack 1–5 (Sinowealth kb_by_v2, RongYuan, MCHOSE, SONiX anh em + WitMod, DareU + AULA Hub) đều định danh bằng probe đọc trước khi ghi và chưa kiểm chứng trên phần cứng thật. Dry-run bật mặc định.", "sub"),
+                aboutPara,
                 Tb("Phát triển bởi Vũ Minh Tiến — github.com/tiendz2k", "sub"),
                 Tb("Mã nguồn + bản chính thức: github.com/tiendz2k/Tien-Vu-Keyboard-Studio · " + AboutInfo.SignatureLine, "faint"),
                 Tb("Font chữ: Be Vietnam Pro (SIL OFL 1.1). GIF thư viện: tự làm cho Tiến. Giao thức per-key: Gavin Graham (AULA L99).", "faint"),
-                Tb("Theme màn hình chào của cộng đồng (MIT, tái hiện bằng Avalonia): Rhine Lab six-act © 6shenhonghong9 (github.com/6shenhonghong9/dsh-startup-screen); 550C Boot © Ziyang Song + intro gốc của Voidpocket (github.com/yannicksong0106/dsh-550c-boot); MOSS · Ignition — tái hiện phong cách, tiết tấu từ QIFANAI (github.com/QIFANAI/dsh-startup-moss2), vẽ thủ tục 100%, không dùng tư liệu phim; Hạt Bụi TV — ý tưởng hạt biến hình từ INJU Particle Boot © inju0524 (github.com/inju0524/dsh-inju-boot). Chi tiết ghi công ở cuối trang Chợ plugin.", "faint"));
+                BuildAboutCredits());
             var aboutCard = Card(H(14, logoWrap, aboutTexts));
             return Scroll(V(14, aboutCard));
         }
@@ -1066,6 +1085,7 @@ namespace TienKeyboardStudio3
         private Control BuildWeatherLocationCard()
         {
             _weatherLocText = Tb("", "sub");
+            _weatherStatusText = Tb("Chưa tải thời tiết — mở widget “Đồng hồ & thời tiết” ở trên hoặc bấm “Cập nhật thời tiết”.", "sub");
             UpdateWeatherLocText();
             _weatherCityBox = new TextBox
             {
@@ -1092,6 +1112,7 @@ namespace TienKeyboardStudio3
                 Tb("Tự động theo mạng (mặc định): app đo vị trí qua địa chỉ IP (ipapi.co, miễn phí, không cần key) rồi lấy thời tiết Open-Meteo tại đó; kết quả đo được nhớ 24 giờ. Chọn tay: nhập tên thành phố để ghi đè — hữu ích khi bật VPN (vị trí IP đi theo đầu ra VPN).", "sub"),
                 modeSeg,
                 _weatherLocText,
+                _weatherStatusText,
                 H(10, _weatherCityBox, GhostBtn("Áp dụng thành phố", () =>
                 {
                     _ui.WeatherCity = (_weatherCityBox.Text ?? "").Trim();
@@ -1494,50 +1515,6 @@ namespace TienKeyboardStudio3
                 }
             }
             ShowScene();
-        }
-
-        // ================================================================
-        // v3.11 (bo sung): CHAN DOAN DAU THU 2.4G — CHI DOC
-        // Liet ke cac giao dien HID cua dongle 05AC:024F (usage page/usage
-        // + do dai report) va ket luan co giao dien man hinh (0xFF68 /
-        // output ~4096 B) hay khong. Khong mo stream, khong gui bat ky
-        // report nao xuong dongle.
-        // ================================================================
-        private TextBlock _dongleDiagText;
-
-        private Control BuildDongleDiagCard()
-        {
-            _dongleDiagText = Tb("Chưa kiểm tra. Cắm đầu thu 2.4G của F75 Max vào máy rồi bấm nút — app chỉ LIỆT KÊ các giao diện HID của đầu thu (đọc mô tả), không gửi bất kỳ lệnh nào xuống thiết bị.", "sub");
-            var btn = PrimaryBtn("Kiểm tra đầu thu 2.4G", async () => await RunDongleDiagAsync());
-            var head = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto") };
-            head.Children.Add(Tb("Kiểm tra đầu thu 2.4G (chỉ đọc)", "h2"));
-            Grid.SetColumn(btn, 1);
-            head.Children.Add(btn);
-            return Card(V(10, head,
-                Tb("Kiểm chứng kết luận nghiên cứu của dự án ngay trên đầu thu của bạn: kênh màn hình TFT (usage page 0xFF68, output report 4096 byte) được cho là CHỈ có khi cắm cáp USB-C; qua đầu thu chỉ có pin / đèn / mức phản hồi / chế độ game.", "faint"),
-                _dongleDiagText));
-        }
-
-        private async Task RunDongleDiagAsync()
-        {
-            if (_dongleDiagText == null) return;
-            _dongleDiagText.Text = "Đang liệt kê các giao diện HID của đầu thu 05AC:024F…";
-            List<DongleInterfaceInfo> ifs;
-            try { ifs = await Task.Run(() => DongleEnumerator.Enumerate()); }
-            catch (Exception ex)
-            {
-                _dongleDiagText.Text = "Không liệt kê được thiết bị HID: " + ex.Message;
-                return;
-            }
-            if (ifs == null || ifs.Count == 0)
-            {
-                _dongleDiagText.Text = "Chưa thấy đầu thu 2.4G (05AC:024F) trên máy này. Hãy cắm đầu thu vào cổng USB rồi bấm kiểm tra lại. (Bàn phím đang nối bằng cáp/Bluetooth thì cũng không thấy đầu thu — điều đó bình thường.)";
-                return;
-            }
-            var sb = new System.Text.StringBuilder();
-            sb.AppendLine($"Thấy đầu thu 2.4G (05AC:024F) với {ifs.Count} giao diện HID:");
-            foreach (var line in DongleClassifier.BuildReportLines(ifs)) sb.AppendLine(line);
-            _dongleDiagText.Text = sb.ToString().TrimEnd();
         }
     }
 }

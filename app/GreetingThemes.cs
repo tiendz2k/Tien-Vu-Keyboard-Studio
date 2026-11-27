@@ -27,7 +27,7 @@ namespace TienKeyboardStudio3
         public string RepoUrl;      // repo nguon ("" neu la theme cua app)
         public string License;      // "MIT" / "Cua app"
         public bool ThirdParty;     // true = theme ben thu ba, can ghi cong
-        public string Attribution;  // dong ghi cong day du (modal + About)
+        public string Attribution;  // dong ghi cong day du (README/NOTICE di kem ban phat hanh)
     }
 
     public static class GreetingThemeRegistry
@@ -94,12 +94,27 @@ namespace TienKeyboardStudio3
             return null;
         }
 
-        /// <summary>Cac dong ghi cong cua theme ben thu ba (cho About + footer Cho).</summary>
+        /// <summary>Cac dong ghi cong DAY DU cua theme ben thu ba — dung
+        /// cho README/NOTICE di kem ban phat hanh (trong UI khong con hien
+        /// ban day du nay nua tu v3.11.1).</summary>
         public static List<string> CreditLines()
         {
             var lines = new List<string>();
             foreach (var t in All)
                 if (t.ThirdParty) lines.Add(t.Attribution);
+            return lines;
+        }
+
+        /// <summary>
+        /// v3.11.1: dong ghi cong GON cho muc "Nguon theme & giay phep" —
+        /// NOI DUY NHAT trong UI con hien ghi cong (Cai dat -> Gioi thieu):
+        /// "Ten theme — tac gia — giay phep", moi theme mot dong.
+        /// </summary>
+        public static List<string> AboutCreditLines()
+        {
+            var lines = new List<string>();
+            foreach (var t in All)
+                if (t.ThirdParty) lines.Add(t.Name + " — " + t.Author + " — " + t.License);
             return lines;
         }
     }

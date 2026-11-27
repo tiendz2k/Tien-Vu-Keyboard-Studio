@@ -138,6 +138,7 @@ namespace TienKeyboardStudio3
         private int _widgetKind; // 0 thong so, 1 dang phat, 2 dong ho
         private SystemStats _lastStats;
         private WeatherInfo _weather;
+        private TextBlock _widgetWeatherDesc; // v3.11.1: mo ta the "Dong ho & thoi tiet" (theo noi dang dung)
         private bool _widgetAuto;
         private int _widgetTickCount;
         private ProgressBar _widgetProgress;
@@ -323,7 +324,7 @@ namespace TienKeyboardStudio3
             RefreshWriteStates();
             ShowPage("home");
             _ = RunIntegrityCheckAsync();
-            AppendLog("Tien Vu Keyboard Studio v3.11.0 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
+            AppendLog("Tien Vu Keyboard Studio v3.11.1 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
             AppendLog("Lộ trình an toàn lần đầu: Quét thiết bị → thử RGB (dry-run) → tắt Dry-run → RGB thật → Cài đặt 04 17 → Đồng hồ → GIF TFT nhỏ → Đọc thử 0xF5.");
         }
 
@@ -853,14 +854,12 @@ namespace TienKeyboardStudio3
             var root = V(14,
                 Tb("Tổng quan", "h1"),
                 _integrityBanner,
-                Tb("Tien Vu Keyboard Studio v3.11.0 — bản thật: quét thiết bị HID thật, ghi xuống F75 Max qua giao thức đã kiểm chứng; Driver Pack 1 thêm họ Sinowealth kb_by_v2 (định danh 0x82 trước khi ghi); Driver Pack 2 thêm nền tảng RongYuan — Akko/MonsGeek/EPOMAKER (định danh dev_id 0x8F trước khi ghi); Driver Pack 3 thêm họ MCHOSE — stack GLW/CZ + QHW (định danh bằng PID registry + probe đọc trước khi ghi; họ BY dùng chung Pack 1, chỉ xem); Driver Pack 4 thêm các họ SONiX anh em (S75 Pro/Nova75, MAD60, HERO68 HE, WIN60 HE/SE) và nền WitMod (Redragon K617 HE) — định danh bằng probe của từng họ trước khi ghi, chưa kiểm chứng trên phần cứng thật. Driver Pack 5 (v3.9, pack CUỐI) thêm họ DareU (TG/TG-RT + Magnetic Axis, OHID, JM/QF — định danh bằng registry PID từ web driver chính hãng) và các họ AULA Hub còn lại (HFD, SparkLink V1/V2 — định danh bằng VID:PID + usage page). v3.8: bản GỌN — Thư viện Online không còn đóng gói GIF (tải theo nhu cầu từ Google Drive của dự án), thêm GIF từ link TikTok (thử nghiệm), chữ ký tác giả + kiểm tra toàn vẹn bản phát hành. v3.9.1: panel nhật ký thao tác ẩn mặc định cho gọn — bật lại ở Cài đặt → Cài đặt app → “Hiện nhật ký thao tác”. v3.9.2: viết lại đường stream GIF→LED của F75 Max theo cơ chế của ứng dụng tham chiếu trên cùng nền tảng SONiX — bắt tay 0xF5→đọc bỏ 9 khối→0x02 khi mở phiên stream, chờ ACK theo thang poll qua reply toàn-0 (20/40/80/160/200/200/300 ms), header 0x20 bận thì gửi lại tối đa 3 lần rồi bỏ frame (stream không chết), lệnh 0x02 bận thì gửi lại sau 35 ms, pacer 2 ms trước mỗi khối, chọn đúng interface usage page 0xFF13, và sửa lấy mẫu màu GIF→LED (median theo vùng + ngưỡng đen 24 + đúng hệ toạ độ toàn canvas). Vẫn CHƯA kiểm chứng trên F75 Max thật — bản này chính là bản để kiểm chứng. v3.10: Chợ plugin thêm 4 theme màn hình chào — 550C Boot + Thẻ ID (mã QR thật), DeepSeek Harness — Rhine Lab bản đầy đủ 6 hồi, MOSS · Ignition (tái hiện phong cách, vẽ thủ tục), Hạt Bụi TV (3.200 hạt tụ thành logo Mẫu F) — kèm khối ghi công MIT ở cuối trang Chợ plugin. v3.11: giao diện kiểu AULA Hub đã duyệt (panel Cài đặt phủ + 5 ô màu chủ đề gồm “Nguyên bản”, hình nền toàn cửa sổ + nền động từ video ngắn ≤12 giây), Chợ plugin thêm nhập plugin thủ công (gói dữ liệu thuần, kiểm tra nghiêm ngặt), thời tiết widget tự động theo mạng (đo IP, cache 24h, chọn tay ghi đè), thẻ “Kiểm tra đầu thu 2.4G” chỉ đọc ở Tổng quan (liệt kê giao diện HID của dongle 05AC:024F, kết luận có kênh màn hình hay không). Dry-run bật mặc định để an toàn.", "sub"),
                 connectCard,
-                BuildDongleDiagCard(),
                 heroCard,
                 stats,
                 Tb("Tất cả mẫu được hỗ trợ", "h2"),
                 models,
-                Tb("App chỉ tích hợp ghi thật cho mẫu đã kiểm chứng giao thức (hiện tại: AULA F75 Max). Các mẫu đã công khai giao thức (F75 thường, Hi75C Pro, Keychron VIA, Wooting, MADLIONS…) sẽ được tích hợp dần — chọn mẫu khác để xem trước giao diện/hiệu ứng, tính năng ghi sẽ khoá kèm giải thích.", "faint"),
+                Tb("“Hỗ trợ” = app dùng được với mẫu đó hôm nay: ghi thật (F75 Max) hoặc qua trang riêng của họ giao thức (xem trước / nhận diện / chỉ xem). Chi tiết khả năng từng mẫu nằm ở trang của họ giao thức.", "faint"),
                 logCard);
             return Scroll(root);
         }
@@ -986,43 +985,63 @@ namespace TienKeyboardStudio3
             if (_currentPage == "aulahub") RefreshAulaHubPage();
         }
 
+        // v3.11.1: danh sach mau gon theo yeu cau cua Tien — gom theo HANG,
+        // moi mau chi con ten + pill nhi phan "Ho tro / Chua ho tro"
+        // (ModelCatalog). Bo dong spec va dong trang thai dai cua Driver
+        // Pack; chi tiet kha nang nam o trang rieng cua tung ho giao thuc.
+        // Bam vao mot mau van chon mau do nhu truoc; mau dang chon / ho tro
+        // day du giu vien accent de nhan dien.
         private Control BuildModelGrid()
         {
-            var wrap = new WrapPanel();
-            foreach (var model in ModelDatabase.All)
+            var root = new StackPanel { Spacing = 16 };
+            foreach (var group in ModelCatalog.GroupByBrand(ModelDatabase.All))
             {
-                var m = model;
-                Color pillText, pillBg;
-                if (m.StatusKind == 0) { pillText = Color.FromRgb(0x34, 0xD3, 0x99); pillBg = Color.FromArgb(0x26, 0x34, 0xD3, 0x99); }
-                else if (m.StatusKind == 1) { pillText = Color.FromRgb(0xC4, 0xB5, 0xFD); pillBg = Color.FromArgb(0x2E, 0x7C, 0x3A, 0xED); }
-                else { pillText = Color.FromRgb(0x8A, 0x87, 0xA0); pillBg = Color.FromArgb(0x14, 0xFF, 0xFF, 0xFF); }
-                var pill = new Border
+                var section = new StackPanel { Spacing = 8 };
+                section.Children.Add(H(8,
+                    Tb(group.Brand, "h3"),
+                    Tb("· " + group.Models.Count + " mẫu · " + group.SupportedCount + " hỗ trợ", "faint")));
+                var wrap = new WrapPanel();
+                foreach (var model in group.Models)
                 {
-                    Background = new SolidColorBrush(pillBg),
-                    CornerRadius = new CornerRadius(999),
-                    Padding = new Thickness(8, 3),
-                    Child = new TextBlock { Text = m.ProtocolStatus, FontSize = 10, Foreground = new SolidColorBrush(pillText) },
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                };
-                string caps = (m.HasScreen ? "Có màn hình" : "Không màn hình") + (m.HasKnob ? " · núm xoay" : "");
-                var cardContent = V(5, Tb(m.Name, "h3"), Tb(m.Layout + " · " + caps, "faint"), pill);
-                var card = new Border
-                {
-                    Classes = { "pickcard" },
-                    Child = cardContent,
-                    Width = 218,
-                    Margin = new Thickness(0, 0, 10, 10),
-                    Cursor = new Cursor(StandardCursorType.Hand),
-                };
-                if (m.FullSupport)
-                {
-                    card.BorderBrush = UiBrushes.AccentGradient();
-                    card.BorderThickness = new Thickness(1.6);
+                    var m = model;
+                    bool supported = ModelCatalog.IsSupported(m);
+                    var pill = new Border
+                    {
+                        Background = new SolidColorBrush(supported
+                            ? Color.FromArgb(0x26, 0x34, 0xD3, 0x99)
+                            : Color.FromArgb(0x14, 0xFF, 0xFF, 0xFF)),
+                        CornerRadius = new CornerRadius(999),
+                        Padding = new Thickness(8, 2),
+                        Child = new TextBlock
+                        {
+                            Text = supported ? "Hỗ trợ" : "Chưa hỗ trợ",
+                            FontSize = 10,
+                            FontWeight = FontWeight.SemiBold,
+                            Foreground = new SolidColorBrush(supported
+                                ? Color.FromRgb(0x34, 0xD3, 0x99)
+                                : Color.FromRgb(0x8A, 0x87, 0xA0)),
+                        },
+                        VerticalAlignment = VerticalAlignment.Center,
+                    };
+                    var chip = new Border
+                    {
+                        Classes = { "pickcard" },
+                        Child = H(8, Tb(m.Name, null, 12.5), pill),
+                        Margin = new Thickness(0, 0, 8, 8),
+                        Cursor = new Cursor(StandardCursorType.Hand),
+                    };
+                    if (m.FullSupport || m == _selectedModel)
+                    {
+                        chip.BorderBrush = UiBrushes.AccentGradient();
+                        chip.BorderThickness = new Thickness(1.6);
+                    }
+                    chip.PointerPressed += (s2, e2) => SelectModel(m);
+                    wrap.Children.Add(chip);
                 }
-                card.PointerPressed += (s, e) => SelectModel(m);
-                wrap.Children.Add(card);
+                section.Children.Add(wrap);
+                root.Children.Add(section);
             }
-            return wrap;
+            return root;
         }
 
         // ================= TRANG HO SINOWEALTH kb_by_v2 (Driver Pack 1, v3.4) =================
@@ -3862,17 +3881,22 @@ namespace TienKeyboardStudio3
                 ("Đang phát", "Đang phát triển — SMTC của Windows chưa tích hợp; hiện bản mô phỏng có ghi rõ"),
                 ("Đồng hồ & thời tiết", "Giờ thật của máy + thời tiết Hà Nội (Open-Meteo, không cần API key)"),
             };
-            var selectorRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 10 };
+            // v3.11.1: WrapPanel thay hang StackPanel ngang — cua so hep thi
+            // the tu xuong dong thay vi bi cat ngang o mep phai cua so.
+            var selectorRow = new WrapPanel();
             var cards = new List<Border>();
             for (int i = 0; i < kinds.Length; i++)
             {
                 int idx = i;
-                var content = V(4, Tb(kinds[i].Title, "h3"), Tb(kinds[i].Desc, "faint"));
+                var descTb = Tb(kinds[i].Desc, "faint");
+                if (idx == 2) _widgetWeatherDesc = descTb;
+                var content = V(4, Tb(kinds[i].Title, "h3"), descTb);
                 var card = new Border
                 {
                     Classes = { "pickcard" },
                     Child = content,
                     Width = 252,
+                    Margin = new Thickness(0, 0, 10, 10),
                     Cursor = new Cursor(StandardCursorType.Hand),
                 };
                 card.PointerPressed += (s, e) =>
@@ -3908,73 +3932,70 @@ namespace TienKeyboardStudio3
             return Scroll(root);
         }
 
+        // v3.11.1: trang thai thoi tiet HIEN RO cho nguoi dung qua dong
+        // _weatherStatusText trong the "Vi tri thoi tiet" (theo loai:
+        // dang tai / thanh cong / loi co the loai). Ban 3.11.0 chi ghi
+        // loi vao nhat ky thao tac — panel an mac dinh — nen moi loi deu
+        // vo hinh, widget dung yen o "Ha Noi - chua co du lieu".
+        private enum WeatherStatusKind { Idle, Loading, Ok, Error }
+        private DateTime _weatherLastAttemptUtc = DateTime.MinValue;
+        private bool _weatherLastOk;
+
+        private void SetWeatherStatus(string text, WeatherStatusKind kind)
+        {
+            if (_weatherStatusText == null) return;
+            _weatherStatusText.Text = text;
+            _weatherStatusText.Foreground = new SolidColorBrush(
+                kind == WeatherStatusKind.Error ? Color.FromRgb(0xF5, 0x9B, 0x9B)
+                : kind == WeatherStatusKind.Ok ? Color.FromRgb(0x34, 0xD3, 0x99)
+                : Color.FromRgb(0xA6, 0xA3, 0xB8));
+        }
+
         private async Task FetchWeatherAsync()
         {
             _weatherTried = true;
-            // v3.11: phan giai vi tri theo che do — tu dong theo mang (do IP,
-            // cache 24h) hoac chon tay (ghi de). Loi do IP thi theo thu tu du
-            // phong cua WeatherLocationLogic: cache cu -> chon tay -> Ha Noi.
-            var cache = WeatherLocationLogic.FromSettings(_ui);
-            var plan = WeatherLocationLogic.Plan(_ui.WeatherMode, cache, DateTime.UtcNow);
-            double lat = WeatherLocationLogic.HanoiLat, lon = WeatherLocationLogic.HanoiLon;
-            string place = WeatherLocationLogic.HanoiName, via = "mặc định";
-
-            if (plan == WeatherSource.Manual)
+            _weatherLastAttemptUtc = DateTime.UtcNow;
+            SetWeatherStatus("Đang tải thời tiết…", WeatherStatusKind.Loading);
+            WeatherOutcome outcome = null;
+            try
             {
-                via = "chọn tay";
-                string city = (_ui.WeatherCity ?? "").Trim();
-                if (city.Length == 0) { place = WeatherLocationLogic.HanoiName; }
-                else
-                {
-                    var g = await WeatherService.GeocodeAsync(city);
-                    if (g.HasValue) { lat = g.Value.Lat; lon = g.Value.Lon; place = g.Value.Name; }
-                    else { place = city; AppendLog("Không tìm được tọa độ cho “" + city + "” — tạm dùng Hà Nội."); }
-                }
+                outcome = await WeatherFlow.RunAsync(WeatherService.HttpGetString, _ui, DateTime.UtcNow);
             }
-            else if (plan == WeatherSource.GeoCache)
+            catch (Exception ex)
             {
-                lat = cache.Lat; lon = cache.Lon; place = cache.DisplayName; via = "tự động theo mạng";
+                AppendLog("Lỗi thời tiết không ngờ tới: " + ex.Message);
             }
-            else // GeoFetch
+            if (outcome == null)
             {
-                var geo = await WeatherService.FetchIpGeoAsync();
-                if (geo != null)
-                {
-                    _ui.GeoCity = geo.City; _ui.GeoCountry = geo.Country;
-                    _ui.GeoLat = geo.Lat; _ui.GeoLon = geo.Lon;
-                    _ui.GeoFetchedUtc = geo.FetchedUtc.ToString("o");
-                    SaveUi();
-                    lat = geo.Lat; lon = geo.Lon; place = geo.DisplayName; via = "tự động theo mạng";
-                }
-                else
-                {
-                    var fb = WeatherLocationLogic.FallbackAfterGeoFailure(cache,
-                        !string.IsNullOrWhiteSpace(_ui.WeatherCity));
-                    AppendLog("Đo vị trí qua IP thất bại — dùng phương án dự phòng: " + fb + ".");
-                    if (fb == WeatherSource.StaleGeoCache)
-                    {
-                        lat = cache.Lat; lon = cache.Lon; place = cache.DisplayName; via = "tự động (cache cũ)";
-                    }
-                    else if (fb == WeatherSource.Manual)
-                    {
-                        via = "chọn tay (dự phòng)";
-                        var g = await WeatherService.GeocodeAsync(_ui.WeatherCity.Trim());
-                        if (g.HasValue) { lat = g.Value.Lat; lon = g.Value.Lon; place = g.Value.Name; }
-                        else place = _ui.WeatherCity.Trim();
-                    }
-                }
-            }
-
-            _weatherPlace = place;
-            UpdateWeatherLocText(place, via);
-            var w = await WeatherService.FetchAsync(lat, lon, place);
-            if (w != null)
-            {
-                _weather = w;
-                AppendLog($"Thời tiết {place} ({via}): {w.TempC}°C, {w.Description}, độ ẩm {w.Humidity}%.");
+                _weatherLastOk = false;
+                SetWeatherStatus(WeatherFlow.NetworkErrorMessage, WeatherStatusKind.Error);
                 if (_widgetKind == 2) RenderWidgetFrame();
+                return;
             }
-            else AppendLog("Không tải được thời tiết (mạng?) — widget đồng hồ chỉ hiện giờ.");
+            if (outcome.NewGeoCache != null)
+            {
+                var geo = outcome.NewGeoCache;
+                _ui.GeoCity = geo.City; _ui.GeoCountry = geo.Country;
+                _ui.GeoLat = geo.Lat; _ui.GeoLon = geo.Lon;
+                _ui.GeoFetchedUtc = geo.FetchedUtc.ToString("o");
+                SaveUi();
+            }
+            if (outcome.Ok)
+            {
+                _weather = outcome.Weather;
+                _weatherPlace = outcome.Place;
+                _weatherLastOk = true;
+                UpdateWeatherLocText(outcome.Place, outcome.Via);
+                SetWeatherStatus(outcome.UserMessage + " · cập nhật " + DateTime.Now.ToString("HH:mm"), WeatherStatusKind.Ok);
+                AppendLog($"Thời tiết {outcome.Place} ({outcome.Via}): {outcome.Weather.TempC}°C, {outcome.Weather.Description}, độ ẩm {outcome.Weather.Humidity}%.");
+            }
+            else
+            {
+                _weatherLastOk = false;
+                SetWeatherStatus(outcome.UserMessage, WeatherStatusKind.Error);
+                AppendLog("Thời tiết: " + outcome.UserMessage);
+            }
+            if (_widgetKind == 2) RenderWidgetFrame();
         }
 
         private void UpdateWeatherLocText()
@@ -3999,6 +4020,35 @@ namespace TienKeyboardStudio3
         {
             if (_weatherLocText != null)
                 _weatherLocText.Text = "Đang dùng: " + place + " (" + via + ")";
+            UpdateWidgetWeatherDesc();
+        }
+
+        // v3.11.1: the chon widget "Dong ho & thoi tiet" khong con ghi cung
+        // "Ha Noi" trong mo ta — hien noi dang dung that.
+        private void UpdateWidgetWeatherDesc()
+        {
+            if (_widgetWeatherDesc == null) return;
+            string place = _weatherPlace;
+            if (_weather == null
+                && WeatherLocationLogic.NormalizeMode(_ui.WeatherMode) == WeatherLocationLogic.ModeManual)
+            {
+                string city = (_ui.WeatherCity ?? "").Trim();
+                if (city.Length > 0) place = city;
+            }
+            _widgetWeatherDesc.Text = "Giờ thật của máy + thời tiết " + place + " (Open-Meteo, không cần API key)";
+        }
+
+        // Dong thoi tiet tren widget dong ho: xem truoc trong app va day
+        // len TFT dung CHUNG mot ham (ban cu viet cung "Ha Noi" o duong
+        // day len TFT nen ke ca khi tai duoc thoi tiet noi khac, man hinh
+        // phim van hien Ha Noi).
+        private string WeatherLineText()
+        {
+            if (_weather != null)
+                return $"{_weatherPlace} {_weather.TempC}°C · {_weather.Description}";
+            if (_weatherTried && !_weatherLastOk)
+                return _weatherPlace + " · chưa tải được thời tiết";
+            return _weatherPlace + " · chưa có dữ liệu thời tiết";
         }
 
         private void RenderWidgetFrame()
@@ -4033,11 +4083,13 @@ namespace TienKeyboardStudio3
             }
             else
             {
-                if (!_weatherTried) _ = FetchWeatherAsync();
-                string weatherLine = _weather != null
-                    ? $"{_weatherPlace} {_weather.TempC}°C · {_weather.Description}"
-                    : _weatherPlace + " · chưa có dữ liệu thời tiết";
-                var bmp = WidgetRenderer.RenderClock(DateTime.Now, weatherLine, "Tien Vu Keyboard Studio");
+                // v3.11.1: chua co du lieu thi tu thu lai (lan loi truoc
+                // cach it nhat 30 giay). Ban cu khoa cung bang _weatherTried:
+                // mot lan loi la widget khong bao gio tu tai lai nua.
+                if (_weather == null && (!_weatherTried ||
+                    (!_weatherLastOk && (DateTime.UtcNow - _weatherLastAttemptUtc).TotalSeconds > 30)))
+                    _ = FetchWeatherAsync();
+                var bmp = WidgetRenderer.RenderClock(DateTime.Now, WeatherLineText(), "Tien Vu Keyboard Studio");
                 SetWidgetBitmap(bmp);
             }
             if (_widgetAuto && _widgetTickCount % 5 == 0 && !_busy && _currentPage == "widget")
@@ -4069,10 +4121,7 @@ namespace TienKeyboardStudio3
                 }
                 else
                 {
-                    string weatherLine = _weather != null
-                        ? $"Hà Nội {_weather.TempC}°C · {_weather.Description}"
-                        : "Hà Nội · chưa có dữ liệu thời tiết";
-                    bmp = WidgetRenderer.RenderClock(DateTime.Now, weatherLine, "Tien Vu Keyboard Studio");
+                    bmp = WidgetRenderer.RenderClock(DateTime.Now, WeatherLineText(), "Tien Vu Keyboard Studio");
                 }
                 byte[] stream;
                 using (var img = BitmapToImageSharp(bmp))
@@ -4970,7 +5019,7 @@ namespace TienKeyboardStudio3
         private sealed class PluginItem
         {
             public string Id, Name, Author, Cat, CatLabel, Desc, Detail, Meta, Thumb;
-            public string Attribution; // v3.10: dong ghi cong ben thu ba (modal chi tiet)
+            public string Attribution; // v3.10: ghi cong ben thu ba — tu v3.11.1 chi con o Gioi thieu + README/NOTICE, modal khong hien nua
             public bool BuiltIn;
             public bool Idea; // true = "Y tuong/dang phat trien": nhan ro, khoa bat
         }
@@ -5162,13 +5211,10 @@ namespace TienKeyboardStudio3
                 filterRow.Children.Add(b);
             }
 
-            // v3.10: khoi ghi cong ben thu ba (MIT) — nghia vu phap ly toi
-            // thieu khi phan phoi ban tai hien/dan xuat tu code cong dong.
-            var creditTexts = new List<Control> { Tb("Ghi công / Credits — theme cộng đồng (MIT)", "h3") };
-            foreach (var line in GreetingThemeRegistry.CreditLines())
-                creditTexts.Add(Tb("• " + line, "faint"));
-            creditTexts.Add(Tb("Mọi theme đều được viết lại bằng Avalonia trong app này; app không tải hay chạy mã của bên thứ ba.", "faint"));
-            var creditsCard = CardFlat(V(6, creditTexts.ToArray()));
+            // v3.11.1: DA GO khoi ghi cong khoi cuoi trang Cho plugin theo
+            // yeu cau gon giao dien cua Tien. Ghi cong MIT (bat buoc phap
+            // ly) chi con o HAI noi: muc "Nguon theme & giay phep" trong
+            // Cai dat -> Gioi thieu, va README/NOTICE di kem ban phat hanh.
 
             _myPluginsHost = new StackPanel { Spacing = 10 };
             var root = V(14,
@@ -5180,8 +5226,7 @@ namespace TienKeyboardStudio3
                 Tb("Plugin có sẵn trong app", "h2"),
                 filterRow,
                 wrap,
-                CardFlat(Tb("Cơ chế thật của trang này: các plugin khởi động là tính năng THẬT của app — plugin đang bật sẽ quyết định màn hình chào mỗi lần mở app, cấu hình lưu trong settings.json. Hai mục gắn nhãn “Ý tưởng · đang phát triển” chỉ là ý tưởng đang làm — chưa bật được, không có chức năng ẩn và app không tải/cài bất cứ thứ gì từ mạng.", "faint")),
-                creditsCard);
+                CardFlat(Tb("Cơ chế thật của trang này: các plugin khởi động là tính năng THẬT của app — plugin đang bật sẽ quyết định màn hình chào mỗi lần mở app, cấu hình lưu trong settings.json. Hai mục gắn nhãn “Ý tưởng · đang phát triển” chỉ là ý tưởng đang làm — chưa bật được, không có chức năng ẩn và app không tải/cài bất cứ thứ gì từ mạng.", "faint")));
             RefreshMyPlugins();
             return Scroll(root);
         }
@@ -5245,8 +5290,7 @@ namespace TienKeyboardStudio3
             inner.Children.Add(preview);
             inner.Children.Add(Tb(it.CatLabel + " · " + it.Author + " · " + it.Meta, "faint"));
             inner.Children.Add(Tb(it.Detail, "sub"));
-            if (!string.IsNullOrEmpty(it.Attribution))
-                inner.Children.Add(Tb("Ghi công: " + it.Attribution, "faint"));
+            // v3.11.1: modal khong con dong ghi cong (da gom ve Gioi thieu).
             inner.Children.Add(new Border { Height = 1, Background = new SolidColorBrush(Color.FromArgb(0x14, 0xFF, 0xFF, 0xFF)) });
             inner.Children.Add(enableRow);
             foreach (var row in PluginConfigRows(it, state)) inner.Children.Add(row);
@@ -5266,7 +5310,7 @@ namespace TienKeyboardStudio3
             return new Border
             {
                 Classes = { "card" },
-                Background = new SolidColorBrush(Color.FromArgb(0xE6, 0x1B, 0x1B, 0x26)),
+                Background = new SolidColorBrush(Color.FromArgb(0xF5, 0x1B, 0x1B, 0x26)),
                 Width = 560,
                 Padding = new Thickness(0),
                 Child = inner,
