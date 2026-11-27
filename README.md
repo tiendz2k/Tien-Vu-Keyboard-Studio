@@ -1,10 +1,47 @@
-# Tien Vu Keyboard Studio — v3.10.0
+# Tien Vu Keyboard Studio — v3.11.0
 
 Ứng dụng điều khiển bàn phím cơ cho Windows.
 **AULA F75 Max: hỗ trợ đầy đủ** qua giao thức HID đã kiểm chứng chéo từ hai driver mã nguồn mở độc lập.
 Các mẫu khác (AULA F75, Leobog Hi75C Pro, Keychron VIA, Wooting 60HE, RK84, DrunkDeer A75, AULA WIN68, GravaStar K1): app nhận diện được khi cắm vào, cho xem trước giao diện/hiệu ứng — tính năng ghi xuống phím được khoá kèm giải thích cho tới khi driver của mẫu đó được tích hợp (chỉ tích hợp mẫu đã công khai giao thức hoặc đã trích xuất được từ ứng dụng chính hãng). Dòng Akko / MonsGeek / EPOMAKER thuộc nền tảng RongYuan đã có Driver Pack 2 (mục bên dưới). Dòng MCHOSE (Ace 68, Jet 75, G87 V3…) đã có Driver Pack 3. Các họ SONiX anh em (S75 Pro/Nova75, MAD60, HERO68 HE, WIN60 HE/SE) và nền WitMod (Redragon K617 HE) đã có Driver Pack 4. **Driver Pack 5 (v3.9.0, pack cuối của lộ trình)** thêm họ DareU (EK75/EK75 RT và toàn bộ catalog All-in-One của hãng) và các họ AULA Hub còn lại (HFD, SparkLink V1/V2) — mục ngay bên dưới.
 
-Giao diện là bản đã được duyệt ở bản xem trước (Preview v0.9.1 + các bổ sung của Preview v0.10.1): nền tối trung tính sạch, panel kính **Liquid Glass** (panel mờ cho nền xuyên qua, viền sáng ở cạnh trên, bóng mềm), điểm nhấn gradient tím → cyan đổi được 4 màu, font Be Vietnam Pro, logo mới: chữ TV cách điệu trên nền keycap (v3.8).
+Giao diện là bản đã được duyệt ở bản xem trước (Preview v0.9.1 + các bổ sung của Preview v0.10.1): nền tối trung tính sạch, panel kính **Liquid Glass** (panel mờ cho nền xuyên qua, viền sáng ở cạnh trên, bóng mềm), điểm nhấn gradient tím → cyan đổi được 4 màu, font Be Vietnam Pro, logo mới: chữ TV cách điệu trên nền keycap (v3.8). **Từ v3.11.0**, giao diện chuyển sang phong cách **AULA Hub** đã duyệt ở Preview v0.11.3 — mục bên dưới.
+
+## Mới ở v3.11.0 — Giao diện AULA Hub + nền động + nhập plugin thủ công + thời tiết tự động
+
+1. **Giao diện kiểu AULA Hub** (port từ Preview v0.11.3 đã duyệt, nối vào trạng thái THẬT):
+   - Chrome kính, nút chính dạng **pill trắng**, mục đang chọn pill trắng, công tắc **BẬT = trắng / TẮT = đỏ**, thanh trên cùng: logo Mẫu F + tên app bên trái; 5 chấm màu chủ đề + nút Sáng/Tối + bánh răng Cài đặt bên phải. Chế độ Sáng vẫn là thẻ xem trước gắn nhãn "đang phát triển".
+   - **Cài đặt thành PANEL PHỦ** trên app đã mờ, có mini-sidebar riêng: nút pill "← Quay lại" + các mục **Cài đặt chung / Giao diện chủ đề / GameSense / Phản hồi / Giới thiệu** — mọi mục đều là cài đặt THẬT của app (đồng hồ phím, khối 04 17, dry-run, nhật ký, khởi động cùng Windows, khay hệ thống, bảng thiết bị cộng đồng, hồ sơ theo app, macro, thống kê gõ phím, GameSense CS2 đầy đủ, phản hồi qua GitHub Issues). Esc/Quay lại đóng panel.
+   - Mục **Giao diện chủ đề**: 5 ô màu lớn (Cực quang, Mây nhạt, Lá phong, Rừng sâu, **Nguyên bản**) có pill "Đã áp dụng"/"Áp dụng một lần" — ô **Nguyên bản** khôi phục chrome gradient tím→cyan (#7C3AED→#22D3EE) của bản trước; thẻ Chế độ (Tối đang dùng / Sáng đang phát triển); hàng **Hình nền** phủ toàn cửa sổ: nền mặc định, 4 skin gradient, 2 tranh mực gốc ("Kiếm sĩ mực đỏ", "Trăng mực xanh") và thẻ tải ảnh của bạn (nhãn 4MB như AULA; app tự nén ≤1920px JPEG và lưu thật vào `%AppData%\TienKeyboardStudio\Backgrounds`); **độ mờ kính 4–10** lưu lại. Mọi lựa chọn lưu trong settings.json và khôi phục khi mở app.
+2. **Nền động (live wallpaper) từ video NGẮN**: trong mục Hình nền có ô "Nền động — chọn video". Chọn .mp4 (hoặc .gif): MP4 được chuyển bằng **ffmpeg tải-khi-cần** (cùng cơ chế với tính năng TikTok) lấy **tối đa 12 giây đầu → GIF vòng lặp 15 fps, rộng tối đa 1280px**; GIF ≤ 20 MB dùng thẳng, lớn hơn đi đường chuyển đổi. GIF nền phát sau lớp kính toàn cửa sổ (khung hình giải mã sẵn rộng ≤768px, tối đa 120 khung), có nút tạm dừng/phát tiếp và **tự tạm dừng khi cửa sổ mất focus**. "Nền mặc định" khôi phục nền tĩnh.
+3. **Nhập plugin THỦ CÔNG ở Chợ plugin**: dán link (file .zip trực tiếp, hoặc link repo GitHub — app tự hỏi nhánh mặc định rồi tải bản zip) hoặc chọn file .zip trên máy. Gói plugin là **DỮ LIỆU THUẦN** — app kiểm tra nghiêm ngặt và **từ chối mọi gói chứa file thực thi/script** (.exe/.dll/.js/.py/.bat/.cmd/.sh/.ps1…) hoặc manifest thiếu/sai, với thông báo tiếng Việt rõ ràng. Plugin đã cài nằm ở mục **"Plugin của tôi"** (Bật / Xem trước / Xoá) và plugin đang bật **dùng được làm màn hình chào** qua engine cảnh tích hợp. Kèm theo bản phát hành là gói mẫu **Mau-plugin-chao-Hao-Quang-Tien-Vu.zip** để thử ngay. Định dạng manifest: xem mục "Định dạng gói plugin" bên dưới.
+4. **Thời tiết widget TFT tự động theo mạng** (mặc định mới): vị trí đo qua IP bằng **ipapi.co** (miễn phí, không cần key), **cache 24 giờ**, hiện rõ "Đang dùng: <thành phố> (tự động)" ở trang Widget; **chọn tay** (nhập tên thành phố, tra toạ độ bằng Open-Meteo Geocoding) là ghi đè. Đo IP thất bại thì tự rơi về: cache cũ → thành phố chọn tay → Hà Nội. Lưu ý: bật VPN thì vị trí IP đi theo đầu ra VPN — đó là lúc nên dùng chọn tay.
+5. **Kiểm tra đầu thu 2.4G (chỉ đọc)** — thẻ mới ở trang Tổng quan: liệt kê mọi giao diện HID của đầu thu **05AC:024F** (usage page/usage + độ dài report vào/ra/feature đọc từ report descriptor) và kết luận rõ có giao diện **màn hình** (usage page 0xFF68 hoặc output report ~4096 byte) hay không. Đây là phép kiểm chứng trên phần cứng thật cho kết luận nghiên cứu của dự án (kênh màn hình TFT chỉ tồn tại qua cáp USB-C; qua đầu thu chỉ có pin/đèn/mức phản hồi/chế độ game). **Chỉ liệt kê và đọc mô tả — không mở stream ghi, không gửi bất kỳ report nào xuống đầu thu.** Chưa cắm đầu thu thì app báo thân thiện "chưa thấy đầu thu".
+
+- 641/641 test đạt (552 test cũ + 89 test mới: validator manifest — nhận gói hợp lệ, từ chối từng đuôi file thực thi và manifest thiếu; phân giải link GitHub → zip; bộ dựng lệnh ffmpeg + giới hạn thời lượng của nền động; thứ tự phân giải/dự phòng của thời tiết bằng phản hồi giả; trạng thái ô màu Nguyên bản ↔ chrome; round-trip settings mới; phân loại giao diện đầu thu + kết luận có/không kênh màn hình bằng descriptor tổng hợp). Toàn bộ 21 file giao thức được bảo vệ + ExperimentalTransport giữ nguyên từng byte so với v3.10.0. Mọi cảnh báo cũ vẫn nguyên: chưa kiểm chứng trên F75 Max thật, dry-run bật mặc định.
+
+## Định dạng gói plugin (manifest.json)
+
+Một gói plugin là file .zip chứa `manifest.json` ở thư mục gốc (hoặc trong đúng một thư mục con duy nhất — dạng zip của GitHub) + các file ảnh/GIF dùng làm tài nguyên. **Gói chỉ chứa DỮ LIỆU — không chứa và không bao giờ chạy mã.** App từ chối gói chứa bất kỳ file nào có đuôi: `.exe .dll .js .py .bat .cmd .sh .ps1 .com .msi .scr .vbs .jse .jar`.
+
+```json
+{
+  "id": "ten-plugin",
+  "name": "Tên hiển thị",
+  "description": "Mô tả ngắn",
+  "author": "Tên tác giả",
+  "version": "1.0.0",
+  "kind": "greeting",
+  "scenes": [
+    { "type": "image", "asset": "assets/bg.png", "durationMs": 1800 },
+    { "type": "gif",   "asset": "assets/anim.gif", "durationMs": 2400 },
+    { "type": "title", "text": "TIEN VU", "durationMs": 1500 },
+    { "type": "lines", "lines": ["dòng chữ 1", "dòng chữ 2"], "durationMs": 2200 },
+    { "type": "logo",  "durationMs": 1500 }
+  ]
+}
+```
+
+Quy tắc kiểm tra: `id` chỉ gồm chữ thường/số/dấu `-` (2–41 ký tự, bắt đầu bằng chữ/số); `name` bắt buộc; `kind` hiện chỉ hỗ trợ `"greeting"`; `scenes` có ít nhất 1 cảnh; loại cảnh chỉ gồm `image` (ảnh tĩnh: .png/.jpg/.jpeg/.gif/.webp/.bmp), `gif` (GIF động), `title` (một dòng chữ lớn, trường `text`), `lines` (nhiều dòng chữ gõ dần, trường `lines`), `logo` (logo Mẫu F + tên app, không cần asset); mọi `asset` nhắc trong manifest phải có thật trong gói; `durationMs` mỗi cảnh được kẹp về 300–15000 ms. Plugin cài vào `%AppData%\TienKeyboardStudio\Plugins\<id>\`.
 
 ## Mới ở v3.10.0 — 4 theme màn hình chào mới trong Chợ plugin
 
@@ -20,9 +57,9 @@ Bản này chỉ thêm theme chào (không đổi giao diện, không đổi gia
 - Hai control hoạt hình mới đo thời gian bằng Stopwatch (không đếm tick) nên nhịp theme đúng cả trên máy chậm.
 - 552/552 test đạt (487 test cũ + 65 test mới: registry/ghi công theme, ánh xạ style + Resolve, QR payload, serial thẻ, lấy mẫu điểm logo xác định, máy trạng thái trình tự chào). Toàn bộ 21 file giao thức được bảo vệ giữ nguyên từng byte so với v3.9.2. Mọi cảnh báo cũ vẫn nguyên: chưa kiểm chứng trên F75 Max thật, dry-run bật mặc định.
 
-## Mới ở v3.10.0 — sửa đường stream GIF→LED của F75 Max theo cơ chế ứng dụng tham chiếu
+## Mới ở v3.9.2 — sửa đường stream GIF→LED của F75 Max theo cơ chế ứng dụng tham chiếu
 
-Bản này sửa đúng một đường: **stream GIF→LED (lệnh 0x20) của lớp thử nghiệm F75 Max**, sau khi bản v3.9.1 chạy trên máy thật cho thấy đèn phím không phản ứng. Toàn bộ thay đổi dựa trên báo cáo nghiên cứu cơ chế của **ứng dụng tham chiếu trên cùng nền tảng SONiX** (0C45:800A, usage page 0xFF13) — một bản cài đặt thương mại đang chạy thật trên phần cứng cùng họ. **Nói thẳng: cơ chế mới vẫn CHƯA được kiểm chứng trên F75 Max thật — v3.10.0 chính là bản để người dùng kiểm chứng.** Nếu vẫn không sáng, hãy bật Cài đặt → “Hiện nhật ký thao tác”, chạy lại stream và đối chiếu log (log nay ghi rõ từng bước bắt tay/ACK).
+Bản này sửa đúng một đường: **stream GIF→LED (lệnh 0x20) của lớp thử nghiệm F75 Max**, sau khi bản v3.9.1 chạy trên máy thật cho thấy đèn phím không phản ứng. Toàn bộ thay đổi dựa trên báo cáo nghiên cứu cơ chế của **ứng dụng tham chiếu trên cùng nền tảng SONiX** (0C45:800A, usage page 0xFF13) — một bản cài đặt thương mại đang chạy thật trên phần cứng cùng họ. **Nói thẳng: cơ chế mới vẫn CHƯA được kiểm chứng trên F75 Max thật — v3.9.2 chính là bản để người dùng kiểm chứng.** Nếu vẫn không sáng, hãy bật Cài đặt → “Hiện nhật ký thao tác”, chạy lại stream và đối chiếu log (log nay ghi rõ từng bước bắt tay/ACK).
 
 - **Bắt tay khi mở phiên stream (mới):** đúng trình tự connect của ứng dụng tham chiếu — gửi **0xF5** (byte[8]=9, bắt buộc ACK “sẵn sàng”) → **đọc 9 khối trạng thái rồi bỏ đi** (không sao lưu/khôi phục — ứng dụng tham chiếu cũng không làm) → gửi **0x02** (bắt buộc sẵn sàng). Chạy một lần khi phiên stream armed bắt đầu; chưa armed thì các bước này chỉ được ghi log như gói sẽ gửi.
 - **Kỷ luật ACK viết lại (port từ `SonixCommander` mới, tách thuần logic và có unit test bằng kênh giả lập):** gửi lệnh → chờ **5 ms** → đọc ACK; reply **toàn 0** (firmware đang xử lý) không còn bị coi là lỗi — tiếp tục poll theo thang **20/40/80/160/200/200/300 ms**; header **0x20 báo bận (0xFF)** thì **gửi lại tối đa 3 lần** (cách 20 ms), vẫn bận thì **bỏ frame đó và stream tiếp** — stream không còn chết vì một frame bận; lệnh kết thúc **0x02 bận** thì **gửi lại sau 35 ms, tối đa 2 lần**; **pacer 2 ms trước mỗi khối dữ liệu** (bản cũ: ngủ 10 ms sau mỗi khối); ngân sách mỗi thao tác ~1600 ms. Trước đây bộ chờ ACK ngủ cố định 30 ms, chỉ chấp nhận một dạng ACK và **ném exception huỷ cả stream** ở frame đầu tiên nếu gặp reply toàn 0 hoặc bận — đó là nghi phạm chính của lỗi “bấm phát mà đèn không phản ứng”.
@@ -33,7 +70,7 @@ Bản này sửa đúng một đường: **stream GIF→LED (lệnh 0x20) của 
 ## Mới ở v3.9.1 — bản vá giao diện: ẩn nhật ký thao tác mặc định
 
 - Theo yêu cầu của người dùng, **panel “Nhật ký thao tác” ở Trang chủ và panel “Nhật ký gói tin” ở trang Per-key không còn hiện sẵn** — giao diện gọn hơn, khoảng trống được trả lại cho nội dung chính.
-- Muốn xem lại (khi kiểm tra/gỡ lỗi): **Cài đặt → Cài đặt app → “Hiện nhật ký thao tác”**. Công tắc áp dụng **ngay, không cần khởi động lại app**, và được nhớ trong `settings.json`.
+- Muốn xem lại (khi kiểm tra/gỡ lỗi): **Panel Cài đặt → Cài đặt chung → Cài đặt app → “Hiện nhật ký thao tác”**. Công tắc áp dụng **ngay, không cần khởi động lại app**, và được nhớ trong `settings.json`.
 - Đây **chỉ là thay đổi hiển thị**: nhật ký vẫn được ghi ngầm bên trong như trước (kể cả log gói tin của Dry-run), nên bật công tắc lên là thấy ngay lịch sử gần đây. Không thay đổi giao thức, tính năng hay cổng an toàn nào.
 
 ## Mới ở v3.9.0 — Driver Pack 5 (pack CUỐI): họ DareU + các họ AULA Hub còn lại
@@ -68,7 +105,7 @@ Bản này sửa đúng một đường: **stream GIF→LED (lệnh 0x20) của 
   - **Họ F2 — AULA WIN60 SE** (38A6:291A): giao thức byte phiên ngẫu nhiên. Ngay giao diện của chính nhà sản xuất cũng ghi mẫu này là thử nghiệm/chưa kiểm chứng → app này **chỉ dựng gói + ghi log**, không ghi thật.
 - **Trang mới "Họ WitMod (Redragon)"** — nền tảng WitMod (hồ sơ `docs/PROTOCOLS-WITMOD-FULL.md`): khung gói report 1 + 63 byte `[opcode, sub, page big-endian, len, payload]`, **không checksum**. Nhận diện: quét bảng filter **36 cặp VID:PID** (usage page 0xFF1B), probe quyết định là lệnh **0x0D** (chuỗi sản phẩm CSV, trường thứ 5) + khối support của lệnh **0x01**; không qua probe → chỉ xem. Đã tích hợp: đèn chính 0x07 (đọc/ghi), đọc keymap 0x18, đọc trigger/poll-rate 0x21, reset deadband 0x26; builder đầy đủ cho họ lệnh 0x01–0x26 (SOCD 0x24, phím nâng cao 0x22, macro 0x19…) đã có ở tầng giao thức + unit test. Quy tắc phiên theo driver gốc: timeout 300 ms, ACK ghi = echo opcode+sub (gói đầu chờ nghiêm ngặt 100 ms), sau ghi keymap phải poll bit `isStoringData` của lệnh 0x01 tới khi tắt. Mẫu đã biết: **Redragon K617 HE** (app desktop của hãng nhận diện bằng tiền tố productName `7153`, 8 biến thể layout; VID:PID riêng của K617 HE không có trong code web — app không đoán).
 - **Nút "Sao chép thông tin thiết bị"** ở trang Tổng quan và mọi trang họ driver: sao chép một đoạn text gồm VID:PID, tên sản phẩm, usage page/usage, kích thước report, kết quả probe (UUID / dev_id / chuỗi 0x0D / tóm tắt 0xF5…), mẫu đang chọn và phiên bản app — dán thẳng vào GitHub issue khi cần hỗ trợ hoặc muốn đóng góp thông tin mẫu phím mới (xem mục "Đóng góp thông tin thiết bị" bên dưới).
-- **Cập nhật bảng thiết bị không cần phát hành app mới:** trang Cài đặt → thẻ **Bảng thiết bị cộng đồng** → nút **"Kiểm tra cập nhật bảng thiết bị"**. App chỉ tải khi bạn bấm (không tự gọi mạng nền), kiểm tra định dạng + số mục hợp lệ, lưu vào `%AppData%\TienKeyboardStudio\devices-registry.json` và áp dụng ở lần mở app sau (chỉ **bổ sung** mẫu mới, không ghi đè dữ liệu tích hợp; bảng tích hợp luôn là dự phòng). Định dạng file được mô tả ở mục "Bảng thiết bị (devices-registry.json)" bên dưới; file khởi đầu nằm tại `docs/devices-registry.json` trong repo.
+- **Cập nhật bảng thiết bị không cần phát hành app mới:** panel Cài đặt → Cài đặt chung → thẻ **Bảng thiết bị cộng đồng** → nút **"Kiểm tra cập nhật bảng thiết bị"**. App chỉ tải khi bạn bấm (không tự gọi mạng nền), kiểm tra định dạng + số mục hợp lệ, lưu vào `%AppData%\TienKeyboardStudio\devices-registry.json` và áp dụng ở lần mở app sau (chỉ **bổ sung** mẫu mới, không ghi đè dữ liệu tích hợp; bảng tích hợp luôn là dự phòng). Định dạng file được mô tả ở mục "Bảng thiết bị (devices-registry.json)" bên dưới; file khởi đầu nằm tại `docs/devices-registry.json` trong repo.
 
 ## Bảng thiết bị (devices-registry.json)
 
@@ -159,8 +196,8 @@ Giải nén zip ra một thư mục (giữ nguyên hai thư mục `Library` và 
 
 ## Nguyên tắc an toàn
 
-- **Dry-run BẬT mặc định.** Khi Dry-run bật, mọi thao tác ghi chỉ **ghi log** đúng các gói sẽ gửi — không có gì được ghi xuống phím. Công tắc Dry-run nằm ở thanh bên trái và ở trang Cài đặt.
-- **Không telemetry.** App không tự gọi mạng, ngoại trừ đúng các việc bạn chủ động bật/bấm: tải GIF từ link bạn tự dán ở trang Màn hình GIF, tải thời tiết khi mở trang Widget, server điều khiển điện thoại trong LAN khi bạn bật, và cổng nghe GameSense CS2 — cổng này chỉ **nghe trên 127.0.0.1** (máy của bạn tự gửi cho app), không kết nối ra ngoài. Chợ plugin **không gọi mạng**; Thư viện Online hiển thị sẵn offline nhưng GIF gốc chỉ tải khi bạn bấm “Tải về” (từ Google Drive công khai của dự án); thêm GIF từ TikTok và tải ffmpeg cũng chỉ chạy khi bạn bấm.
+- **Dry-run BẬT mặc định.** Khi Dry-run bật, mọi thao tác ghi chỉ **ghi log** đúng các gói sẽ gửi — không có gì được ghi xuống phím. Công tắc Dry-run nằm ở thanh bên trái và trong panel Cài đặt.
+- **Không telemetry.** App không tự gọi mạng, ngoại trừ đúng các việc bạn chủ động bật/bấm: tải GIF từ link bạn tự dán ở trang Màn hình GIF, tải thời tiết khi mở trang Widget (v3.11: kèm đo vị trí qua ipapi.co khi ở chế độ tự động), tải gói plugin/ffmpeg khi bạn bấm nhập plugin thủ công hoặc chọn nền động, server điều khiển điện thoại trong LAN khi bạn bật, và cổng nghe GameSense CS2 — cổng này chỉ **nghe trên 127.0.0.1** (máy của bạn tự gửi cho app), không kết nối ra ngoài. Chợ plugin **không gọi mạng**; Thư viện Online hiển thị sẵn offline nhưng GIF gốc chỉ tải khi bạn bấm “Tải về” (từ Google Drive công khai của dự án); thêm GIF từ TikTok và tải ffmpeg cũng chỉ chạy khi bạn bấm.
 - Các tính năng ghi thật cho F75 Max (RGB, đồng hồ, cài đặt 04 17, nạp GIF TFT) đều qua **cáp USB-C**. Bluetooth/đầu thu 2.4G không nhận cài đặt và không nạp được màn hình.
 - Lớp per-key/stream/nhạc là **THỬ NGHIỆM** có khoá riêng — đọc kỹ mục riêng bên dưới trước khi mở khoá.
 
@@ -171,7 +208,7 @@ Giải nén zip ra một thư mục (giữ nguyên hai thư mục `Library` và 
 3. Sang trang **Ánh sáng RGB**, chọn một hiệu ứng, bấm **Áp dụng xuống phím** — đang Dry-run nên app chỉ ghi log (xem ở Nhật ký thao tác, trang Tổng quan). Kiểm tra log thấy đủ 5 bước: mở phiên → chọn hiệu ứng → khối thông số → áp dụng → đóng phiên.
 4. **Tắt Dry-run** ở thanh bên trái (app sẽ cảnh báo "ĐANG GHI THẬT").
 5. Bấm **Áp dụng xuống phím** lại — lần này đèn phím đổi thật. Thử thêm đổi màu, độ sáng, tốc độ, hướng.
-6. Trang **Đồng hồ & Cài đặt**: bấm **Đồng bộ đồng hồ** (gửi giờ máy tính xuống màn hình phím). Sau đó thử khối **Cài đặt thiết bị (04 17)**: chỉnh vài công tắc (ví dụ Khoá phím Windows), bấm **Gửi cài đặt xuống phím**.
+6. Mở **panel Cài đặt** (bánh răng trên thanh trên cùng) → **Cài đặt chung**: bấm **Đồng bộ đồng hồ** (gửi giờ máy tính xuống màn hình phím). Sau đó thử khối **Cài đặt thiết bị (04 17)**: chỉnh vài công tắc (ví dụ Khoá phím Windows), bấm **Gửi cài đặt xuống phím**.
 7. Trang **Màn hình GIF**: chọn **một GIF nhỏ** trong thư viện, bấm **Nạp lên phím**, chờ thanh tiến trình chạy hết — GIF hiện trên màn hình TFT của phím.
 8. Trang **Per-key (thử nghiệm)**: bấm **Đọc thử màu phím (0xF5)** — thao tác **chỉ đọc**, chạy live kể cả khi Dry-run bật. Nếu màu đọc về hiện đúng lên hình vẽ bàn phím (khớp đèn thật) thì kênh per-key của F75 Max đã thông — đó là mốc kiểm chứng quan trọng nhất của lớp thử nghiệm.
 9. Chỉ sau bước 8 mới cân nhắc mở khoá lớp thử nghiệm (xem mục dưới).
@@ -194,10 +231,10 @@ Nếu có gì lạ (đèn không đổi, app báo không ACK): cắm lại cáp,
 - **Họ AULA Hub** — (mới ở v3.9.0) trang Driver Pack 5 cho HFD / SparkLink V1 / SparkLink V2, mỗi họ một thẻ riêng tự ẩn hiện theo mẫu đang chọn.
 - **Chợ plugin** — (mới ở v3.3.0) kho plugin cộng đồng: 3 phong cách màn hình chào dùng thật + 2 ý tưởng đang phát triển (khoá, ghi rõ nhãn). Bật plugin khởi động nào thì màn hình chào lần mở sau dùng phong cách đó; nút Xem trước mở đúng màn hình chào thật.
 - **Widget TFT** — widget vẽ trên máy rồi nạp lên màn hình phím: **Thông số máy** (CPU/RAM thật + GPU NVIDIA qua nvidia-smi nếu có), **Đồng hồ & thời tiết** (giờ thật + thời tiết Hà Nội từ Open-Meteo, không cần API key), **Đang phát** (đang phát triển — chưa tích hợp SMTC, xem BUILD-INFO). Có nút đẩy thủ công và tự động đẩy mỗi 5 giây. Trang này cũng chỉ hiện khi mẫu có màn hình.
-- **Đồng hồ & Cài đặt** — thẻ **Giao diện** mới ở v3.3.0 (hình nền app + ảnh của bạn, 4 màu chủ đề, chế độ Tối/Sáng, màn hình chào: xem lại + bỏ qua); đồng bộ đồng hồ; khối cài đặt thiết bị 04 17 (khoá Win, khoá Alt+F4, khoá Alt+Tab, chuyển Fn, giờ tự ngủ, độ phản hồi phím 1–5); cài đặt app (Dry-run, khởi động cùng Windows, thu nhỏ xuống khay); và 3 tính năng Stage 2 bên dưới.
+- **Panel Cài đặt** (từ v3.11.0 là panel phủ kiểu AULA Hub, mở bằng bánh răng trên thanh trên cùng hoặc nút Cài đặt ở thanh bên) — **Cài đặt chung**: đồng bộ đồng hồ; khối cài đặt thiết bị 04 17 (khoá Win, khoá Alt+F4, khoá Alt+Tab, chuyển Fn, giờ tự ngủ, độ phản hồi phím 1–5); cài đặt app (Dry-run, nhật ký thao tác, khởi động cùng Windows, thu nhỏ xuống khay); bảng thiết bị cộng đồng; và 3 tính năng Stage 2 bên dưới. **Giao diện chủ đề**: 5 ô màu + hình nền/nền động + độ mờ kính + màn hình chào. **GameSense / Phản hồi / Giới thiệu**: các mục riêng trong cùng panel.
 - **Điều khiển từ điện thoại** — bật server LAN ngay trong app: hiện **mã QR thật** + PIN 4 số (PIN nằm sẵn trong link QR). Điện thoại cùng Wi-Fi quét QR → mở trang điều khiển: chọn nhanh hiệu ứng, nạp GIF, đẩy widget. Mọi lệnh từ điện thoại đều đi qua PC và **tôn trọng Dry-run** như thao tác trên PC. Server tắt mặc định; Windows Firewall có thể hỏi lần đầu — cho phép trong mạng Private/Home.
 
-### Stage 2 (đã có trong bản này, ở trang Cài đặt)
+### Stage 2 (đã có trong bản này, ở panel Cài đặt → Cài đặt chung)
 
 - **Hồ sơ theo ứng dụng** — bật theo dõi cửa sổ đang active; gán cho mỗi app một hiệu ứng RGB (+ GIF TFT) và app tự áp khi bạn chuyển sang app đó.
 - **Macro trên máy** — ghi/phát chuỗi phím bằng hook + SendInput, lưu JSON tại máy; phím tắt toàn cục **Ctrl+Alt+R** (ghi/dừng) và **Ctrl+Alt+P** (phát). Macro chạy trên máy, không ghi xuống bộ nhớ phím.

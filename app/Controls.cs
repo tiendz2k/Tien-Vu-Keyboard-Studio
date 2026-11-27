@@ -29,6 +29,11 @@ namespace TienKeyboardStudio3
             },
         };
         public static readonly SolidColorBrush GlassBorder = new SolidColorBrush(Color.FromArgb(0x17, 0xFF, 0xFF, 0xFF));
+        // v3.11 AULA-style: vien "dang chon" = trang trung tinh (khong con gradient)
+        public static readonly SolidColorBrush SelBorder = new SolidColorBrush(Color.FromRgb(0xF4, 0xF4, 0xF6));
+        // v3.11: true khi dang dung chu de "Nguyen ban" (chrome gradient ban
+        // truoc) — cac control ve tay (PillSwitch) doc co nay de doi cach ve.
+        public static bool LegacyChrome;
         public static readonly SolidColorBrush CardFill = new SolidColorBrush(Color.FromArgb(0x0A, 0xFF, 0xFF, 0xFF));
         public static readonly SolidColorBrush TextSecondary = new SolidColorBrush(Color.FromRgb(0xA6, 0xA3, 0xB8));
     }
@@ -78,15 +83,36 @@ namespace TienKeyboardStudio3
         {
             base.Render(ctx);
             var rect = new Rect(0, 0, Bounds.Width, Bounds.Height);
-            IBrush track = _pos > 0.03
-                ? (IBrush)UiBrushes.AccentGradient()
-                : new SolidColorBrush(Color.FromRgb(0x2C, 0x2C, 0x38));
-            ctx.DrawRectangle(track, null, rect, (float)(rect.Height / 2), (float)(rect.Height / 2));
+            // v3.11 AULA-style (port Preview v0.11.3): TAT = ranh DO, BAT =
+            // ranh TRANG + num toi. Che do "Nguyen ban" (LegacyChrome): BAT =
+            // ranh GRADIENT tim->cyan + num trang (dung chrome ban truoc).
+            var offRed = Color.FromRgb(0xD9, 0x3A, 0x3E);
+            var onWhite = Color.FromRgb(0xF4, 0xF4, 0xF6);
+            byte Lerp(byte a, byte b) => (byte)(a + (b - a) * _pos);
+            float rad = (float)(rect.Height / 2);
+            if (UiBrushes.LegacyChrome)
+            {
+                ctx.DrawRectangle(new SolidColorBrush(offRed), null, rect, rad, rad);
+                if (_pos > 0.001)
+                {
+                    var gb = UiBrushes.AccentGradient();
+                    gb.Opacity = _pos;
+                    ctx.DrawRectangle(gb, null, rect, rad, rad);
+                }
+            }
+            else
+            {
+                var trackColor = Color.FromRgb(Lerp(offRed.R, onWhite.R), Lerp(offRed.G, onWhite.G), Lerp(offRed.B, onWhite.B));
+                ctx.DrawRectangle(new SolidColorBrush(trackColor), null, rect, rad, rad);
+            }
             double kx = 3.5 + _pos * (rect.Width - rect.Height);
             var knobRect = new Rect(kx, 3.5, rect.Height - 7, rect.Height - 7);
             ctx.DrawEllipse(new SolidColorBrush(Color.FromArgb(0x40, 0, 0, 0)), null,
                 new Point(knobRect.Center.X, knobRect.Center.Y + 1.2), knobRect.Width / 2, knobRect.Height / 2);
-            ctx.DrawEllipse(Brushes.White, null, knobRect.Center, knobRect.Width / 2, knobRect.Height / 2);
+            var knobColor = UiBrushes.LegacyChrome
+                ? Color.FromRgb(0xFF, 0xFF, 0xFF)
+                : Color.FromRgb(Lerp(0xFF, 0x17), Lerp(0xFF, 0x17), Lerp(0xFF, 0x1D));
+            ctx.DrawEllipse(new SolidColorBrush(knobColor), null, knobRect.Center, knobRect.Width / 2, knobRect.Height / 2);
         }
     }
 

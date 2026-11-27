@@ -3,7 +3,8 @@
              x:Class="TienKeyboardStudio3.App"
              RequestedThemeVariant="Dark">
   <Application.Resources>
-    <!-- Accent gradient tim -> cyan (dung tiet che tren nen sach) -->
+    <!-- v0.11 AULA-style: accent gradient CHI con la diem nhan nho (logo, link,
+         cham mau chu de) — khong con la mau nen nut/nav nhu truoc -->
     <LinearGradientBrush x:Key="AccentGradient" StartPoint="0%,0%" EndPoint="100%,100%">
       <GradientStop Color="#7C3AED" Offset="0" />
       <GradientStop Color="#22D3EE" Offset="1" />
@@ -18,30 +19,32 @@
     <SolidColorBrush x:Key="GlassFill" Color="#0FFFFFFF" />
     <SolidColorBrush x:Key="GlassBorder" Color="#17FFFFFF" />
     <SolidColorBrush x:Key="OkGreen" Color="#34D399" />
+    <!-- Trang AULA: nen nut chinh / muc dang chon -->
+    <SolidColorBrush x:Key="PillWhite" Color="#F4F4F6" />
+    <SolidColorBrush x:Key="PillWhiteHover" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="PillInk" Color="#121218" />
   </Application.Resources>
   <Application.Styles>
     <FluentTheme />
 
-    <!-- LIQUID GLASS (v3.3, port tu Preview v0.10 da duyet): lop kinh mo phu tren
-         giao dien cu — nen ban trong suot nhieu lop de hinh nen xuyen qua, vien
-         sang o mep tren (highlight), bong mem. Khong doi bo cuc; chi doi chat
-         lieu be mat. Avalonia khong co backdrop-blur that — day la panel ban
-         trong suot tren hinh nen, dung co che nhu ban tham khao. -->
+    <!-- LIQUID GLASS v0.11 (phong cach AULA Hub): panel ban trong suot manh hon,
+         vien toc sang (hairline) ro, bo goc lon mem — hinh nen xuyen qua ro ret.
+         Bo cuc giu nguyen; chi doi chat lieu be mat. -->
     <Style Selector="Border.card">
-      <Setter Property="Background" Value="#14FFFFFF" />
-      <Setter Property="BorderBrush" Value="#26FFFFFF" />
+      <Setter Property="Background" Value="#12FFFFFF" />
+      <Setter Property="BorderBrush" Value="#30FFFFFF" />
       <Setter Property="BorderThickness" Value="1" />
-      <Setter Property="CornerRadius" Value="18" />
+      <Setter Property="CornerRadius" Value="24" />
       <Setter Property="Padding" Value="18" />
-      <Setter Property="BoxShadow" Value="inset 0 1 0 0 #2EFFFFFF, inset 0 -1 0 0 #0D000000, 0 12 30 0 #66000000, 0 2 6 0 #33000000" />
+      <Setter Property="BoxShadow" Value="inset 0 1 0 0 #38FFFFFF, inset 0 -1 0 0 #0D000000, 0 12 30 0 #66000000, 0 2 6 0 #33000000" />
     </Style>
     <Style Selector="Border.cardflat">
-      <Setter Property="Background" Value="#10FFFFFF" />
-      <Setter Property="BorderBrush" Value="#1FFFFFFF" />
+      <Setter Property="Background" Value="#0EFFFFFF" />
+      <Setter Property="BorderBrush" Value="#24FFFFFF" />
       <Setter Property="BorderThickness" Value="1" />
-      <Setter Property="CornerRadius" Value="14" />
+      <Setter Property="CornerRadius" Value="18" />
       <Setter Property="Padding" Value="14" />
-      <Setter Property="BoxShadow" Value="inset 0 1 0 0 #24FFFFFF, 0 4 14 0 #40000000" />
+      <Setter Property="BoxShadow" Value="inset 0 1 0 0 #2AFFFFFF, 0 4 14 0 #40000000" />
     </Style>
 
     <Style Selector="TextBlock.h1">
@@ -72,38 +75,56 @@
       <Setter Property="TextWrapping" Value="Wrap" />
       <Setter Property="LineHeight" Value="17" />
     </Style>
-    <!-- Nut chinh gradient -->
+    <!-- Nut chinh: PILL TRANG chu toi (dung phong cach AULA Hub) -->
     <Style Selector="Button.primary">
-      <Setter Property="Background" Value="{StaticResource AccentGradient}" />
-      <Setter Property="Foreground" Value="White" />
-      <Setter Property="CornerRadius" Value="12" />
-      <Setter Property="Padding" Value="18,10" />
+      <Setter Property="Background" Value="{StaticResource PillWhite}" />
+      <Setter Property="Foreground" Value="{StaticResource PillInk}" />
+      <Setter Property="CornerRadius" Value="999" />
+      <Setter Property="Padding" Value="20,10" />
       <Setter Property="FontWeight" Value="SemiBold" />
       <Setter Property="FontSize" Value="13.5" />
       <Setter Property="BorderThickness" Value="0" />
     </Style>
     <Style Selector="Button.primary:pointerover /template/ ContentPresenter">
-      <Setter Property="Background" Value="{StaticResource AccentGradientHover}" />
+      <Setter Property="Background" Value="{StaticResource PillWhiteHover}" />
+      <Setter Property="TextElement.Foreground" Value="{StaticResource PillInk}" />
     </Style>
+    <Style Selector="Button.primary:pressed /template/ ContentPresenter">
+      <Setter Property="Background" Value="#DCDCE4" />
+      <Setter Property="TextElement.Foreground" Value="{StaticResource PillInk}" />
+    </Style>
+    <!-- Nut phu: pill kinh mo vien toc -->
     <Style Selector="Button.ghost">
-      <Setter Property="Background" Value="#0DFFFFFF" />
+      <Setter Property="Background" Value="#0FFFFFFF" />
       <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
-      <Setter Property="CornerRadius" Value="11" />
-      <Setter Property="Padding" Value="14,8" />
-      <Setter Property="BorderBrush" Value="#1FFFFFFF" />
+      <Setter Property="CornerRadius" Value="999" />
+      <Setter Property="Padding" Value="15,8" />
+      <Setter Property="BorderBrush" Value="#24FFFFFF" />
       <Setter Property="BorderThickness" Value="1" />
       <Setter Property="FontSize" Value="12.5" />
     </Style>
     <Style Selector="Button.ghost:pointerover /template/ ContentPresenter">
-      <Setter Property="Background" Value="#1AFFFFFF" />
+      <Setter Property="Background" Value="#1EFFFFFF" />
+    </Style>
+    <!-- Nut tron tren thanh tren cung (sang-toi / cai dat) -->
+    <Style Selector="Button.topicon">
+      <Setter Property="Background" Value="#0FFFFFFF" />
+      <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+      <Setter Property="CornerRadius" Value="999" />
+      <Setter Property="Padding" Value="8" />
+      <Setter Property="BorderBrush" Value="#24FFFFFF" />
+      <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style Selector="Button.topicon:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="#1EFFFFFF" />
     </Style>
 
-    <!-- Sidebar nav -->
+    <!-- Sidebar nav: muc dang chon = pill TRANG chu toi (AULA) -->
     <Style Selector="Button.nav">
       <Setter Property="Background" Value="Transparent" />
       <Setter Property="Foreground" Value="#B9B6CC" />
-      <Setter Property="CornerRadius" Value="12" />
-      <Setter Property="Padding" Value="13,10" />
+      <Setter Property="CornerRadius" Value="999" />
+      <Setter Property="Padding" Value="14,10" />
       <Setter Property="Margin" Value="0,2" />
       <Setter Property="HorizontalAlignment" Value="Stretch" />
       <Setter Property="HorizontalContentAlignment" Value="Left" />
@@ -111,19 +132,19 @@
       <Setter Property="BorderThickness" Value="0" />
     </Style>
     <Style Selector="Button.nav:pointerover /template/ ContentPresenter">
-      <Setter Property="Background" Value="#12FFFFFF" />
+      <Setter Property="Background" Value="#14FFFFFF" />
       <Setter Property="TextElement.Foreground" Value="White" />
     </Style>
     <Style Selector="Button.nav.sel">
-      <Setter Property="Foreground" Value="White" />
+      <Setter Property="Foreground" Value="{StaticResource PillInk}" />
       <Setter Property="FontWeight" Value="SemiBold" />
     </Style>
     <Style Selector="Button.nav.sel /template/ ContentPresenter">
-      <Setter Property="Background" Value="{StaticResource AccentGradient}" />
-      <Setter Property="TextElement.Foreground" Value="White" />
+      <Setter Property="Background" Value="{StaticResource PillWhite}" />
+      <Setter Property="TextElement.Foreground" Value="{StaticResource PillInk}" />
     </Style>
 
-    <!-- Chip / tag -->
+    <!-- Chip / tag: dang chon = trang chu toi -->
     <Style Selector="Button.chip">
       <Setter Property="Background" Value="#0DFFFFFF" />
       <Setter Property="Foreground" Value="#C9C6DA" />
@@ -137,19 +158,19 @@
       <Setter Property="Background" Value="#1AFFFFFF" />
     </Style>
     <Style Selector="Button.chip.sel">
-      <Setter Property="Foreground" Value="White" />
-      <Setter Property="BorderBrush" Value="#A78BFA" />
+      <Setter Property="Foreground" Value="{StaticResource PillInk}" />
+      <Setter Property="BorderBrush" Value="#F4F4F6" />
     </Style>
     <Style Selector="Button.chip.sel /template/ ContentPresenter">
-      <Setter Property="Background" Value="#407C3AED" />
-      <Setter Property="TextElement.Foreground" Value="White" />
+      <Setter Property="Background" Value="{StaticResource PillWhite}" />
+      <Setter Property="TextElement.Foreground" Value="{StaticResource PillInk}" />
     </Style>
 
-    <!-- Segmented control trong khay kinh -->
+    <!-- Segmented control trong khay kinh: muc chon = pill trang nho -->
     <Style Selector="Button.seg">
       <Setter Property="Background" Value="Transparent" />
       <Setter Property="Foreground" Value="#A6A3B8" />
-      <Setter Property="CornerRadius" Value="9" />
+      <Setter Property="CornerRadius" Value="999" />
       <Setter Property="Padding" Value="14,6" />
       <Setter Property="FontSize" Value="12.5" />
       <Setter Property="BorderThickness" Value="0" />
@@ -158,43 +179,43 @@
       <Setter Property="TextElement.Foreground" Value="White" />
     </Style>
     <Style Selector="Button.seg.sel">
-      <Setter Property="Foreground" Value="White" />
+      <Setter Property="Foreground" Value="{StaticResource PillInk}" />
       <Setter Property="FontWeight" Value="SemiBold" />
     </Style>
     <Style Selector="Button.seg.sel /template/ ContentPresenter">
-      <Setter Property="Background" Value="{StaticResource AccentGradient}" />
-      <Setter Property="TextElement.Foreground" Value="White" />
+      <Setter Property="Background" Value="{StaticResource PillWhite}" />
+      <Setter Property="TextElement.Foreground" Value="{StaticResource PillInk}" />
     </Style>
     <Style Selector="Border.segtray">
       <Setter Property="Background" Value="#0A000000" />
       <Setter Property="BorderBrush" Value="#14FFFFFF" />
       <Setter Property="BorderThickness" Value="1" />
-      <Setter Property="CornerRadius" Value="12" />
+      <Setter Property="CornerRadius" Value="999" />
       <Setter Property="Padding" Value="3" />
     </Style>
 
-    <!-- The chon (hieu ung / GIF / thiet bi / mau phim) — cung lop kinh -->
+    <!-- The chon (hieu ung / GIF / thiet bi / mau phim) — cung lop kinh, bo goc lon -->
     <Style Selector="Border.pickcard">
-      <Setter Property="Background" Value="#12FFFFFF" />
-      <Setter Property="BorderBrush" Value="#21FFFFFF" />
+      <Setter Property="Background" Value="#10FFFFFF" />
+      <Setter Property="BorderBrush" Value="#26FFFFFF" />
       <Setter Property="BorderThickness" Value="1" />
-      <Setter Property="CornerRadius" Value="14" />
+      <Setter Property="CornerRadius" Value="18" />
       <Setter Property="Padding" Value="10" />
-      <Setter Property="BoxShadow" Value="inset 0 1 0 0 #26FFFFFF, 0 4 12 0 #38000000" />
+      <Setter Property="BoxShadow" Value="inset 0 1 0 0 #2EFFFFFF, 0 4 12 0 #38000000" />
     </Style>
 
     <!-- O tim kiem -->
     <Style Selector="TextBox.search">
       <Setter Property="Background" Value="#0DFFFFFF" />
       <Setter Property="BorderBrush" Value="#1AFFFFFF" />
-      <Setter Property="CornerRadius" Value="12" />
-      <Setter Property="Padding" Value="12,9" />
+      <Setter Property="CornerRadius" Value="18" />
+      <Setter Property="Padding" Value="13,9" />
       <Setter Property="FontSize" Value="13" />
     </Style>
 
-    <!-- Slider: track gradient -->
+    <!-- Slider: duong truot trung tinh, num trang (bo gradient) -->
     <Style Selector="Slider">
-      <Setter Property="Foreground" Value="{StaticResource AccentGradient}" />
+      <Setter Property="Foreground" Value="{StaticResource PillWhite}" />
     </Style>
 
     <!-- Thanh cuon mong, nhe -->
@@ -205,12 +226,57 @@
       <Setter Property="Height" Value="8" />
     </Style>
 
+    <!-- v0.11.3 NGUYEN BAN: chrome GRADIENT tim->cyan mac dinh cua ban that v3.9.x
+         (truoc khi doi sang phong cach AULA). Khi cua so mang lop "legacy" (chon o
+         "Nguyen ban" trong muc Mau chu de), nut chinh / muc dang chon / chip / seg
+         tro lai nen GRADIENT chu trang thay cho pill trang AULA; slider cung gradient.
+         Brush AccentGradient duoc ApplyAccent cap nhat theo bang mau dang chon. -->
+    <Style Selector=".legacy Button.primary">
+      <Setter Property="Background" Value="{StaticResource AccentGradient}" />
+      <Setter Property="Foreground" Value="White" />
+    </Style>
+    <Style Selector=".legacy Button.primary:pointerover /template/ ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource AccentGradientHover}" />
+      <Setter Property="TextElement.Foreground" Value="White" />
+    </Style>
+    <Style Selector=".legacy Button.primary:pressed /template/ ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource AccentGradient}" />
+      <Setter Property="TextElement.Foreground" Value="White" />
+    </Style>
+    <Style Selector=".legacy Button.nav.sel">
+      <Setter Property="Foreground" Value="White" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style Selector=".legacy Button.nav.sel /template/ ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource AccentGradient}" />
+      <Setter Property="TextElement.Foreground" Value="White" />
+    </Style>
+    <Style Selector=".legacy Button.chip.sel">
+      <Setter Property="Foreground" Value="White" />
+      <Setter Property="BorderBrush" Value="Transparent" />
+    </Style>
+    <Style Selector=".legacy Button.chip.sel /template/ ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource AccentGradient}" />
+      <Setter Property="TextElement.Foreground" Value="White" />
+    </Style>
+    <Style Selector=".legacy Button.seg.sel">
+      <Setter Property="Foreground" Value="White" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style Selector=".legacy Button.seg.sel /template/ ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource AccentGradient}" />
+      <Setter Property="TextElement.Foreground" Value="White" />
+    </Style>
+    <Style Selector=".legacy Slider">
+      <Setter Property="Foreground" Value="{StaticResource AccentGradient}" />
+    </Style>
+
     <!-- Toast kinh mo -->
     <Style Selector="Border.toastcard">
       <Setter Property="Background" Value="#E61B1B26" />
       <Setter Property="BorderBrush" Value="#3AFFFFFF" />
       <Setter Property="BorderThickness" Value="1" />
-      <Setter Property="CornerRadius" Value="14" />
+      <Setter Property="CornerRadius" Value="18" />
       <Setter Property="Padding" Value="15,11" />
       <Setter Property="BoxShadow" Value="0 14 34 0 #80000000" />
     </Style>

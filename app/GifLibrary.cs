@@ -40,6 +40,23 @@ namespace TienKeyboardStudio3
         // Day CHI la thay doi hien thi: bo dem nhat ky trong app van thu
         // thap lien tuc, bat cong tac nay len la thay lich su gan day.
         public bool ShowOperationLog { get; set; } = false;
+
+        // --- v3.11: chu de kieu AULA (o mau + do mo kinh + nen dong) va
+        // thoi tiet theo vi tri. Mac dinh an toan cho settings.json cu:
+        // ThemeTile rong -> ResolveId anh xa tu AccentIndex (giu dien mao
+        // cu sau nang cap); WeatherMode "auto" la mac dinh moi theo y
+        // nguoi dung (tu dong theo mang, chon tay la ghi de). ---
+        public string ThemeTile { get; set; } = "";            // cuc-quang/may-nhat/la-phong/rung-sau/nguyen-ban
+        public double GlassBlur { get; set; } = 7;             // 4..10 (thang AULA)
+        public string LiveWallpaperFile { get; set; } = "";    // ten file GIF trong Backgrounds/ khi Background == "live"
+        public bool LiveWallpaperPaused { get; set; } = false;
+        public string WeatherMode { get; set; } = "auto";      // auto | manual
+        public string WeatherCity { get; set; } = "";          // che do chon tay (rong = Ha Noi)
+        public string GeoCity { get; set; } = "";              // cache do IP (tu dong theo mang)
+        public string GeoCountry { get; set; } = "";
+        public double GeoLat { get; set; }
+        public double GeoLon { get; set; }
+        public string GeoFetchedUtc { get; set; } = "";        // ISO 8601, cache 24h
     }
 
     /// <summary>Thu muc luu anh nen nguoi dung tu chon (v3.3).</summary>

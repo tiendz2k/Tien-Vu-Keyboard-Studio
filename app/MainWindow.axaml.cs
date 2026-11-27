@@ -229,6 +229,7 @@ namespace TienKeyboardStudio3
 
             // v3.3: hieu ung mo cho modal plugin + man hinh chao
             GreetingOverlay.Transitions = new Transitions { new DoubleTransition { Property = OpacityProperty, Duration = TimeSpan.FromMilliseconds(220) } };
+            SettingsOverlay.Transitions = new Transitions { new DoubleTransition { Property = OpacityProperty, Duration = TimeSpan.FromMilliseconds(220) } };
             PluginModal.Transitions = new Transitions { new DoubleTransition { Property = OpacityProperty, Duration = TimeSpan.FromMilliseconds(220) } };
             PluginModalDim.PointerPressed += (s, e) => ClosePluginModal();
             GreetingOverlay.PointerPressed += (s, e) => DismissGreeting();
@@ -237,6 +238,7 @@ namespace TienKeyboardStudio3
                 if (e.Key != Key.Escape) return;
                 if (GreetingOverlay.IsVisible) DismissGreeting();
                 else if (PluginModal.IsVisible) ClosePluginModal();
+                else if (SettingsOverlay.IsVisible) CloseSettings();
             };
             _gsi.Log = msg => AppendLog(msg);
             _gsi.EventReceived += (ev, payload) => Dispatcher.UIThread.Post(() => HandleGsiEvent(ev));
@@ -258,13 +260,18 @@ namespace TienKeyboardStudio3
             _pages["aulahub"] = BuildAulaHubPage();
             _pages["store"] = BuildStorePage();
             _pages["widget"] = BuildWidgetPage();
-            _pages["settings"] = BuildSettingsPage();
             _pages["phone"] = BuildPhonePage();
+            // v3.11: Cai dat khong con la mot TRANG — la PANEL PHU kieu AULA Hub
+            // (mini-sidebar rieng) + thanh tren cung, dung sau khi cac trang co san.
+            BuildTopBar();
+            BuildSettingsOverlay();
             foreach (var p in _pages.Values) { p.IsVisible = false; PageHost.Children.Add(p); }
 
-            // v3.3: ap dung giao dien da luu (mau chu de + hinh nen)
-            ApplyAccentByIndex(_ui.AccentIndex, save: false);
+            // v3.11: ap dung giao dien da luu — o mau chu de (ke ca chrome
+            // "Nguyen ban"), hinh nen (gom ca nen dong) va do mo kinh.
+            ApplyThemeTile(ThemeTiles.ResolveId(_ui), save: false);
             ApplyBackground(_ui.Background, save: false);
+            ApplyGlass(_ui.GlassBlur, save: false);
             if (_ui.GameSense.Listening) StartGsi();
 
             DragDrop.SetAllowDrop(this, true);
@@ -281,6 +288,9 @@ namespace TienKeyboardStudio3
             _profiles.Load();
             _profiles.ForegroundChanged += exe => Dispatcher.UIThread.Post(() => OnForegroundAppChanged(exe));
 
+            // v3.11: nen dong tu tam dung khi cua so mat focus (tiet kiem CPU)
+            Activated += (s, e) => UpdateLivePlayback();
+            Deactivated += (s, e) => UpdateLivePlayback();
             Opened += (s, e) =>
             {
                 try
@@ -313,7 +323,7 @@ namespace TienKeyboardStudio3
             RefreshWriteStates();
             ShowPage("home");
             _ = RunIntegrityCheckAsync();
-            AppendLog("Tien Vu Keyboard Studio v3.10.0 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
+            AppendLog("Tien Vu Keyboard Studio v3.11.0 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
             AppendLog("Lộ trình an toàn lần đầu: Quét thiết bị → thử RGB (dry-run) → tắt Dry-run → RGB thật → Cài đặt 04 17 → Đồng hồ → GIF TFT nhỏ → Đọc thử 0xF5.");
         }
 
@@ -337,6 +347,7 @@ namespace TienKeyboardStudio3
 
         private void Cleanup()
         {
+            try { _liveTimer?.Stop(); } catch { }
             try { _gsi.Stop(); } catch { }
             try { _flashOverlay?.Close(); } catch { }
             try { _phone.Stop(); } catch { }
@@ -488,7 +499,6 @@ namespace TienKeyboardStudio3
                 ("aulahub", "Họ AULA Hub", "M4 6.5 A1.5 1.5 0 0 1 5.5 5h13A1.5 1.5 0 0 1 20 6.5v11A1.5 1.5 0 0 1 18.5 19h-13A1.5 1.5 0 0 1 4 17.5Z M7.5 9.5h9 M7.5 13h5"),
                 ("store", "Chợ plugin", "M5.5 8h13l-.9 11.5A1.5 1.5 0 0 1 16.1 21H7.9a1.5 1.5 0 0 1-1.5-1.5L5.5 8Z M8.5 10.5V6.8a3.5 3.5 0 0 1 7 0v3.7"),
                 ("widget", "Widget TFT", "M4.5 15.5 A8.5 8.5 0 1 1 19.5 15.5 M12 15.5 16 10 M12 15.5 m-1.2 0 a1.2 1.2 0 1 0 2.4 0 a1.2 1.2 0 1 0-2.4 0"),
-                ("settings", "Đồng hồ & Cài đặt", "M12 12 m-9 0 a9 9 0 1 0 18 0 a9 9 0 1 0-18 0 M12 7v5.2l3.4 2"),
                 ("phone", "Điều khiển từ điện thoại", "M7 2.5h10A1.5 1.5 0 0 1 18.5 4v16A1.5 1.5 0 0 1 17 21.5H7A1.5 1.5 0 0 1 5.5 20V4A1.5 1.5 0 0 1 7 2.5Z M10.3 5.2h3.4"),
             };
             var idle = Color.FromRgb(0xB9, 0xB6, 0xCC);
@@ -503,6 +513,13 @@ namespace TienKeyboardStudio3
                 _nav.Add((key, b, icon));
                 NavPanel.Children.Add(b);
             }
+            // v3.11: nut "Cai dat" co dinh o day thanh ben — mo PANEL CAI DAT
+            // (khong con la trang nhu truoc v3.11).
+            var setIcon = NavIcon("M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.51 1.7 1.7 0 0 0 1.87-.34l.06-.06A1.7 1.7 0 1 0 19.4 9c.24.6.86 1 1.51 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1Z", idle);
+            var setBtn = new Button { Content = H(11, setIcon, Tb("Cài đặt", null, 13.5)) };
+            setBtn.Classes.Add("nav");
+            setBtn.Click += (s, e) => OpenSettings("general");
+            SideSettingsHost.Children.Add(setBtn);
         }
 
         // An/hien trang theo nang luc cua model dang chon (quy tac cua Tien:
@@ -546,7 +563,9 @@ namespace TienKeyboardStudio3
             {
                 bool sel = k == key;
                 SetCls(btn, "sel", sel);
-                icon.Stroke = new SolidColorBrush(sel ? Colors.White : Color.FromRgb(0xB9, 0xB6, 0xCC));
+                icon.Stroke = new SolidColorBrush(sel
+                    ? (UiBrushes.LegacyChrome ? Colors.White : Color.FromRgb(0x12, 0x12, 0x18))
+                    : Color.FromRgb(0xB9, 0xB6, 0xCC));
             }
             if (_pages.TryGetValue(key, out var page)) AnimateIn(page);
             OnPageShown(key);
@@ -571,15 +590,14 @@ namespace TienKeyboardStudio3
         private void OnPageShown(string key)
         {
             _widgetTimer.IsEnabled = key == "widget";
-            _clockTimer.IsEnabled = key == "settings";
-            if (key == "widget") RenderWidgetFrame();
+            if (key == "widget") { UpdateWeatherLocText(); RenderWidgetFrame(); }
+            if (key == "store") RefreshMyPlugins();
             if (key == "rongyuan") RefreshRyPage();
             if (key == "mchose") RefreshMcPage();
             if (key == "sonix") RefreshSxPage();
             if (key == "witmod") RefreshWmPage();
             if (key == "dareu") RefreshDareUPage();
             if (key == "aulahub") RefreshAulaHubPage();
-            if (key == "settings") { UpdateClockLabels(); RefreshTypingLabels(); RefreshGreetingStyleText(); }
             if (key != "perkey") _ledPlayer?.Stop();
             if (key != "online") _onlineLedPlayer?.Stop();
             if (key != "music" && _musicPlaying) StopMusic();
@@ -835,8 +853,9 @@ namespace TienKeyboardStudio3
             var root = V(14,
                 Tb("Tổng quan", "h1"),
                 _integrityBanner,
-                Tb("Tien Vu Keyboard Studio v3.10.0 — bản thật: quét thiết bị HID thật, ghi xuống F75 Max qua giao thức đã kiểm chứng; Driver Pack 1 thêm họ Sinowealth kb_by_v2 (định danh 0x82 trước khi ghi); Driver Pack 2 thêm nền tảng RongYuan — Akko/MonsGeek/EPOMAKER (định danh dev_id 0x8F trước khi ghi); Driver Pack 3 thêm họ MCHOSE — stack GLW/CZ + QHW (định danh bằng PID registry + probe đọc trước khi ghi; họ BY dùng chung Pack 1, chỉ xem); Driver Pack 4 thêm các họ SONiX anh em (S75 Pro/Nova75, MAD60, HERO68 HE, WIN60 HE/SE) và nền WitMod (Redragon K617 HE) — định danh bằng probe của từng họ trước khi ghi, chưa kiểm chứng trên phần cứng thật. Driver Pack 5 (v3.9, pack CUỐI) thêm họ DareU (TG/TG-RT + Magnetic Axis, OHID, JM/QF — định danh bằng registry PID từ web driver chính hãng) và các họ AULA Hub còn lại (HFD, SparkLink V1/V2 — định danh bằng VID:PID + usage page). v3.8: bản GỌN — Thư viện Online không còn đóng gói GIF (tải theo nhu cầu từ Google Drive của dự án), thêm GIF từ link TikTok (thử nghiệm), chữ ký tác giả + kiểm tra toàn vẹn bản phát hành. v3.9.1: panel nhật ký thao tác ẩn mặc định cho gọn — bật lại ở Cài đặt → Cài đặt app → “Hiện nhật ký thao tác”. v3.9.2: viết lại đường stream GIF→LED của F75 Max theo cơ chế của ứng dụng tham chiếu trên cùng nền tảng SONiX — bắt tay 0xF5→đọc bỏ 9 khối→0x02 khi mở phiên stream, chờ ACK theo thang poll qua reply toàn-0 (20/40/80/160/200/200/300 ms), header 0x20 bận thì gửi lại tối đa 3 lần rồi bỏ frame (stream không chết), lệnh 0x02 bận thì gửi lại sau 35 ms, pacer 2 ms trước mỗi khối, chọn đúng interface usage page 0xFF13, và sửa lấy mẫu màu GIF→LED (median theo vùng + ngưỡng đen 24 + đúng hệ toạ độ toàn canvas). Vẫn CHƯA kiểm chứng trên F75 Max thật — bản này chính là bản để kiểm chứng. v3.10: Chợ plugin thêm 4 theme màn hình chào — 550C Boot + Thẻ ID (mã QR thật), DeepSeek Harness — Rhine Lab bản đầy đủ 6 hồi, MOSS · Ignition (tái hiện phong cách, vẽ thủ tục), Hạt Bụi TV (3.200 hạt tụ thành logo Mẫu F) — kèm khối ghi công MIT ở cuối trang Chợ plugin. Dry-run bật mặc định để an toàn.", "sub"),
+                Tb("Tien Vu Keyboard Studio v3.11.0 — bản thật: quét thiết bị HID thật, ghi xuống F75 Max qua giao thức đã kiểm chứng; Driver Pack 1 thêm họ Sinowealth kb_by_v2 (định danh 0x82 trước khi ghi); Driver Pack 2 thêm nền tảng RongYuan — Akko/MonsGeek/EPOMAKER (định danh dev_id 0x8F trước khi ghi); Driver Pack 3 thêm họ MCHOSE — stack GLW/CZ + QHW (định danh bằng PID registry + probe đọc trước khi ghi; họ BY dùng chung Pack 1, chỉ xem); Driver Pack 4 thêm các họ SONiX anh em (S75 Pro/Nova75, MAD60, HERO68 HE, WIN60 HE/SE) và nền WitMod (Redragon K617 HE) — định danh bằng probe của từng họ trước khi ghi, chưa kiểm chứng trên phần cứng thật. Driver Pack 5 (v3.9, pack CUỐI) thêm họ DareU (TG/TG-RT + Magnetic Axis, OHID, JM/QF — định danh bằng registry PID từ web driver chính hãng) và các họ AULA Hub còn lại (HFD, SparkLink V1/V2 — định danh bằng VID:PID + usage page). v3.8: bản GỌN — Thư viện Online không còn đóng gói GIF (tải theo nhu cầu từ Google Drive của dự án), thêm GIF từ link TikTok (thử nghiệm), chữ ký tác giả + kiểm tra toàn vẹn bản phát hành. v3.9.1: panel nhật ký thao tác ẩn mặc định cho gọn — bật lại ở Cài đặt → Cài đặt app → “Hiện nhật ký thao tác”. v3.9.2: viết lại đường stream GIF→LED của F75 Max theo cơ chế của ứng dụng tham chiếu trên cùng nền tảng SONiX — bắt tay 0xF5→đọc bỏ 9 khối→0x02 khi mở phiên stream, chờ ACK theo thang poll qua reply toàn-0 (20/40/80/160/200/200/300 ms), header 0x20 bận thì gửi lại tối đa 3 lần rồi bỏ frame (stream không chết), lệnh 0x02 bận thì gửi lại sau 35 ms, pacer 2 ms trước mỗi khối, chọn đúng interface usage page 0xFF13, và sửa lấy mẫu màu GIF→LED (median theo vùng + ngưỡng đen 24 + đúng hệ toạ độ toàn canvas). Vẫn CHƯA kiểm chứng trên F75 Max thật — bản này chính là bản để kiểm chứng. v3.10: Chợ plugin thêm 4 theme màn hình chào — 550C Boot + Thẻ ID (mã QR thật), DeepSeek Harness — Rhine Lab bản đầy đủ 6 hồi, MOSS · Ignition (tái hiện phong cách, vẽ thủ tục), Hạt Bụi TV (3.200 hạt tụ thành logo Mẫu F) — kèm khối ghi công MIT ở cuối trang Chợ plugin. v3.11: giao diện kiểu AULA Hub đã duyệt (panel Cài đặt phủ + 5 ô màu chủ đề gồm “Nguyên bản”, hình nền toàn cửa sổ + nền động từ video ngắn ≤12 giây), Chợ plugin thêm nhập plugin thủ công (gói dữ liệu thuần, kiểm tra nghiêm ngặt), thời tiết widget tự động theo mạng (đo IP, cache 24h, chọn tay ghi đè), thẻ “Kiểm tra đầu thu 2.4G” chỉ đọc ở Tổng quan (liệt kê giao diện HID của dongle 05AC:024F, kết luận có kênh màn hình hay không). Dry-run bật mặc định để an toàn.", "sub"),
                 connectCard,
+                BuildDongleDiagCard(),
                 heroCard,
                 stats,
                 Tb("Tất cả mẫu được hỗ trợ", "h2"),
@@ -3884,6 +3903,7 @@ namespace TienKeyboardStudio3
                 Tb("Chọn widget", "h2"),
                 selectorRow,
                 H(12, uploadBtn, _widgetProgress, autoSwitch, Tb("Tự động đẩy mỗi 5 giây", "sub"), weatherBtn),
+                BuildWeatherLocationCard(),
                 Tb("Widget “Đang phát”: Windows SMTC (System Media Transport Controls) cần tích hợp WinRT riêng — để tránh làm nặng/không ổn định bản build này, tính năng để ở trạng thái Đang phát triển (xem BUILD-INFO). Widget thông số và đồng hồ là dữ liệu thật.", "faint"));
             return Scroll(root);
         }
@@ -3891,14 +3911,94 @@ namespace TienKeyboardStudio3
         private async Task FetchWeatherAsync()
         {
             _weatherTried = true;
-            var w = await WeatherService.FetchHanoiAsync();
+            // v3.11: phan giai vi tri theo che do — tu dong theo mang (do IP,
+            // cache 24h) hoac chon tay (ghi de). Loi do IP thi theo thu tu du
+            // phong cua WeatherLocationLogic: cache cu -> chon tay -> Ha Noi.
+            var cache = WeatherLocationLogic.FromSettings(_ui);
+            var plan = WeatherLocationLogic.Plan(_ui.WeatherMode, cache, DateTime.UtcNow);
+            double lat = WeatherLocationLogic.HanoiLat, lon = WeatherLocationLogic.HanoiLon;
+            string place = WeatherLocationLogic.HanoiName, via = "mặc định";
+
+            if (plan == WeatherSource.Manual)
+            {
+                via = "chọn tay";
+                string city = (_ui.WeatherCity ?? "").Trim();
+                if (city.Length == 0) { place = WeatherLocationLogic.HanoiName; }
+                else
+                {
+                    var g = await WeatherService.GeocodeAsync(city);
+                    if (g.HasValue) { lat = g.Value.Lat; lon = g.Value.Lon; place = g.Value.Name; }
+                    else { place = city; AppendLog("Không tìm được tọa độ cho “" + city + "” — tạm dùng Hà Nội."); }
+                }
+            }
+            else if (plan == WeatherSource.GeoCache)
+            {
+                lat = cache.Lat; lon = cache.Lon; place = cache.DisplayName; via = "tự động theo mạng";
+            }
+            else // GeoFetch
+            {
+                var geo = await WeatherService.FetchIpGeoAsync();
+                if (geo != null)
+                {
+                    _ui.GeoCity = geo.City; _ui.GeoCountry = geo.Country;
+                    _ui.GeoLat = geo.Lat; _ui.GeoLon = geo.Lon;
+                    _ui.GeoFetchedUtc = geo.FetchedUtc.ToString("o");
+                    SaveUi();
+                    lat = geo.Lat; lon = geo.Lon; place = geo.DisplayName; via = "tự động theo mạng";
+                }
+                else
+                {
+                    var fb = WeatherLocationLogic.FallbackAfterGeoFailure(cache,
+                        !string.IsNullOrWhiteSpace(_ui.WeatherCity));
+                    AppendLog("Đo vị trí qua IP thất bại — dùng phương án dự phòng: " + fb + ".");
+                    if (fb == WeatherSource.StaleGeoCache)
+                    {
+                        lat = cache.Lat; lon = cache.Lon; place = cache.DisplayName; via = "tự động (cache cũ)";
+                    }
+                    else if (fb == WeatherSource.Manual)
+                    {
+                        via = "chọn tay (dự phòng)";
+                        var g = await WeatherService.GeocodeAsync(_ui.WeatherCity.Trim());
+                        if (g.HasValue) { lat = g.Value.Lat; lon = g.Value.Lon; place = g.Value.Name; }
+                        else place = _ui.WeatherCity.Trim();
+                    }
+                }
+            }
+
+            _weatherPlace = place;
+            UpdateWeatherLocText(place, via);
+            var w = await WeatherService.FetchAsync(lat, lon, place);
             if (w != null)
             {
                 _weather = w;
-                AppendLog($"Thời tiết Hà Nội: {w.TempC}°C, {w.Description}, độ ẩm {w.Humidity}%.");
+                AppendLog($"Thời tiết {place} ({via}): {w.TempC}°C, {w.Description}, độ ẩm {w.Humidity}%.");
                 if (_widgetKind == 2) RenderWidgetFrame();
             }
             else AppendLog("Không tải được thời tiết (mạng?) — widget đồng hồ chỉ hiện giờ.");
+        }
+
+        private void UpdateWeatherLocText()
+        {
+            // Hien thi tu settings (chua can goi mang): chon tay -> thanh pho
+            // da nhap; tu dong -> cache IP con tuoi neu co, khong thi noi
+            // dang dung gan nhat (_weatherPlace).
+            if (WeatherLocationLogic.NormalizeMode(_ui.WeatherMode) == WeatherLocationLogic.ModeManual)
+            {
+                string city = (_ui.WeatherCity ?? "").Trim();
+                UpdateWeatherLocText(city.Length == 0 ? WeatherLocationLogic.HanoiName : city, "chọn tay");
+                return;
+            }
+            var cache = WeatherLocationLogic.FromSettings(_ui);
+            if (WeatherLocationLogic.IsCacheFresh(cache, DateTime.UtcNow))
+                UpdateWeatherLocText(cache.DisplayName, "tự động theo mạng");
+            else
+                UpdateWeatherLocText(_weatherPlace, "tự động theo mạng");
+        }
+
+        private void UpdateWeatherLocText(string place, string via)
+        {
+            if (_weatherLocText != null)
+                _weatherLocText.Text = "Đang dùng: " + place + " (" + via + ")";
         }
 
         private void RenderWidgetFrame()
@@ -3935,8 +4035,8 @@ namespace TienKeyboardStudio3
             {
                 if (!_weatherTried) _ = FetchWeatherAsync();
                 string weatherLine = _weather != null
-                    ? $"Hà Nội {_weather.TempC}°C · {_weather.Description}"
-                    : "Hà Nội · chưa có dữ liệu thời tiết";
+                    ? $"{_weatherPlace} {_weather.TempC}°C · {_weather.Description}"
+                    : _weatherPlace + " · chưa có dữ liệu thời tiết";
                 var bmp = WidgetRenderer.RenderClock(DateTime.Now, weatherLine, "Tien Vu Keyboard Studio");
                 SetWidgetBitmap(bmp);
             }
@@ -4011,164 +4111,6 @@ namespace TienKeyboardStudio3
             var row = CardFlat(grid, 12);
             row.Margin = new Thickness(0, 4);
             return row;
-        }
-
-        private Control BuildSettingsPage()
-        {
-            _clockTimer.Tick += (s, e) => { UpdateClockLabels(); RefreshTypingLabels(); };
-            _clockBig = new TextBlock
-            {
-                FontSize = 44, FontWeight = FontWeight.Bold,
-                Foreground = new SolidColorBrush(Color.FromRgb(0xF4, 0xF4, 0xF8)),
-            };
-            _clockDate = Tb("", "sub");
-            UpdateClockLabels();
-
-            var syncBtn = WriteBtn("Đồng bộ đồng hồ", async () =>
-                await RunStepsAsync("Đồng bộ đồng hồ", () => F75Protocol.BuildClockSync(DateTime.Now)), primary: false);
-            var clockCard = Card(V(10,
-                Tb("Đồng hồ phím", "h2"),
-                _clockBig,
-                _clockDate,
-                syncBtn));
-
-            // --- Khoi cai dat thiet bi 04 17 ---
-            bool winLock = false, altF4 = false, altTab = false, fnSwitch = false;
-            int sleepVal = 2, responseVal = 2;
-            var devSetCard = Card(V(8,
-                Tb("Cài đặt thiết bị (khối 04 17)", "h2"),
-                Tb("Khối cài đặt này được mohin7 và VitalyArt tài liệu hoá NGAY TRÊN F75 Max (Win lock, khoá Alt+F4/Alt+Tab, chuyển Fn, giờ ngủ, độ phản hồi phím 1–5) và đi qua cùng khung giao dịch với khối sáng. Vẫn tôn trọng Dry-run như mọi thao tác ghi.", "sub"),
-                SettingRow("Khoá phím Windows", "Chặn phím Win khi chơi game", false, v => winLock = v),
-                SettingRow("Khoá Alt+F4", "Chặn tổ hợp Alt+F4", false, v => altF4 = v),
-                SettingRow("Khoá Alt+Tab", "Chặn tổ hợp Alt+Tab", false, v => altTab = v),
-                SettingRow("Chuyển đổi Fn", "Hoán đổi vai trò lớp Fn", false, v => fnSwitch = v),
-                H(10, Tb("Tự ngủ:", "sub"), Segmented(new[] { "Không ngủ", "1 phút", "5 phút", "30 phút" }, 2, i => sleepVal = i).Root),
-                V(4, Tb("Độ phản hồi phím (1 = nhanh nhất … 5 = chậm nhất, chống rung)", "sub"),
-                    new Slider { Minimum = 1, Maximum = 5, Value = 2, Width = 260, TickFrequency = 1, IsSnapToTickEnabled = true }
-                        .Also(sl => sl.PropertyChanged += (s, e) => { if (e.Property == Slider.ValueProperty) responseVal = (int)sl.Value; })),
-                WriteBtn("Gửi cài đặt xuống phím", async () =>
-                    await RunStepsAsync("Gửi cài đặt thiết bị 04 17",
-                        () => L99Protocol.BuildSettingsSteps(winLock, altF4, altTab, fnSwitch, sleepVal, responseVal)))));
-
-            // --- Cai dat app ---
-            var appCard = Card(V(6,
-                Tb("Cài đặt app", "h2"),
-                SettingRow("Dry-run (chế độ an toàn)", "Bật: mọi thao tác ghi chỉ ghi log, không ghi xuống phím", true, v =>
-                {
-                    if (_syncingDry) return;
-                    SetDryRun(v, fromUi: true);
-                }).Also(c => _drySwitch = FindPill(c)),
-                SettingRow("Hiện nhật ký thao tác", "Hiện panel nhật ký ở Trang chủ và trang Per-key — chỉ cần khi kiểm tra/gỡ lỗi. Mặc định tắt cho gọn giao diện; nhật ký vẫn được ghi ngầm bên trong, bật lên là thấy lịch sử gần đây.", _ui.ShowOperationLog, v =>
-                {
-                    _ui.ShowOperationLog = v;
-                    SaveUi();
-                    ApplyLogVisibility();
-                }),
-                SettingRow("Khởi động cùng Windows", "Tự mở app khi đăng nhập Windows (ghi vào HKCU Run)", GetAutostart(), v => SetAutostart(v)),
-                SettingRow("Thu nhỏ xuống khay hệ thống", "Đóng cửa sổ thì app vẫn chạy nền ở khay", true, v => _trayEnabled = v),
-                Tb("App không tự kiểm tra cập nhật và không gọi mạng nào ngoài: tải GIF bạn chủ động bấm, thời tiết khi mở trang Widget, server điều khiển qua LAN khi bạn bật, và tải bảng thiết bị khi bạn bấm nút kiểm tra ở thẻ 'Bảng thiết bị cộng đồng' bên dưới.", "faint")));
-
-            // --- v3.7: bang thiet bi cong dong ---
-            _regStatus = Tb(RegistryStatusText(), "sub");
-            var regCard = Card(V(8,
-                Tb("Bảng thiết bị cộng đồng", "h2"),
-                Tb("Danh sách mẫu phím của app có thể được bổ sung mà không cần phát hành bản app mới. Bấm nút dưới đây để tải bảng mới nhất từ kho GitHub của dự án (chỉ tải khi bạn bấm — app không tự gọi mạng nền). File tải về được kiểm tra định dạng rồi lưu vào thư mục dữ liệu của app và áp dụng ở lần mở app SAU; bảng tích hợp sẵn luôn là phương án dự phòng.", "sub"),
-                _regStatus,
-                GhostBtn("Kiểm tra cập nhật bảng thiết bị", async () => await CheckRegistryUpdateAsync())));
-
-            // --- Stage 2: ho so theo app ---
-            _profileCurrent = Tb("App đang mở: —", "sub");
-            _profileList = new StackPanel { Spacing = 6 };
-            RefreshProfileList();
-            var profileCard = Card(V(10,
-                Tb("Hồ sơ theo ứng dụng (Stage 2)", "h2"),
-                Tb("Khi bật, app theo dõi cửa sổ đang active; nếu app đó đã được gán hồ sơ, app tự áp hiệu ứng RGB (+ GIF TFT nếu có) đã lưu. Áp dụng vẫn tôn trọng Dry-run.", "sub"),
-                SettingRow("Bật theo dõi ứng dụng", "GetForegroundWindow, kiểm tra mỗi 0,7 giây", false, v =>
-                {
-                    _profilesOn = v;
-                    if (v) _profiles.Start(); else _profiles.Stop();
-                    ShowToast(v ? "Đã bật hồ sơ theo ứng dụng." : "Đã tắt hồ sơ theo ứng dụng.");
-                }),
-                _profileCurrent,
-                GhostBtn("Gán app đang mở cho hiệu ứng RGB + GIF đang chọn", () =>
-                {
-                    string exe = _profiles.CurrentExe;
-                    if (string.IsNullOrEmpty(exe)) { ShowToast("Chưa xác định được app đang mở — hãy bấm sang app khác rồi quay lại."); return; }
-                    var p = _profiles.Find(exe) ?? new AppProfile { ExeName = exe };
-                    p.EffectId = _rgb.Effect;
-                    p.TftGifPath = _selectedGif != null ? ResolveGifPath(_selectedGif) : "";
-                    if (_profiles.Find(exe) == null) _profiles.Profiles.Add(p);
-                    _profiles.Save();
-                    RefreshProfileList();
-                    ShowToast($"Đã gán hồ sơ cho {exe}: hiệu ứng {EffectFriendlyNames[p.EffectId]}" + (string.IsNullOrEmpty(p.TftGifPath) ? "" : " + GIF TFT đã chọn"));
-                }),
-                _profileList));
-
-            // --- Stage 2: macro host ---
-            _macroStatus = Tb("Macro chạy trên máy (host) bằng SendInput — không ghi xuống bộ nhớ phím. Phím tắt toàn cục: Ctrl+Alt+R ghi/dừng, Ctrl+Alt+P phát macro gần nhất.", "sub");
-            _macroList = new StackPanel { Spacing = 6 };
-            RefreshMacroList();
-            var macroCard = Card(V(10,
-                Tb("Macro trên máy (Stage 2)", "h2"),
-                _macroStatus,
-                H(10,
-                    GhostBtn("Ghi macro mới", () => _macros.StartRecording("Macro " + (_macros.Macros.Count + 1))),
-                    GhostBtn("Dừng ghi", () => _macros.StopRecording()),
-                    GhostBtn("Phát macro gần nhất", () =>
-                    {
-                        var m = _macros.Macros.Count > 0 ? _macros.Macros[_macros.Macros.Count - 1] : null;
-                        if (m == null) ShowToast("Chưa có macro nào.");
-                        else _macros.Play(m);
-                    })),
-                _macroList));
-
-            // --- Stage 2: thong ke go phim ---
-            _typingStatus = Tb("Chưa bật. Khi bật, app CHỈ ĐẾM số lần nhấn theo vị trí phím (heatmap + WPM) — không ghi nội dung, không ghi chuỗi phím, không lưu lại khi tắt app.", "sub");
-            _heatKb = new KeyboardView { Mode = KeyboardMode.Animated, State = _heatState };
-            var typingCard = Card(V(10,
-                Tb("Thống kê gõ phím (Stage 2)", "h2"),
-                SettingRow("Bật đếm phím", "Hook bàn phím mức thấp, chỉ đếm — không ghi nội dung", false, v =>
-                {
-                    _typingOn = v;
-                    if (v) { _typing.Start(); ShowToast("Đã bật thống kê gõ phím (chỉ đếm)."); }
-                    else { _typing.Stop(); ShowToast("Đã tắt thống kê gõ phím."); }
-                    RefreshTypingLabels();
-                }),
-                _typingStatus,
-                _heatKb));
-
-            var logoImg = new Avalonia.Controls.Image
-            {
-                Source = new Bitmap(AssetLoader.Open(GifTools.Asset("Assets/logo.png"))),
-                Width = 64, Height = 64,
-            };
-            var logoWrap = new Border
-            {
-                CornerRadius = new CornerRadius(14), ClipToBounds = true,
-                Width = 64, Height = 64, Child = logoImg,
-            };
-            var aboutTexts = V(4,
-                Tb("Tien Vu Keyboard Studio", "h2"),
-                Tb("Phiên bản 3.10.0 — bản thật: F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; lớp per-key/stream/nhạc là thử nghiệm có khoá an toàn (xem trang Per-key). Mới: Liquid Glass, hình nền + màu chủ đề, màn hình chào 3 phong cách, Chợ plugin, GameSense CS2 (GSI). v3.4 thêm Driver Pack 1: họ Sinowealth kb_by_v2 (AULA F75, Leobog Hi75, YUNZII Cake, GravaStar K1) — trang riêng, định danh bằng UUID 0x82 trước khi ghi, chưa kiểm chứng trên phần cứng thật. v3.5 thêm Driver Pack 2: nền tảng RongYuan (Akko, MonsGeek, EPOMAKER — 246 mục registry) — trang riêng, định danh bằng dev_id 0x8F trước khi ghi, mục chưa có dev_id đã kiểm chứng chỉ xem, chưa kiểm chứng trên phần cứng thật. v3.6 thêm Driver Pack 3: họ MCHOSE (31 model CZ: stack GLW Hall-effect + stack QHW; 18 model BY dùng chung kb_by_v2, chỉ xem vì chưa có UUID) — trang riêng, định danh bằng VID:PID registry + probe đọc trước khi ghi, checksum GLW là giả thuyết sum-mod-256 chưa kiểm chứng, stack legacy chỉ ghi log gói, chưa kiểm chứng trên phần cứng thật. v3.7 thêm Driver Pack 4: các họ SONiX anh em — S75 Pro/Nova75 (họ B, chung nền F75 Max; probe 0xF5 không phân biệt được với F75 Max nên ghi vẫn khoá sau công tắc thử nghiệm; Nova75 stream chỉ log), MAD60 (họ C, bắt tay fw protocol v9), HERO68 HE (họ D, chữ ký cmd 130 + checksum), WIN60 HE (họ E), WIN60 SE (họ F2, chỉ log — nhà sản xuất tự đánh dấu thử nghiệm) — và nền WitMod (Redragon K617 HE; định danh bằng probe 0x0D + khối support 0x01 sau khi quét bảng filter 36 cặp VID:PID). Cộng thêm tính năng cộng đồng: nút sao chép thông tin thiết bị (dán vào GitHub issue) và cập nhật bảng thiết bị từ repo khi bạn chủ động bấm. Tất cả Pack 4 chưa kiểm chứng trên phần cứng thật. v3.9 thêm Driver Pack 5 (pack cuối): họ DareU — TG/TG-RT (lớp 13 Magnetic Axis đầy đủ cho EK75 RT và các mẫu TG-RT), OHID, JM/QF — định danh bằng registry 187 mục trích từ web driver chính hãng dr.dareu.com (PID lạ → chỉ xem); và các họ AULA Hub còn lại — HFD (gồm TFT NOVA98 240×135 + dongle 2.4G bộ lệnh riêng), SparkLink V1 (KB2, per-key bền, không stream), SparkLink V2 (DirectDrive + GIF stream + dot-matrix BOX 63) — định danh bằng VID:PID + usage page theo registry AULA Hub. Tất cả Pack 5 chưa kiểm chứng trên phần cứng thật; bản cài desktop của DareU chưa từng được kiểm toán (CDN của hãng chặn tải) — giao thức lấy từ bản web chính hãng. v3.9.1: panel nhật ký thao tác/gói tin ẩn mặc định (chỉ là thay đổi hiển thị — nhật ký vẫn ghi ngầm; bật lại ở Cài đặt → Cài đặt app → “Hiện nhật ký thao tác”). v3.9.2: viết lại đường stream GIF→LED của F75 Max theo cơ chế của ứng dụng tham chiếu trên cùng nền tảng SONiX — bắt tay 0xF5→đọc bỏ 9 khối→0x02 khi mở phiên stream, chờ ACK theo thang poll qua reply toàn-0 (20/40/80/160/200/200/300 ms), header 0x20 bận thì gửi lại tối đa 3 lần rồi bỏ frame (stream không chết), lệnh 0x02 bận thì gửi lại sau 35 ms, pacer 2 ms trước mỗi khối, chọn đúng interface usage page 0xFF13, và sửa lấy mẫu màu GIF→LED (median theo vùng + ngưỡng đen 24 + đúng hệ toạ độ toàn canvas). Vẫn CHƯA kiểm chứng trên F75 Max thật — bản này chính là bản để kiểm chứng. v3.10.0: thêm 4 theme màn hình chào vào Chợ plugin — 550C Boot + Thẻ ID (thẻ truy cập cá nhân + mã QR thật), DeepSeek Harness — Rhine Lab bản đầy đủ 6 hồi, MOSS · Ignition (tái hiện phong cách, vẽ thủ tục 100%, không dùng tư liệu phim), Hạt Bụi TV (3.200 hạt tụ thành logo Mẫu F) — ghi công MIT đầy đủ ở cuối trang Chợ plugin và ngay dưới mục này. Dry-run bật mặc định.", "sub"),
-                Tb("v3.8: đổi tên thành Tien Vu Keyboard Studio + logo mới; Thư viện Online chuyển sang tải theo nhu cầu (không đóng gói GIF); thêm GIF từ link TikTok (thử nghiệm); app có chữ ký tác giả + tự kiểm tra toàn vẹn khi mở — bản bị chỉnh sửa sẽ hiện cảnh báo ở Trang chủ.", "sub"),
-                Tb("Phát triển bởi Vũ Minh Tiến — github.com/tiendz2k", "sub"),
-                Tb("Mã nguồn + bản chính thức: github.com/tiendz2k/T-Keyboard-Studio · " + AboutInfo.SignatureLine, "faint"),
-                Tb("Font chữ: Be Vietnam Pro (SIL OFL 1.1). GIF thư viện: tự làm cho Tiến. Giao thức per-key: Gavin Graham (AULA L99).", "faint"),
-                Tb("Theme màn hình chào của cộng đồng (MIT, tái hiện bằng Avalonia): Rhine Lab six-act © 6shenhonghong9 (github.com/6shenhonghong9/dsh-startup-screen); 550C Boot © Ziyang Song + intro gốc của Voidpocket (github.com/yannicksong0106/dsh-550c-boot); MOSS · Ignition — tái hiện phong cách, tiết tấu từ QIFANAI (github.com/QIFANAI/dsh-startup-moss2), vẽ thủ tục 100%, không dùng tư liệu phim; Hạt Bụi TV — ý tưởng hạt biến hình từ INJU Particle Boot © inju0524 (github.com/inju0524/dsh-inju-boot). Chi tiết ghi công ở cuối trang Chợ plugin.", "faint"));
-            var aboutCard = Card(H(14, logoWrap, aboutTexts));
-
-            var root = V(14,
-                Tb("Đồng hồ & Cài đặt", "h1"),
-                BuildAppearanceCard(),
-                clockCard,
-                devSetCard,
-                appCard,
-                regCard,
-                profileCard,
-                macroCard,
-                typingCard,
-                aboutCard);
-            return Scroll(root);
         }
 
         private static PillSwitch FindPill(Control row)
@@ -4459,6 +4401,25 @@ namespace TienKeyboardStudio3
         /// <summary>Doi hinh nen toan app (skin: default/aurora/sunset/forest/space/custom).</summary>
         public void ApplyBackground(string skin, bool save = true)
         {
+            // v3.11: NEN DONG — GIF vong lap (tu video ngan) phat sau panel kinh
+            if (skin == "live")
+            {
+                string lp = ResolveLiveWallpaperPath();
+                if (lp == null)
+                {
+                    if (save) ShowToast("Chưa có nền động — hãy bấm “Nền động — chọn video” trong Cài đặt → Giao diện chủ đề để chọn video/GIF trước.");
+                    skin = "default";
+                }
+                else
+                {
+                    StartLiveWallpaper(lp);
+                    _ui.Background = "live";
+                    if (save) SaveUi();
+                    SyncWallpaperSelection();
+                    return;
+                }
+            }
+            StopLiveWallpaper();
             if (skin == "custom")
             {
                 string path = BackgroundStore.ResolveCustomPath(_ui);
@@ -4476,6 +4437,7 @@ namespace TienKeyboardStudio3
                         BackdropShade.IsVisible = true;
                         _ui.Background = "custom";
                         if (save) SaveUi();
+                        SyncWallpaperSelection();
                         return;
                     }
                     catch (Exception ex) { AppendLog("Không nạp được ảnh nền riêng: " + ex.Message); skin = "default"; }
@@ -4485,6 +4447,8 @@ namespace TienKeyboardStudio3
                         : skin == "sunset" ? "skin-sunset.jpg"
                         : skin == "forest" ? "skin-forest.jpg"
                         : skin == "space" ? "skin-space.jpg"
+                        : skin == "inkred" ? "skin-ink-red.jpg"
+                        : skin == "inkteal" ? "skin-ink-teal.jpg"
                         : null;
             if (file == null)
             {
@@ -4500,6 +4464,7 @@ namespace TienKeyboardStudio3
                 _ui.Background = skin;
             }
             if (save) SaveUi();
+            SyncWallpaperSelection();
         }
 
         /// <summary>Doi mau chu de: sua truc tiep brush tai nguyen dung chung + mau code-side.</summary>
@@ -4556,7 +4521,7 @@ namespace TienKeyboardStudio3
                 string savedName = await Task.Run(() => ImportBackgroundFile(src));
                 _ui.CustomBackgroundFile = savedName;
                 ApplyBackground("custom");
-                RefreshSkinSelection();
+                SyncWallpaperSelection();
                 ShowToast("Đã đặt ảnh của bạn làm nền app (đã nén vào thư mục Backgrounds của app).");
                 AppendLog("Ảnh nền riêng: " + src + " -> Backgrounds/" + savedName);
             }
@@ -4600,6 +4565,12 @@ namespace TienKeyboardStudio3
             var ids = new List<string>();
             foreach (var id in new[] { GreetingStyles.PluginGalaxy, GreetingStyles.PluginDeepSeek, GreetingStyles.Plugin550C, GreetingStyles.PluginMoss, GreetingStyles.PluginParticles })
                 if (GetPluginState(id).Enabled) ids.Add(id);
+            // v3.11: plugin tu nhap dang bat cung la ung vien man chao
+            foreach (var (m, _) in PluginInstaller.ListInstalled())
+            {
+                string cid = GreetingStyles.CustomPrefix + m.Id;
+                if (GetPluginState(cid).Enabled) ids.Add(cid);
+            }
             return ids;
         }
 
@@ -4610,7 +4581,9 @@ namespace TienKeyboardStudio3
         {
             if (_greetingStyleText == null) return;
             string style = ResolveCurrentGreetingStyle();
-            string name = style == GreetingStyles.Terminal ? "DeepSeek Harness — Rhine Lab (bản đầy đủ)"
+            string name = style == GreetingStyles.Custom
+                        ? "Plugin của tôi: " + (PluginInstaller.FindInstalled(GreetingStyles.ManifestIdOf(_ui.GreetingPlugin)).Manifest?.Name ?? _ui.GreetingPlugin)
+                        : style == GreetingStyles.Terminal ? "DeepSeek Harness — Rhine Lab (bản đầy đủ)"
                         : style == GreetingStyles.Amber550 ? "550C Boot + Thẻ ID (CRT hổ phách)"
                         : style == GreetingStyles.Moss ? "MOSS · Ignition"
                         : style == GreetingStyles.Particles ? "Hạt Bụi TV"
@@ -4632,7 +4605,11 @@ namespace TienKeyboardStudio3
             _greetingTimer?.Stop();
             // v3.10: thoi luong theo dung trinh tu cua tung theme
             // (GreetingSequence la nguon su that duy nhat cho cac hoi).
-            _greetingTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(GreetingSequence.For(style).TotalMs) };
+            int totalMs = style == GreetingStyles.Custom
+                ? (PluginInstaller.FindInstalled(GreetingStyles.ManifestIdOf(
+                       string.IsNullOrEmpty(_greetingCustomId) ? _ui.GreetingPlugin : _greetingCustomId)).Manifest?.TotalDurationMs ?? 4000)
+                : GreetingSequence.For(style).TotalMs;
+            _greetingTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(totalMs) };
             _greetingTimer.Tick += (s, e) =>
             {
                 _greetingTimer.Stop();
@@ -4649,6 +4626,8 @@ namespace TienKeyboardStudio3
             _mossCtrl?.Stop();
             _particleCtrl?.Stop();
             _reticle?.Stop();
+            _customSceneTimer?.Stop();
+            _customAnimTimer?.Stop();
         }
 
         private void BuildGreetingBody(string style)
@@ -4658,10 +4637,12 @@ namespace TienKeyboardStudio3
             // v3.10: cac theme giau (Rhine day du / 550C+The ID / MOSS / Hat
             // Bui) can san khau cao 302px; theme cu giu 118px nhu truoc.
             bool rich = style == GreetingStyles.Terminal || style == GreetingStyles.Amber550
-                     || style == GreetingStyles.Moss || style == GreetingStyles.Particles;
+                     || style == GreetingStyles.Moss || style == GreetingStyles.Particles
+                     || style == GreetingStyles.Custom;
             GreetingBodyHost.Height = rich ? 302 : 118;
 
-            if (style == GreetingStyles.Terminal) BuildRhineGreeting();
+            if (style == GreetingStyles.Custom) BuildCustomGreeting();
+            else if (style == GreetingStyles.Terminal) BuildRhineGreeting();
             else if (style == GreetingStyles.Amber550) Build550CGreeting();
             else if (style == GreetingStyles.Moss) BuildMossGreeting();
             else if (style == GreetingStyles.Particles) BuildParticlesGreeting();
@@ -4979,260 +4960,6 @@ namespace TienKeyboardStudio3
             t.Start();
         }
 
-        // ================= v3.3: THE GIAO DIEN trong Cai dat =================
-        private readonly List<(string Id, Border Card)> _skinCards = new List<(string, Border)>();
-        private Avalonia.Controls.Image _customSkinThumb;
-
-        private void RefreshSkinSelection()
-        {
-            foreach (var (id, card) in _skinCards)
-            {
-                bool sel = id == _ui.Background;
-                card.BorderBrush = sel ? UiBrushes.AccentGradient() : UiBrushes.GlassBorder;
-                card.BorderThickness = new Thickness(sel ? 1.8 : 1);
-            }
-            if (_customSkinThumb != null)
-            {
-                string p = BackgroundStore.ResolveCustomPath(_ui);
-                if (p != null)
-                {
-                    try { _customSkinThumb.Source = new Bitmap(p); } catch { }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Muc "Giao dien" trong Cai dat (port tu Preview v0.10 da duyet, noi
-        /// that): hinh nen app (mac dinh / skin co san / anh cua ban qua hop
-        /// chon file that), mau chu de 4 mau ap dung ngay, xem truoc Sang/Toi
-        /// va tuy chon man hinh chao. Moi lua chon luu vao settings.json.
-        /// </summary>
-        private Control BuildAppearanceCard()
-        {
-            _skinCards.Clear();
-            var skins = new (string Id, string Name, string File)[]
-            {
-                ("default", "Mặc định", null),
-                ("aurora", "Cực quang", "skin-aurora.jpg"),
-                ("sunset", "Hoàng hôn", "skin-sunset.jpg"),
-                ("forest", "Rừng sâu", "skin-forest.jpg"),
-                ("space", "Vũ trụ sâu", "skin-space.jpg"),
-            };
-            var skinRow = new WrapPanel();
-            foreach (var (id, name, file) in skins)
-            {
-                Control preview;
-                if (file == null)
-                {
-                    preview = new Border
-                    {
-                        Height = 56, CornerRadius = new CornerRadius(9),
-                        Background = new LinearGradientBrush
-                        {
-                            StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
-                            EndPoint = new RelativePoint(0, 1, RelativeUnit.Relative),
-                            GradientStops =
-                            {
-                                new GradientStop(Color.FromRgb(0x12, 0x12, 0x1A), 0),
-                                new GradientStop(Color.FromRgb(0x0B, 0x0B, 0x10), 1),
-                            },
-                        },
-                    };
-                }
-                else
-                {
-                    preview = new Avalonia.Controls.Image
-                    {
-                        Height = 56, Stretch = Stretch.UniformToFill,
-                        Source = LoadSkin(file),
-                    };
-                }
-                var previewHost = new Border
-                {
-                    CornerRadius = new CornerRadius(9), ClipToBounds = true,
-                    Child = preview,
-                };
-                var cardContent = V(6, previewHost, Tb(name, null, 11.5));
-                var card = new Border
-                {
-                    Classes = { "pickcard" },
-                    Child = cardContent,
-                    Width = 118,
-                    Margin = new Thickness(0, 0, 9, 9),
-                    Cursor = new Cursor(StandardCursorType.Hand),
-                };
-                string sid = id; string sname = name;
-                card.PointerPressed += (s, e) =>
-                {
-                    ApplyBackground(sid);
-                    RefreshSkinSelection();
-                    ShowToast(sid == "default"
-                        ? "Đã về nền mặc định (phẳng, trung tính)"
-                        : "Đã đổi hình nền app: " + sname + " — panel kính cho nền xuyên qua");
-                };
-                _skinCards.Add((id, card));
-                skinRow.Children.Add(card);
-            }
-            // The "Anh cua ban" (hien anh custom neu da co)
-            {
-                _customSkinThumb = new Avalonia.Controls.Image
-                {
-                    Height = 56, Stretch = Stretch.UniformToFill,
-                };
-                Control customPreview;
-                string cp = BackgroundStore.ResolveCustomPath(_ui);
-                if (cp != null)
-                {
-                    try { _customSkinThumb.Source = new Bitmap(cp); } catch { }
-                    customPreview = _customSkinThumb;
-                }
-                else
-                {
-                    customPreview = new Border
-                    {
-                        Height = 56, CornerRadius = new CornerRadius(9),
-                        Background = new SolidColorBrush(Color.FromArgb(0x14, 0xFF, 0xFF, 0xFF)),
-                        Child = Tb("＋ Ảnh riêng", null, 11.5).Also(t =>
-                        {
-                            t.HorizontalAlignment = HorizontalAlignment.Center;
-                            t.VerticalAlignment = VerticalAlignment.Center;
-                        }),
-                    };
-                }
-                var previewHost = new Border { CornerRadius = new CornerRadius(9), ClipToBounds = true, Child = customPreview };
-                var card = new Border
-                {
-                    Classes = { "pickcard" },
-                    Child = V(6, previewHost, Tb("Ảnh của bạn", null, 11.5)),
-                    Width = 118,
-                    Margin = new Thickness(0, 0, 9, 9),
-                    Cursor = new Cursor(StandardCursorType.Hand),
-                };
-                card.PointerPressed += (s, e) =>
-                {
-                    if (BackgroundStore.ResolveCustomPath(_ui) != null)
-                    {
-                        ApplyBackground("custom");
-                        RefreshSkinSelection();
-                        ShowToast("Đã dùng ảnh của bạn làm nền app.");
-                    }
-                    else _ = ImportCustomBackgroundAsync();
-                };
-                _skinCards.Add(("custom", card));
-                skinRow.Children.Add(card);
-            }
-            RefreshSkinSelection();
-
-            var customBtn = GhostBtn("Ảnh của bạn…", async () => await ImportCustomBackgroundAsync());
-
-            // --- Mau chu de (4 mau) ---
-            var accentRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 9 };
-            var accentSwatches = new List<Border>();
-            for (int i = 0; i < AccentTable.All.Length; i++)
-            {
-                var acc = AccentTable.All[i];
-                var ca = Color.FromRgb(acc.A.R, acc.A.G, acc.A.B);
-                var cb = Color.FromRgb(acc.B.R, acc.B.G, acc.B.B);
-                var sw = new Border
-                {
-                    Width = 36, Height = 36, CornerRadius = new CornerRadius(11),
-                    Background = new LinearGradientBrush
-                    {
-                        StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
-                        EndPoint = new RelativePoint(1, 1, RelativeUnit.Relative),
-                        GradientStops = { new GradientStop(ca, 0), new GradientStop(cb, 1) },
-                    },
-                    BorderBrush = new SolidColorBrush(Color.FromArgb(0x33, 0xFF, 0xFF, 0xFF)),
-                    BorderThickness = new Thickness(1),
-                    Cursor = new Cursor(StandardCursorType.Hand),
-                };
-                ToolTip.SetTip(sw, acc.Name);
-                int idx = i;
-                sw.PointerPressed += (s, e) =>
-                {
-                    ApplyAccentByIndex(idx);
-                    foreach (var o in accentSwatches)
-                    {
-                        bool sel = ReferenceEquals(o, sw);
-                        o.BorderBrush = new SolidColorBrush(sel ? Colors.White : Color.FromArgb(0x33, 0xFF, 0xFF, 0xFF));
-                        o.BorderThickness = new Thickness(sel ? 2.2 : 1);
-                    }
-                    ShowToast("Đã áp dụng màu chủ đề: " + AccentTable.Get(idx).Name);
-                };
-                accentSwatches.Add(sw);
-                accentRow.Children.Add(sw);
-            }
-            if (_ui.AccentIndex >= 0 && _ui.AccentIndex < accentSwatches.Count)
-            {
-                accentSwatches[_ui.AccentIndex].BorderBrush = new SolidColorBrush(Colors.White);
-                accentSwatches[_ui.AccentIndex].BorderThickness = new Thickness(2.2);
-            }
-
-            // --- Xem truoc Sang / Toi ---
-            Border ModePreview(bool dark, string label, string state)
-            {
-                var lines = new StackPanel { Spacing = 5, Margin = new Thickness(10) };
-                lines.Children.Add(new Border { Height = 7, CornerRadius = new CornerRadius(3.5), Width = 62, HorizontalAlignment = HorizontalAlignment.Left, Background = new SolidColorBrush(dark ? Color.FromRgb(0x3A, 0x3A, 0x4C) : Color.FromRgb(0xC9, 0xCD, 0xD8)) });
-                lines.Children.Add(new Border { Height = 7, CornerRadius = new CornerRadius(3.5), Width = 92, HorizontalAlignment = HorizontalAlignment.Left, Background = new SolidColorBrush(dark ? Color.FromRgb(0x2C, 0x2C, 0x3C) : Color.FromRgb(0xDD, 0xE0, 0xE8)) });
-                lines.Children.Add(new Border { Height = 7, CornerRadius = new CornerRadius(3.5), Width = 44, HorizontalAlignment = HorizontalAlignment.Left, Background = UiBrushes.AccentGradient() });
-                var mock = new Border
-                {
-                    CornerRadius = new CornerRadius(9), Height = 74,
-                    Background = new SolidColorBrush(dark ? Color.FromRgb(0x14, 0x14, 0x1E) : Color.FromRgb(0xF2, 0xF3, 0xF7)),
-                    Child = lines,
-                };
-                var content = V(6, mock, H(6, Tb(label, "h3"), Tb("· " + state, "faint")));
-                var card = new Border { Classes = { "pickcard" }, Child = content, Width = 168 };
-                if (dark)
-                {
-                    card.BorderBrush = UiBrushes.AccentGradient();
-                    card.BorderThickness = new Thickness(1.8);
-                }
-                else
-                {
-                    card.Cursor = new Cursor(StandardCursorType.Hand);
-                    card.PointerPressed += (s, e) =>
-                        ShowToast("Chế độ Sáng đang được phát triển — sẽ có ở bản sau. Bản này giữ chế độ Tối như bản đã duyệt.");
-                }
-                return card;
-            }
-            var modeRow = H(10,
-                ModePreview(true, "Tối", "đang dùng"),
-                ModePreview(false, "Sáng", "sắp có ở bản sau"));
-
-            // --- Man hinh chao ---
-            var replayBtn = GhostBtn("Xem lại màn hình chào", () => ShowGreeting());
-            _greetingStyleText = Tb("", "faint");
-            RefreshGreetingStyleText();
-            var skipSw = new PillSwitch();
-            skipSw.IsChecked = _ui.SkipGreeting;
-            skipSw.Changed += v => { _ui.SkipGreeting = v; SaveUi(); };
-            var skipTexts = V(2,
-                Tb("Bỏ qua màn hình chào mừng", "h3"),
-                Tb("Bật: mở app vào thẳng trang chính, không hiện màn hình chào", "sub"));
-            var skipGrid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto") };
-            skipGrid.Children.Add(skipTexts);
-            skipSw.VerticalAlignment = VerticalAlignment.Center;
-            Grid.SetColumn(skipSw, 1);
-            skipGrid.Children.Add(skipSw);
-            var skipRow = CardFlat(skipGrid, 12);
-
-            return Card(V(12,
-                Tb("Giao diện", "h2"),
-                Tb("Hình nền app", "h3"),
-                Tb("Chọn nền có sẵn hoặc dùng ảnh của bạn — các panel kính mờ (Liquid Glass) sẽ cho nền xuyên qua. Ảnh riêng được nén (cạnh dài nhất 1920px) và lưu trong thư mục Backgrounds của app; mọi lựa chọn được nhớ trong settings.json.", "sub"),
-                skinRow,
-                customBtn,
-                Tb("Màu chủ đề", "h3"),
-                accentRow,
-                Tb("Chế độ giao diện", "h3"),
-                modeRow,
-                Tb("Màn hình chào", "h3"),
-                _greetingStyleText,
-                H(10, replayBtn),
-                skipRow));
-        }
-
         // ================= v3.3: CHO PLUGIN =================
         // Trinh bay theo Preview v0.10.1 da duyet: luoi the 2 cot co anh bia,
         // tab danh muc, modal chi tiet o giua man hinh. Khac ban xem truoc:
@@ -5341,7 +5068,7 @@ namespace TienKeyboardStudio3
             {
                 Height = 148, ClipToBounds = true,
                 CornerRadius = new CornerRadius(13, 13, 0, 0),
-                Child = new Avalonia.Controls.Image { Source = LoadThumb(it.Thumb), Stretch = Stretch.UniformToFill },
+                Child = new Avalonia.Controls.Image { Source = it.Thumb != null ? LoadThumb(it.Thumb) : LogoBitmap(), Stretch = Stretch.UniformToFill },
             };
             var title = Tb(it.Name, "h3");
             title.FontSize = 13.5;
@@ -5443,13 +5170,19 @@ namespace TienKeyboardStudio3
             creditTexts.Add(Tb("Mọi theme đều được viết lại bằng Avalonia trong app này; app không tải hay chạy mã của bên thứ ba.", "faint"));
             var creditsCard = CardFlat(V(6, creditTexts.ToArray()));
 
+            _myPluginsHost = new StackPanel { Spacing = 10 };
             var root = V(14,
                 Tb("Chợ plugin", "h1"),
                 Tb("Kho cộng đồng: hiệu ứng khởi động, công cụ hình nền và gói hiệu ứng đèn — bấm vào một thẻ để mở panel chi tiết: bật/tắt, cấu hình và xem trước.", "sub"),
+                BuildImportCard(),
+                Tb("Plugin của tôi", "h2"),
+                _myPluginsHost,
+                Tb("Plugin có sẵn trong app", "h2"),
                 filterRow,
                 wrap,
                 CardFlat(Tb("Cơ chế thật của trang này: các plugin khởi động là tính năng THẬT của app — plugin đang bật sẽ quyết định màn hình chào mỗi lần mở app, cấu hình lưu trong settings.json. Hai mục gắn nhãn “Ý tưởng · đang phát triển” chỉ là ý tưởng đang làm — chưa bật được, không có chức năng ẩn và app không tải/cài bất cứ thứ gì từ mạng.", "faint")),
                 creditsCard);
+            RefreshMyPlugins();
             return Scroll(root);
         }
 
@@ -5487,7 +5220,7 @@ namespace TienKeyboardStudio3
             var preview = new Border
             {
                 Height = 196, ClipToBounds = true, CornerRadius = new CornerRadius(12),
-                Child = new Avalonia.Controls.Image { Source = LoadThumb(it.Thumb), Stretch = Stretch.UniformToFill },
+                Child = new Avalonia.Controls.Image { Source = it.Thumb != null ? LoadThumb(it.Thumb) : LogoBitmap(), Stretch = Stretch.UniformToFill },
             };
 
             var enableSw = new PillSwitch { IsChecked = state.Enabled, IsEnabled = !it.Idea };
@@ -5517,13 +5250,18 @@ namespace TienKeyboardStudio3
             inner.Children.Add(new Border { Height = 1, Background = new SolidColorBrush(Color.FromArgb(0x14, 0xFF, 0xFF, 0xFF)) });
             inner.Children.Add(enableRow);
             foreach (var row in PluginConfigRows(it, state)) inner.Children.Add(row);
-            inner.Children.Add(H(10,
+            var modalBtns = new List<Control>
+            {
                 PrimaryBtn("Xem trước", () =>
                 {
-                    if (it.Cat == "boot") { ClosePluginModal(); ShowGreeting(GreetingStyles.StyleForPlugin(it.Id)); }
+                    if (it.Cat == "boot") { ClosePluginModal(); PreviewPlugin(it); }
                     else ShowToast("Plugin đang ở trạng thái ý tưởng — chưa có bản xem trước thật.");
                 }),
-                GhostBtn("Đóng", () => ClosePluginModal())));
+                GhostBtn("Đóng", () => ClosePluginModal()),
+            };
+            if (GreetingStyles.IsCustomId(it.Id))
+                modalBtns.Add(GhostBtn("Xoá plugin", () => { ClosePluginModal(); DeleteCustomPlugin(it); }));
+            inner.Children.Add(H(10, modalBtns.ToArray()));
 
             return new Border
             {

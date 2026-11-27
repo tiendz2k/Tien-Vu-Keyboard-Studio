@@ -108,7 +108,17 @@ namespace TienKeyboardStudio3
         public const string Amber550 = "550c";
         public const string Moss = "moss";
         public const string Particles = "particles";
+        public const string Custom = "custom"; // v3.11: plugin tu nhap (id dang "custom:<manifest-id>")
         public const string None = "none";
+
+        /// <summary>Tien to id trang thai cua plugin tu nhap trong settings.</summary>
+        public const string CustomPrefix = "custom:";
+
+        public static bool IsCustomId(string pluginId)
+            => !string.IsNullOrEmpty(pluginId) && pluginId.StartsWith(CustomPrefix, StringComparison.Ordinal);
+
+        public static string ManifestIdOf(string pluginId)
+            => IsCustomId(pluginId) ? pluginId.Substring(CustomPrefix.Length) : pluginId;
 
         public const string PluginGalaxy = "tien-galaxy-boot";
         public const string PluginDeepSeek = "deepseek-harness";
@@ -118,6 +128,7 @@ namespace TienKeyboardStudio3
 
         public static string StyleForPlugin(string pluginId)
         {
+            if (IsCustomId(pluginId)) return Custom;
             switch (pluginId)
             {
                 case PluginDeepSeek: return Terminal;
