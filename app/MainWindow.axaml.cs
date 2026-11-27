@@ -19,7 +19,9 @@ using Avalonia.Styling;
 using Avalonia.Threading;
 using Microsoft.Win32;
 using QRCoder;
+using SixLabors.ImageSharp.Processing;
 using PathShape = Avalonia.Controls.Shapes.Path;
+using EllipseShape = Avalonia.Controls.Shapes.Ellipse;
 
 namespace TienKeyboardStudio3
 {
@@ -113,6 +115,23 @@ namespace TienKeyboardStudio3
         private bool _trayEnabled = true;
         private bool _reallyExit;
 
+        // v3.3: cai dat giao dien/plugin/GameSense (luu trong settings.json)
+        private readonly LibrarySettings _ui = GifLibraryStore.Load();
+        private static readonly Dictionary<string, Bitmap> SkinCache = new Dictionary<string, Bitmap>();
+        private GreetingSweep _sweep;
+        private DispatcherTimer _greetingTimer;
+        private DispatcherTimer _terminalTimer;
+        private string _greetingStyleNow = GreetingStyles.Galaxy;
+        private TextBlock _greetingStyleText;
+
+        // v3.3: GameSense
+        private readonly GameSenseServer _gsi = new GameSenseServer();
+        private FlashOverlay _flashOverlay;
+        private EllipseShape _gsDot;
+        private TextBlock _gsStatusText;
+        private TextBlock _gsLastEvent;
+        private bool _flashDimApplied;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -125,17 +144,38 @@ namespace TienKeyboardStudio3
 
             DryToggle.IsCheckedChanged += (s, e) => SetDryRun(DryToggle.IsChecked == true, fromUi: true);
 
+            // v3.3: hieu ung mo cho modal plugin + man hinh chao
+            GreetingOverlay.Transitions = new Transitions { new DoubleTransition { Property = OpacityProperty, Duration = TimeSpan.FromMilliseconds(220) } };
+            PluginModal.Transitions = new Transitions { new DoubleTransition { Property = OpacityProperty, Duration = TimeSpan.FromMilliseconds(220) } };
+            PluginModalDim.PointerPressed += (s, e) => ClosePluginModal();
+            GreetingOverlay.PointerPressed += (s, e) => DismissGreeting();
+            KeyDown += (s, e) =>
+            {
+                if (e.Key != Key.Escape) return;
+                if (GreetingOverlay.IsVisible) DismissGreeting();
+                else if (PluginModal.IsVisible) ClosePluginModal();
+            };
+            _gsi.Log = msg => AppendLog(msg);
+            _gsi.EventReceived += (ev, payload) => Dispatcher.UIThread.Post(() => HandleGsiEvent(ev));
+
             BuildNav();
             _pages["home"] = BuildHomePage();
             _pages["rgb"] = BuildRgbPage();
             _pages["music"] = BuildMusicPage();
+            _pages["gamesense"] = BuildGameSensePage();
             _pages["gif"] = BuildGifPage();
             _pages["online"] = BuildOnlinePage();
             _pages["perkey"] = BuildPerKeyPage();
+            _pages["store"] = BuildStorePage();
             _pages["widget"] = BuildWidgetPage();
             _pages["settings"] = BuildSettingsPage();
             _pages["phone"] = BuildPhonePage();
             foreach (var p in _pages.Values) { p.IsVisible = false; PageHost.Children.Add(p); }
+
+            // v3.3: ap dung giao dien da luu (mau chu de + hinh nen)
+            ApplyAccentByIndex(_ui.AccentIndex, save: false);
+            ApplyBackground(_ui.Background, save: false);
+            if (_ui.GameSense.Listening) StartGsi();
 
             DragDrop.SetAllowDrop(this, true);
             AddHandler(DragDrop.DropEvent, OnDropFiles);
@@ -164,6 +204,7 @@ namespace TienKeyboardStudio3
                 }
                 catch { }
                 _ = ScanDevicesAsync(auto: true);
+                if (!_ui.SkipGreeting) ShowGreeting();
             };
             Closing += (s, e) =>
             {
@@ -181,12 +222,14 @@ namespace TienKeyboardStudio3
             RefreshNavVisibility();
             RefreshWriteStates();
             ShowPage("home");
-            AppendLog("T Keyboard Studio v3.2.2 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
+            AppendLog("T Keyboard Studio v3.3.0 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
             AppendLog("Lộ trình an toàn lần đầu: Quét thiết bị → thử RGB (dry-run) → tắt Dry-run → RGB thật → Cài đặt 04 17 → Đồng hồ → GIF TFT nhỏ → Đọc thử 0xF5.");
         }
 
         private void Cleanup()
         {
+            try { _gsi.Stop(); } catch { }
+            try { _flashOverlay?.Close(); } catch { }
             try { _phone.Stop(); } catch { }
             try { _audio.Stop(); } catch { }
             try { _musicSendCts?.Cancel(); } catch { }
@@ -316,9 +359,11 @@ namespace TienKeyboardStudio3
                 ("home", "Tổng quan", "M3 9.5 12 3l9 6.5V21a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 21Z M9.5 22v-8h5v8"),
                 ("rgb", "Ánh sáng RGB", "M8 12 A4 4 0 1 1 16 12 A4 4 0 1 1 8 12 M12 2.5v2 M12 19.5v2 M4.8 4.8l1.4 1.4 M17.8 17.8l1.4 1.4 M2.5 12h2 M19.5 12h2 M4.8 19.2l1.4-1.4 M17.8 6.2l1.4-1.4"),
                 ("music", "Theo nhạc", "M9 18.5V6l11-2v12.5 M3.8 18.5 A2.7 2.7 0 1 1 9.2 18.5 A2.7 2.7 0 1 1 3.8 18.5 M14.8 16.5 A2.7 2.7 0 1 1 20.2 16.5 A2.7 2.7 0 1 1 14.8 16.5"),
+                ("gamesense", "GameSense", "M12 12 m-7.5 0 a7.5 7.5 0 1 0 15 0 a7.5 7.5 0 1 0-15 0 M12 2.5v3.5 M12 18v3.5 M2.5 12H6 M18 12h3.5 M12 12 m-1.7 0 a1.7 1.7 0 1 0 3.4 0 a1.7 1.7 0 1 0-3.4 0"),
                 ("gif", "Màn hình GIF", "M4 4.5 A1.5 1.5 0 0 1 5.5 3h13A1.5 1.5 0 0 1 20 4.5v15a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19.5Z M8.3 10.2 a1.4 1.4 0 1 0 .1 0 M20 16.5 15.5 12 5 21"),
                 ("online", "Thư viện Online", "M12 12 m-9.5 0 a9.5 9.5 0 1 0 19 0 a9.5 9.5 0 1 0-19 0 M2.5 12h19 M12 2.5c2.9 2.7 4.4 5.9 4.4 9.5s-1.5 6.8-4.4 9.5c-2.9-2.7-4.4-5.9-4.4-9.5S9.1 5.2 12 2.5Z"),
                 ("perkey", "Per-key (thử nghiệm)", "M4 4h4v4H4z M10 4h4v4h-4z M16 4h4v4h-4z M4 10h4v4H4z M10 10h4v4h-4z M16 10h4v4h-4z M4 16h4v4H4z M10 16h4v4h-4z M16 16h4v4h-4z"),
+                ("store", "Chợ plugin", "M5.5 8h13l-.9 11.5A1.5 1.5 0 0 1 16.1 21H7.9a1.5 1.5 0 0 1-1.5-1.5L5.5 8Z M8.5 10.5V6.8a3.5 3.5 0 0 1 7 0v3.7"),
                 ("widget", "Widget TFT", "M4.5 15.5 A8.5 8.5 0 1 1 19.5 15.5 M12 15.5 16 10 M12 15.5 m-1.2 0 a1.2 1.2 0 1 0 2.4 0 a1.2 1.2 0 1 0-2.4 0"),
                 ("settings", "Đồng hồ & Cài đặt", "M12 12 m-9 0 a9 9 0 1 0 18 0 a9 9 0 1 0-18 0 M12 7v5.2l3.4 2"),
                 ("phone", "Điều khiển từ điện thoại", "M7 2.5h10A1.5 1.5 0 0 1 18.5 4v16A1.5 1.5 0 0 1 17 21.5H7A1.5 1.5 0 0 1 5.5 20V4A1.5 1.5 0 0 1 7 2.5Z M10.3 5.2h3.4"),
@@ -391,7 +436,7 @@ namespace TienKeyboardStudio3
             _widgetTimer.IsEnabled = key == "widget";
             _clockTimer.IsEnabled = key == "settings";
             if (key == "widget") RenderWidgetFrame();
-            if (key == "settings") { UpdateClockLabels(); RefreshTypingLabels(); }
+            if (key == "settings") { UpdateClockLabels(); RefreshTypingLabels(); RefreshGreetingStyleText(); }
             if (key != "perkey") _ledPlayer?.Stop();
             if (key != "online") _onlineLedPlayer?.Stop();
             if (key != "music" && _musicPlaying) StopMusic();
@@ -600,7 +645,7 @@ namespace TienKeyboardStudio3
 
             var root = V(14,
                 Tb("Tổng quan", "h1"),
-                Tb("T Keyboard Studio v3.2.2 — bản thật: quét thiết bị HID thật, ghi xuống F75 Max qua giao thức đã kiểm chứng. Dry-run bật mặc định để an toàn.", "sub"),
+                Tb("T Keyboard Studio v3.3.0 — bản thật: quét thiết bị HID thật, ghi xuống F75 Max qua giao thức đã kiểm chứng. Dry-run bật mặc định để an toàn.", "sub"),
                 connectCard,
                 heroCard,
                 stats,
@@ -2242,13 +2287,14 @@ namespace TienKeyboardStudio3
             };
             var aboutTexts = V(4,
                 Tb("T Keyboard Studio", "h2"),
-                Tb("Phiên bản 3.2.2 — bản thật: F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; lớp per-key/stream/nhạc là thử nghiệm có khoá an toàn (xem trang Per-key). Dry-run bật mặc định.", "sub"),
+                Tb("Phiên bản 3.3.0 — bản thật: F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; lớp per-key/stream/nhạc là thử nghiệm có khoá an toàn (xem trang Per-key). Mới: Liquid Glass, hình nền + màu chủ đề, màn hình chào 3 phong cách, Chợ plugin, GameSense CS2 (GSI). Dry-run bật mặc định.", "sub"),
                 Tb("Logo Mẫu C — chữ “T” tạo hình từ phím spacebar — đã được người dùng duyệt.", "sub"),
                 Tb("Font chữ: Be Vietnam Pro (SIL OFL 1.1). GIF thư viện: tự làm cho Tiến. Giao thức per-key: Gavin Graham (AULA L99).", "faint"));
             var aboutCard = Card(H(14, logoWrap, aboutTexts));
 
             var root = V(14,
                 Tb("Đồng hồ & Cài đặt", "h1"),
+                BuildAppearanceCard(),
                 clockCard,
                 devSetCard,
                 appCard,
@@ -2524,6 +2570,1329 @@ namespace TienKeyboardStudio3
                 cols,
                 CardFlat(Tb("Lưu ý: điện thoại không chỉnh trực tiếp được phím — F75 Max không nhận cài đặt qua Bluetooth và iOS giới hạn kết nối với phụ kiện. PC là cầu nối bắt buộc và phải đang mở app; điện thoại chỉ gửi lệnh qua mạng nhà tới PC.", "faint")));
             return Scroll(root);
+        }
+
+        // ================= v3.3: GIAO DIEN (nen + mau chu de) =================
+        private void SaveUi()
+        {
+            try { GifLibraryStore.Save(_ui); }
+            catch (Exception ex) { AppendLog("Không lưu được settings.json: " + ex.Message); }
+        }
+
+        private static Bitmap LoadSkin(string file)
+        {
+            if (SkinCache.TryGetValue(file, out var b)) return b;
+            using (var s = AssetLoader.Open(GifTools.Asset("Assets/Wallpapers/" + file)))
+            {
+                var bmp = new Bitmap(s);
+                SkinCache[file] = bmp;
+                return bmp;
+            }
+        }
+
+        /// <summary>Doi hinh nen toan app (skin: default/aurora/sunset/forest/space/custom).</summary>
+        public void ApplyBackground(string skin, bool save = true)
+        {
+            if (skin == "custom")
+            {
+                string path = BackgroundStore.ResolveCustomPath(_ui);
+                if (path == null)
+                {
+                    if (save) ShowToast("Chưa có ảnh nền riêng — hãy bấm “Ảnh của bạn…” để chọn ảnh trước.");
+                    skin = "default";
+                }
+                else
+                {
+                    try
+                    {
+                        BackdropImage.Source = new Bitmap(path);
+                        BackdropImage.IsVisible = true;
+                        BackdropShade.IsVisible = true;
+                        _ui.Background = "custom";
+                        if (save) SaveUi();
+                        return;
+                    }
+                    catch (Exception ex) { AppendLog("Không nạp được ảnh nền riêng: " + ex.Message); skin = "default"; }
+                }
+            }
+            string file = skin == "aurora" ? "skin-aurora.jpg"
+                        : skin == "sunset" ? "skin-sunset.jpg"
+                        : skin == "forest" ? "skin-forest.jpg"
+                        : skin == "space" ? "skin-space.jpg"
+                        : null;
+            if (file == null)
+            {
+                BackdropImage.IsVisible = false;
+                BackdropShade.IsVisible = false;
+                _ui.Background = "default";
+            }
+            else
+            {
+                BackdropImage.Source = LoadSkin(file);
+                BackdropImage.IsVisible = true;
+                BackdropShade.IsVisible = true;
+                _ui.Background = skin;
+            }
+            if (save) SaveUi();
+        }
+
+        /// <summary>Doi mau chu de: sua truc tiep brush tai nguyen dung chung + mau code-side.</summary>
+        public void ApplyAccent(Color a, Color b)
+        {
+            UiBrushes.AccentA = a;
+            UiBrushes.AccentB = b;
+            if (Application.Current != null &&
+                Application.Current.Resources.TryGetValue("AccentGradient", out var res) &&
+                res is LinearGradientBrush g && g.GradientStops.Count >= 2)
+            {
+                g.GradientStops[0].Color = a;
+                g.GradientStops[1].Color = b;
+            }
+            if (Application.Current != null &&
+                Application.Current.Resources.TryGetValue("AccentGradientHover", out var res2) &&
+                res2 is LinearGradientBrush g2 && g2.GradientStops.Count >= 2)
+            {
+                g2.GradientStops[0].Color = Lighten(a, 1.25);
+                g2.GradientStops[1].Color = Lighten(b, 1.2);
+            }
+        }
+
+        private void ApplyAccentByIndex(int index, bool save = true)
+        {
+            var acc = AccentTable.Get(index);
+            _ui.AccentIndex = index >= 0 && index < AccentTable.All.Length ? index : 0;
+            ApplyAccent(
+                Color.FromRgb(acc.A.R, acc.A.G, acc.A.B),
+                Color.FromRgb(acc.B.R, acc.B.G, acc.B.B));
+            if (save) SaveUi();
+        }
+
+        private static Color Lighten(Color c, double f) => Color.FromRgb(
+            (byte)Math.Min(255, c.R * f), (byte)Math.Min(255, c.G * f), (byte)Math.Min(255, c.B * f));
+
+        // Chon anh nen cua nguoi dung: copy vao %AppData%\TienKeyboardStudio\
+        // Backgrounds, nen/thu nho anh lon (canh dai nhat 1920, JPEG q82).
+        private async Task ImportCustomBackgroundAsync()
+        {
+            try
+            {
+                var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+                {
+                    Title = "Chọn ảnh nền cho app",
+                    AllowMultiple = false,
+                    FileTypeFilter = new[]
+                    {
+                        new FilePickerFileType("Ảnh") { Patterns = new[] { "*.jpg", "*.jpeg", "*.png", "*.bmp", "*.webp" } },
+                    },
+                });
+                if (files.Count == 0) return;
+                string src = files[0].Path.LocalPath;
+                string savedName = await Task.Run(() => ImportBackgroundFile(src));
+                _ui.CustomBackgroundFile = savedName;
+                ApplyBackground("custom");
+                RefreshSkinSelection();
+                ShowToast("Đã đặt ảnh của bạn làm nền app (đã nén vào thư mục Backgrounds của app).");
+                AppendLog("Ảnh nền riêng: " + src + " -> Backgrounds/" + savedName);
+            }
+            catch (Exception ex)
+            {
+                AppendLog("Lỗi chọn ảnh nền: " + ex.Message);
+                ShowToast("Không dùng được ảnh này: " + ex.Message);
+            }
+        }
+
+        private static string ImportBackgroundFile(string srcPath)
+        {
+            Directory.CreateDirectory(BackgroundStore.BackgroundsDir);
+            using (var img = SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(srcPath))
+            {
+                var (tw, th) = AppearanceMath.ComputeTargetSize(img.Width, img.Height, 1920);
+                if (tw != img.Width || th != img.Height)
+                    img.Mutate(m => m.Resize(tw, th));
+                string name = "custom-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".jpg";
+                string dest = System.IO.Path.Combine(BackgroundStore.BackgroundsDir, name);
+                using (var fs = File.Create(dest))
+                    img.Save(fs, new SixLabors.ImageSharp.Formats.Jpeg.JpegEncoder { Quality = 82 });
+                return name;
+            }
+        }
+
+        // ================= v3.3: MAN HINH CHAO =================
+        private PluginState GetPluginState(string id)
+        {
+            if (!_ui.Plugins.TryGetValue(id, out var st) || st == null)
+            {
+                st = new PluginState { Enabled = id == GreetingStyles.PluginGalaxy };
+                _ui.Plugins[id] = st;
+            }
+            if (st.Config == null) st.Config = new Dictionary<string, string>();
+            return st;
+        }
+
+        private List<string> EnabledBootPluginIds()
+        {
+            var ids = new List<string>();
+            foreach (var id in new[] { GreetingStyles.PluginGalaxy, GreetingStyles.PluginDeepSeek, GreetingStyles.Plugin550C })
+                if (GetPluginState(id).Enabled) ids.Add(id);
+            return ids;
+        }
+
+        private string ResolveCurrentGreetingStyle()
+            => GreetingStyles.Resolve(EnabledBootPluginIds(), _ui.GreetingPlugin);
+
+        private void RefreshGreetingStyleText()
+        {
+            if (_greetingStyleText == null) return;
+            string style = ResolveCurrentGreetingStyle();
+            string name = style == GreetingStyles.Terminal ? "DeepSeek Harness (terminal)"
+                        : style == GreetingStyles.Amber550 ? "550C Boot (CRT hổ phách)"
+                        : style == GreetingStyles.Galaxy ? "Tien Galaxy Boot (vệt sáng)"
+                        : "Không hiệu ứng (chỉ logo)";
+            _greetingStyleText.Text = "Phong cách đang dùng: " + name + " — đổi tại trang Chợ plugin (bật plugin khởi động bạn muốn).";
+        }
+
+        public void ShowGreeting() => ShowGreeting(null);
+
+        private void ShowGreeting(string forceStyle)
+        {
+            string style = forceStyle ?? ResolveCurrentGreetingStyle();
+            _greetingStyleNow = style;
+            BuildGreetingBody(style);
+            GreetingOverlay.IsVisible = true;
+            GreetingOverlay.Opacity = 1;
+            GreetingStatus.Text = "Đang nạp giao diện…";
+            _greetingTimer?.Stop();
+            _greetingTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(style == GreetingStyles.Terminal ? 2600 : 2000) };
+            _greetingTimer.Tick += (s, e) =>
+            {
+                _greetingTimer.Stop();
+                GreetingStatus.Text = "Sẵn sàng";
+                DismissGreeting();
+            };
+            _greetingTimer.Start();
+        }
+
+        private void BuildGreetingBody(string style)
+        {
+            _terminalTimer?.Stop();
+            _sweep?.Stop();
+            GreetingBodyHost.Children.Clear();
+
+            if (style == GreetingStyles.Terminal)
+            {
+                GreetingSub.Text = "DeepSeek Harness — màn chào kiểu terminal";
+                var st = GetPluginState(GreetingStyles.PluginDeepSeek);
+                string name = st.GetCfg("name", "T OPERATOR");
+                string code = st.GetCfg("code", "TKB-001");
+                var lines = new[]
+                {
+                    "T KEYBOARD // DEEPSEEK HARNESS v1.2.0",
+                    "[ok] nap module rgb ............ OK",
+                    "[ok] nap module tft + widget ... OK",
+                    "[ok] quet thiet bi HID ......... OK",
+                    $"[ok] identity: {name} · {code}",
+                    "READY _",
+                };
+                var text = new TextBlock
+                {
+                    FontFamily = new FontFamily("Consolas, 'Courier New', monospace"),
+                    FontSize = 12.5,
+                    Foreground = new SolidColorBrush(Color.FromRgb(0x4A, 0xDE, 0x80)),
+                    LineHeight = 18,
+                };
+                var panel = new Border
+                {
+                    Background = new SolidColorBrush(Color.FromRgb(0x05, 0x08, 0x07)),
+                    BorderBrush = new SolidColorBrush(Color.FromArgb(0x40, 0x4A, 0xDE, 0x80)),
+                    BorderThickness = new Thickness(1),
+                    CornerRadius = new CornerRadius(10),
+                    Padding = new Thickness(14, 10),
+                    Child = text,
+                };
+                GreetingBodyHost.Children.Add(panel);
+                int shown = 0;
+                _terminalTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(240) };
+                _terminalTimer.Tick += (s, e) =>
+                {
+                    if (shown >= lines.Length) { _terminalTimer.Stop(); return; }
+                    text.Text = string.Join("\n", lines.Take(shown + 1));
+                    shown++;
+                };
+                _terminalTimer.Start();
+            }
+            else if (style == GreetingStyles.Amber550)
+            {
+                GreetingSub.Text = "550C Boot — đồng hồ CRT hổ phách";
+                _sweep = new GreetingSweep { AmberMode = true, Height = 30, VerticalAlignment = VerticalAlignment.Center };
+                var stack = new StackPanel { Spacing = 8, VerticalAlignment = VerticalAlignment.Center };
+                stack.Children.Add(_sweep);
+                var lbl = Tb("5 5 0 C", null, 12);
+                lbl.Foreground = new SolidColorBrush(Color.FromRgb(0xFF, 0xB0, 0x20));
+                lbl.HorizontalAlignment = HorizontalAlignment.Center;
+                lbl.FontFamily = new FontFamily("Consolas, 'Courier New', monospace");
+                stack.Children.Add(lbl);
+                GreetingBodyHost.Children.Add(stack);
+                _sweep.Play();
+            }
+            else if (style == GreetingStyles.Galaxy)
+            {
+                GreetingSub.Text = "Chào mừng bạn trở lại";
+                _sweep = new GreetingSweep { Height = 30, VerticalAlignment = VerticalAlignment.Center };
+                GreetingBodyHost.Children.Add(_sweep);
+                _sweep.Play();
+            }
+            else
+            {
+                GreetingSub.Text = "Chào mừng bạn trở lại";
+                var lbl = Tb("Sẵn sàng", "faint");
+                lbl.HorizontalAlignment = HorizontalAlignment.Center;
+                lbl.VerticalAlignment = VerticalAlignment.Center;
+                GreetingBodyHost.Children.Add(lbl);
+            }
+        }
+
+        public void DismissGreeting()
+        {
+            if (!GreetingOverlay.IsVisible) return;
+            _greetingTimer?.Stop();
+            _terminalTimer?.Stop();
+            _sweep?.Stop();
+            GreetingOverlay.Opacity = 0;
+            var t = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(230) };
+            t.Tick += (s, e) => { t.Stop(); GreetingOverlay.IsVisible = false; };
+            t.Start();
+        }
+
+        // ================= v3.3: THE GIAO DIEN trong Cai dat =================
+        private readonly List<(string Id, Border Card)> _skinCards = new List<(string, Border)>();
+        private Avalonia.Controls.Image _customSkinThumb;
+
+        private void RefreshSkinSelection()
+        {
+            foreach (var (id, card) in _skinCards)
+            {
+                bool sel = id == _ui.Background;
+                card.BorderBrush = sel ? UiBrushes.AccentGradient() : UiBrushes.GlassBorder;
+                card.BorderThickness = new Thickness(sel ? 1.8 : 1);
+            }
+            if (_customSkinThumb != null)
+            {
+                string p = BackgroundStore.ResolveCustomPath(_ui);
+                if (p != null)
+                {
+                    try { _customSkinThumb.Source = new Bitmap(p); } catch { }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Muc "Giao dien" trong Cai dat (port tu Preview v0.10 da duyet, noi
+        /// that): hinh nen app (mac dinh / skin co san / anh cua ban qua hop
+        /// chon file that), mau chu de 4 mau ap dung ngay, xem truoc Sang/Toi
+        /// va tuy chon man hinh chao. Moi lua chon luu vao settings.json.
+        /// </summary>
+        private Control BuildAppearanceCard()
+        {
+            _skinCards.Clear();
+            var skins = new (string Id, string Name, string File)[]
+            {
+                ("default", "Mặc định", null),
+                ("aurora", "Cực quang", "skin-aurora.jpg"),
+                ("sunset", "Hoàng hôn", "skin-sunset.jpg"),
+                ("forest", "Rừng sâu", "skin-forest.jpg"),
+                ("space", "Vũ trụ sâu", "skin-space.jpg"),
+            };
+            var skinRow = new WrapPanel();
+            foreach (var (id, name, file) in skins)
+            {
+                Control preview;
+                if (file == null)
+                {
+                    preview = new Border
+                    {
+                        Height = 56, CornerRadius = new CornerRadius(9),
+                        Background = new LinearGradientBrush
+                        {
+                            StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
+                            EndPoint = new RelativePoint(0, 1, RelativeUnit.Relative),
+                            GradientStops =
+                            {
+                                new GradientStop(Color.FromRgb(0x12, 0x12, 0x1A), 0),
+                                new GradientStop(Color.FromRgb(0x0B, 0x0B, 0x10), 1),
+                            },
+                        },
+                    };
+                }
+                else
+                {
+                    preview = new Avalonia.Controls.Image
+                    {
+                        Height = 56, Stretch = Stretch.UniformToFill,
+                        Source = LoadSkin(file),
+                    };
+                }
+                var previewHost = new Border
+                {
+                    CornerRadius = new CornerRadius(9), ClipToBounds = true,
+                    Child = preview,
+                };
+                var cardContent = V(6, previewHost, Tb(name, null, 11.5));
+                var card = new Border
+                {
+                    Classes = { "pickcard" },
+                    Child = cardContent,
+                    Width = 118,
+                    Margin = new Thickness(0, 0, 9, 9),
+                    Cursor = new Cursor(StandardCursorType.Hand),
+                };
+                string sid = id; string sname = name;
+                card.PointerPressed += (s, e) =>
+                {
+                    ApplyBackground(sid);
+                    RefreshSkinSelection();
+                    ShowToast(sid == "default"
+                        ? "Đã về nền mặc định (phẳng, trung tính)"
+                        : "Đã đổi hình nền app: " + sname + " — panel kính cho nền xuyên qua");
+                };
+                _skinCards.Add((id, card));
+                skinRow.Children.Add(card);
+            }
+            // The "Anh cua ban" (hien anh custom neu da co)
+            {
+                _customSkinThumb = new Avalonia.Controls.Image
+                {
+                    Height = 56, Stretch = Stretch.UniformToFill,
+                };
+                Control customPreview;
+                string cp = BackgroundStore.ResolveCustomPath(_ui);
+                if (cp != null)
+                {
+                    try { _customSkinThumb.Source = new Bitmap(cp); } catch { }
+                    customPreview = _customSkinThumb;
+                }
+                else
+                {
+                    customPreview = new Border
+                    {
+                        Height = 56, CornerRadius = new CornerRadius(9),
+                        Background = new SolidColorBrush(Color.FromArgb(0x14, 0xFF, 0xFF, 0xFF)),
+                        Child = Tb("＋ Ảnh riêng", null, 11.5).Also(t =>
+                        {
+                            t.HorizontalAlignment = HorizontalAlignment.Center;
+                            t.VerticalAlignment = VerticalAlignment.Center;
+                        }),
+                    };
+                }
+                var previewHost = new Border { CornerRadius = new CornerRadius(9), ClipToBounds = true, Child = customPreview };
+                var card = new Border
+                {
+                    Classes = { "pickcard" },
+                    Child = V(6, previewHost, Tb("Ảnh của bạn", null, 11.5)),
+                    Width = 118,
+                    Margin = new Thickness(0, 0, 9, 9),
+                    Cursor = new Cursor(StandardCursorType.Hand),
+                };
+                card.PointerPressed += (s, e) =>
+                {
+                    if (BackgroundStore.ResolveCustomPath(_ui) != null)
+                    {
+                        ApplyBackground("custom");
+                        RefreshSkinSelection();
+                        ShowToast("Đã dùng ảnh của bạn làm nền app.");
+                    }
+                    else _ = ImportCustomBackgroundAsync();
+                };
+                _skinCards.Add(("custom", card));
+                skinRow.Children.Add(card);
+            }
+            RefreshSkinSelection();
+
+            var customBtn = GhostBtn("Ảnh của bạn…", async () => await ImportCustomBackgroundAsync());
+
+            // --- Mau chu de (4 mau) ---
+            var accentRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 9 };
+            var accentSwatches = new List<Border>();
+            for (int i = 0; i < AccentTable.All.Length; i++)
+            {
+                var acc = AccentTable.All[i];
+                var ca = Color.FromRgb(acc.A.R, acc.A.G, acc.A.B);
+                var cb = Color.FromRgb(acc.B.R, acc.B.G, acc.B.B);
+                var sw = new Border
+                {
+                    Width = 36, Height = 36, CornerRadius = new CornerRadius(11),
+                    Background = new LinearGradientBrush
+                    {
+                        StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
+                        EndPoint = new RelativePoint(1, 1, RelativeUnit.Relative),
+                        GradientStops = { new GradientStop(ca, 0), new GradientStop(cb, 1) },
+                    },
+                    BorderBrush = new SolidColorBrush(Color.FromArgb(0x33, 0xFF, 0xFF, 0xFF)),
+                    BorderThickness = new Thickness(1),
+                    Cursor = new Cursor(StandardCursorType.Hand),
+                };
+                ToolTip.SetTip(sw, acc.Name);
+                int idx = i;
+                sw.PointerPressed += (s, e) =>
+                {
+                    ApplyAccentByIndex(idx);
+                    foreach (var o in accentSwatches)
+                    {
+                        bool sel = ReferenceEquals(o, sw);
+                        o.BorderBrush = new SolidColorBrush(sel ? Colors.White : Color.FromArgb(0x33, 0xFF, 0xFF, 0xFF));
+                        o.BorderThickness = new Thickness(sel ? 2.2 : 1);
+                    }
+                    ShowToast("Đã áp dụng màu chủ đề: " + AccentTable.Get(idx).Name);
+                };
+                accentSwatches.Add(sw);
+                accentRow.Children.Add(sw);
+            }
+            if (_ui.AccentIndex >= 0 && _ui.AccentIndex < accentSwatches.Count)
+            {
+                accentSwatches[_ui.AccentIndex].BorderBrush = new SolidColorBrush(Colors.White);
+                accentSwatches[_ui.AccentIndex].BorderThickness = new Thickness(2.2);
+            }
+
+            // --- Xem truoc Sang / Toi ---
+            Border ModePreview(bool dark, string label, string state)
+            {
+                var lines = new StackPanel { Spacing = 5, Margin = new Thickness(10) };
+                lines.Children.Add(new Border { Height = 7, CornerRadius = new CornerRadius(3.5), Width = 62, HorizontalAlignment = HorizontalAlignment.Left, Background = new SolidColorBrush(dark ? Color.FromRgb(0x3A, 0x3A, 0x4C) : Color.FromRgb(0xC9, 0xCD, 0xD8)) });
+                lines.Children.Add(new Border { Height = 7, CornerRadius = new CornerRadius(3.5), Width = 92, HorizontalAlignment = HorizontalAlignment.Left, Background = new SolidColorBrush(dark ? Color.FromRgb(0x2C, 0x2C, 0x3C) : Color.FromRgb(0xDD, 0xE0, 0xE8)) });
+                lines.Children.Add(new Border { Height = 7, CornerRadius = new CornerRadius(3.5), Width = 44, HorizontalAlignment = HorizontalAlignment.Left, Background = UiBrushes.AccentGradient() });
+                var mock = new Border
+                {
+                    CornerRadius = new CornerRadius(9), Height = 74,
+                    Background = new SolidColorBrush(dark ? Color.FromRgb(0x14, 0x14, 0x1E) : Color.FromRgb(0xF2, 0xF3, 0xF7)),
+                    Child = lines,
+                };
+                var content = V(6, mock, H(6, Tb(label, "h3"), Tb("· " + state, "faint")));
+                var card = new Border { Classes = { "pickcard" }, Child = content, Width = 168 };
+                if (dark)
+                {
+                    card.BorderBrush = UiBrushes.AccentGradient();
+                    card.BorderThickness = new Thickness(1.8);
+                }
+                else
+                {
+                    card.Cursor = new Cursor(StandardCursorType.Hand);
+                    card.PointerPressed += (s, e) =>
+                        ShowToast("Chế độ Sáng đang được phát triển — sẽ có ở bản sau. Bản này giữ chế độ Tối như bản đã duyệt.");
+                }
+                return card;
+            }
+            var modeRow = H(10,
+                ModePreview(true, "Tối", "đang dùng"),
+                ModePreview(false, "Sáng", "sắp có ở bản sau"));
+
+            // --- Man hinh chao ---
+            var replayBtn = GhostBtn("Xem lại màn hình chào", () => ShowGreeting());
+            _greetingStyleText = Tb("", "faint");
+            RefreshGreetingStyleText();
+            var skipSw = new PillSwitch();
+            skipSw.IsChecked = _ui.SkipGreeting;
+            skipSw.Changed += v => { _ui.SkipGreeting = v; SaveUi(); };
+            var skipTexts = V(2,
+                Tb("Bỏ qua màn hình chào mừng", "h3"),
+                Tb("Bật: mở app vào thẳng trang chính, không hiện màn hình chào", "sub"));
+            var skipGrid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto") };
+            skipGrid.Children.Add(skipTexts);
+            skipSw.VerticalAlignment = VerticalAlignment.Center;
+            Grid.SetColumn(skipSw, 1);
+            skipGrid.Children.Add(skipSw);
+            var skipRow = CardFlat(skipGrid, 12);
+
+            return Card(V(12,
+                Tb("Giao diện", "h2"),
+                Tb("Hình nền app", "h3"),
+                Tb("Chọn nền có sẵn hoặc dùng ảnh của bạn — các panel kính mờ (Liquid Glass) sẽ cho nền xuyên qua. Ảnh riêng được nén (cạnh dài nhất 1920px) và lưu trong thư mục Backgrounds của app; mọi lựa chọn được nhớ trong settings.json.", "sub"),
+                skinRow,
+                customBtn,
+                Tb("Màu chủ đề", "h3"),
+                accentRow,
+                Tb("Chế độ giao diện", "h3"),
+                modeRow,
+                Tb("Màn hình chào", "h3"),
+                _greetingStyleText,
+                H(10, replayBtn),
+                skipRow));
+        }
+
+        // ================= v3.3: CHO PLUGIN =================
+        // Trinh bay theo Preview v0.10.1 da duyet: luoi the 2 cot co anh bia,
+        // tab danh muc, modal chi tiet o giua man hinh. Khac ban xem truoc:
+        // cong tac Bat + cau hinh cua cac plugin KHOI DONG la THAT (quyet
+        // dinh man hinh chao + luu settings.json). Hai plugin "Y tuong/dang
+        // phat trien" duoc gan nhan ro rang, khoa cong tac, khong gia vo
+        // chuc nang va khong co bat ky loi goi mang nao.
+        private sealed class PluginItem
+        {
+            public string Id, Name, Author, Cat, CatLabel, Desc, Detail, Meta, Thumb;
+            public bool BuiltIn;
+            public bool Idea; // true = "Y tuong/dang phat trien": nhan ro, khoa bat
+        }
+
+        private static readonly Dictionary<string, Bitmap> ThumbCache = new Dictionary<string, Bitmap>();
+
+        private static Bitmap LoadThumb(string file)
+        {
+            if (ThumbCache.TryGetValue(file, out var b)) return b;
+            using (var s = AssetLoader.Open(GifTools.Asset("Assets/Plugins/" + file)))
+            {
+                var bmp = new Bitmap(s);
+                ThumbCache[file] = bmp;
+                return bmp;
+            }
+        }
+
+        private static List<PluginItem> StoreItems() => new List<PluginItem>
+        {
+            new PluginItem
+            {
+                Id = "deepseek-harness",
+                Name = "DeepSeek Harness Boot", Author = "Cộng đồng GitHub", Cat = "boot", CatLabel = "Hiệu ứng khởi động",
+                Desc = "Màn hình chào kiểu terminal “AI harness”: chuỗi bước xác nhận nạp module, có đọc bằng giọng nói.",
+                Detail = "Mỗi lần khởi động, app chạy chuỗi xác nhận từng bước (nạp module → kiểm tra thiết bị → sẵn sàng) trên màn hình chào kiểu terminal. Tên và mã định danh của bạn hiển thị thật trong chuỗi khởi động. Tuỳ chọn đọc bằng giọng nói đang được phát triển — cấu hình được lưu sẵn, giọng đọc sẽ có ở bản sau.",
+                Meta = "Phiên bản 1.2.0 · Có sẵn trong app · Miễn phí", Thumb = "thumb-ds-harness.png",
+            },
+            new PluginItem
+            {
+                Id = "550c-boot",
+                Name = "550C Boot", Author = "Cộng đồng GitHub", Cat = "boot", CatLabel = "Hiệu ứng khởi động",
+                Desc = "Màn hình chào giả lập 550C: đồng hồ CRT màu hổ phách, kim quét một vòng rồi hiện logo.",
+                Detail = "Bản cổng cộng đồng của hiệu ứng boot 550C: nền CRT hổ phách, vệt quét chạy ngang kèm phát sáng, kết thúc bằng logo app. Thời lượng ~2 giây, bỏ qua được bằng Esc.",
+                Meta = "Phiên bản 1.0.3 · Có sẵn trong app · Miễn phí", Thumb = "thumb-550c.png",
+            },
+            new PluginItem
+            {
+                Id = "wallpaper-engine-sync",
+                Name = "Wallpaper Engine Sync", Author = "Cộng đồng GitHub", Cat = "wallpaper", CatLabel = "Công cụ hình nền",
+                Desc = "Dùng hình nền cực bá của Wallpaper Engine làm nền ứng dụng — không đổi hình nền Windows.",
+                Detail = "Ý tưởng: công cụ nền đọc cảnh đang chạy của Wallpaper Engine và dùng khung hình của nó làm hình nền app. Plugin đang ở trạng thái Ý TƯỞNG / ĐANG PHÁT TRIỂN — chưa bật được, app không đọc dữ liệu của Wallpaper Engine và không gọi mạng cho mục này.",
+                Meta = "Ý tưởng · Đang phát triển", Thumb = "thumb-we-sync.png", Idea = true,
+            },
+            new PluginItem
+            {
+                Id = "aurora-wave-pack",
+                Name = "Aurora Wave Pack", Author = "T Keyboard Team", Cat = "led", CatLabel = "Hiệu ứng đèn",
+                Desc = "Gói 6 hiệu ứng sóng đèn từng phím qua kênh stream: sóng ngang, sóng chéo, mưa sao, nhịp thở đôi…",
+                Detail = "Ý tưởng: 6 hiệu ứng chạy bằng kênh stream từng phím của T Keyboard. Plugin đang ở trạng thái Ý TƯỞNG / ĐANG PHÁT TRIỂN — chưa bật được và chưa gửi bất kỳ gói tin nào xuống phím.",
+                Meta = "Ý tưởng · Đang phát triển", Thumb = "thumb-aurora-wave.png", Idea = true,
+            },
+            new PluginItem
+            {
+                Id = "tien-galaxy-boot",
+                Name = "Tien Galaxy Boot", Author = "T Keyboard Team", Cat = "boot", CatLabel = "Hiệu ứng khởi động",
+                Desc = "Màn hình chào riêng của T Keyboard: vệt sáng cầu vồng quét qua hàng phím + logo Mẫu C.",
+                Detail = "Đây là màn hình chào mặc định của app — vệt sáng quét ngang hàng phím trong ~2 giây, bấm hoặc nhấn Esc để bỏ qua. Xem lại bất cứ lúc nào ở Cài đặt → Giao diện.",
+                Meta = "Phiên bản 1.0.0 · Có sẵn trong app · Miễn phí", Thumb = "thumb-tien-galaxy.png", BuiltIn = true,
+            },
+        };
+
+        private static Border IdeaBadge() => new Border
+        {
+            Background = new SolidColorBrush(Color.FromArgb(0x2E, 0xF9, 0x73, 0x16)),
+            CornerRadius = new CornerRadius(999),
+            Padding = new Thickness(8, 3),
+            Child = new TextBlock { Text = "Ý tưởng · đang phát triển", FontSize = 10, Foreground = new SolidColorBrush(Color.FromRgb(0xFD, 0xBA, 0x74)) },
+            HorizontalAlignment = HorizontalAlignment.Left,
+            VerticalAlignment = VerticalAlignment.Center,
+        };
+
+        private Border StoreCard(PluginItem it)
+        {
+            var thumbBox = new Border
+            {
+                Height = 148, ClipToBounds = true,
+                CornerRadius = new CornerRadius(13, 13, 0, 0),
+                Child = new Avalonia.Controls.Image { Source = LoadThumb(it.Thumb), Stretch = Stretch.UniformToFill },
+            };
+            var title = Tb(it.Name, "h3");
+            title.FontSize = 13.5;
+            var desc = new TextBlock
+            {
+                Text = it.Desc, FontSize = 12, Foreground = UiBrushes.TextSecondary,
+                TextTrimming = TextTrimming.CharacterEllipsis, MaxLines = 1,
+            };
+            var pill = new Border
+            {
+                Background = new SolidColorBrush(Color.FromArgb(0x2E, 0x7C, 0x3A, 0xED)),
+                CornerRadius = new CornerRadius(999),
+                Padding = new Thickness(8, 3),
+                Child = new TextBlock { Text = it.CatLabel, FontSize = 10, Foreground = new SolidColorBrush(Color.FromRgb(0xC4, 0xB5, 0xFD)) },
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Center,
+            };
+            var srcLink = new TextBlock
+            {
+                Text = "Mã nguồn", FontSize = 11.5, FontWeight = FontWeight.SemiBold,
+                Foreground = new SolidColorBrush(Color.FromRgb(0x38, 0xE0, 0xF8)),
+                TextDecorations = TextDecorations.Underline,
+                Cursor = new Cursor(StandardCursorType.Hand),
+                VerticalAlignment = VerticalAlignment.Center,
+            };
+            srcLink.PointerPressed += (s, e) =>
+            {
+                e.Handled = true;
+                ShowToast("Các hiệu ứng này được đóng gói sẵn trong app — app không tự tải hay cài thêm gì từ mạng.");
+            };
+            var author = Tb(it.Author, "faint");
+            var footer = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto") };
+            footer.Children.Add(srcLink);
+            Grid.SetColumn(author, 1);
+            footer.Children.Add(author);
+
+            var body = new StackPanel { Spacing = 7, Margin = new Thickness(13, 11, 13, 12) };
+            body.Children.Add(title);
+            body.Children.Add(desc);
+            var pillRow = H(6, pill);
+            if (it.Idea) pillRow.Children.Add(IdeaBadge());
+            body.Children.Add(pillRow);
+            body.Children.Add(footer);
+            var stack = new StackPanel();
+            stack.Children.Add(thumbBox);
+            stack.Children.Add(body);
+            var card = new Border
+            {
+                Classes = { "pickcard" },
+                Padding = new Thickness(0),
+                Child = stack,
+                Cursor = new Cursor(StandardCursorType.Hand),
+            };
+            card.PointerPressed += (s, e) => OpenPluginModal(it);
+            return card;
+        }
+
+        private Control BuildStorePage()
+        {
+            var items = StoreItems();
+            var wrap = new WrapPanel();
+            var cards = new List<Border>();
+            for (int i = 0; i < items.Count; i++)
+            {
+                var card = StoreCard(items[i]);
+                card.Width = 418;
+                card.Margin = new Thickness(0, 0, i % 2 == 0 ? 10 : 0, 10);
+                cards.Add(card);
+                wrap.Children.Add(card);
+            }
+
+            var filterRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+            var cats = new (string Label, string Cat)[]
+            {
+                ("Tất cả", "all"), ("Hiệu ứng khởi động", "boot"), ("Công cụ hình nền", "wallpaper"), ("Hiệu ứng đèn", "led"),
+            };
+            var filterBtns = new List<Button>();
+            foreach (var (label, cat) in cats)
+            {
+                var b = new Button { Content = label };
+                b.Classes.Add("chip");
+                if (cat == "all") b.Classes.Add("sel");
+                b.Click += (s, e) =>
+                {
+                    foreach (var o in filterBtns) o.Classes.Remove("sel");
+                    b.Classes.Add("sel");
+                    for (int j = 0; j < cards.Count; j++)
+                        cards[j].IsVisible = cat == "all" || items[j].Cat == cat;
+                };
+                filterBtns.Add(b);
+                filterRow.Children.Add(b);
+            }
+
+            var root = V(14,
+                Tb("Chợ plugin", "h1"),
+                Tb("Kho cộng đồng: hiệu ứng khởi động, công cụ hình nền và gói hiệu ứng đèn — bấm vào một thẻ để mở panel chi tiết: bật/tắt, cấu hình và xem trước.", "sub"),
+                filterRow,
+                wrap,
+                CardFlat(Tb("Cơ chế thật của trang này: 3 plugin khởi động là tính năng THẬT của app — plugin đang bật sẽ quyết định màn hình chào mỗi lần mở app, cấu hình lưu trong settings.json. Hai mục gắn nhãn “Ý tưởng · đang phát triển” chỉ là ý tưởng đang làm — chưa bật được, không có chức năng ẩn và app không tải/cài bất cứ thứ gì từ mạng.", "faint")));
+            return Scroll(root);
+        }
+
+        // ---------- MODAL CHI TIET PLUGIN ----------
+        private void OpenPluginModal(PluginItem it)
+        {
+            PluginModalHost.Children.Clear();
+            PluginModalHost.Children.Add(BuildPluginModalPanel(it));
+            PluginModal.IsVisible = true;
+            PluginModal.Opacity = 1;
+        }
+
+        private void ClosePluginModal()
+        {
+            if (!PluginModal.IsVisible) return;
+            PluginModal.Opacity = 0;
+            var t = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(230) };
+            t.Tick += (s, e) => { t.Stop(); PluginModal.IsVisible = false; };
+            t.Start();
+        }
+
+        private Control BuildPluginModalPanel(PluginItem it)
+        {
+            var state = GetPluginState(it.Id);
+            var title = Tb(it.Name, "h2");
+            title.VerticalAlignment = VerticalAlignment.Center;
+            var closeBtn = new Button { Content = "✕", FontSize = 13, Padding = new Thickness(10, 5) };
+            closeBtn.Classes.Add("ghost");
+            closeBtn.Click += (s, e) => ClosePluginModal();
+            var head = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto") };
+            head.Children.Add(title);
+            Grid.SetColumn(closeBtn, 1);
+            head.Children.Add(closeBtn);
+
+            var preview = new Border
+            {
+                Height = 196, ClipToBounds = true, CornerRadius = new CornerRadius(12),
+                Child = new Avalonia.Controls.Image { Source = LoadThumb(it.Thumb), Stretch = Stretch.UniformToFill },
+            };
+
+            var enableSw = new PillSwitch { IsChecked = state.Enabled, IsEnabled = !it.Idea };
+            enableSw.Changed += v =>
+            {
+                state.Enabled = v;
+                if (v && it.Cat == "boot")
+                {
+                    _ui.GreetingPlugin = it.Id;
+                    ShowToast("Đã bật “" + it.Name + "” — màn hình chào lần mở app tới sẽ dùng phong cách này.");
+                }
+                else ShowToast(v ? "Đã bật “" + it.Name + "”" : "Đã tắt “" + it.Name + "”");
+                SaveUi();
+                RefreshGreetingStyleText();
+            };
+            var enableRow = H(10, Tb("Bật", "h3"), enableSw);
+            enableRow.Children[0].VerticalAlignment = VerticalAlignment.Center;
+            if (it.Idea) enableRow.Children.Add(Tb("Chưa bật được — đang phát triển", "faint"));
+
+            var inner = new StackPanel { Spacing = 11, Margin = new Thickness(20, 16, 20, 18) };
+            inner.Children.Add(head);
+            inner.Children.Add(preview);
+            inner.Children.Add(Tb(it.CatLabel + " · " + it.Author + " · " + it.Meta, "faint"));
+            inner.Children.Add(Tb(it.Detail, "sub"));
+            inner.Children.Add(new Border { Height = 1, Background = new SolidColorBrush(Color.FromArgb(0x14, 0xFF, 0xFF, 0xFF)) });
+            inner.Children.Add(enableRow);
+            foreach (var row in PluginConfigRows(it, state)) inner.Children.Add(row);
+            inner.Children.Add(H(10,
+                PrimaryBtn("Xem trước", () =>
+                {
+                    if (it.Cat == "boot") { ClosePluginModal(); ShowGreeting(GreetingStyles.StyleForPlugin(it.Id)); }
+                    else ShowToast("Plugin đang ở trạng thái ý tưởng — chưa có bản xem trước thật.");
+                }),
+                GhostBtn("Đóng", () => ClosePluginModal())));
+
+            return new Border
+            {
+                Classes = { "card" },
+                Background = new SolidColorBrush(Color.FromArgb(0xE6, 0x1B, 0x1B, 0x26)),
+                Width = 560,
+                Padding = new Thickness(0),
+                Child = inner,
+            };
+        }
+
+        private IEnumerable<Control> PluginConfigRows(PluginItem it, PluginState state)
+        {
+            var rows = new List<Control>();
+            Control Row(string label, Control ctl)
+            {
+                var g = new Grid { ColumnDefinitions = new ColumnDefinitions("190,*") };
+                var lb = Tb(label, "sub");
+                lb.VerticalAlignment = VerticalAlignment.Center;
+                g.Children.Add(lb);
+                ctl.HorizontalAlignment = HorizontalAlignment.Left;
+                ctl.VerticalAlignment = VerticalAlignment.Center;
+                Grid.SetColumn(ctl, 1);
+                g.Children.Add(ctl);
+                return g;
+            }
+
+            if (it.Idea)
+            {
+                rows.Add(Tb("Plugin đang ở trạng thái Ý TƯỞNG / ĐANG PHÁT TRIỂN — phần cấu hình sẽ mở khi plugin được phát triển xong. Hiện tại app không chạy bất kỳ mã nào của plugin này.", "faint"));
+                return rows;
+            }
+
+            if (it.Cat == "boot")
+            {
+                var voice = new PillSwitch { IsChecked = state.GetCfgBool("voice", true) };
+                voice.Changed += v =>
+                {
+                    state.Config["voice"] = v.ToString();
+                    SaveUi();
+                    if (v) ShowToast("Đã lưu tuỳ chọn giọng nói — tính năng đọc thành tiếng đang phát triển, sẽ có ở bản sau.");
+                };
+                rows.Add(Row("Đọc bằng giọng nói (đang phát triển)", voice));
+
+                var volVal = Tb(state.GetCfgInt("volume", 90) + "%", "sub");
+                var vol = new Slider { Minimum = 0, Maximum = 100, Value = state.GetCfgInt("volume", 90), Width = 220 };
+                vol.PropertyChanged += (s, e) =>
+                {
+                    if (e.Property == Slider.ValueProperty)
+                    {
+                        volVal.Text = (int)vol.Value + "%";
+                        state.Config["volume"] = ((int)vol.Value).ToString();
+                        SaveUi();
+                    }
+                };
+                rows.Add(Row("Âm lượng", H(10, vol, volVal)));
+
+                var nameBox = new TextBox { Text = state.GetCfg("name", "T OPERATOR"), Width = 220 };
+                nameBox.Classes.Add("search");
+                nameBox.LostFocus += (s, e) => { state.Config["name"] = (nameBox.Text ?? "").Trim(); SaveUi(); };
+                rows.Add(Row("Tên định danh", nameBox));
+
+                var codeBox = new TextBox { Text = state.GetCfg("code", "TKB-001"), Width = 220 };
+                codeBox.Classes.Add("search");
+                codeBox.LostFocus += (s, e) => { state.Config["code"] = (codeBox.Text ?? "").Trim(); SaveUi(); };
+                rows.Add(Row("Mã định danh", codeBox));
+
+                if (it.Id == GreetingStyles.PluginDeepSeek)
+                    rows.Add(Tb("Tên + mã định danh hiển thị thật trong chuỗi khởi động của màn chào terminal.", "faint"));
+            }
+            return rows;
+        }
+
+        // ================= v3.3: GAMESENSE (CS2 GSI — THAT) =================
+        // CS2 tu gui trang thai tran ve 127.0.0.1:<port> qua file cfg ma app
+        // tao (chuan mo Game State Integration cua Valve). App chi NHAN du
+        // lieu game gui; khong doc bo nho game, khong inject, khong nghe
+        // ngoai localhost. Phan ung den phim (neu bat) di qua dung
+        // ExperimentalDevice voi cung khoa Thu nghiem + Dry-run nhu lenh
+        // 0x20 o trang Per-key.
+        private void StartGsi()
+        {
+            try { _gsi.Start(_ui.GameSense.Port); }
+            catch (Exception ex)
+            {
+                AppendLog($"GameSense: không mở được cổng {_ui.GameSense.Port} — {ex.Message}");
+                ShowToast("GameSense: không mở được cổng lắng nghe — " + ex.Message);
+            }
+            UpdateGsStatus();
+        }
+
+        private void UpdateGsStatus()
+        {
+            if (_gsDot == null) return;
+            bool on = _gsi.Running;
+            _gsDot.Fill = new SolidColorBrush(on ? Color.FromRgb(0x34, 0xD3, 0x99) : Color.FromRgb(0x8A, 0x87, 0xA0));
+            _gsStatusText.Text = on
+                ? $"Đang lắng nghe tại 127.0.0.1:{_gsi.Port} — chờ CS2 kết nối (cần file cfg + CS2 đang chạy)…"
+                  + (_gsi.LastPayloadAt != DateTime.MinValue ? $" · Dữ liệu gần nhất: {_gsi.LastPayloadAt:HH:mm:ss} (CS2 đã kết nối)" : "")
+                : "Đang tắt — bật công tắc để bắt đầu lắng nghe GSI trên localhost.";
+        }
+
+        private Control GsEventRow(string title, string desc, string[] actions, int initialAction, bool initialOn,
+            Action<bool> onToggle, Action<int> onAction, Control extra = null)
+        {
+            var sw = new PillSwitch();
+            sw.IsChecked = initialOn;
+            sw.Changed += v => onToggle(v);
+            var texts = V(2, Tb(title, "h3"), Tb(desc, "sub"));
+            var top = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto") };
+            top.Children.Add(texts);
+            sw.VerticalAlignment = VerticalAlignment.Center;
+            Grid.SetColumn(sw, 1);
+            top.Children.Add(sw);
+            var (seg, _) = Segmented(actions, initialAction, i => onAction(i));
+            var body = V(8, top, seg);
+            if (extra != null) body.Children.Add(extra);
+            var row = CardFlat(body, 12);
+            row.Margin = new Thickness(0, 4);
+            return row;
+        }
+
+        private Control BuildGameSensePage()
+        {
+            var gs = _ui.GameSense;
+            _gsi.PayloadReceived += () => Dispatcher.UIThread.Post(UpdateGsStatus);
+
+            // --- The trang thai dich vu GSI ---
+            _gsDot = new EllipseShape { Width = 9, Height = 9, Fill = new SolidColorBrush(Color.FromRgb(0x8A, 0x87, 0xA0)), VerticalAlignment = VerticalAlignment.Center };
+            _gsStatusText = Tb("", "sub");
+            var listenSw = new PillSwitch();
+            listenSw.IsChecked = gs.Listening;
+            listenSw.Changed += v =>
+            {
+                gs.Listening = v;
+                SaveUi();
+                if (v) StartGsi();
+                else { _gsi.Stop(); UpdateGsStatus(); }
+            };
+            var listenTop = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto") };
+            listenTop.Children.Add(V(2,
+                Tb("Dịch vụ lắng nghe CS2 (GSI)", "h3"),
+                Tb("CS2 tự gửi trạng thái trận đấu về máy bạn qua Game State Integration — chuẩn mở của Valve. App chỉ nhận dữ liệu game tự gửi trên localhost, không đọc bộ nhớ game.", "sub")));
+            listenSw.VerticalAlignment = VerticalAlignment.Center;
+            Grid.SetColumn(listenSw, 1);
+            listenTop.Children.Add(listenSw);
+            var portBox = new TextBox { Text = gs.Port.ToString(), Width = 96 };
+            portBox.Classes.Add("search");
+            portBox.LostFocus += (s, e) =>
+            {
+                if (int.TryParse(portBox.Text, out var p) && p >= 1024 && p <= 65535)
+                {
+                    if (p != gs.Port)
+                    {
+                        gs.Port = p;
+                        SaveUi();
+                        if (_gsi.Running) StartGsi();
+                        ShowToast("Đã đổi cổng GSI sang " + p + " — nhớ tạo lại file cfg cho CS2.");
+                    }
+                }
+                else portBox.Text = gs.Port.ToString();
+            };
+            var cfgBtn = GhostBtn("Tạo file cfg cho CS2", async () => await GenerateCfgAsync());
+            var statusRow = H(8, _gsDot, _gsStatusText);
+            statusRow.Children[1].VerticalAlignment = VerticalAlignment.Center;
+            _gsLastEvent = Tb("Chưa nhận sự kiện nào trong phiên này.", "faint");
+            var serviceCard = Card(V(10,
+                listenTop,
+                H(10, Tb("Cổng lắng nghe:", "sub"), portBox, cfgBtn),
+                statusRow,
+                _gsLastEvent));
+
+            // --- Extra: chet -> URL / chuong trinh ---
+            var deathUrlBox = new TextBox { Text = gs.DeathUrl, Width = 380 };
+            deathUrlBox.Classes.Add("search");
+            deathUrlBox.LostFocus += (s, e) => { gs.DeathUrl = (deathUrlBox.Text ?? "").Trim(); SaveUi(); };
+            var deathProgBox = new TextBox { Text = gs.DeathProgram, Width = 380 };
+            deathProgBox.Classes.Add("search");
+            deathProgBox.LostFocus += (s, e) => { gs.DeathProgram = (deathProgBox.Text ?? "").Trim(); SaveUi(); };
+            var deathExtra = V(6,
+                H(8, Tb("Trang web khi chết:", "sub"), deathUrlBox),
+                H(8, Tb("Chương trình khi chết:", "sub"), deathProgBox,
+                    GhostBtn("Chọn…", async () =>
+                    {
+                        var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+                        {
+                            Title = "Chọn chương trình chạy khi chết",
+                            AllowMultiple = false,
+                            FileTypeFilter = new[] { new FilePickerFileType("Chương trình") { Patterns = new[] { "*.exe", "*.bat", "*.cmd", "*.lnk" } } },
+                        });
+                        if (files.Count > 0) { deathProgBox.Text = files[0].Path.LocalPath; gs.DeathProgram = deathProgBox.Text; SaveUi(); }
+                    })));
+
+            // --- Extra: flash -> anh phu + do mo ---
+            var flashChips = new List<Button>();
+            string FlashLabel()
+                => gs.FlashImage == "black" ? "Đen tuyền" : gs.FlashImage == "gray" ? "Xám dịu" : "Ảnh của bạn";
+            var flashState = Tb("Ảnh phủ hiện tại: " + FlashLabel(), "faint");
+            void FlashChip(string label, string spec)
+            {
+                var b = new Button { Content = label };
+                b.Classes.Add("chip");
+                if (gs.FlashImage == spec) b.Classes.Add("sel");
+                b.Click += (s, e) =>
+                {
+                    gs.FlashImage = spec;
+                    SaveUi();
+                    foreach (var o in flashChips) o.Classes.Remove("sel");
+                    b.Classes.Add("sel");
+                    flashState.Text = "Ảnh phủ hiện tại: " + FlashLabel();
+                };
+                flashChips.Add(b);
+            }
+            FlashChip("Đen tuyền", "black");
+            FlashChip("Xám dịu", "gray");
+            var flashCustomBtn = new Button { Content = "Ảnh của bạn…" };
+            flashCustomBtn.Classes.Add("chip");
+            if (gs.FlashImage != "black" && gs.FlashImage != "gray") flashCustomBtn.Classes.Add("sel");
+            flashCustomBtn.Click += async (s, e) =>
+            {
+                var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+                {
+                    Title = "Chọn ảnh phủ chống loá",
+                    AllowMultiple = false,
+                    FileTypeFilter = new[] { new FilePickerFileType("Ảnh") { Patterns = new[] { "*.jpg", "*.jpeg", "*.png", "*.bmp", "*.webp" } } },
+                });
+                if (files.Count == 0) return;
+                try
+                {
+                    string dir = System.IO.Path.Combine(GifLibraryStore.RootDir, "GameSense");
+                    Directory.CreateDirectory(dir);
+                    string dest = System.IO.Path.Combine(dir, "flash-custom" + System.IO.Path.GetExtension(files[0].Path.LocalPath));
+                    File.Copy(files[0].Path.LocalPath, dest, true);
+                    gs.FlashImage = dest;
+                    SaveUi();
+                    foreach (var o in flashChips) o.Classes.Remove("sel");
+                    flashCustomBtn.Classes.Add("sel");
+                    flashState.Text = "Ảnh phủ hiện tại: " + FlashLabel();
+                }
+                catch (Exception ex) { ShowToast("Không dùng được ảnh này: " + ex.Message); }
+            };
+            flashChips.Add(flashCustomBtn);
+            var flashOpacityVal = Tb((int)(gs.FlashOpacity * 100) + "%", "sub");
+            var flashOpacity = new Slider { Minimum = 0.3, Maximum = 1, Value = gs.FlashOpacity, Width = 200 };
+            flashOpacity.PropertyChanged += (s, e) =>
+            {
+                if (e.Property == Slider.ValueProperty)
+                {
+                    gs.FlashOpacity = flashOpacity.Value;
+                    flashOpacityVal.Text = (int)(flashOpacity.Value * 100) + "%";
+                    SaveUi();
+                }
+            };
+            var flashChipRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+            foreach (var c in flashChips) flashChipRow.Children.Add(c);
+            var flashExtra = V(6,
+                H(8, Tb("Ảnh phủ chống loá:", "sub"), flashChipRow),
+                flashState,
+                H(10, Tb("Độ mờ lớp phủ:", "sub"), flashOpacity, flashOpacityVal));
+
+            // --- Anh xa su kien -> hanh dong ---
+            var mapCard = Card(V(6,
+                Tb("Ánh xạ sự kiện → hành động", "h2"),
+                Tb("Mỗi sự kiện trong trận có thể kích hoạt một hành động trên máy — và (chỉ có ở T Keyboard) cả phản ứng bằng đèn phím qua lớp thử nghiệm.", "sub"),
+                GsEventRow("Khi bạn chết",
+                    "Sự kiện: player_state.health về 0",
+                    new[] { "Mở trang web", "Chạy chương trình", "Nháy đèn phím" }, gs.DeathAction, gs.DeathEnabled,
+                    v => { gs.DeathEnabled = v; SaveUi(); }, i => { gs.DeathAction = i; SaveUi(); }, deathExtra),
+                GsEventRow("Khi bị flashbang",
+                    "Sự kiện: player_state.flashed tăng vọt — hiện lớp phủ bảo vệ mắt toàn màn hình",
+                    new[] { "Overlay chống loá", "Làm tối đèn", "Không làm gì" }, gs.FlashAction, gs.FlashEnabled,
+                    v => { gs.FlashEnabled = v; SaveUi(); }, i => { gs.FlashAction = i; SaveUi(); }, flashExtra),
+                GsEventRow("Khi thắng round",
+                    "Sự kiện: round kết thúc và đội của bạn thắng",
+                    new[] { "Đèn ăn mừng (stream)", "Mở trang web", "Không làm gì" }, gs.WinAction, gs.WinEnabled,
+                    v => { gs.WinEnabled = v; SaveUi(); }, i => { gs.WinAction = i; SaveUi(); }),
+                GsEventRow("Khi đặt bom",
+                    "Sự kiện: bomb.state = planted",
+                    new[] { "Nháy đèn phím", "Không làm gì" }, gs.BombAction, gs.BombEnabled,
+                    v => { gs.BombEnabled = v; SaveUi(); }, i => { gs.BombAction = i; SaveUi(); },
+                    Tb("Đèn đếm ngược theo nhịp bom: ĐANG PHÁT TRIỂN — hiện tại sự kiện đặt bom chỉ nháy đèn một nhịp (nếu chọn) và ghi log.", "faint")),
+                SettingRow("Phản ứng bằng đèn phím (lớp thử nghiệm)", "Mọi phản ứng đèn của GameSense đều đi qua ExperimentalDevice — chỉ gửi thật khi công tắc Thử nghiệm ở trang Per-key BẬT và Dry-run TẮT; ngoài ra chỉ ghi log gói sẽ gửi.", gs.LightingEnabled,
+                    v => { gs.LightingEnabled = v; SaveUi(); })));
+
+            // --- Diem hon ban goc ---
+            var plusCard = Card(V(8,
+                Tb("Điểm hơn bản gốc", "h2"),
+                Tb("Ở app tham khảo, GameSense chỉ mở trang web / chạy chương trình khi chết và phủ overlay chống loá khi bị flash — KHÔNG có phản ứng bằng đèn theo game. Ở T Keyboard, cùng sự kiện đó còn đẩy xuống ĐÈN PHÍM qua kênh stream của chính app (qua lớp thử nghiệm có khoá an toàn).", "sub")));
+            plusCard.BorderBrush = UiBrushes.AccentGradient();
+            plusCard.BorderThickness = new Thickness(1.6);
+
+            // --- File cfg mau (sinh that theo cong hien tai) ---
+            var cfgText = new TextBlock
+            {
+                Text = GsiConfig.BuildCfg(gs.Port, GsiConfig.Token),
+                FontFamily = new FontFamily("Consolas, 'Courier New', monospace"),
+                FontSize = 12,
+                Foreground = new SolidColorBrush(Color.FromRgb(0xD8, 0xD5, 0xE6)),
+            };
+            var cfgCard = Card(V(8, Tb("File cfg (game tự gửi dữ liệu về)", "h3"), cfgText,
+                Tb("Nút “Tạo file cfg cho CS2” ở trên sẽ ghi đúng nội dung này vào thư mục game\\csgo\\cfg của CS2 (tự tìm qua Steam) hoặc cho bạn tự chọn nơi lưu.", "faint")));
+
+            UpdateGsStatus();
+            var root = V(14,
+                Tb("GameSense", "h1"),
+                Tb("Phản ứng theo sự kiện trong game CS2: chết thì mở sẵn trang web/chương trình, bị flash thì có lớp phủ chống loá — và ở app mình, thêm cả phản ứng bằng đèn phím.", "sub"),
+                serviceCard,
+                mapCard,
+                plusCard,
+                cfgCard);
+            return Scroll(root);
+        }
+
+        private async Task GenerateCfgAsync()
+        {
+            string content = GsiConfig.BuildCfg(_ui.GameSense.Port, GsiConfig.Token);
+            string dir = Cs2Locator.FindCfgDir();
+            if (dir != null)
+            {
+                try
+                {
+                    string path = System.IO.Path.Combine(dir, GsiConfig.CfgFileName);
+                    File.WriteAllText(path, content);
+                    AppendLog("GameSense: đã ghi file cfg vào " + path);
+                    ShowToast("Đã ghi file cfg vào thư mục CS2: " + path + " — khởi động lại CS2 để game bắt đầu gửi dữ liệu.");
+                    return;
+                }
+                catch (Exception ex) { AppendLog("GameSense: ghi cfg vào thư mục CS2 thất bại: " + ex.Message); }
+            }
+            try
+            {
+                var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+                {
+                    Title = "Lưu file cfg GSI — hãy đặt vào thư mục game\\csgo\\cfg của CS2",
+                    SuggestedFileName = GsiConfig.CfgFileName,
+                    DefaultExtension = "cfg",
+                    FileTypeChoices = new[] { new FilePickerFileType("File cfg") { Patterns = new[] { "*.cfg" } } },
+                });
+                if (file != null)
+                {
+                    File.WriteAllText(file.Path.LocalPath, content);
+                    AppendLog("GameSense: đã lưu file cfg tại " + file.Path.LocalPath);
+                    ShowToast("Đã lưu file cfg. Hãy đặt nó vào thư mục game\\csgo\\cfg của CS2 rồi khởi động lại game.");
+                }
+                else AppendLog("GameSense: không tự tìm thấy thư mục CS2 trên máy này và bạn đã huỷ lưu file cfg.");
+            }
+            catch (Exception ex)
+            {
+                AppendLog("GameSense: lỗi tạo file cfg: " + ex.Message);
+                ShowToast("Không tạo được file cfg: " + ex.Message);
+            }
+        }
+
+        // ---------- Xu ly su kien GSI (tren UI thread) ----------
+        private void HandleGsiEvent(GsiEventKind ev)
+        {
+            var gs = _ui.GameSense;
+            string label = ev == GsiEventKind.Death ? "Bạn vừa chết trong game"
+                         : ev == GsiEventKind.FlashStart ? "Bị flashbang (loá mạnh)"
+                         : ev == GsiEventKind.FlashEnd ? "Hết loá"
+                         : ev == GsiEventKind.RoundWin ? "Thắng round!"
+                         : "Bom đã được đặt";
+            if (_gsLastEvent != null)
+                _gsLastEvent.Text = $"Sự kiện gần nhất: {label} · {DateTime.Now:HH:mm:ss}";
+            AppendLog("GameSense: " + label + ".");
+
+            switch (ev)
+            {
+                case GsiEventKind.Death:
+                    if (!gs.DeathEnabled) break;
+                    if (gs.DeathAction == 0) OpenUrlSafe(gs.DeathUrl);
+                    else if (gs.DeathAction == 1) RunProgramSafe(gs.DeathProgram);
+                    else SendGsStream("GameSense: nháy đỏ khi chết", AllKeysColor(0xE0, 0x10, 0x10), restoreAfter: true);
+                    break;
+                case GsiEventKind.FlashStart:
+                    if (!gs.FlashEnabled) break;
+                    if (gs.FlashAction == 0) ShowFlashOverlay();
+                    else if (gs.FlashAction == 1)
+                    {
+                        SendGsStream("GameSense: làm tối đèn khi bị flash", AllKeysColor(0, 0, 0), restoreAfter: false);
+                        _flashDimApplied = gs.LightingEnabled;
+                    }
+                    break;
+                case GsiEventKind.FlashEnd:
+                    HideFlashOverlay();
+                    if (_flashDimApplied)
+                    {
+                        _flashDimApplied = false;
+                        _ = ApplyRgbAsync(_rgb.Effect, _rgb.Brush, _rgb.Multi, (int)_rgb.Brightness, (int)_rgb.Speed, _rgb.Direction);
+                    }
+                    break;
+                case GsiEventKind.RoundWin:
+                    if (!gs.WinEnabled) break;
+                    if (gs.WinAction == 0) CelebrateLighting();
+                    else if (gs.WinAction == 1) OpenUrlSafe(gs.WinUrl);
+                    break;
+                case GsiEventKind.BombPlanted:
+                    if (gs.BombEnabled && gs.BombAction == 0)
+                        SendGsStream("GameSense: nháy cam khi đặt bom", AllKeysColor(0xF9, 0x73, 0x16), restoreAfter: true);
+                    break;
+            }
+        }
+
+        private void OpenUrlSafe(string url)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(url)) { AppendLog("GameSense: chưa cấu hình trang web để mở."); return; }
+                if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) ||
+                    (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+                {
+                    AppendLog("GameSense: URL không hợp lệ (chỉ http/https): " + url);
+                    return;
+                }
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true });
+                AppendLog("GameSense: đã mở trang web " + url);
+            }
+            catch (Exception ex) { AppendLog("GameSense: mở web lỗi: " + ex.Message); }
+        }
+
+        private void RunProgramSafe(string path)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+                {
+                    AppendLog("GameSense: chưa cấu hình chương trình hợp lệ để chạy khi chết.");
+                    return;
+                }
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(path) { UseShellExecute = true });
+                AppendLog("GameSense: đã chạy chương trình " + path);
+            }
+            catch (Exception ex) { AppendLog("GameSense: chạy chương trình lỗi: " + ex.Message); }
+        }
+
+        private FlashOverlay GetFlashOverlay()
+        {
+            if (_flashOverlay == null)
+            {
+                _flashOverlay = new FlashOverlay();
+                _flashOverlay.Closed += (s, e) => _flashOverlay = null;
+            }
+            return _flashOverlay;
+        }
+
+        private void ShowFlashOverlay()
+        {
+            try
+            {
+                var gs = _ui.GameSense;
+                string spec = gs.FlashImage == "black" || gs.FlashImage == "gray" ? gs.FlashImage : gs.FlashImage;
+                GetFlashOverlay().ShowOverlay(spec, gs.FlashOpacity);
+                AppendLog("GameSense: đã hiện lớp phủ chống loá.");
+            }
+            catch (Exception ex) { AppendLog("GameSense: lỗi lớp phủ: " + ex.Message); }
+        }
+
+        private void HideFlashOverlay()
+        {
+            try { _flashOverlay?.HideOverlay(); } catch { }
+        }
+
+        private static List<L99Protocol.StreamQuad> AllKeysColor(byte r, byte g, byte b)
+            => MaxKeyData.StreamSlots.Select(s => new L99Protocol.StreamQuad(s.Id, r, g, b)).ToList();
+
+        // Gui mot frame stream phan ung game qua ExperimentalDevice (cung khoa
+        // Thu nghiem + Dry-run nhu trang Per-key). restoreAfter: gui xong thi
+        // tra lai hieu ung RGB hien tai bang kenh da kiem chung 04 13.
+        private void SendGsStream(string title, List<L99Protocol.StreamQuad> quads, bool restoreAfter)
+        {
+            if (!_ui.GameSense.LightingEnabled)
+            {
+                AppendLog("GameSense: phản ứng đèn đang TẮT trong cài đặt GameSense — bỏ qua gửi đèn.");
+                return;
+            }
+            var steps = L99Protocol.BuildStreamFrameSteps(quads);
+            _ = Task.Run(() =>
+            {
+                try
+                {
+                    bool sent = _exp.SendSteps(title, steps);
+                    if (sent && restoreAfter)
+                    {
+                        Thread.Sleep(420);
+                        Dispatcher.UIThread.Post(() =>
+                            _ = ApplyRgbAsync(_rgb.Effect, _rgb.Brush, _rgb.Multi, (int)_rgb.Brightness, (int)_rgb.Speed, _rgb.Direction));
+                    }
+                }
+                catch (Exception ex) { AppendLog("GameSense: lỗi gửi đèn: " + ex.Message); }
+            });
+        }
+
+        private void CelebrateLighting()
+        {
+            if (!_ui.GameSense.LightingEnabled)
+            {
+                AppendLog("GameSense: phản ứng đèn đang TẮT trong cài đặt GameSense — bỏ qua đèn ăn mừng.");
+                return;
+            }
+            _ = Task.Run(() =>
+            {
+                try
+                {
+                    var hues = new (byte, byte, byte)[] { (0x7C, 0x3A, 0xED), (0x22, 0xD3, 0xEE), (0x34, 0xD3, 0x99) };
+                    bool anySent = false;
+                    for (int i = 0; i < hues.Length; i++)
+                    {
+                        var steps = L99Protocol.BuildStreamFrameSteps(AllKeysColor(hues[i].Item1, hues[i].Item2, hues[i].Item3));
+                        anySent = _exp.SendSteps("GameSense: đèn ăn mừng thắng round", steps) || anySent;
+                        Thread.Sleep(260);
+                    }
+                    if (anySent)
+                        Dispatcher.UIThread.Post(() =>
+                            _ = ApplyRgbAsync(_rgb.Effect, _rgb.Brush, _rgb.Multi, (int)_rgb.Brightness, (int)_rgb.Speed, _rgb.Direction));
+                }
+                catch (Exception ex) { AppendLog("GameSense: lỗi đèn ăn mừng: " + ex.Message); }
+            });
         }
 
         // ================= Khay he thong =================

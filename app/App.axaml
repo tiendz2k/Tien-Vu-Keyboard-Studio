@@ -22,21 +22,26 @@
   <Application.Styles>
     <FluentTheme />
 
-    <!-- The kinh mo sach: nen trang alpha nhe, vien manh, bo goc lon, bong mem -->
+    <!-- LIQUID GLASS (v3.3, port tu Preview v0.10 da duyet): lop kinh mo phu tren
+         giao dien cu — nen ban trong suot nhieu lop de hinh nen xuyen qua, vien
+         sang o mep tren (highlight), bong mem. Khong doi bo cuc; chi doi chat
+         lieu be mat. Avalonia khong co backdrop-blur that — day la panel ban
+         trong suot tren hinh nen, dung co che nhu ban tham khao. -->
     <Style Selector="Border.card">
-      <Setter Property="Background" Value="#0DFFFFFF" />
-      <Setter Property="BorderBrush" Value="#17FFFFFF" />
+      <Setter Property="Background" Value="#14FFFFFF" />
+      <Setter Property="BorderBrush" Value="#26FFFFFF" />
       <Setter Property="BorderThickness" Value="1" />
       <Setter Property="CornerRadius" Value="18" />
       <Setter Property="Padding" Value="18" />
-      <Setter Property="BoxShadow" Value="0 10 28 0 #59000000, 0 2 6 0 #33000000" />
+      <Setter Property="BoxShadow" Value="inset 0 1 0 0 #2EFFFFFF, inset 0 -1 0 0 #0D000000, 0 12 30 0 #66000000, 0 2 6 0 #33000000" />
     </Style>
     <Style Selector="Border.cardflat">
-      <Setter Property="Background" Value="#09FFFFFF" />
-      <Setter Property="BorderBrush" Value="#12FFFFFF" />
+      <Setter Property="Background" Value="#10FFFFFF" />
+      <Setter Property="BorderBrush" Value="#1FFFFFFF" />
       <Setter Property="BorderThickness" Value="1" />
       <Setter Property="CornerRadius" Value="14" />
       <Setter Property="Padding" Value="14" />
+      <Setter Property="BoxShadow" Value="inset 0 1 0 0 #24FFFFFF, 0 4 14 0 #40000000" />
     </Style>
 
     <Style Selector="TextBlock.h1">
@@ -168,13 +173,14 @@
       <Setter Property="Padding" Value="3" />
     </Style>
 
-    <!-- The chon (hieu ung / GIF / thiet bi / mau phim) -->
+    <!-- The chon (hieu ung / GIF / thiet bi / mau phim) — cung lop kinh -->
     <Style Selector="Border.pickcard">
-      <Setter Property="Background" Value="#0AFFFFFF" />
-      <Setter Property="BorderBrush" Value="#14FFFFFF" />
+      <Setter Property="Background" Value="#12FFFFFF" />
+      <Setter Property="BorderBrush" Value="#21FFFFFF" />
       <Setter Property="BorderThickness" Value="1" />
       <Setter Property="CornerRadius" Value="14" />
       <Setter Property="Padding" Value="10" />
+      <Setter Property="BoxShadow" Value="inset 0 1 0 0 #26FFFFFF, 0 4 12 0 #38000000" />
     </Style>
 
     <!-- O tim kiem -->

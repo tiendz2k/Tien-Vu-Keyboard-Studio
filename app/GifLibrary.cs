@@ -22,6 +22,31 @@ namespace TienKeyboardStudio3
     public sealed class LibrarySettings
     {
         public List<string> Folders { get; set; } = new List<string>();
+
+        // --- v3.3: Giao dien + man hinh chao + plugin + GameSense ---
+        // Moi truong deu co mac dinh an toan de file settings.json cu (v3.2)
+        // nap len khong loi va giu nguyen hanh vi cu.
+        public string Background { get; set; } = "default";   // default/aurora/sunset/forest/space/custom
+        public string CustomBackgroundFile { get; set; } = ""; // ten file trong thu muc Backgrounds/
+        public int AccentIndex { get; set; } = 0;              // 0..3 (bang mau trong AppSettings.cs)
+        public bool SkipGreeting { get; set; } = false;
+        public string GreetingPlugin { get; set; } = "tien-galaxy-boot"; // plugin boot dang chon lam man chao
+        public Dictionary<string, PluginState> Plugins { get; set; } = new Dictionary<string, PluginState>();
+        public GameSenseSettings GameSense { get; set; } = new GameSenseSettings();
+    }
+
+    /// <summary>Thu muc luu anh nen nguoi dung tu chon (v3.3).</summary>
+    public static class BackgroundStore
+    {
+        public static string BackgroundsDir => Path.Combine(GifLibraryStore.RootDir, "Backgrounds");
+
+        /// <summary>Duong dan day du cua file nen custom da luu (null neu chua co).</summary>
+        public static string ResolveCustomPath(LibrarySettings settings)
+        {
+            if (settings == null || string.IsNullOrEmpty(settings.CustomBackgroundFile)) return null;
+            string p = Path.Combine(BackgroundsDir, settings.CustomBackgroundFile);
+            return File.Exists(p) ? p : null;
+        }
     }
 
     public static class GifLibraryStore
@@ -48,6 +73,10 @@ namespace TienKeyboardStudio3
                     if (s != null)
                     {
                         if (s.Folders == null) s.Folders = new List<string>();
+                        if (s.Plugins == null) s.Plugins = new Dictionary<string, PluginState>();
+                        if (s.GameSense == null) s.GameSense = new GameSenseSettings();
+                        if (string.IsNullOrEmpty(s.Background)) s.Background = "default";
+                        if (string.IsNullOrEmpty(s.GreetingPlugin)) s.GreetingPlugin = "tien-galaxy-boot";
                         return s;
                     }
                 }

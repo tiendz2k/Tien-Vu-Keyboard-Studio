@@ -12,14 +12,20 @@ namespace TienKeyboardStudio3
 {
     public static class UiBrushes
     {
+        // Cap mau chu de hien tai (v3.3): ApplyAccent trong MainWindow cap nhat
+        // hai bien nay + brush tai nguyen dung chung; brush tao tu code sau do
+        // se dung cap mau moi.
+        public static Color AccentA = Color.FromRgb(0x7C, 0x3A, 0xED);
+        public static Color AccentB = Color.FromRgb(0x22, 0xD3, 0xEE);
+
         public static LinearGradientBrush AccentGradient() => new LinearGradientBrush
         {
             StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
             EndPoint = new RelativePoint(1, 1, RelativeUnit.Relative),
             GradientStops =
             {
-                new GradientStop(Color.FromRgb(0x7C, 0x3A, 0xED), 0),
-                new GradientStop(Color.FromRgb(0x22, 0xD3, 0xEE), 1),
+                new GradientStop(AccentA, 0),
+                new GradientStop(AccentB, 1),
             },
         };
         public static readonly SolidColorBrush GlassBorder = new SolidColorBrush(Color.FromArgb(0x17, 0xFF, 0xFF, 0xFF));
@@ -323,6 +329,71 @@ namespace TienKeyboardStudio3
             ctx.DrawRectangle(ink, null, new Rect(ox, oy, cell * 7, cell * 7), 2, 2);
             ctx.DrawRectangle(Brushes.White, null, new Rect(ox + cell, oy + cell, cell * 5, cell * 5), 1, 1);
             ctx.DrawRectangle(ink, null, new Rect(ox + cell * 2, oy + cell * 2, cell * 3, cell * 3), 1, 1);
+        }
+    }
+
+    /// <summary>
+    /// Vet sang quet ngang mot hang "phim" (24 o) dung cho man hinh chao
+    /// (port tu Preview v0.10): dai sang chay trai -> phai trong ~1.6 giay roi
+    /// mo dan. AmberMode = phong cach 550C: cung vet quet nhung tong ho phach.
+    /// </summary>
+    public sealed class GreetingSweep : Control
+    {
+        private readonly DispatcherTimer _timer;
+        private double _t; // tien trinh 0..1
+        public bool Running { get; private set; }
+        public bool AmberMode { get; set; }
+
+        public GreetingSweep()
+        {
+            _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(30) };
+            _timer.Tick += (s, e) =>
+            {
+                _t += 0.030 / 1.6;
+                if (_t >= 1.15) { _t = 1.15; Stop(); }
+                InvalidateVisual();
+            };
+        }
+
+        public void Play() { _t = 0; Running = true; _timer.Start(); InvalidateVisual(); }
+        public void Stop() { Running = false; _timer.Stop(); }
+
+        public override void Render(DrawingContext ctx)
+        {
+            base.Render(ctx);
+            var rect = new Rect(Bounds.Size);
+            const int cells = 24;
+            double gap = 3;
+            double cw = (rect.Width - gap * (cells - 1)) / cells;
+            double head = _t * 1.3 - 0.15; // vi tri dai sang (don vi: ti le chieu rong)
+            for (int i = 0; i < cells; i++)
+            {
+                double x = i * (cw + gap);
+                double cx = (x + cw / 2) / rect.Width;
+                double d = Math.Abs(cx - head);
+                double glow = Math.Max(0, 1 - d / 0.16);
+                glow = glow * glow;
+                Color c;
+                if (glow <= 0.02)
+                    c = AmberMode ? Color.FromRgb(0x2A, 0x1E, 0x0C) : Color.FromRgb(0x1D, 0x1B, 0x2A);
+                else if (AmberMode)
+                {
+                    // Ho phach CRT: sang dan tu nau sam -> vang ho phach
+                    double v = 0.25 + 0.75 * glow;
+                    c = Color.FromRgb(
+                        (byte)Math.Min(255, 255 * v),
+                        (byte)Math.Min(255, 176 * v),
+                        (byte)Math.Min(255, 32 * v));
+                }
+                else c = KeyboardView.Hsv(cx, 0.85, 0.25 + 0.75 * glow);
+                var cell = new Rect(x, 2, cw, rect.Height - 4);
+                ctx.DrawRectangle(new SolidColorBrush(c), null, cell, 5, 5);
+                if (glow > 0.05)
+                {
+                    var halo = new Rect(x - 3, -1, cw + 6, rect.Height + 2);
+                    ctx.DrawRectangle(new SolidColorBrush(Color.FromArgb((byte)(70 * glow), c.R, c.G, c.B)), null, halo, 8, 8);
+                }
+            }
         }
     }
 }

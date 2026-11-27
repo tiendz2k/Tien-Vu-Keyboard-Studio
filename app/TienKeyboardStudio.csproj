@@ -9,8 +9,8 @@
     <RootNamespace>TienKeyboardStudio3</RootNamespace>
     <Product>T Keyboard Studio</Product>
     <AssemblyTitle>T Keyboard Studio</AssemblyTitle>
-    <Description>T Keyboard Studio 3.2.2 — ứng dụng điều khiển bàn phím (AULA F75 Max hỗ trợ đầy đủ; các model khác xem trước). Dry-run bật mặc định.</Description>
-    <Version>3.2.2</Version>
+    <Description>T Keyboard Studio 3.3.0 — ứng dụng điều khiển bàn phím (AULA F75 Max hỗ trợ đầy đủ; các model khác xem trước). Giao diện Liquid Glass + hình nền + màn hình chào + Chợ plugin + GameSense CS2 (GSI). Dry-run bật mặc định.</Description>
+    <Version>3.3.0</Version>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>app.ico</ApplicationIcon>
     <AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>
@@ -33,6 +33,9 @@
     <AvaloniaResource Include="Assets\logo.png" />
     <AvaloniaResource Include="Assets\Gifs\**\*.gif" />
     <AvaloniaResource Include="Assets\effects-manifest.json" />
+    <!-- v3.3: skin hinh nen + anh bia Cho plugin (lay tu Preview v0.10.1 da duyet) -->
+    <AvaloniaResource Include="Assets\Wallpapers\*.jpg" />
+    <AvaloniaResource Include="Assets\Plugins\*.png" />
   </ItemGroup>
 
   <!-- Catalog Thu vien Online (16 hieu ung cong dong DONG GOI SAN, v3.2.2):
