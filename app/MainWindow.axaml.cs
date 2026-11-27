@@ -244,6 +244,7 @@ namespace TienKeyboardStudio3
             _gsi.Log = msg => AppendLog(msg);
             _gsi.EventReceived += (ev, payload) => Dispatcher.UIThread.Post(() => HandleGsiEvent(ev));
 
+            RestoreLightingState(); // v3.12: truoc khi dung trang (trang doc _rgb/_painted)
             BuildNav();
             _pages["home"] = BuildHomePage();
             _pages["rgb"] = BuildRgbPage();
@@ -324,7 +325,7 @@ namespace TienKeyboardStudio3
             RefreshWriteStates();
             ShowPage("home");
             _ = RunIntegrityCheckAsync();
-            AppendLog("Tien Vu Keyboard Studio v3.11.2 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
+            AppendLog("Tien Vu Keyboard Studio v3.12.0 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
             AppendLog("Lộ trình an toàn lần đầu: Quét thiết bị → thử RGB (dry-run) → tắt Dry-run → RGB thật → Cài đặt 04 17 → Đồng hồ → GIF TFT nhỏ → Đọc thử 0xF5.");
         }
 
@@ -354,6 +355,7 @@ namespace TienKeyboardStudio3
             try { _phone.Stop(); } catch { }
             try { _audio.Stop(); } catch { }
             try { _musicSendCts?.Cancel(); } catch { }
+            try { _rtPlayer.Stop(); } catch { }
             try { _profiles.Stop(); } catch { }
             try { _typing.Stop(); } catch { }
             try { _macros.Dispose(); } catch { }
@@ -599,7 +601,8 @@ namespace TienKeyboardStudio3
             if (key == "witmod") RefreshWmPage();
             if (key == "dareu") RefreshDareUPage();
             if (key == "aulahub") RefreshAulaHubPage();
-            if (key != "perkey") _ledPlayer?.Stop();
+            if (key != "perkey") { _ledPlayer?.Stop(); _rtPlayer?.Stop(); }
+            if (key == "perkey") _refreshSchemeList?.Invoke();
             if (key != "online") _onlineLedPlayer?.Stop();
             if (key != "music" && _musicPlaying) StopMusic();
         }
@@ -817,7 +820,7 @@ namespace TienKeyboardStudio3
             var homeKb = new KeyboardView { Mode = KeyboardMode.Animated, State = _rgb };
             var heroCard = Card(homeKb, 14);
 
-            _homeFxValue = Tb("Sóng (Wave)", "h3");
+            _homeFxValue = Tb(EffectFriendlyNames[_rgb.Effect], "h3");
             _homeGifValue = Tb("Tien Galaxy Spiral", "h3");
             _homeDryValue = Tb("Dry-run đang bật", "h3");
             var stats = new Grid { ColumnDefinitions = new ColumnDefinitions("*,*,*"), ColumnSpacing = 12 };
@@ -2456,8 +2459,10 @@ namespace TienKeyboardStudio3
                 cards.Add(card);
                 wrap.Children.Add(card);
             }
-            SelectEffectVisual(10, previews, cards);
+            SelectEffectVisual(_rgb.Effect, previews, cards);
 
+            // v3.12: bo chon mau TU DO (o SV + thanh hue + nhap RGB/hex +
+            // 9 mau mac dinh + mau gan day) thay hang o mau co dinh.
             var swatchColors = new (string Name, Color C)[]
             {
                 ("Tím", Color.FromRgb(0x7C, 0x3A, 0xED)), ("Cyan", Color.FromRgb(0x22, 0xD3, 0xEE)),
@@ -2466,48 +2471,46 @@ namespace TienKeyboardStudio3
                 ("Lục", Color.FromRgb(0x34, 0xD3, 0x99)), ("Dương", Color.FromRgb(0x3B, 0x82, 0xF6)),
                 ("Trắng", Color.FromRgb(0xF8, 0xFA, 0xFC)),
             };
-            var swRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
-            foreach (var (name, col) in swatchColors)
-            {
-                var sw = new Border
-                {
-                    Width = 30, Height = 30, CornerRadius = new CornerRadius(9),
-                    Background = new SolidColorBrush(col),
-                    BorderBrush = new SolidColorBrush(Color.FromArgb(0x33, 0xFF, 0xFF, 0xFF)),
-                    BorderThickness = new Thickness(1),
-                    Cursor = new Cursor(StandardCursorType.Hand),
-                };
-                ToolTip.SetTip(sw, name);
-                var captured = col;
-                sw.PointerPressed += (s, e) =>
-                {
-                    _rgb.Brush = captured;
-                    _rgb.Multi = false;
-                    foreach (var p in previews) p.BaseColor = captured;
-                    kb.InvalidateVisual();
-                };
-                swRow.Children.Add(sw);
-            }
             var multiChip = new Button { Content = "Nhiều màu (cầu vồng)" };
             multiChip.Classes.Add("chip");
+            SetCls(multiChip, "sel", _rgb.Multi);
             multiChip.Click += (s, e) =>
             {
                 _rgb.Multi = !_rgb.Multi;
                 SetCls(multiChip, "sel", _rgb.Multi);
                 kb.InvalidateVisual();
+                QueuePersistLighting();
                 ShowToast(_rgb.Multi ? "Đã bật chế độ nhiều màu cho các hiệu ứng hỗ trợ" : "Đã tắt chế độ nhiều màu");
             };
-            swRow.Children.Add(multiChip);
+            var picker = new ColorPickerPanel(swatchColors);
+            picker.SetColor(_rgb.Brush);
+            picker.SetRecents(RecentColorList());
+            picker.ColorChanged += c =>
+            {
+                _rgb.Brush = c;
+                if (_rgb.Multi) { _rgb.Multi = false; SetCls(multiChip, "sel", false); }
+                foreach (var p in previews) p.BaseColor = c;
+                kb.InvalidateVisual();
+                QueuePersistLighting();
+            };
+            picker.ColorCommitted += c =>
+            {
+                _ui.RecentColors = ColorMath.PushRecent(_ui.RecentColors, ColorMath.ToHex(c.R, c.G, c.B));
+                picker.SetRecents(RecentColorList());
+                PersistLightingNow();
+            };
+            var colorRow = H(16, picker, V(8, Tb("Nhiều màu", "sub"), multiChip));
+            colorRow.Children[1].VerticalAlignment = VerticalAlignment.Top;
 
-            var bright = new Slider { Minimum = 0, Maximum = 4, Value = 3, Width = 210 };
+            var bright = new Slider { Minimum = 0, Maximum = 4, Value = _rgb.Brightness, Width = 210 };
             bright.PropertyChanged += (s, e) =>
             {
-                if (e.Property == Slider.ValueProperty) _rgb.Brightness = bright.Value;
+                if (e.Property == Slider.ValueProperty) { _rgb.Brightness = bright.Value; QueuePersistLighting(); }
             };
-            var speed = new Slider { Minimum = 0, Maximum = 4, Value = 2, Width = 210 };
+            var speed = new Slider { Minimum = 0, Maximum = 4, Value = _rgb.Speed, Width = 210 };
             speed.PropertyChanged += (s, e) =>
             {
-                if (e.Property == Slider.ValueProperty) _rgb.Speed = speed.Value;
+                if (e.Property == Slider.ValueProperty) { _rgb.Speed = speed.Value; QueuePersistLighting(); }
             };
             var sliderGrid = new Grid { ColumnDefinitions = new ColumnDefinitions("Auto,Auto"), ColumnSpacing = 26 };
             sliderGrid.Children.Add(V(4, Tb("Độ sáng", "sub"), bright));
@@ -2515,7 +2518,7 @@ namespace TienKeyboardStudio3
             Grid.SetColumn(spCol, 1);
             sliderGrid.Children.Add(spCol);
 
-            var (dirSeg, _) = Segmented(new[] { "Phải", "Xuống", "Trái", "Lên" }, 0, i => { _rgb.Direction = i; kb.InvalidateVisual(); });
+            var (dirSeg, _) = Segmented(new[] { "Phải", "Xuống", "Trái", "Lên" }, _rgb.Direction, i => { _rgb.Direction = i; kb.InvalidateVisual(); QueuePersistLighting(); });
             var dirRow = H(10, Tb("Hướng chạy:", "sub"), dirSeg);
             dirRow.Children[0].VerticalAlignment = VerticalAlignment.Center;
 
@@ -2530,11 +2533,21 @@ namespace TienKeyboardStudio3
                 Tb("Hiệu ứng firmware (20)", "h2"),
                 wrap,
                 Card(V(12,
-                    Tb("Màu chính", "h3"), swRow,
+                    Tb("Màu chính", "h3"), colorRow,
                     sliderGrid,
                     dirRow,
                     applyBtn)));
             return Scroll(root);
+        }
+
+        /// <summary>v3.12: mau gan day (hex trong settings) -> Color de
+        /// dua vao ColorPickerPanel.</summary>
+        private List<Color> RecentColorList()
+        {
+            var list = new List<Color>();
+            foreach (var h in _ui.RecentColors ?? new List<string>())
+                if (ColorMath.TryParseHex(h, out var c)) list.Add(Color.FromRgb(c.R, c.G, c.B));
+            return list;
         }
 
         private void SelectEffect(int idx, List<EffectPreview> previews, List<Border> cards)
@@ -2542,6 +2555,7 @@ namespace TienKeyboardStudio3
             _rgb.Effect = idx;
             SelectEffectVisual(idx, previews, cards);
             if (_homeFxValue != null) _homeFxValue.Text = EffectFriendlyNames[idx];
+            QueuePersistLighting();
         }
 
         private static void SelectEffectVisual(int idx, List<EffectPreview> previews, List<Border> cards)
@@ -2593,19 +2607,41 @@ namespace TienKeyboardStudio3
                         : "Feed phổ: gửi 23 dải phổ xuống phím (lớp thử nghiệm).");
                 });
 
-            var gain = new Slider { Minimum = 0.4, Maximum = 1.8, Value = 1.0, Width = 230 };
+            var gain = new Slider { Minimum = 0.4, Maximum = 1.8, Value = _music.MusicGain, Width = 230 };
             gain.PropertyChanged += (s, e) =>
             {
-                if (e.Property == Slider.ValueProperty) _music.MusicGain = gain.Value;
+                if (e.Property == Slider.ValueProperty) { _music.MusicGain = gain.Value; QueuePersistLighting(); }
             };
-            var (bgSeg, _) = Segmented(new[] { "Tắt", "Mờ", "Đầy đủ" }, 1, i => _music.MusicBg = i);
+            var (bgSeg, _) = Segmented(new[] { "Tắt", "Mờ", "Đầy đủ" }, _music.MusicBg, i => { _music.MusicBg = i; QueuePersistLighting(); });
+
+            // v3.12: mo khoa tham so 0x78 (builder da co san cac truong) —
+            // kieu nhip (15 kieu), bien do (scale), do sang nen. Do nhay +
+            // che do nen o tren cung tac dong that vao feed 0x78.
+            var styleBox = new ComboBox { Width = 230, ItemsSource = L99Protocol.AudioStyleNames, SelectedIndex = _rhythmStyle };
+            styleBox.SelectionChanged += (s, e) =>
+            {
+                if (styleBox.SelectedIndex >= 0) { _rhythmStyle = styleBox.SelectedIndex; QueuePersistLighting(); if (_musicPlaying && _musicMode == 2) RestartMusicSend(); }
+            };
+            var amp = new Slider { Minimum = 10, Maximum = 100, Value = _rhythmAmplitude, Width = 230 };
+            amp.PropertyChanged += (s, e) =>
+            {
+                if (e.Property == Slider.ValueProperty) { _rhythmAmplitude = (int)Math.Round(amp.Value); QueuePersistLighting(); }
+            };
+            var bgBright = new Slider { Minimum = 0, Maximum = 100, Value = _rhythmBgBrightness, Width = 230 };
+            bgBright.PropertyChanged += (s, e) =>
+            {
+                if (e.Property == Slider.ValueProperty) { _rhythmBgBrightness = (int)Math.Round(bgBright.Value); QueuePersistLighting(); }
+            };
 
             var controlCard = Card(V(12,
                 Tb("Điều khiển", "h2"),
                 _musicPlayBtn,
                 V(4, Tb("Chế độ gửi:", "sub"), modeSeg),
                 V(4, Tb("Độ nhạy (biên độ cột sóng)", "sub"), gain),
-                V(4, Tb("Chế độ nền:", "sub"), bgSeg)));
+                V(4, Tb("Chế độ nền:", "sub"), bgSeg),
+                V(4, Tb("Kiểu nhịp (Feed phổ 0x78):", "sub"), styleBox),
+                V(4, Tb("Biên độ phổ (Feed phổ 0x78)", "sub"), amp),
+                V(4, Tb("Độ sáng nền (Feed phổ 0x78)", "sub"), bgBright)));
 
             var howCard = Card(V(8,
                 Tb("Hoạt động thế nào?", "h2"),
@@ -2659,6 +2695,8 @@ namespace TienKeyboardStudio3
             _musicSendCts = new CancellationTokenSource();
             var ct = _musicSendCts.Token;
             int mode = _musicMode;
+            if (mode == 2)
+                AppendLog($"Feed phổ 0x78: kiểu “{L99Protocol.AudioStyleNames[_rhythmStyle]}” (byte 0x{MusicRhythmMap.RhythmByteForStyle(_rhythmStyle):X2}), biên độ scale={_rhythmAmplitude}, byte nền=0x{MusicRhythmMap.BgModeByte(_music.MusicBg):X2}, sáng nền={MusicRhythmMap.BgBrightnessByte(_rhythmBgBrightness)}/255.");
             _ = Task.Run(async () =>
             {
                 bool sendBusy = false;
@@ -2670,7 +2708,17 @@ namespace TienKeyboardStudio3
                         {
                             List<F75Protocol.Step> steps = null;
                             if (mode == 0) steps = L99Protocol.BuildStreamFrameSteps(BandsToSlots());
-                            else if (mode == 2) steps = L99Protocol.BuildAudioFrameSteps(_audio.Levels100);
+                            else if (mode == 2)
+                            {
+                                // v3.12: do nhay (gain) + bien do (scale) +
+                                // kieu nhip + nen — tat ca chay that vao 0x78.
+                                var bands = _audio.Available ? _audio.Bands01 : SyntheticBands();
+                                var levels = MusicRhythmMap.BuildLevels(bands, _music.MusicGain, _rhythmAmplitude);
+                                steps = L99Protocol.BuildAudioFrameSteps(levels, _rhythmAmplitude,
+                                    MusicRhythmMap.RhythmByteForStyle(_rhythmStyle),
+                                    MusicRhythmMap.BgModeByte(_music.MusicBg),
+                                    MusicRhythmMap.BgBrightnessByte(_rhythmBgBrightness));
+                            }
                             if (steps != null)
                             {
                                 if (_exp.WritesArmed)
@@ -3357,8 +3405,81 @@ namespace TienKeyboardStudio3
             }
         }
 
+        // v3.12: bo phat hieu ung THOI GIAN THUC (generator thu tuc ->
+        // stream 0x20), cung ky luat gui voi LedPlayer: mo khoa thi gui
+        // that tung frame (busy thi bo frame), chua mo khoa thi log 1
+        // frame mau. Xem truoc trong app qua State.FrameColors.
+        private sealed class RealtimeLedPlayer
+        {
+            public readonly DispatcherTimer Timer = new DispatcherTimer();
+            public RgbAnimState State;
+            public KeyboardView Target;
+            public ExperimentalDevice Exp;
+            public Action<string> Log;
+            public int EffectId = RealtimeEffects.OffIndex;
+            public (byte R, byte G, byte B) BaseColor = (0x7C, 0x3A, 0xED);
+            public double Brightness01 = 0.75;
+            public int SpeedUi = 2;
+            private double _t;
+            private bool _sendBusy;
+            private bool _loggedOnce;
+
+            public RealtimeLedPlayer() { Timer.Tick += Tick; }
+            public bool Running => Timer.IsEnabled;
+
+            public void Start(int effectId)
+            {
+                EffectId = effectId;
+                _loggedOnce = false;
+                Timer.Interval = TimeSpan.FromMilliseconds(RealtimeEffects.FrameIntervalMs(SpeedUi));
+                Timer.Start();
+                Tick(null, null);
+            }
+
+            public void Stop() { Timer.Stop(); }
+
+            private void Tick(object sender, EventArgs e)
+            {
+                if (State == null) return;
+                Timer.Interval = TimeSpan.FromMilliseconds(RealtimeEffects.FrameIntervalMs(SpeedUi));
+                _t += Timer.Interval.TotalSeconds * (0.6 + SpeedUi * 0.35);
+                var quads = RealtimeEffects.Generate(EffectId, _t, BaseColor, Brightness01);
+                var dict = new Dictionary<string, Color>();
+                for (int i = 0; i < quads.Length; i++)
+                    dict["k" + MaxKeyData.StreamSlots[i].ViewIndex] = Color.FromRgb(quads[i].R, quads[i].G, quads[i].B);
+                State.FrameColors = dict;
+                State.PaintMode = false;
+                Target?.InvalidateVisual();
+                MaybeSend(quads);
+            }
+
+            private void MaybeSend(L99Protocol.StreamQuad[] quads)
+            {
+                if (Exp == null) return;
+                var steps = L99Protocol.BuildStreamFrameSteps(quads.ToList());
+                if (Exp.WritesArmed)
+                {
+                    if (_sendBusy) return;
+                    _sendBusy = true;
+                    Task.Run(() =>
+                    {
+                        try { Exp.SendSteps("Stream thời gian thực 0x20", steps); }
+                        catch (Exception ex) { Log?.Invoke("Lỗi stream thời gian thực: " + ex.Message); }
+                        _sendBusy = false;
+                    });
+                }
+                else if (!_loggedOnce)
+                {
+                    _loggedOnce = true;
+                    Exp.SendSteps("Stream thời gian thực 0x20 (frame mẫu)", steps);
+                    Log?.Invoke("Thời gian thực: lớp thử nghiệm chưa mở khoá gửi thật — chỉ ghi log frame mẫu; các frame sau phát trong app.");
+                }
+            }
+        }
+
         private readonly LedPlayer _ledPlayer = new LedPlayer();
         private readonly LedPlayer _onlineLedPlayer = new LedPlayer();
+        private readonly RealtimeLedPlayer _rtPlayer = new RealtimeLedPlayer();
 
         // ================= TRANG 5: THU VIEN ONLINE =================
         private Control BuildOnlinePage()
@@ -3628,6 +3749,95 @@ namespace TienKeyboardStudio3
         private readonly Dictionary<string, Color> _painted = new Dictionary<string, Color>();
         private Color _paintColor = Color.FromRgb(0x7C, 0x3A, 0xED);
         private bool _eraseMode;
+
+        // v3.12: trang thai anh sang mo rong (khoi phuc tu settings.json
+        // o RestoreLightingState, luu qua QueuePersistLighting).
+        private int _rhythmStyle = 4;        // chi so trong L99Protocol.AudioStyleNames
+        private int _rhythmAmplitude = 100;  // scale byte 0x78 (10..100)
+        private int _rhythmBgBrightness = 40; // 0..100 (%)
+        private double _gifBrightness = 1.0;
+        private int _gifBlackLevel = GifLedConverter.DefaultBlackLevel;
+        private int _rtSelected = RealtimeEffects.OffIndex;
+        private string _activeSchemeName = "";
+        private Action _refreshSchemeList;
+        private DispatcherTimer _lightPersistTimer;
+        private static string SchemesDir => Path.Combine(GifLibraryStore.RootDir, "LightingSchemes");
+
+        private static int ClampI(int v, int lo, int hi) => Math.Max(lo, Math.Min(hi, v));
+        private static double ClampD(double v, double lo, double hi) => Math.Max(lo, Math.Min(hi, v));
+
+        /// <summary>v3.12: khoi phuc trang thai den tu settings.json —
+        /// goi trong constructor TRUOC khi dung cac trang (trang RGB doc
+        /// _rgb lam gia tri khoi tao). File cu khong co Lighting -> giu
+        /// nguyen mac dinh cung nhu truoc.</summary>
+        private void RestoreLightingState()
+        {
+            var L = _ui.Lighting;
+            if (L == null) return;
+            _rgb.Effect = ClampI(L.EffectId, 0, 19);
+            _rgb.Brush = Color.FromRgb(L.R, L.G, L.B);
+            _rgb.Multi = L.Multi;
+            _rgb.Brightness = ClampI(L.BrightnessUi, 0, 4);
+            _rgb.Speed = ClampI(L.SpeedUi, 0, 4);
+            _rgb.Direction = ClampI(L.Direction, 0, 3);
+            _rhythmStyle = ClampI(L.MusicStyle, 0, L99Protocol.AudioStyleNames.Length - 1);
+            _rhythmAmplitude = ClampI(L.MusicAmplitude, 10, 100);
+            _rhythmBgBrightness = ClampI(L.MusicBgBrightness, 0, 100);
+            _music.MusicBg = ClampI(L.MusicBgMode, 0, 2);
+            _music.MusicGain = ClampD(L.MusicGain, 0.4, 1.8);
+            _gifBrightness = ClampD(L.GifBrightness, 0.2, 1.5);
+            _gifBlackLevel = ClampI(L.GifBlackLevel, 0, 60);
+            _rtSelected = ClampI(L.RtEffect, 0, RealtimeEffects.OffIndex);
+            _activeSchemeName = L.PaintedSchemeName ?? "";
+            if (!string.IsNullOrEmpty(_activeSchemeName))
+            {
+                try
+                {
+                    var sc = new LightingSchemeStore(SchemesDir).Load(_activeSchemeName);
+                    if (sc != null)
+                    {
+                        _painted.Clear();
+                        foreach (var kv in sc.ToPainted())
+                            _painted[kv.Key] = Color.FromRgb(kv.Value.R, kv.Value.G, kv.Value.B);
+                    }
+                }
+                catch { }
+            }
+        }
+
+        /// <summary>v3.12: chup trang thai den hien tai vao settings.json
+        /// (chong doi 700ms — slider keo lien tuc khong ghi file lien tuc).</summary>
+        private void QueuePersistLighting()
+        {
+            if (_lightPersistTimer == null)
+            {
+                _lightPersistTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(700) };
+                _lightPersistTimer.Tick += (s, e) => { _lightPersistTimer.Stop(); PersistLightingNow(); };
+            }
+            _lightPersistTimer.Stop();
+            _lightPersistTimer.Start();
+        }
+
+        private void PersistLightingNow()
+        {
+            var L = _ui.Lighting ?? (_ui.Lighting = new LightingStateData());
+            L.EffectId = _rgb.Effect;
+            L.R = _rgb.Brush.R; L.G = _rgb.Brush.G; L.B = _rgb.Brush.B;
+            L.Multi = _rgb.Multi;
+            L.BrightnessUi = (int)_rgb.Brightness;
+            L.SpeedUi = (int)_rgb.Speed;
+            L.Direction = _rgb.Direction;
+            L.PaintedSchemeName = _activeSchemeName ?? "";
+            L.MusicStyle = _rhythmStyle;
+            L.MusicAmplitude = _rhythmAmplitude;
+            L.MusicBgMode = _music.MusicBg;
+            L.MusicBgBrightness = _rhythmBgBrightness;
+            L.MusicGain = _music.MusicGain;
+            L.RtEffect = _rtSelected;
+            L.GifBrightness = _gifBrightness;
+            L.GifBlackLevel = _gifBlackLevel;
+            try { GifLibraryStore.Save(_ui); } catch { }
+        }
         private TextBlock _expStatus;
         private TextBlock _paintInfo;
         private PillSwitch _expSwitch;
@@ -3680,7 +3890,6 @@ namespace TienKeyboardStudio3
                 _paintInfo.Text = $"Đã tô {_painted.Count} phím. Phím vừa chọn: {label} ({id}).";
             };
 
-            var palette = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
             var paletteColors = new (string Name, Color C)[]
             {
                 ("Tím", Color.FromRgb(0x7C, 0x3A, 0xED)), ("Cyan", Color.FromRgb(0x22, 0xD3, 0xEE)),
@@ -3689,45 +3898,191 @@ namespace TienKeyboardStudio3
                 ("Lục", Color.FromRgb(0x34, 0xD3, 0x99)), ("Dương", Color.FromRgb(0x3B, 0x82, 0xF6)),
                 ("Trắng", Color.FromRgb(0xF8, 0xFA, 0xFC)),
             };
-            foreach (var (name, col) in paletteColors)
-            {
-                var sw = new Border
-                {
-                    Width = 30, Height = 30, CornerRadius = new CornerRadius(9),
-                    Background = new SolidColorBrush(col),
-                    BorderBrush = new SolidColorBrush(Color.FromArgb(0x33, 0xFF, 0xFF, 0xFF)),
-                    BorderThickness = new Thickness(1),
-                    Cursor = new Cursor(StandardCursorType.Hand),
-                };
-                ToolTip.SetTip(sw, name);
-                var captured = col;
-                sw.PointerPressed += (s, e) => { _paintColor = captured; _eraseMode = false; };
-                palette.Children.Add(sw);
-            }
+            // v3.12: bang ve dung CHUNG bo chon mau tu do voi trang RGB.
             var eraseChip = new Button { Content = "Tẩy (tắt phím)" };
             eraseChip.Classes.Add("chip");
             eraseChip.Click += (s, e) => { _eraseMode = !_eraseMode; SetCls(eraseChip, "sel", _eraseMode); };
-            palette.Children.Add(eraseChip);
-            palette.Children.Add(GhostBtn("Tô tất cả", () =>
+            var paintPicker = new ColorPickerPanel(paletteColors);
+            paintPicker.SetColor(_paintColor);
+            paintPicker.SetRecents(RecentColorList());
+            paintPicker.ColorChanged += c =>
             {
-                foreach (var k in KeyboardView.AllKeys) _painted[k.Id] = _paintColor;
-                kb.InvalidateVisual();
-            }));
-            palette.Children.Add(GhostBtn("Xoá hết", () =>
+                _paintColor = c;
+                if (_eraseMode) { _eraseMode = false; SetCls(eraseChip, "sel", false); }
+            };
+            paintPicker.ColorCommitted += c =>
             {
+                _ui.RecentColors = ColorMath.PushRecent(_ui.RecentColors, ColorMath.ToHex(c.R, c.G, c.B));
+                paintPicker.SetRecents(RecentColorList());
+                try { GifLibraryStore.Save(_ui); } catch { }
+            };
+            var paintTools = H(10,
+                eraseChip,
+                GhostBtn("Tô tất cả", () =>
+                {
+                    foreach (var k in KeyboardView.AllKeys) _painted[k.Id] = _paintColor;
+                    kb.InvalidateVisual();
+                }),
+                GhostBtn("Xoá hết", () =>
+                {
+                    _painted.Clear();
+                    kb.InvalidateVisual();
+                }));
+
+            // --- v3.12: scheme den tuy chinh (luu ten / ap / doi ten / xoa /
+            // xuat / nhap — JSON cua app + XML theo dinh dang app chinh chu) ---
+            var schemeStore = new LightingSchemeStore(SchemesDir);
+            var schemeNameBox = new TextBox { Watermark = "Tên scheme…", Width = 190 };
+            var schemeBox = new ComboBox { Width = 210 };
+            var schemeStatus = Tb("", "faint");
+            void RefreshSchemes()
+            {
+                var names = schemeStore.ListNames();
+                schemeBox.ItemsSource = names;
+                if (!string.IsNullOrEmpty(_activeSchemeName) && names.Contains(_activeSchemeName))
+                    schemeBox.SelectedItem = _activeSchemeName;
+            }
+            _refreshSchemeList = RefreshSchemes;
+            RefreshSchemes();
+            string SelectedScheme() => schemeBox.SelectedItem as string;
+            var schemeSaveBtn = GhostBtn("Lưu scheme", () =>
+            {
+                string name = (schemeNameBox.Text ?? "").Trim();
+                if (string.IsNullOrEmpty(name)) name = SelectedScheme() ?? "";
+                if (string.IsNullOrEmpty(name)) { schemeStatus.Text = "Hãy nhập tên scheme trước."; return; }
+                if (_painted.Count == 0) { schemeStatus.Text = "Chưa tô phím nào để lưu."; return; }
+                try
+                {
+                    var map = new Dictionary<string, (byte, byte, byte)>();
+                    foreach (var kv in _painted) map[kv.Key] = (kv.Value.R, kv.Value.G, kv.Value.B);
+                    schemeStore.Save(LightingScheme.FromPainted(name, map));
+                    _activeSchemeName = name;
+                    PersistLightingNow();
+                    RefreshSchemes();
+                    schemeStatus.Text = $"Đã lưu scheme “{name}” ({_painted.Count} phím).";
+                }
+                catch (Exception ex) { schemeStatus.Text = "Lưu thất bại: " + ex.Message; }
+            });
+            var schemeApplyBtn = GhostBtn("Áp dụng", () =>
+            {
+                string name = SelectedScheme();
+                if (name == null) { schemeStatus.Text = "Hãy chọn một scheme."; return; }
+                var sc = schemeStore.Load(name);
+                if (sc == null) { schemeStatus.Text = "Không đọc được scheme."; return; }
                 _painted.Clear();
+                foreach (var kv in sc.ToPainted()) _painted[kv.Key] = Color.FromRgb(kv.Value.R, kv.Value.G, kv.Value.B);
+                _activeSchemeName = name;
+                PersistLightingNow();
                 kb.InvalidateVisual();
-            }));
+                schemeStatus.Text = $"Đã áp dụng “{name}” ({_painted.Count} phím) — bấm Gửi 0x23 để xuống phím.";
+            });
+            var schemeRenameBtn = GhostBtn("Đổi tên", () =>
+            {
+                string old = SelectedScheme();
+                string nw = (schemeNameBox.Text ?? "").Trim();
+                if (old == null) { schemeStatus.Text = "Hãy chọn scheme cần đổi tên."; return; }
+                if (string.IsNullOrEmpty(nw)) { schemeStatus.Text = "Hãy nhập tên mới vào ô tên."; return; }
+                try
+                {
+                    schemeStore.Rename(old, nw);
+                    if (_activeSchemeName == old) { _activeSchemeName = nw; PersistLightingNow(); }
+                    RefreshSchemes();
+                    schemeStatus.Text = $"Đã đổi tên thành “{nw}”.";
+                }
+                catch (Exception ex) { schemeStatus.Text = "Đổi tên thất bại: " + ex.Message; }
+            });
+            var schemeDeleteBtn = GhostBtn("Xoá", () =>
+            {
+                string name = SelectedScheme();
+                if (name == null) { schemeStatus.Text = "Hãy chọn scheme cần xoá."; return; }
+                if (schemeStore.Delete(name))
+                {
+                    if (_activeSchemeName == name) { _activeSchemeName = ""; PersistLightingNow(); }
+                    RefreshSchemes();
+                    schemeStatus.Text = $"Đã xoá “{name}”.";
+                }
+                else schemeStatus.Text = "Xoá thất bại.";
+            });
+            var schemeExportBtn = GhostBtn("Xuất file", async () =>
+            {
+                string name = SelectedScheme();
+                if (name == null) { schemeStatus.Text = "Hãy chọn scheme cần xuất."; return; }
+                var sc = schemeStore.Load(name);
+                if (sc == null) { schemeStatus.Text = "Không đọc được scheme."; return; }
+                try
+                {
+                    var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+                    {
+                        Title = "Xuất scheme đèn",
+                        SuggestedFileName = name + ".json",
+                        FileTypeChoices = new[]
+                        {
+                            new FilePickerFileType("Scheme JSON (app này)") { Patterns = new[] { "*.json" } },
+                            new FilePickerFileType("Scheme XML (định dạng app chính chủ)") { Patterns = new[] { "*.xml" } },
+                        },
+                    });
+                    string path = file?.TryGetLocalPath();
+                    if (path == null) return;
+                    if (path.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
+                        File.WriteAllText(path, SchemeXml.Export(sc));
+                    else
+                        File.WriteAllText(path, JsonSerializer.Serialize(sc, new JsonSerializerOptions { WriteIndented = true }));
+                    schemeStatus.Text = "Đã xuất: " + Path.GetFileName(path);
+                }
+                catch (Exception ex) { schemeStatus.Text = "Xuất thất bại: " + ex.Message; }
+            });
+            var schemeImportBtn = GhostBtn("Nhập file", async () =>
+            {
+                try
+                {
+                    var files = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+                    {
+                        Title = "Nhập scheme đèn (JSON hoặc XML)",
+                        AllowMultiple = false,
+                        FileTypeFilter = new[]
+                        {
+                            new FilePickerFileType("Scheme đèn") { Patterns = new[] { "*.json", "*.xml" } },
+                        },
+                    });
+                    string path = files.Count > 0 ? files[0].TryGetLocalPath() : null;
+                    if (path == null) return;
+                    string text = File.ReadAllText(path);
+                    LightingScheme sc;
+                    if (path.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (!SchemeXml.TryParse(text, out sc, out string err)) { schemeStatus.Text = "Nhập thất bại: " + err; return; }
+                    }
+                    else
+                    {
+                        sc = JsonSerializer.Deserialize<LightingScheme>(text);
+                        if (sc == null) { schemeStatus.Text = "Nhập thất bại: file JSON không hợp lệ."; return; }
+                    }
+                    if (string.IsNullOrWhiteSpace(sc.Name)) sc.Name = Path.GetFileNameWithoutExtension(path);
+                    schemeStore.Save(sc);
+                    RefreshSchemes();
+                    schemeBox.SelectedItem = sc.Name;
+                    schemeStatus.Text = $"Đã nhập scheme “{sc.Name}” — bấm Áp dụng để dùng.";
+                }
+                catch (Exception ex) { schemeStatus.Text = "Nhập thất bại: " + ex.Message; }
+            });
+            var schemeBlock = V(8,
+                Tb("Scheme đèn của tôi", "h3"),
+                H(10, schemeNameBox, schemeSaveBtn),
+                H(10, schemeBox, schemeApplyBtn, schemeRenameBtn, schemeDeleteBtn),
+                H(10, schemeExportBtn, schemeImportBtn),
+                schemeStatus);
 
             var probeBtn = GhostBtn("Đọc thử màu phím (0xF5) — chỉ đọc", async () => await ProbeColorsAsync(kb));
             var sendBtn = GhostBtn("Gửi màu 0x23 + bật Custom 0x80", async () => await SendPaintedAsync());
             var paintCard = Card(V(12,
                 Tb("Vẽ màu từng phím", "h2"),
                 kb,
-                palette,
+                paintPicker,
+                paintTools,
                 _paintInfo,
                 H(10, probeBtn, sendBtn),
-                Tb("Đọc thử 0xF5 là bước kiểm chứng an toàn đầu tiên: chỉ đọc, không ghi gì xuống phím.", "faint")));
+                Tb("Đọc thử 0xF5 là bước kiểm chứng an toàn đầu tiên: chỉ đọc, không ghi gì xuống phím.", "faint"),
+                schemeBlock));
 
             // --- GIF -> LED ---
             var ledState = new RgbAnimState { Brush = Color.FromRgb(0x7C, 0x3A, 0xED), Brightness = 3 };
@@ -3737,6 +4092,7 @@ namespace TienKeyboardStudio3
             ledPicker.ItemsSource = ledItems.Select(i => i.Entry.Name).ToList();
             if (ledItems.Count > 0) ledPicker.SelectedIndex = 0;
             var ledInfo = Tb("Chọn GIF rồi bấm Nạp GIF để stream lên đèn phím (lớp thử nghiệm).", "sub");
+            string ledPath = null;
             var loadLedBtn = GhostBtn("Nạp GIF", async () =>
             {
                 int idx = ledPicker.SelectedIndex;
@@ -3745,13 +4101,39 @@ namespace TienKeyboardStudio3
                 {
                     var item = ledItems[idx];
                     string path = ResolveGifPath(item);
+                    ledPath = path;
                     ledInfo.Text = "Đang chuyển GIF thành frame đèn phím…";
-                    var anim = await Task.Run(() => GifLedConverter.Convert(path));
+                    var anim = await Task.Run(() => GifLedConverter.Convert(path, _gifBlackLevel, _gifBrightness));
                     _ledPlayer.Load(anim, ledState, ledKb);
                     ledInfo.Text = $"“{item.Entry.Name}”: {anim.SourceWidth}×{anim.SourceHeight}, {anim.SourceFrames} frame gốc → {anim.Frames.Count} frame LED. Bấm Phát để xem trong app (~17fps khi chạy lên phím).";
                 }
                 catch (Exception ex) { ledInfo.Text = "Lỗi chuyển GIF: " + ex.Message; }
             });
+            // v3.12: do sang + nguong den cua GIF->LED thanh slider (truoc
+            // day co dinh trong code: brightness 1.0, blackLevel 24). Doi
+            // slider -> chuyen lai GIF dang nap (chong doi 500ms).
+            var gifBright = new Slider { Minimum = 0.2, Maximum = 1.5, Value = _gifBrightness, Width = 200 };
+            var gifBlack = new Slider { Minimum = 0, Maximum = 60, Value = _gifBlackLevel, Width = 200 };
+            var reconvertTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(500) };
+            reconvertTimer.Tick += async (s, e) =>
+            {
+                reconvertTimer.Stop();
+                if (ledPath == null) return;
+                try
+                {
+                    var anim = await Task.Run(() => GifLedConverter.Convert(ledPath, _gifBlackLevel, _gifBrightness));
+                    _ledPlayer.Load(anim, ledState, ledKb);
+                }
+                catch (Exception ex) { ledInfo.Text = "Lỗi chuyển GIF: " + ex.Message; }
+            };
+            gifBright.PropertyChanged += (s, e) =>
+            {
+                if (e.Property == Slider.ValueProperty) { _gifBrightness = gifBright.Value; QueuePersistLighting(); reconvertTimer.Stop(); reconvertTimer.Start(); }
+            };
+            gifBlack.PropertyChanged += (s, e) =>
+            {
+                if (e.Property == Slider.ValueProperty) { _gifBlackLevel = (int)Math.Round(gifBlack.Value); QueuePersistLighting(); reconvertTimer.Stop(); reconvertTimer.Start(); }
+            };
             var playLedBtn = GhostBtn("Phát / Dừng", () =>
             {
                 if (_ledPlayer.Anim == null) { ShowToast("Hãy nạp một GIF trước nhé."); return; }
@@ -3771,7 +4153,68 @@ namespace TienKeyboardStudio3
                 ledKb,
                 H(10, ledPicker, loadLedBtn),
                 ledInfo,
-                H(10, playLedBtn, sendLedBtn)));
+                H(10, playLedBtn, sendLedBtn),
+                H(24,
+                    V(4, Tb("Độ sáng GIF", "sub"), gifBright),
+                    V(4, Tb("Ngưỡng đen (blackLevel)", "sub"), gifBlack))));
+
+            // --- v3.12: hieu ung THOI GIAN THUC (generator -> stream 0x20) ---
+            _rtPlayer.Exp = _exp;
+            _rtPlayer.Log = AppendLog;
+            var rtState = new RgbAnimState { Brush = Color.FromRgb(0x7C, 0x3A, 0xED), Brightness = 3 };
+            var rtKb = new KeyboardView { Mode = KeyboardMode.Animated, State = rtState };
+            _rtPlayer.State = rtState;
+            _rtPlayer.Target = rtKb;
+            var rtBtns = new List<Button>();
+            var rtWrap = new WrapPanel();
+            var rtBright = new Slider { Minimum = 0, Maximum = 4, Value = 3, Width = 200 };
+            var rtSpeed = new Slider { Minimum = 0, Maximum = 4, Value = 2, Width = 200 };
+            _rtPlayer.Brightness01 = 0.75;
+            _rtPlayer.SpeedUi = 2;
+            rtBright.PropertyChanged += (s, e) =>
+            {
+                if (e.Property == Slider.ValueProperty) _rtPlayer.Brightness01 = rtBright.Value / 4.0;
+            };
+            rtSpeed.PropertyChanged += (s, e) =>
+            {
+                if (e.Property == Slider.ValueProperty) _rtPlayer.SpeedUi = (int)Math.Round(rtSpeed.Value);
+            };
+            for (int i = 0; i < RealtimeEffects.Names.Length; i++)
+            {
+                int idx = i;
+                var b = new Button { Content = RealtimeEffects.Names[idx], Margin = new Thickness(0, 0, 8, 8) };
+                b.Classes.Add("chip");
+                if (idx == _rtSelected) b.Classes.Add("sel");
+                b.Click += (s, e) =>
+                {
+                    _rtSelected = idx;
+                    foreach (var o in rtBtns) SetCls(o, "sel", o == b);
+                    if (idx == RealtimeEffects.OffIndex)
+                    {
+                        _rtPlayer.Stop();
+                        rtState.FrameColors = null;
+                        rtKb.InvalidateVisual();
+                    }
+                    else
+                    {
+                        _rtPlayer.BaseColor = (_paintColor.R, _paintColor.G, _paintColor.B);
+                        _rtPlayer.Brightness01 = rtBright.Value / 4.0;
+                        _rtPlayer.SpeedUi = (int)Math.Round(rtSpeed.Value);
+                        _rtPlayer.Start(idx);
+                    }
+                    QueuePersistLighting();
+                };
+                rtBtns.Add(b);
+                rtWrap.Children.Add(b);
+            }
+            var rtCard = Card(V(12,
+                Tb("Hiệu ứng thời gian thực (stream 0x20)", "h2"),
+                rtKb,
+                rtWrap,
+                H(24,
+                    V(4, Tb("Độ sáng", "sub"), rtBright),
+                    V(4, Tb("Tốc độ", "sub"), rtSpeed)),
+                Tb("Màu gốc lấy từ màu vẽ per-key đang chọn. Lớp thử nghiệm như GIF→LED.", "faint")));
 
             _expLogBox = new TextBox
             {
@@ -3792,6 +4235,7 @@ namespace TienKeyboardStudio3
                 gateCard,
                 paintCard,
                 ledCard,
+                rtCard,
                 logCard);
             return Scroll(root);
         }
@@ -4213,8 +4657,26 @@ namespace TienKeyboardStudio3
             var p = _profiles.Find(exe);
             if (p == null) return;
             AppendLog($"Hồ sơ app: {exe} → hiệu ứng {p.EffectId} ({EffectFriendlyNames[p.EffectId]})" + (string.IsNullOrEmpty(p.TftGifPath) ? "" : " + GIF TFT"));
-            _ = ApplyRgbAsync(p.EffectId, _rgb.Brush, _rgb.Multi, (int)_rgb.Brightness, (int)_rgb.Speed, _rgb.Direction);
-            _rgb.Effect = p.EffectId;
+            if (p.HasLighting)
+            {
+                // v3.12: ho so chua DU trang thai den — khoi phuc het.
+                _rgb.Effect = p.EffectId;
+                _rgb.Brush = Color.FromRgb((byte)ClampI(p.R, 0, 255), (byte)ClampI(p.G, 0, 255), (byte)ClampI(p.B, 0, 255));
+                _rgb.Multi = p.Multi;
+                _rgb.Brightness = ClampI(p.BrightnessUi, 0, 4);
+                _rgb.Speed = ClampI(p.SpeedUi, 0, 4);
+                _rgb.Direction = ClampI(p.Direction, 0, 3);
+                _ = ApplyRgbAsync(p.EffectId, _rgb.Brush, _rgb.Multi, (int)_rgb.Brightness, (int)_rgb.Speed, _rgb.Direction);
+                QueuePersistLighting();
+            }
+            else
+            {
+                // Ho so cu (chi co EffectId): giu hanh vi cu.
+                _ = ApplyRgbAsync(p.EffectId, _rgb.Brush, _rgb.Multi, (int)_rgb.Brightness, (int)_rgb.Speed, _rgb.Direction);
+                _rgb.Effect = p.EffectId;
+                QueuePersistLighting();
+            }
+            if (_homeFxValue != null) _homeFxValue.Text = EffectFriendlyNames[p.EffectId];
             if (!string.IsNullOrEmpty(p.TftGifPath) && File.Exists(p.TftGifPath) && _selectedModel.HasScreen)
                 _ = UploadGifFileAsync(p.TftGifPath, FitMode.Fill, null);
         }
@@ -4232,7 +4694,9 @@ namespace TienKeyboardStudio3
             {
                 var prof = p;
                 var row = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto") };
-                row.Children.Add(Tb($"{prof.ExeName} — {EffectFriendlyNames[prof.EffectId]}" + (string.IsNullOrEmpty(prof.TftGifPath) ? "" : " + GIF TFT"), "sub"));
+                row.Children.Add(Tb($"{prof.ExeName} — {EffectFriendlyNames[prof.EffectId]}" +
+                    (prof.HasLighting ? $" · #{prof.R:X2}{prof.G:X2}{prof.B:X2}" + (prof.Multi ? " · nhiều màu" : "") : "") +
+                    (string.IsNullOrEmpty(prof.TftGifPath) ? "" : " + GIF TFT"), "sub"));
                 var del = GhostBtn("Xoá", () =>
                 {
                     _profiles.Profiles.Remove(prof);

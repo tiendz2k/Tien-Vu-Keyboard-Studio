@@ -57,6 +57,13 @@ namespace TienKeyboardStudio3
         public double GeoLat { get; set; }
         public double GeoLon { get; set; }
         public string GeoFetchedUtc { get; set; } = "";        // ISO 8601, cache 24h
+
+        // --- v3.12: trang thai anh sang day du (hieu ung firmware + per-key
+        // + nhac 0x78 + thoi gian thuc + GIF->LED) va mau gan day cua bo
+        // chon mau. settings.json cu khong co -> null/empty, MainWindow
+        // dung mac dinh trong LightingStateData. ---
+        public LightingStateData Lighting { get; set; }
+        public List<string> RecentColors { get; set; } = new List<string>();
     }
 
     /// <summary>Thu muc luu anh nen nguoi dung tu chon (v3.3).</summary>
@@ -97,6 +104,7 @@ namespace TienKeyboardStudio3
                     if (s != null)
                     {
                         if (s.Folders == null) s.Folders = new List<string>();
+                        if (s.RecentColors == null) s.RecentColors = new List<string>();
                         if (s.Plugins == null) s.Plugins = new Dictionary<string, PluginState>();
                         if (s.GameSense == null) s.GameSense = new GameSenseSettings();
                         if (string.IsNullOrEmpty(s.Background)) s.Background = "default";

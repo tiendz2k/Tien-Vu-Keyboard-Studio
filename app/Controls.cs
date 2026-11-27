@@ -871,4 +871,259 @@ namespace TienKeyboardStudio3
             }
         }
     }
+
+    // =====================================================================
+    // v3.12 — BO CHON MAU TU DO: o Saturation/Value + thanh Hue (ve tay),
+    // kem nhap R/G/B + hex + hang mau mac dinh/mau gan day. Logic mau
+    // thuan nam o ColorMath (LightingCore.cs) de unit test duoc.
+    // =====================================================================
+
+    /// <summary>O chon mau HSV: vung trai la o do bao hoa/do sang theo hue
+    /// hien tai, dai phai la thanh hue doc. Keo/cham de doi mau.</summary>
+    public sealed class SvPickerControl : Control
+    {
+        private double _h, _s = 1, _v = 1;
+        private bool _dragSv, _dragHue;
+
+        public event Action<Color> Changed;
+        public event Action<Color> Committed;
+
+        public Color SelectedColor
+        {
+            get { var c = ColorMath.HsvToRgb(_h, _s, _v); return Color.FromRgb(c.R, c.G, c.B); }
+        }
+
+        public void SetColor(Color c)
+        {
+            var hsv = ColorMath.RgbToHsv(c.R, c.G, c.B);
+            // Mau xam/trang/den khong co hue that: giu hue cu de o SV
+            // khong nhay ve do moi khi chon mau trung tinh.
+            if (hsv.S > 0.02 && hsv.V > 0.02) _h = hsv.H;
+            _s = hsv.S; _v = hsv.V;
+            InvalidateVisual();
+        }
+
+        private Rect SvRect => new Rect(0, 0, Math.Max(10, Bounds.Width - 30), Bounds.Height);
+        private Rect HueRect => new Rect(Bounds.Width - 20, 0, 14, Bounds.Height);
+
+        public override void Render(DrawingContext ctx)
+        {
+            var sv = SvRect; var hue = HueRect;
+            var pure = ColorMath.HsvToRgb(_h, 1, 1);
+            ctx.FillRectangle(new SolidColorBrush(Color.FromRgb(pure.R, pure.G, pure.B)), sv);
+            var whiteGrad = new LinearGradientBrush
+            {
+                StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
+                EndPoint = new RelativePoint(1, 0, RelativeUnit.Relative),
+                GradientStops = { new GradientStop(Colors.White, 0), new GradientStop(Color.FromArgb(0, 255, 255, 255), 1) },
+            };
+            // Gradient theo toa do tuyet doi cua o SV (brush dung Relative
+            // theo chinh rect ve — FillRectangle voi brush rieng can map:
+            // dung DrawRectangle tren rect voi brush co Start/End tuong doi
+            // theo bounding box cua geometry — Avalonia map theo rect).
+            ctx.DrawRectangle(whiteGrad, null, sv);
+            var blackGrad = new LinearGradientBrush
+            {
+                StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
+                EndPoint = new RelativePoint(0, 1, RelativeUnit.Relative),
+                GradientStops = { new GradientStop(Color.FromArgb(0, 0, 0, 0), 0), new GradientStop(Colors.Black, 1) },
+            };
+            ctx.DrawRectangle(blackGrad, null, sv);
+            ctx.DrawRectangle(null, new Pen(new SolidColorBrush(Color.FromArgb(0x33, 255, 255, 255))), sv);
+
+            var hueGrad = new LinearGradientBrush
+            {
+                StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
+                EndPoint = new RelativePoint(0, 1, RelativeUnit.Relative),
+            };
+            for (int i = 0; i <= 6; i++)
+            {
+                var c = ColorMath.HsvToRgb(i * 60, 1, 1);
+                hueGrad.GradientStops.Add(new GradientStop(Color.FromRgb(c.R, c.G, c.B), i / 6.0));
+            }
+            ctx.DrawRectangle(hueGrad, null, hue, 4);
+            ctx.DrawRectangle(null, new Pen(new SolidColorBrush(Color.FromArgb(0x33, 255, 255, 255))), hue, 4);
+
+            // Diem danh dau SV: vong trang + vong den cho thay tren moi nen
+            var mp = new Point(sv.X + _s * sv.Width, sv.Y + (1 - _v) * sv.Height);
+            ctx.DrawEllipse(null, new Pen(new SolidColorBrush(Colors.White), 2), mp, 7, 7);
+            ctx.DrawEllipse(null, new Pen(new SolidColorBrush(Colors.Black), 1), mp, 8.5, 8.5);
+            // Danh dau hue
+            double hy = hue.Y + _h / 360.0 * hue.Height;
+            ctx.DrawRectangle(new SolidColorBrush(Colors.White), null,
+                new Rect(hue.X - 2, hy - 2, hue.Width + 4, 4), 2);
+        }
+
+        private void HandlePoint(Point p)
+        {
+            if (_dragHue)
+            {
+                _h = Math.Max(0, Math.Min(360, p.Y / Math.Max(1, Bounds.Height) * 360));
+            }
+            else
+            {
+                var sv = SvRect;
+                _s = Math.Max(0, Math.Min(1, (p.X - sv.X) / sv.Width));
+                _v = Math.Max(0, Math.Min(1, 1 - (p.Y - sv.Y) / sv.Height));
+            }
+            InvalidateVisual();
+            Changed?.Invoke(SelectedColor);
+        }
+
+        protected override void OnPointerPressed(PointerPressedEventArgs e)
+        {
+            base.OnPointerPressed(e);
+            var p = e.GetPosition(this);
+            _dragHue = p.X >= Bounds.Width - 26;
+            _dragSv = !_dragHue;
+            e.Pointer.Capture(this);
+            HandlePoint(p);
+            e.Handled = true;
+        }
+
+        protected override void OnPointerMoved(PointerEventArgs e)
+        {
+            base.OnPointerMoved(e);
+            if (_dragSv || _dragHue) HandlePoint(e.GetPosition(this));
+        }
+
+        protected override void OnPointerReleased(PointerReleasedEventArgs e)
+        {
+            base.OnPointerReleased(e);
+            if (_dragSv || _dragHue) Committed?.Invoke(SelectedColor);
+            _dragSv = _dragHue = false;
+        }
+    }
+
+    /// <summary>Panel chon mau day du: o SV + thanh hue, o xem truoc,
+    /// nhap hex + R/G/B, hang mau mac dinh va mau gan day.</summary>
+    public sealed class ColorPickerPanel : StackPanel
+    {
+        private readonly SvPickerControl _sv = new SvPickerControl { Width = 316, Height = 168 };
+        private readonly Border _preview = new Border
+        {
+            Width = 40, Height = 40, CornerRadius = new CornerRadius(10),
+            BorderBrush = new SolidColorBrush(Color.FromArgb(0x33, 255, 255, 255)),
+            BorderThickness = new Thickness(1),
+        };
+        private readonly TextBox _hex = new TextBox { Width = 92, Watermark = "RRGGBB" };
+        private readonly TextBox _r = new TextBox { Width = 52 };
+        private readonly TextBox _g = new TextBox { Width = 52 };
+        private readonly TextBox _b = new TextBox { Width = 52 };
+        private readonly WrapPanel _swatches = new WrapPanel();
+        private readonly List<(string Name, Color C)> _defaults;
+        private List<Color> _recents = new List<Color>();
+        private bool _sync;
+
+        public event Action<Color> ColorChanged;
+        public event Action<Color> ColorCommitted;
+        public Color CurrentColor { get; private set; } = Color.FromRgb(0x7C, 0x3A, 0xED);
+
+        public ColorPickerPanel(IEnumerable<(string Name, Color C)> defaults)
+        {
+            _defaults = new List<(string, Color)>(defaults ?? new List<(string, Color)>());
+            Spacing = 10;
+            _sv.Changed += c => Apply(c, fromPicker: true, commit: false);
+            _sv.Committed += c => Apply(c, fromPicker: true, commit: true);
+
+            var numRow = new StackPanel { Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 8 };
+            numRow.Children.Add(_preview);
+            numRow.Children.Add(new TextBlock { Text = "#", VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center });
+            numRow.Children.Add(_hex);
+            numRow.Children.Add(new TextBlock { Text = "R", VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center });
+            numRow.Children.Add(_r);
+            numRow.Children.Add(new TextBlock { Text = "G", VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center });
+            numRow.Children.Add(_g);
+            numRow.Children.Add(new TextBlock { Text = "B", VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center });
+            numRow.Children.Add(_b);
+
+            _hex.LostFocus += (s, e) => CommitHex();
+            _hex.KeyDown += (s, e) => { if (e.Key == Key.Enter) CommitHex(); };
+            foreach (var box in new[] { _r, _g, _b })
+            {
+                box.LostFocus += (s, e) => CommitRgb();
+                box.KeyDown += (s, e) => { if (e.Key == Key.Enter) CommitRgb(); };
+            }
+
+            Children.Add(_sv);
+            Children.Add(numRow);
+            Children.Add(_swatches);
+            RebuildSwatches();
+            SetColor(CurrentColor);
+        }
+
+        private void CommitHex()
+        {
+            if (_sync) return;
+            if (ColorMath.TryParseHex(_hex.Text, out var c))
+                Apply(Color.FromRgb(c.R, c.G, c.B), fromPicker: false, commit: true);
+            else SyncTexts();
+        }
+
+        private void CommitRgb()
+        {
+            if (_sync) return;
+            if (byte.TryParse(_r.Text, out byte r) && byte.TryParse(_g.Text, out byte g) && byte.TryParse(_b.Text, out byte b))
+                Apply(Color.FromRgb(r, g, b), fromPicker: false, commit: true);
+            else SyncTexts();
+        }
+
+        private void Apply(Color c, bool fromPicker, bool commit)
+        {
+            CurrentColor = c;
+            if (!fromPicker) _sv.SetColor(c);
+            SyncTexts();
+            ColorChanged?.Invoke(c);
+            if (commit) ColorCommitted?.Invoke(c);
+        }
+
+        private void SyncTexts()
+        {
+            _sync = true;
+            _preview.Background = new SolidColorBrush(CurrentColor);
+            _hex.Text = ColorMath.ToHex(CurrentColor.R, CurrentColor.G, CurrentColor.B);
+            _r.Text = CurrentColor.R.ToString();
+            _g.Text = CurrentColor.G.ToString();
+            _b.Text = CurrentColor.B.ToString();
+            _sync = false;
+        }
+
+        /// <summary>Dat mau tu ben ngoai (khong phat su kien doi mau).</summary>
+        public void SetColor(Color c)
+        {
+            CurrentColor = c;
+            _sv.SetColor(c);
+            SyncTexts();
+        }
+
+        public void SetRecents(IEnumerable<Color> recents)
+        {
+            _recents = new List<Color>(recents ?? new List<Color>());
+            RebuildSwatches();
+        }
+
+        private void RebuildSwatches()
+        {
+            _swatches.Children.Clear();
+            foreach (var (name, col) in _defaults) AddSwatch(name, col);
+            foreach (var col in _recents) AddSwatch("Gần đây: #" + ColorMath.ToHex(col.R, col.G, col.B), col);
+        }
+
+        private void AddSwatch(string tip, Color col)
+        {
+            var sw = new Border
+            {
+                Width = 30, Height = 30, CornerRadius = new CornerRadius(9),
+                Background = new SolidColorBrush(col),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(0x33, 255, 255, 255)),
+                BorderThickness = new Thickness(1),
+                Margin = new Thickness(0, 0, 8, 8),
+                Cursor = new Cursor(StandardCursorType.Hand),
+            };
+            ToolTip.SetTip(sw, tip);
+            var captured = col;
+            sw.PointerPressed += (s, e) => Apply(captured, fromPicker: false, commit: true);
+            _swatches.Children.Add(sw);
+        }
+    }
 }

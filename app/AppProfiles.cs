@@ -19,6 +19,17 @@ namespace TienKeyboardStudio3
         public string ExeName { get; set; } = "";
         public int EffectId { get; set; } = 11;
         public string TftGifPath { get; set; } = "";
+        // v3.12: ho so luu DU trang thai den (truoc day chi EffectId).
+        // HasLighting = false voi file app-profiles.json cu (khong co cac
+        // truong nay) -> ap dung kieu cu (chi doi hieu ung, giu mau hien tai).
+        public bool HasLighting { get; set; } = false;
+        public int R { get; set; }
+        public int G { get; set; }
+        public int B { get; set; }
+        public bool Multi { get; set; }
+        public int BrightnessUi { get; set; } = 3;
+        public int SpeedUi { get; set; } = 2;
+        public int Direction { get; set; }
     }
 
     public sealed class AppProfileService : IDisposable

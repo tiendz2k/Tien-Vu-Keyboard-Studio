@@ -298,6 +298,13 @@ namespace TienKeyboardStudio3
                     if (string.IsNullOrEmpty(exe)) { ShowToast("Chưa xác định được app đang mở — hãy bấm sang app khác rồi quay lại."); return; }
                     var p = _profiles.Find(exe) ?? new AppProfile { ExeName = exe };
                     p.EffectId = _rgb.Effect;
+                    // v3.12: luu DU trang thai den vao ho so (khong chi EffectId)
+                    p.HasLighting = true;
+                    p.R = _rgb.Brush.R; p.G = _rgb.Brush.G; p.B = _rgb.Brush.B;
+                    p.Multi = _rgb.Multi;
+                    p.BrightnessUi = (int)_rgb.Brightness;
+                    p.SpeedUi = (int)_rgb.Speed;
+                    p.Direction = _rgb.Direction;
                     p.TftGifPath = _selectedGif != null ? ResolveGifPath(_selectedGif) : "";
                     if (_profiles.Find(exe) == null) _profiles.Profiles.Add(p);
                     _profiles.Save();
@@ -400,7 +407,7 @@ namespace TienKeyboardStudio3
                 CornerRadius = new CornerRadius(14), ClipToBounds = true,
                 Width = 64, Height = 64, Child = logoImg,
             };
-            var aboutPara = Tb("Phiên bản 3.11.2 — sửa widget đồng hồ + thời tiết TFT (bỏ dòng chân trang, thời tiết tách 2 dòng hết tràn), sửa các ô màu AULA nhuộm rõ toàn giao diện, thẻ thiết bị gọn (bỏ thông số kỹ thuật), trang Nhạc hết chồng chữ, sửa lỗi banner toàn vẹn hiện oan trên bản chính thức, và rà soát gọn toàn app. F75 Max hỗ trợ đầy đủ; các họ còn lại định danh bằng probe đọc trước khi ghi, chưa kiểm chứng trên phần cứng thật. Dry-run bật mặc định.", "sub");
+            var aboutPara = Tb("Phiên bản 3.12.0 — nâng cấp ánh sáng: bộ chọn màu tự do (vòng HSV + nhập RGB/hex + màu gần đây) cho trang RGB và vẽ per-key; scheme đèn có tên (lưu/áp dụng/đổi tên/xoá, xuất/nhập JSON + XML); mở khoá tham số nhạc 0x78 (kiểu nhịp, biên độ, nền, sáng nền); hiệu ứng thời gian thực stream 0x20 có tên + slider độ sáng/ngưỡng đen cho GIF→LED; trạng thái đèn được nhớ qua các lần mở app và hồ sơ theo ứng dụng lưu đủ bộ thông số. F75 Max hỗ trợ đầy đủ; các họ còn lại định danh bằng probe đọc trước khi ghi, chưa kiểm chứng trên phần cứng thật. Dry-run bật mặc định.", "sub");
             aboutPara.MaxWidth = 640; // cot ngang H() cho chieu rong vo han — gioi han de chu xuong dong trong the
             var aboutTexts = V(4,
                 Tb("Tien Vu Keyboard Studio", "h2"),
