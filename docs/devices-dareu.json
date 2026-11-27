@@ -1,0 +1,6103 @@
+{
+ "source": "DAREU All in One WEB driver (dr.dareu.com) per-PID product configs; VID 0x260D for all entries",
+ "generated_from": "~/workspace/hot-keyboards/dareu/drweb/products/*/*.json (official, downloaded 2026-11-27)",
+ "all_in_one_devices": [
+  {
+   "vid": "0x260D",
+   "pid": "0x0030",
+   "product_name": "Z82",
+   "internal_model": "TK51A",
+   "type": "keyboard",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 85,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0030/0030.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0037",
+   "product_name": "USB 2.4G Receiver",
+   "internal_model": "Dongle",
+   "type": "dongle",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": null,
+   "has_battery": null,
+   "key_count": null,
+   "latest_fw_ver": "010003",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0037/0037.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0042",
+   "product_name": "USB 2.4G Receiver",
+   "internal_model": "Dongle",
+   "type": "dongle",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": null,
+   "has_battery": null,
+   "key_count": null,
+   "latest_fw_ver": "010003",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0042/0042.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0043",
+   "product_name": "A104",
+   "internal_model": "TK51QU",
+   "type": "keyboard",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 104,
+   "latest_fw_ver": "010104",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0043/0043.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0045",
+   "product_name": "EK75",
+   "internal_model": "TK51G",
+   "type": "keyboard",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 83,
+   "latest_fw_ver": "010108",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0045/0045.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0051",
+   "product_name": "A98",
+   "internal_model": "TK51V",
+   "type": "keyboard",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 97,
+   "latest_fw_ver": "010308",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0051/0051.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0056",
+   "product_name": "A87 PRO",
+   "internal_model": "TK51CU",
+   "type": "keyboard",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 87,
+   "latest_fw_ver": "010009",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0056/0056.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0060",
+   "product_name": "EK87 PRO",
+   "internal_model": "TK51CF",
+   "type": "keyboard",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 87,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0060/0060.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0067",
+   "product_name": "CK98 PRO RT",
+   "internal_model": "TK51WU",
+   "type": "keyboard",
+   "fw_type": 4,
+   "family": "OHID",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 100,
+   "latest_fw_ver": "010200",
+   "travel_ranges": {
+    "GlobalTravelRange": null,
+    "SingleTriggerRange": [
+     0.1,
+     0.5,
+     3,
+     4,
+     1,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.1,
+      0.5,
+      3,
+      4,
+      1,
+      0.02
+     ],
+     [
+      0.1,
+      0.5,
+      2,
+      3,
+      1,
+      0.01
+     ],
+     [
+      0.1,
+      0.5,
+      2,
+      3,
+      1,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0067/0067.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0070",
+   "product_name": "Z82 PRO",
+   "internal_model": "TK51ARGB",
+   "type": "keyboard",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 85,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0070/0070.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0074",
+   "product_name": "EK106 PRO",
+   "internal_model": "TK51QF",
+   "type": "keyboard",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 106,
+   "latest_fw_ver": "000105",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0074/0074.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0075",
+   "product_name": "EK106 RT 8K",
+   "internal_model": "TK51QRT8K",
+   "type": "keyboard",
+   "fw_type": 4,
+   "family": "OHID",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 106,
+   "latest_fw_ver": "010200",
+   "travel_ranges": {
+    "GlobalTravelRange": null,
+    "SingleTriggerRange": [
+     0.1,
+     0.5,
+     3.5,
+     4,
+     1,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.1,
+      0.5,
+      3.5,
+      4,
+      1,
+      0.02
+     ],
+     [
+      0.1,
+      0.5,
+      2,
+      2.5,
+      1,
+      0.01
+     ],
+     [
+      0.1,
+      0.5,
+      2,
+      2.5,
+      1,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0075/0075.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0078",
+   "product_name": "A75 PRO",
+   "internal_model": "TK52L",
+   "type": "keyboard",
+   "fw_type": 4,
+   "family": "OHID",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 79,
+   "latest_fw_ver": "000027",
+   "travel_ranges": {
+    "GlobalTravelRange": null,
+    "SingleTriggerRange": [
+     0.1,
+     0.5,
+     3,
+     4,
+     1,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.1,
+      0.5,
+      3,
+      4,
+      1,
+      0.02
+     ],
+     [
+      0.1,
+      0.5,
+      2,
+      2.5,
+      1,
+      0.01
+     ],
+     [
+      0.1,
+      0.5,
+      2,
+      2.5,
+      1,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0078/0078.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0081",
+   "product_name": "EK87 RT 8K",
+   "internal_model": "TK51CU",
+   "type": "keyboard",
+   "fw_type": 4,
+   "family": "OHID",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 87,
+   "latest_fw_ver": "010200",
+   "travel_ranges": {
+    "GlobalTravelRange": null,
+    "SingleTriggerRange": [
+     0.1,
+     0.5,
+     3,
+     4,
+     1,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.1,
+      0.5,
+      3,
+      4,
+      1,
+      0.02
+     ],
+     [
+      0.1,
+      0.5,
+      2,
+      2.5,
+      1,
+      0.01
+     ],
+     [
+      0.1,
+      0.5,
+      2,
+      2.5,
+      1,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0081/0081.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0083",
+   "product_name": "A75 HE",
+   "internal_model": "TK52L",
+   "type": "keyboard",
+   "fw_type": 4,
+   "family": "OHID",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 79,
+   "latest_fw_ver": "010200",
+   "travel_ranges": {
+    "GlobalTravelRange": null,
+    "SingleTriggerRange": [
+     0.1,
+     0.5,
+     3,
+     3.5,
+     1,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.1,
+      0.5,
+      3,
+      3.5,
+      1,
+      0.02
+     ],
+     [
+      0.1,
+      0.5,
+      2,
+      2.5,
+      1,
+      0.01
+     ],
+     [
+      0.1,
+      0.5,
+      2,
+      2.5,
+      1,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0083/0083.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0090",
+   "product_name": "EK106 PRO 8K",
+   "internal_model": "TK51QU",
+   "type": "keyboard",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 106,
+   "latest_fw_ver": "000005",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0090/0090.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0091",
+   "product_name": "EK87 PRO 8K",
+   "internal_model": "TK51CU",
+   "type": "keyboard",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 87,
+   "latest_fw_ver": "000005",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0091/0091.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0092",
+   "product_name": "EK815 PRO",
+   "internal_model": "TK52K",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 100,
+   "latest_fw_ver": "010201",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.3,
+     0.5,
+     3,
+     3.8,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.3,
+     0.5,
+     3,
+     3.8,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.3,
+      0.5,
+      3,
+      3.8,
+      1.5,
+      0.02
+     ],
+     [
+      0.3,
+      0.5,
+      3,
+      3.8,
+      1.5,
+      0.02
+     ],
+     [
+      0.3,
+      0.5,
+      3,
+      3.8,
+      1.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0092/0092.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0101",
+   "product_name": "EK75",
+   "internal_model": "TK51G",
+   "type": "keyboard",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 83,
+   "latest_fw_ver": "000008",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0101/0101.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0103",
+   "product_name": "CK87 MAX",
+   "internal_model": "TK52U",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 87,
+   "latest_fw_ver": "000107",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.5,
+     3,
+     3.8,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.5,
+     3,
+     3.8,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.2,
+      0.5,
+      3,
+      3.8,
+      0.5,
+      0.02
+     ],
+     [
+      0.2,
+      0.5,
+      3,
+      3.8,
+      0.5,
+      0.02
+     ],
+     [
+      0.2,
+      0.5,
+      3,
+      3.8,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0103/0103.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0105",
+   "product_name": "EK87RT WP",
+   "internal_model": "TK51CU",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 87,
+   "latest_fw_ver": "000302",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.2,
+      0.3,
+      3,
+      2.8,
+      1.2,
+      0.02
+     ],
+     [
+      0.2,
+      0.3,
+      2,
+      2.8,
+      0.5,
+      0.02
+     ],
+     [
+      0.2,
+      0.3,
+      2,
+      2.8,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0105/0105.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0106",
+   "product_name": "EK108 RT",
+   "internal_model": "TK51Q",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 108,
+   "latest_fw_ver": "000301",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.5,
+     3,
+     3.8,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.5,
+     3,
+     3.8,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.2,
+      0.5,
+      3,
+      3.8,
+      0.5,
+      0.02
+     ],
+     [
+      0.2,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.2,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0106/0106.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0107",
+   "product_name": "EK75",
+   "internal_model": "TK51G",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 83,
+   "latest_fw_ver": "010200",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.3,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.3,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0107/0107.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0112",
+   "product_name": "USB 2.4G Receiver",
+   "internal_model": "Dongle",
+   "type": "dongle",
+   "fw_type": 7,
+   "family": "TG dongle (OHID)",
+   "has_lcd": null,
+   "has_battery": null,
+   "key_count": null,
+   "latest_fw_ver": "",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0112/0112.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0113",
+   "product_name": "VICTOR HE",
+   "internal_model": "TK51G",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 83,
+   "latest_fw_ver": "000108",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.3,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.3,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0113/0113.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0115",
+   "product_name": "EK75",
+   "internal_model": "TK51G",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 83,
+   "latest_fw_ver": "010200",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.3,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.3,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0115/0115.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0117",
+   "product_name": "COOL 60 / EK60 HE",
+   "internal_model": "TK599",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 61,
+   "latest_fw_ver": "000300",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "RapidTriggerRange": [
+     [
+      0.01,
+      0.3,
+      3,
+      2.8,
+      1.2,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0117/0117.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0119",
+   "product_name": "COOL 60 / EK60 HE",
+   "internal_model": "TK599",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 61,
+   "latest_fw_ver": "000300",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "RapidTriggerRange": [
+     [
+      0.01,
+      0.3,
+      3,
+      2.8,
+      1.2,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0119/0119.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0123",
+   "product_name": "COOL 60 / EK60 HE",
+   "internal_model": "TK599",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 61,
+   "latest_fw_ver": "010200",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "RapidTriggerRange": [
+     [
+      0.01,
+      0.3,
+      3,
+      2.8,
+      1.2,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0123/0123.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0124",
+   "product_name": "CK75 PRO",
+   "internal_model": "TK51G",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 83,
+   "latest_fw_ver": "000301",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.2,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.2,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.2,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0124/0124.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0126",
+   "product_name": "影刃",
+   "internal_model": "TK52W",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 68,
+   "latest_fw_ver": "000009",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "RapidTriggerRange": [
+     [
+      0.01,
+      0.3,
+      3,
+      2.8,
+      1.2,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0126/0126.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0127",
+   "product_name": "COOL 60 / EK60 HE",
+   "internal_model": "TK599",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 61,
+   "latest_fw_ver": "000000",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "RapidTriggerRange": [
+     [
+      0.01,
+      0.3,
+      3,
+      2.8,
+      1.2,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0127/0127.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0129",
+   "product_name": "CK75",
+   "internal_model": "TK51D",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 81,
+   "latest_fw_ver": "000103",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.2,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.02
+     ],
+     [
+      0.2,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.02
+     ],
+     [
+      0.2,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0129/0129.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0131",
+   "product_name": "EK75",
+   "internal_model": "TK51G",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 83,
+   "latest_fw_ver": "010200",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.3,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.3,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0131/0131.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0132",
+   "product_name": "EK75",
+   "internal_model": "TK51G",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 83,
+   "latest_fw_ver": "010200",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.3,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.3,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0132/0132.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0136",
+   "product_name": "A98 RT",
+   "internal_model": "TK51V",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 97,
+   "latest_fw_ver": "010200",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.3,
+     0.5,
+     3,
+     3.8,
+     1.5,
+     1
+    ],
+    "SingleTriggerRange": [
+     0.3,
+     0.5,
+     3,
+     3.8,
+     1.5,
+     1
+    ],
+    "RapidTriggerRange": [
+     [
+      0.3,
+      0.5,
+      3,
+      3.8,
+      1.5,
+      1
+     ],
+     [
+      0.3,
+      0.5,
+      3,
+      3.8,
+      1.5,
+      1
+     ],
+     [
+      0.3,
+      0.5,
+      3,
+      3.8,
+      1.5,
+      1
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0136/0136.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0137",
+   "product_name": "A104 Master  8K",
+   "internal_model": "TK51Q",
+   "type": "keyboard",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 104,
+   "latest_fw_ver": "020106",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0137/0137.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0138",
+   "product_name": "A87 Master 8K",
+   "internal_model": "TK51CU",
+   "type": "keyboard",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 84,
+   "latest_fw_ver": "020006",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0138/0138.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0139",
+   "product_name": "CK100",
+   "internal_model": "TK51N",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 99,
+   "latest_fw_ver": "000007",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.2,
+      0.3,
+      3,
+      2.8,
+      1.2,
+      0.02
+     ],
+     [
+      0.2,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.02
+     ],
+     [
+      0.2,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0139/0139.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0140",
+   "product_name": "CK98 MAX",
+   "internal_model": "TK50TRT",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 97,
+   "latest_fw_ver": "000100",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.2,
+      0.6,
+      3.3,
+      3.3,
+      0.6,
+      0.02
+     ],
+     [
+      0.2,
+      0.6,
+      3.3,
+      3.3,
+      0.6,
+      0.02
+     ],
+     [
+      0.2,
+      0.6,
+      3.3,
+      3.3,
+      0.6,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0140/0140.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0145",
+   "product_name": "A75 HE",
+   "internal_model": "TK52L",
+   "type": "keyboard",
+   "fw_type": 4,
+   "family": "OHID",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 79,
+   "latest_fw_ver": "010200",
+   "travel_ranges": {
+    "GlobalTravelRange": null,
+    "SingleTriggerRange": [
+     0.1,
+     0.5,
+     3,
+     4,
+     1,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.1,
+      0.5,
+      3,
+      4,
+      1,
+      0.02
+     ],
+     [
+      0.1,
+      0.5,
+      2,
+      2.5,
+      1,
+      0.01
+     ],
+     [
+      0.1,
+      0.5,
+      2,
+      2.5,
+      1,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0145/0145.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0146",
+   "product_name": "USB 2.4G Receiver",
+   "internal_model": "TK51Q",
+   "type": "dongle",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": null,
+   "has_battery": null,
+   "key_count": null,
+   "latest_fw_ver": "",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0146/0146.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0150",
+   "product_name": "EK81 MAX",
+   "internal_model": "TK51D",
+   "type": "keyboard",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 81,
+   "latest_fw_ver": "000107",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0150/0150.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0152",
+   "product_name": "CK75 PRO",
+   "internal_model": "TK51G",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 83,
+   "latest_fw_ver": "000108",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.3,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.3,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0152/0152.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0159",
+   "product_name": "EK87 RT 8K",
+   "internal_model": "TK51C",
+   "type": "keyboard",
+   "fw_type": 4,
+   "family": "OHID",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 87,
+   "latest_fw_ver": "010200",
+   "travel_ranges": {
+    "GlobalTravelRange": null,
+    "SingleTriggerRange": [
+     0.1,
+     0.5,
+     3,
+     4,
+     1,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.1,
+      0.5,
+      3,
+      4,
+      1,
+      0.02
+     ],
+     [
+      0.1,
+      0.5,
+      2,
+      3,
+      1,
+      0.01
+     ],
+     [
+      0.1,
+      0.5,
+      2,
+      3,
+      1,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0159/0159.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0160",
+   "product_name": "EK106 RT 8K",
+   "internal_model": "TK51Q",
+   "type": "keyboard",
+   "fw_type": 4,
+   "family": "OHID",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 106,
+   "latest_fw_ver": "010200",
+   "travel_ranges": {
+    "GlobalTravelRange": null,
+    "SingleTriggerRange": [
+     0.1,
+     0.5,
+     3.5,
+     4,
+     1,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.1,
+      0.5,
+      3.5,
+      4,
+      1,
+      0.02
+     ],
+     [
+      0.1,
+      0.5,
+      2,
+      2.5,
+      1,
+      0.01
+     ],
+     [
+      0.1,
+      0.5,
+      2,
+      2.5,
+      1,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0160/0160.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0161",
+   "product_name": "COOL 98",
+   "internal_model": "TK52Q",
+   "type": "keyboard",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 97,
+   "latest_fw_ver": "000101",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0161/0161.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0162",
+   "product_name": "CK75 08G",
+   "internal_model": "TK51D",
+   "type": "keyboard",
+   "fw_type": 4,
+   "family": "OHID",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 81,
+   "latest_fw_ver": "000108",
+   "travel_ranges": {
+    "GlobalTravelRange": null,
+    "SingleTriggerRange": [
+     0.2,
+     0.5,
+     3,
+     4,
+     1,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.2,
+      0.5,
+      3,
+      4,
+      1,
+      0.02
+     ],
+     [
+      0.2,
+      0.5,
+      2,
+      3,
+      1,
+      0.02
+     ],
+     [
+      0.2,
+      0.5,
+      2,
+      3,
+      1,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0162/0162.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0163",
+   "product_name": "DK108 PRO",
+   "internal_model": "TK51Q",
+   "type": "keyboard",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 108,
+   "latest_fw_ver": "000003",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0163/0163.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0164",
+   "product_name": "CK100",
+   "internal_model": "TK51N",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 99,
+   "latest_fw_ver": "000007",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      1.2,
+      0.02
+     ],
+     [
+      0.02,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.02
+     ],
+     [
+      0.02,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0164/0164.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0165",
+   "product_name": "CK98 MAX",
+   "internal_model": "TK50TRT",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 97,
+   "latest_fw_ver": "000100",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.02,
+      0.6,
+      3.3,
+      3.3,
+      0.3,
+      0.02
+     ],
+     [
+      0.02,
+      0.6,
+      3.3,
+      3.3,
+      0.3,
+      0.02
+     ],
+     [
+      0.02,
+      0.6,
+      3.3,
+      3.3,
+      0.3,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0165/0165.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0166",
+   "product_name": "CK98 Ultra",
+   "internal_model": "TK52Q",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 97,
+   "latest_fw_ver": "000107",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "RapidTriggerRange": [
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0166/0166.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0167",
+   "product_name": "DK87 PRO",
+   "internal_model": "TK529",
+   "type": "keyboard",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 87,
+   "latest_fw_ver": "000107",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0167/0167.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0169",
+   "product_name": "CK87 MAX",
+   "internal_model": "TK52U",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 87,
+   "latest_fw_ver": "000107",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.5,
+     3,
+     3.8,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.5,
+     3,
+     3.8,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.02,
+      0.5,
+      3,
+      3.8,
+      0.5,
+      0.02
+     ],
+     [
+      0.02,
+      0.5,
+      3,
+      3.8,
+      0.5,
+      0.02
+     ],
+     [
+      0.02,
+      0.5,
+      3,
+      3.8,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0169/0169.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0170",
+   "product_name": "EK815 MAX",
+   "internal_model": "TK52K",
+   "type": "keyboard",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 100,
+   "latest_fw_ver": "000003",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0170/0170.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0174",
+   "product_name": "CK75 PRO",
+   "internal_model": "TK51G",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 80,
+   "latest_fw_ver": "000108",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.02,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.02,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.02,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0174/0174.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0175",
+   "product_name": "A68",
+   "internal_model": "TK53H",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 68,
+   "latest_fw_ver": "000406",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.1,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "SingleTriggerRange": [
+     0.1,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "RapidTriggerRange": [
+     [
+      0.01,
+      0.3,
+      3,
+      2.8,
+      1.2,
+      0.01
+     ],
+     [
+      0.005,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.005
+     ],
+     [
+      0.005,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.005
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0175/0175.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0178",
+   "product_name": "FK98",
+   "internal_model": "TK51V",
+   "type": "keyboard",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 97,
+   "latest_fw_ver": "000002",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0178/0178.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0179",
+   "product_name": "EK108 RT",
+   "internal_model": "TK51Q",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 108,
+   "latest_fw_ver": "000302",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.5,
+     3,
+     3.8,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.5,
+     3,
+     3.8,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.02,
+      0.5,
+      3,
+      3.8,
+      0.5,
+      0.02
+     ],
+     [
+      0.02,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.02,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0179/0179.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0180",
+   "product_name": "EK87RT WP",
+   "internal_model": "TK51C",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 87,
+   "latest_fw_ver": "000302",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      1.2,
+      0.02
+     ],
+     [
+      0.02,
+      0.3,
+      2,
+      2.8,
+      0.5,
+      0.02
+     ],
+     [
+      0.02,
+      0.3,
+      2,
+      2.8,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0180/0180.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0187",
+   "product_name": "CK75 PRO",
+   "internal_model": "TK51G",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 80,
+   "latest_fw_ver": "000108",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.02,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.02,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.02,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0187/0187.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0188",
+   "product_name": "猎光75",
+   "internal_model": "TK51G",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 80,
+   "latest_fw_ver": "000108",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.02,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.02,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.02,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0188/0188.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0191",
+   "product_name": "COOL 98",
+   "internal_model": "TK52Q",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 97,
+   "latest_fw_ver": "000107",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "RapidTriggerRange": [
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0191/0191.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0192",
+   "product_name": "CK75 PRO",
+   "internal_model": "TK51G",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 80,
+   "latest_fw_ver": "000108",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.5,
+     3,
+     3.2,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.5,
+     3,
+     3.2,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.2,
+      0.5,
+      3,
+      3.2,
+      0.5,
+      0.02
+     ],
+     [
+      0.2,
+      0.5,
+      3,
+      3.2,
+      0.5,
+      0.02
+     ],
+     [
+      0.2,
+      0.5,
+      3,
+      3.2,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0192/0192.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0193",
+   "product_name": "CK75",
+   "internal_model": "TK51D",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 81,
+   "latest_fw_ver": "000003",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.02
+     ],
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.02
+     ],
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0193/0193.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0194",
+   "product_name": "CK98 Ultra",
+   "internal_model": "TK52Q",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 97,
+   "latest_fw_ver": "000107",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "RapidTriggerRange": [
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0194/0194.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0195",
+   "product_name": "CK98 Ultra",
+   "internal_model": "TK52Q",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 97,
+   "latest_fw_ver": "000107",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "RapidTriggerRange": [
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0195/0195.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0196",
+   "product_name": "CK98 Ultra",
+   "internal_model": "TK52Q",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 97,
+   "latest_fw_ver": "000107",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "RapidTriggerRange": [
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0196/0196.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0198",
+   "product_name": "COOL 60 / EK60 HE",
+   "internal_model": "TK599",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 61,
+   "latest_fw_ver": "000300",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "RapidTriggerRange": [
+     [
+      0.01,
+      0.3,
+      3,
+      2.8,
+      1.2,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0198/0198.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0199",
+   "product_name": "COOL 60 / EK60 HE",
+   "internal_model": "TK599",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 61,
+   "latest_fw_ver": "000300",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "RapidTriggerRange": [
+     [
+      0.01,
+      0.3,
+      3,
+      2.8,
+      1.2,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0199/0199.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0201",
+   "product_name": "CK75",
+   "internal_model": "TK51D",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 81,
+   "latest_fw_ver": "000003",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.02
+     ],
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.02
+     ],
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0201/0201.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0202",
+   "product_name": "FLEX 75",
+   "internal_model": "TK53N",
+   "type": "keyboard",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 82,
+   "latest_fw_ver": "000005",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0202/0202.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0205",
+   "product_name": "CK100",
+   "internal_model": "TK51N",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 99,
+   "latest_fw_ver": "000007",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      1.2,
+      0.02
+     ],
+     [
+      0.02,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.02
+     ],
+     [
+      0.02,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0205/0205.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0206",
+   "product_name": "A104PRO8K V2",
+   "internal_model": "TK51QU",
+   "type": "keyboard",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 104,
+   "latest_fw_ver": "000007",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0206/0206.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0208",
+   "product_name": "CK98 MAX",
+   "internal_model": "TK50TRT",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 97,
+   "latest_fw_ver": "000100",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.02,
+      0.6,
+      3.3,
+      3.3,
+      0.3,
+      0.02
+     ],
+     [
+      0.02,
+      0.6,
+      3.3,
+      3.3,
+      0.3,
+      0.02
+     ],
+     [
+      0.02,
+      0.6,
+      3.3,
+      3.3,
+      0.3,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0208/0208.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0209",
+   "product_name": "CK98 Ultra",
+   "internal_model": "TK52Q",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 97,
+   "latest_fw_ver": "000107",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "RapidTriggerRange": [
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0209/0209.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0210",
+   "product_name": "FLEX 87",
+   "internal_model": "TK53P",
+   "type": "keyboard",
+   "fw_type": 1,
+   "family": "HS (TG variant)",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 87,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0210/0210.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0211",
+   "product_name": "USB 2.4G Receiver",
+   "internal_model": "Dongle",
+   "type": "dongle",
+   "fw_type": 1,
+   "family": "HS (TG variant)",
+   "has_lcd": null,
+   "has_battery": null,
+   "key_count": null,
+   "latest_fw_ver": "",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0211/0211.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0214",
+   "product_name": "COOL 60 / EK60 HE",
+   "internal_model": "TK599",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 61,
+   "latest_fw_ver": "000300",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "RapidTriggerRange": [
+     [
+      0.01,
+      0.3,
+      3,
+      2.8,
+      1.2,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0214/0214.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0216",
+   "product_name": "CK98 Ultra",
+   "internal_model": "TK52Q",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 97,
+   "latest_fw_ver": "000107",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "RapidTriggerRange": [
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0216/0216.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0223",
+   "product_name": "CK75",
+   "internal_model": "TK51D",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 81,
+   "latest_fw_ver": "000103",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.02
+     ],
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.02
+     ],
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0223/0223.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0224",
+   "product_name": "CK100",
+   "internal_model": "TK51N",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 99,
+   "latest_fw_ver": "000007",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      1.2,
+      0.02
+     ],
+     [
+      0.02,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.02
+     ],
+     [
+      0.02,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0224/0224.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0229",
+   "product_name": "COOL 60 / EK60 HE",
+   "internal_model": "TK599",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 61,
+   "latest_fw_ver": "000300",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "RapidTriggerRange": [
+     [
+      0.01,
+      0.3,
+      3,
+      2.8,
+      1.2,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0229/0229.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0230",
+   "product_name": "CK75",
+   "internal_model": "TK51D",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 81,
+   "latest_fw_ver": "000003",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.02
+     ],
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.02
+     ],
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0230/0230.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0232",
+   "product_name": "CK75",
+   "internal_model": "TK51D",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 81,
+   "latest_fw_ver": "000003",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.02
+     ],
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.02
+     ],
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0232/0232.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0233",
+   "product_name": "Flex 98",
+   "internal_model": "TK53M",
+   "type": "keyboard",
+   "fw_type": 1,
+   "family": "HS (TG variant)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 98,
+   "latest_fw_ver": "000005",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0233/0233.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0234",
+   "product_name": "FLEX 75",
+   "internal_model": "TK53N",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 79,
+   "latest_fw_ver": "010200",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.01,
+      0.3,
+      3,
+      1.4,
+      1.2,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      1.4,
+      0.2,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      1.4,
+      0.2,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0234/0234.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0236",
+   "product_name": "影刃75",
+   "internal_model": "TK53Q",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 79,
+   "latest_fw_ver": "000003",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.01
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.01
+    ],
+    "RapidTriggerRange": [
+     [
+      0.01,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0236/0236.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0237",
+   "product_name": "EK87RT WP",
+   "internal_model": "TK51C",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 87,
+   "latest_fw_ver": "000302",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      1.2,
+      0.02
+     ],
+     [
+      0.02,
+      0.3,
+      2,
+      2.8,
+      0.5,
+      0.02
+     ],
+     [
+      0.02,
+      0.3,
+      2,
+      2.8,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0237/0237.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0238",
+   "product_name": "EK108 RT",
+   "internal_model": "TK51Q",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 108,
+   "latest_fw_ver": "000302",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.5,
+     3,
+     3.8,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.5,
+     3,
+     3.8,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.02,
+      0.5,
+      3,
+      3.8,
+      0.5,
+      0.02
+     ],
+     [
+      0.02,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.02,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0238/0238.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0239",
+   "product_name": "猎光75",
+   "internal_model": "TK51G",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 80,
+   "latest_fw_ver": "000108",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.02,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.02,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.02,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0239/0239.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0241",
+   "product_name": "CK87 MAX",
+   "internal_model": "TK52U",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 87,
+   "latest_fw_ver": "000107",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.5,
+     3,
+     3.8,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.5,
+     3,
+     3.8,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.02,
+      0.5,
+      3,
+      3.8,
+      0.5,
+      0.02
+     ],
+     [
+      0.02,
+      0.5,
+      3,
+      3.8,
+      0.5,
+      0.02
+     ],
+     [
+      0.02,
+      0.5,
+      3,
+      3.8,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0241/0241.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0244",
+   "product_name": "冰刃75",
+   "internal_model": "TK53V",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 81,
+   "latest_fw_ver": "000003",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.02
+     ],
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.02
+     ],
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0244/0244.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0246",
+   "product_name": "锋刃 75",
+   "internal_model": "TK50G",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 84,
+   "latest_fw_ver": "000108",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "RapidTriggerRange": [
+     [
+      0.1,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.1,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ],
+     [
+      0.1,
+      0.3,
+      2,
+      2.8,
+      0.3,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0246/0246.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0249",
+   "product_name": "CK75",
+   "internal_model": "TK51D",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 81,
+   "latest_fw_ver": "000103",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.02
+     ],
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.02
+     ],
+     [
+      0.02,
+      0.3,
+      3,
+      2.8,
+      0.3,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0249/0249.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0252",
+   "product_name": "CK108 HE",
+   "internal_model": "TK51Q",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 108,
+   "latest_fw_ver": "000302",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.5,
+     3,
+     3.8,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.5,
+     3,
+     3.8,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.02,
+      0.5,
+      3,
+      3.8,
+      0.5,
+      0.02
+     ],
+     [
+      0.02,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.02,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0252/0252.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0253",
+   "product_name": "CK87 MAX",
+   "internal_model": "TK52U",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 87,
+   "latest_fw_ver": "000107",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.5,
+     3,
+     3.8,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.5,
+     3,
+     3.8,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.02,
+      0.5,
+      3,
+      3.8,
+      0.5,
+      0.02
+     ],
+     [
+      0.02,
+      0.5,
+      3,
+      3.8,
+      0.5,
+      0.02
+     ],
+     [
+      0.02,
+      0.5,
+      3,
+      3.8,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0253/0253.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0261",
+   "product_name": "FLEX 75",
+   "internal_model": "TK53N",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 79,
+   "latest_fw_ver": "010200",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "SingleTriggerRange": [
+     0.2,
+     0.6,
+     3,
+     3.3,
+     1.2,
+     0.01
+    ],
+    "RapidTriggerRange": [
+     [
+      0.01,
+      0.3,
+      3,
+      2.8,
+      1.2,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.2,
+      0.01
+     ],
+     [
+      0.01,
+      0.3,
+      2,
+      2.8,
+      0.2,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0261/0261.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1045",
+   "product_name": "A980",
+   "internal_model": "TM238",
+   "type": "mouse",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 11,
+   "latest_fw_ver": "010202",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1045/1045.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1074",
+   "product_name": "2.4G Receiver",
+   "internal_model": "TM243FDongle",
+   "type": "dongle",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": null,
+   "has_battery": null,
+   "key_count": null,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1074/1074.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1082",
+   "product_name": "CM610 PRO",
+   "internal_model": "TM243",
+   "type": "mouse",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1082/1082.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1084",
+   "product_name": "A950",
+   "internal_model": "TM243F",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1084/1084.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1107",
+   "product_name": "EM903",
+   "internal_model": "TM230G",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1107/1107.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1108",
+   "product_name": "2.4G Receiver",
+   "internal_model": "TM230GDongle",
+   "type": "dongle",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": null,
+   "has_battery": null,
+   "key_count": null,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1108/1108.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1112",
+   "product_name": "A950 PRO",
+   "internal_model": "TM265",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1112/1112.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1114",
+   "product_name": "2.4G Receiver",
+   "internal_model": "TM265Dongle",
+   "type": "dongle",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": null,
+   "has_battery": null,
+   "key_count": null,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1114/1114.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1115",
+   "product_name": "2.4G Receiver",
+   "internal_model": "TM265Dongle",
+   "type": "dongle",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": null,
+   "has_battery": null,
+   "key_count": null,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1115/1115.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1117",
+   "product_name": "A950 PRO Mg",
+   "internal_model": "TM271F",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1117/1117.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1118",
+   "product_name": "A950G",
+   "internal_model": "TM265KR",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1118/1118.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1129",
+   "product_name": "A980 PRO MAX",
+   "internal_model": "TM270LCD",
+   "type": "mouse",
+   "fw_type": 1,
+   "family": "HS (TG variant)",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 9,
+   "latest_fw_ver": "00010201",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1129/1129.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1130",
+   "product_name": "A980 PRO",
+   "internal_model": "TM270",
+   "type": "mouse",
+   "fw_type": 1,
+   "family": "HS (TG variant)",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 9,
+   "latest_fw_ver": "00010201",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1130/1130.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1131",
+   "product_name": "Wireless Dongle",
+   "internal_model": "TM270FDongle",
+   "type": "dongle",
+   "fw_type": 1,
+   "family": "HS (TG variant)",
+   "has_lcd": null,
+   "has_battery": null,
+   "key_count": null,
+   "latest_fw_ver": "",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1131/1131.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1134",
+   "product_name": "CM610 PRO",
+   "internal_model": "TM243F",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1134/1134.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1135",
+   "product_name": "2.4G Receiver",
+   "internal_model": "TM243FDongle",
+   "type": "dongle",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": null,
+   "has_battery": null,
+   "key_count": null,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1135/1135.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1136",
+   "product_name": "CM670 PRO",
+   "internal_model": "TM242F",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1136/1136.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1141",
+   "product_name": "CM610 V2",
+   "internal_model": "TM265U",
+   "type": "mouse",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 8,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1141/1141.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1147",
+   "product_name": "A950 AIR",
+   "internal_model": "TM275F",
+   "type": "mouse",
+   "fw_type": 1,
+   "family": "HS (TG variant)",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 8,
+   "latest_fw_ver": "00010208",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1147/1147.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1148",
+   "product_name": "A980 PRO",
+   "internal_model": "TM270FAIM",
+   "type": "mouse",
+   "fw_type": 1,
+   "family": "HS (TG variant)",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 9,
+   "latest_fw_ver": "00010208",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1148/1148.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1150",
+   "product_name": "A980 PRO MAX",
+   "internal_model": "TM270FAIMLCD",
+   "type": "mouse",
+   "fw_type": 1,
+   "family": "HS (TG variant)",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 9,
+   "latest_fw_ver": "00010208",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1150/1150.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1151",
+   "product_name": "A980 PRO MAX",
+   "internal_model": "TM270FAIMLCD",
+   "type": "mouse",
+   "fw_type": 1,
+   "family": "HS (TG variant)",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 9,
+   "latest_fw_ver": "00010208",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1151/1151.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1152",
+   "product_name": "CM610 V2",
+   "internal_model": "TM265U",
+   "type": "mouse",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 8,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1152/1152.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1153",
+   "product_name": "A950 PRO Mg",
+   "internal_model": "TM271F",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1153/1153.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1154",
+   "product_name": "2.4G Receiver",
+   "internal_model": "TM275DGDongle",
+   "type": "dongle",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": null,
+   "has_battery": null,
+   "key_count": null,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1154/1154.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1155",
+   "product_name": "CM610 MAX",
+   "internal_model": "TM243G",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1155/1155.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1156",
+   "product_name": "2.4G Receiver",
+   "internal_model": "TM265D",
+   "type": "dongle",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": null,
+   "has_battery": null,
+   "key_count": null,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1156/1156.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1159",
+   "product_name": "CM610 V2",
+   "internal_model": "TM265U",
+   "type": "mouse",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 7,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1159/1159.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1163",
+   "product_name": "2.4G Receiver",
+   "internal_model": "TM290",
+   "type": "dongle",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": null,
+   "has_battery": null,
+   "key_count": null,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1163/1163.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1165",
+   "product_name": "CM610 V2 MAX",
+   "internal_model": "TM265D",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1165/1165.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1166",
+   "product_name": "A980 PRO",
+   "internal_model": "TM270F",
+   "type": "mouse",
+   "fw_type": 1,
+   "family": "HS (TG variant)",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 9,
+   "latest_fw_ver": "00010207",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1166/1166.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1168",
+   "product_name": "CM610 MAX",
+   "internal_model": "TM243F",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1168/1168.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1169",
+   "product_name": "A950 AIR",
+   "internal_model": "TM275F",
+   "type": "mouse",
+   "fw_type": 1,
+   "family": "HS (TG variant)",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 8,
+   "latest_fw_ver": "010300",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1169/1169.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1174",
+   "product_name": "A950 AIR",
+   "internal_model": "TM275F",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 5,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1174/1174.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1175",
+   "product_name": "2.4G Receiver",
+   "internal_model": "TM275FGDongle",
+   "type": "dongle",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": null,
+   "has_battery": null,
+   "key_count": null,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1175/1175.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1181",
+   "product_name": "CM610 V2 MAX",
+   "internal_model": "TM265D",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1181/1181.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1182",
+   "product_name": "A950 LCD",
+   "internal_model": "TM265D",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1182/1182.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1185",
+   "product_name": "A950 AIR",
+   "internal_model": "TM275D",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 5,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1185/1185.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1193",
+   "product_name": "A950 AIR",
+   "internal_model": "TM275D",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 5,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1193/1193.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1196",
+   "product_name": "A950 Wing",
+   "internal_model": "TM275D",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 5,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1196/1196.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1217",
+   "product_name": "A950 Ultra",
+   "internal_model": "TM283",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1217/1217.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1218",
+   "product_name": "极风",
+   "internal_model": "TM290D",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1218/1218.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1219",
+   "product_name": "2.4G Receiver",
+   "internal_model": "TM2XX",
+   "type": "dongle",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": null,
+   "has_battery": null,
+   "key_count": null,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1219/1219.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1220",
+   "product_name": "羽翼",
+   "internal_model": "TM287D",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1220/1220.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1226",
+   "product_name": "AE6",
+   "internal_model": "TM290F",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1226/1226.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1227",
+   "product_name": "2.4G Receiver",
+   "internal_model": "TM290F",
+   "type": "dongle",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": null,
+   "has_battery": null,
+   "key_count": null,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1227/1227.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1233",
+   "product_name": "AE6 PRO",
+   "internal_model": "TM290F",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1233/1233.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1235",
+   "product_name": "AE7 PRO",
+   "internal_model": "TM287F",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1235/1235.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1237",
+   "product_name": "极风Max",
+   "internal_model": "TM290F",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 8,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1237/1237.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1238",
+   "product_name": "2.4G Receiver",
+   "internal_model": "TM290F",
+   "type": "dongle",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": null,
+   "has_battery": null,
+   "key_count": null,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1238/1238.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1244",
+   "product_name": "A950 GM",
+   "internal_model": "TM265F",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1244/1244.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1245",
+   "product_name": "A950GD",
+   "internal_model": "TM265",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1245/1245.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1246",
+   "product_name": "2.4G Receiver",
+   "internal_model": "TM01AF",
+   "type": "dongle",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": null,
+   "has_battery": null,
+   "key_count": null,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1246/1246.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1250",
+   "product_name": "AE7",
+   "internal_model": "TM287",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 8,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1250/1250.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1257",
+   "product_name": "2.4G Receiver",
+   "internal_model": "TM287",
+   "type": "dongle",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": null,
+   "has_battery": null,
+   "key_count": null,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1257/1257.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1258",
+   "product_name": "2.4G Receiver",
+   "internal_model": "TM290",
+   "type": "dongle",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": null,
+   "has_battery": null,
+   "key_count": null,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1258/1258.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1259",
+   "product_name": "A950GD",
+   "internal_model": "TM265F",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1259/1259.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1260",
+   "product_name": "Ultra 07",
+   "internal_model": "TM00J",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1260/1260.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1261",
+   "product_name": "2.4G Receiver",
+   "internal_model": "TM290",
+   "type": "dongle",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": null,
+   "has_battery": null,
+   "key_count": null,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1261/1261.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1263",
+   "product_name": "CM620",
+   "internal_model": "TM290",
+   "type": "mouse",
+   "fw_type": 1,
+   "family": "HS (TG variant)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 8,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1263/1263.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1264",
+   "product_name": "AE6",
+   "internal_model": "TM290",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 9,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1264/1264.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1265",
+   "product_name": "AE6",
+   "internal_model": "TM290",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 9,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1265/1265.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1271",
+   "product_name": "LM180T",
+   "internal_model": "TM00AF",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 12,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1271/1271.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1283",
+   "product_name": "A950G",
+   "internal_model": "TM265F",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1283/1283.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1284",
+   "product_name": "A950G",
+   "internal_model": "TM265D",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1284/1284.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1286",
+   "product_name": "A950GD",
+   "internal_model": "TM265F",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1286/1286.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1287",
+   "product_name": "极光",
+   "internal_model": "TM01A",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 7,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1287/1287.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1288",
+   "product_name": "DAREU Receiver",
+   "internal_model": "TM265F",
+   "type": "dongle",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": null,
+   "has_battery": null,
+   "key_count": null,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1288/1288.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1289",
+   "product_name": "猎风V3",
+   "internal_model": "TM00P",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 9,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1289/1289.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1292",
+   "product_name": "Ultra09",
+   "internal_model": "TM00T",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1292/1292.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1293",
+   "product_name": "Ultra07",
+   "internal_model": "TP040",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1293/1293.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1295",
+   "product_name": "极风3",
+   "internal_model": "TM290D",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1295/1295.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1298",
+   "product_name": "EM910G",
+   "internal_model": "TM00PF",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1298/1298.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1299",
+   "product_name": "AE6",
+   "internal_model": "TM290F",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1299/1299.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1301",
+   "product_name": "A950G",
+   "internal_model": "TM01AF",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 7,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1301/1301.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1302",
+   "product_name": "CM610 ultra v2",
+   "internal_model": "TM265D",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1302/1302.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1303",
+   "product_name": "A950GD PRO",
+   "internal_model": "TM265D",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1303/1303.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1304",
+   "product_name": "CM620",
+   "internal_model": "TM290",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 8,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1304/1304.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1305",
+   "product_name": "EM905 Pro",
+   "internal_model": "TM173",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 5,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1305/1305.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1319",
+   "product_name": "EM901",
+   "internal_model": "TM224",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 5,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1319/1319.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1328",
+   "product_name": "AE6",
+   "internal_model": "TM290F",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1328/1328.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1329",
+   "product_name": "A950 SE",
+   "internal_model": "TM265D",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 5,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1329/1329.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1330",
+   "product_name": "AE6 V2",
+   "internal_model": "TM290F",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1330/1330.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1332",
+   "product_name": "AE5",
+   "internal_model": "TM01D",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1332/1332.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1333",
+   "product_name": "2.4G Receiver",
+   "internal_model": "TM01D",
+   "type": "dongle",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": null,
+   "has_battery": null,
+   "key_count": null,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1333/1333.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1334",
+   "product_name": "A950 Wing",
+   "internal_model": "TM275D",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 5,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1334/1334.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1335",
+   "product_name": "EM911T",
+   "internal_model": "TM259F",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1335/1335.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x1337",
+   "product_name": "AE6",
+   "internal_model": "TM290D",
+   "type": "mouse",
+   "fw_type": 2,
+   "family": "JM",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 6,
+   "latest_fw_ver": "010200",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/1337/1337.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0xF055",
+   "product_name": "A75 HE",
+   "internal_model": "TK52L",
+   "type": "keyboard",
+   "fw_type": 4,
+   "family": "OHID",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 79,
+   "latest_fw_ver": "010200",
+   "travel_ranges": {
+    "GlobalTravelRange": null,
+    "SingleTriggerRange": [
+     0.1,
+     0.5,
+     3,
+     4,
+     1,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.1,
+      0.5,
+      3,
+      4,
+      1,
+      0.02
+     ],
+     [
+      0.1,
+      0.5,
+      2,
+      2.5,
+      1,
+      0.01
+     ],
+     [
+      0.1,
+      0.5,
+      2,
+      2.5,
+      1,
+      0.01
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/F055/F055.json"
+  }
+ ],
+ "ek75_family": [
+  {
+   "vid": "0x260D",
+   "pid": "0x0045",
+   "product_name": "EK75",
+   "internal_model": "TK51G",
+   "type": "keyboard",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 83,
+   "latest_fw_ver": "010108",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0045/0045.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0101",
+   "product_name": "EK75",
+   "internal_model": "TK51G",
+   "type": "keyboard",
+   "fw_type": 0,
+   "family": "TG",
+   "has_lcd": false,
+   "has_battery": true,
+   "key_count": 83,
+   "latest_fw_ver": "000008",
+   "travel_ranges": null,
+   "config_url": "https://dr.dareu.com/products/0101/0101.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0107",
+   "product_name": "EK75",
+   "internal_model": "TK51G",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 83,
+   "latest_fw_ver": "010200",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.3,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.3,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0107/0107.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0115",
+   "product_name": "EK75",
+   "internal_model": "TK51G",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 83,
+   "latest_fw_ver": "010200",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.3,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.3,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0115/0115.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0131",
+   "product_name": "EK75",
+   "internal_model": "TK51G",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 83,
+   "latest_fw_ver": "010200",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.3,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.3,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0131/0131.json"
+  },
+  {
+   "vid": "0x260D",
+   "pid": "0x0132",
+   "product_name": "EK75",
+   "internal_model": "TK51G",
+   "type": "keyboard",
+   "fw_type": 6,
+   "family": "TG-RT (Hall-effect)",
+   "has_lcd": false,
+   "has_battery": false,
+   "key_count": 83,
+   "latest_fw_ver": "010200",
+   "travel_ranges": {
+    "GlobalTravelRange": [
+     0.3,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "SingleTriggerRange": [
+     0.3,
+     0.5,
+     3,
+     3.3,
+     1.5,
+     0.02
+    ],
+    "RapidTriggerRange": [
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ],
+     [
+      0.3,
+      0.5,
+      3,
+      3.3,
+      0.5,
+      0.02
+     ]
+    ]
+   },
+   "config_url": "https://dr.dareu.com/products/0132/0132.json"
+  }
+ ],
+ "unihub_registry": [
+  {
+   "model": "COOL68V2",
+   "vid": "0x372E",
+   "pid": "0x10FF",
+   "usage_page": "0xFF60",
+   "usage": "0x61"
+  },
+  {
+   "model": "COOL68V2",
+   "vid": "0x372E",
+   "pid": "0x1133",
+   "usage_page": "0xFF60",
+   "usage": "0x61"
+  },
+  {
+   "model": "COOL68V2",
+   "vid": "0x260D",
+   "pid": "0x0255",
+   "usage_page": "0xFF60",
+   "usage": "0x61"
+  },
+  {
+   "model": "Ultra75 (tk53k)",
+   "vid": "0x260D",
+   "pid": "0x0176",
+   "usage_page": "0xFF60",
+   "usage": "0x61"
+  },
+  {
+   "model": "雷电75 (tk53g)",
+   "vid": "0x369B",
+   "pid": "0x01D0",
+   "usage_page": "0xFF60",
+   "usage": "0x61"
+  },
+  {
+   "model": "雷电75 (tk53g)",
+   "vid": "0x369B",
+   "pid": "0x01E0",
+   "usage_page": "0xFF60",
+   "usage": "0x61"
+  }
+ ],
+ "unihub_registry_url": "https://unihub.dareu.com/explore/api/explore/root-registry/standard"
+}
