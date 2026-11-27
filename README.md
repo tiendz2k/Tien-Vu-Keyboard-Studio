@@ -18,7 +18,7 @@ Bản này chỉ thêm theme chào (không đổi giao diện, không đổi gia
 - Cả 4 theme chạy trong đúng luồng chào hiện có: plugin đang bật = màn chào khi mở app, click/Esc bỏ qua, công tắc "bỏ qua màn chào" vẫn hiệu lực; thời lượng từng theme do `GreetingSequence` quyết định (5,6–7 giây). Đọc bằng giọng nói vẫn là cấu hình-chỉ-lưu (chưa có TTS) như trước.
 - **Khối ghi công (Credits)** ở cuối trang Chợ plugin + mục Giới thiệu trong Cài đặt liệt kê đủ 4 theme bên thứ ba: tác giả + link repo + giấy phép MIT.
 - Hai control hoạt hình mới đo thời gian bằng Stopwatch (không đếm tick) nên nhịp theme đúng cả trên máy chậm.
-- 552/552 test đạt (487 test cũ + 65 test mới: registry/ghi công theme, ánh xạ style + Resolve, QR payload, serial thẻ, lấy mẫu điểm logo xác định, máy trạng thái trình tự chào). Toàn bộ 21 file giao thức được bảo vệ giữ nguyên từng byte so với v3.10.0. Mọi cảnh báo cũ vẫn nguyên: chưa kiểm chứng trên F75 Max thật, dry-run bật mặc định.
+- 552/552 test đạt (487 test cũ + 65 test mới: registry/ghi công theme, ánh xạ style + Resolve, QR payload, serial thẻ, lấy mẫu điểm logo xác định, máy trạng thái trình tự chào). Toàn bộ 21 file giao thức được bảo vệ giữ nguyên từng byte so với v3.9.2. Mọi cảnh báo cũ vẫn nguyên: chưa kiểm chứng trên F75 Max thật, dry-run bật mặc định.
 
 ## Mới ở v3.10.0 — sửa đường stream GIF→LED của F75 Max theo cơ chế ứng dụng tham chiếu
 
