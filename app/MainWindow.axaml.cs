@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
@@ -95,6 +96,7 @@ namespace TienKeyboardStudio3
         private TextBox _expLogBox;
 
         // Trang chu
+        private Border _integrityBanner;
         private TextBlock _homeFxValue;
         private TextBlock _homeGifValue;
         private TextBlock _homeDryValue;
@@ -281,8 +283,27 @@ namespace TienKeyboardStudio3
             RefreshNavVisibility();
             RefreshWriteStates();
             ShowPage("home");
-            AppendLog("T Keyboard Studio v3.7.0 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
+            _ = RunIntegrityCheckAsync();
+            AppendLog("Tien Vu Keyboard Studio v3.8.0 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
             AppendLog("Lộ trình an toàn lần đầu: Quét thiết bị → thử RGB (dry-run) → tắt Dry-run → RGB thật → Cài đặt 04 17 → Đồng hồ → GIF TFT nhỏ → Đọc thử 0xF5.");
+        }
+
+        // v3.8: tu kiem tra toan ven ban phat hanh (khong chan tinh nang)
+        private async Task RunIntegrityCheckAsync()
+        {
+            try
+            {
+                var manifest = IntegrityCheck.LoadEmbedded();
+                if (manifest == null) return;
+                var bad = await Task.Run(() => IntegrityCheck.Verify(AppContext.BaseDirectory, manifest));
+                if (bad.Count > 0)
+                {
+                    if (_integrityBanner != null) _integrityBanner.IsVisible = true;
+                    AppendLog("Kiểm tra toàn vẹn: phát hiện file lệch băm so với bản gốc (" +
+                              string.Join(", ", bad) + "). " + IntegrityCheck.TamperWarning);
+                }
+            }
+            catch { }
         }
 
         private void Cleanup()
@@ -738,9 +759,20 @@ namespace TienKeyboardStudio3
             };
             var logCard = Card(V(8, Tb("Nhật ký thao tác", "h2"), _logBox));
 
+            _integrityBanner = new Border
+            {
+                Background = new SolidColorBrush(Color.FromArgb(0x2E, 0xF5, 0x9B, 0x9B)),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(0x66, 0xF5, 0x9B, 0x9B)),
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(12),
+                Padding = new Thickness(14, 10),
+                IsVisible = false,
+                Child = Tb(IntegrityCheck.TamperWarning, null, 12),
+            };
             var root = V(14,
                 Tb("Tổng quan", "h1"),
-                Tb("T Keyboard Studio v3.7.0 — bản thật: quét thiết bị HID thật, ghi xuống F75 Max qua giao thức đã kiểm chứng; Driver Pack 1 thêm họ Sinowealth kb_by_v2 (định danh 0x82 trước khi ghi); Driver Pack 2 thêm nền tảng RongYuan — Akko/MonsGeek/EPOMAKER (định danh dev_id 0x8F trước khi ghi); Driver Pack 3 thêm họ MCHOSE — stack GLW/CZ + QHW (định danh bằng PID registry + probe đọc trước khi ghi; họ BY dùng chung Pack 1, chỉ xem); Driver Pack 4 thêm các họ SONiX anh em (S75 Pro/Nova75, MAD60, HERO68 HE, WIN60 HE/SE) và nền WitMod (Redragon K617 HE) — định danh bằng probe của từng họ trước khi ghi, chưa kiểm chứng trên phần cứng thật. Dry-run bật mặc định để an toàn.", "sub"),
+                _integrityBanner,
+                Tb("Tien Vu Keyboard Studio v3.8.0 — bản thật: quét thiết bị HID thật, ghi xuống F75 Max qua giao thức đã kiểm chứng; Driver Pack 1 thêm họ Sinowealth kb_by_v2 (định danh 0x82 trước khi ghi); Driver Pack 2 thêm nền tảng RongYuan — Akko/MonsGeek/EPOMAKER (định danh dev_id 0x8F trước khi ghi); Driver Pack 3 thêm họ MCHOSE — stack GLW/CZ + QHW (định danh bằng PID registry + probe đọc trước khi ghi; họ BY dùng chung Pack 1, chỉ xem); Driver Pack 4 thêm các họ SONiX anh em (S75 Pro/Nova75, MAD60, HERO68 HE, WIN60 HE/SE) và nền WitMod (Redragon K617 HE) — định danh bằng probe của từng họ trước khi ghi, chưa kiểm chứng trên phần cứng thật. v3.8: bản GỌN — Thư viện Online không còn đóng gói GIF (tải theo nhu cầu từ Google Drive của dự án), thêm GIF từ link TikTok (thử nghiệm), chữ ký tác giả + kiểm tra toàn vẹn bản phát hành. Dry-run bật mặc định để an toàn.", "sub"),
                 connectCard,
                 heroCard,
                 stats,
@@ -1361,7 +1393,7 @@ namespace TienKeyboardStudio3
         {
             try
             {
-                string text = DeviceInfoReport.Build("3.7.0", _selectedModel, CollectProbeInfos());
+                string text = DeviceInfoReport.Build(AboutInfo.Version, _selectedModel, CollectProbeInfos());
                 var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
                 if (clipboard != null) await clipboard.SetTextAsync(text);
                 ShowToast("Đã sao chép thông tin thiết bị — dán vào GitHub issue là xong.");
@@ -2393,6 +2425,19 @@ namespace TienKeyboardStudio3
             Grid.SetColumn(previewCard, 1);
             topGrid.Children.Add(previewCard);
 
+            // v3.8: Them GIF tu link TikTok (THU NGHIEM — kenh phan giai cong
+            // khai tikwm, khong chinh thuc; chuyen doi bang ffmpeg tai theo nhu cau)
+            var tiktokBox = new TextBox { Watermark = "Dán link video TikTok (https://www.tiktok.com/…)", Width = 420 };
+            tiktokBox.Classes.Add("search");
+            var tiktokStatus = Tb("Tuỳ chọn: chuyển thành GIF dải LED (rộng 900px, cho trang Thư viện Online/đèn phím) hoặc GIF 128×128 (cho màn hình TFT). Tối đa 12 giây đầu, 15 fps.", "faint");
+            int tiktokTarget = 0; // 0 = dai LED, 1 = TFT 128
+            var (tiktokSeg, _) = Segmented(new[] { "Dải LED 900px", "TFT 128×128" }, 0, i => tiktokTarget = i);
+            var tiktokRow = H(10,
+                tiktokBox,
+                tiktokSeg,
+                GhostBtn("Thêm từ TikTok", async () => await AddFromTikTokAsync(tiktokBox, tiktokStatus, () => tiktokTarget)),
+                GhostBtn(FfmpegTools.EssentialsNote, async () => await DownloadFfmpegToolAsync(tiktokStatus)));
+
             var root = V(14,
                 Tb("Màn hình GIF", "h1"),
                 Tb("GIF phát ngay trong ô màn hình TFT trên bàn phím và ở khung xem trước lớn. Mọi GIF đều được app tự chuẩn hoá về 128×128, tối đa 255 frame, rồi nạp qua kênh màn hình đã kiểm chứng (cần cáp USB-C). Kéo-thả file/thư mục GIF vào cửa sổ app để thêm vào thư viện.", "sub"),
@@ -2402,7 +2447,11 @@ namespace TienKeyboardStudio3
                 _gifWrap,
                 actionRow,
                 Card(V(10, Tb("Thêm GIF của bạn", "h3"), libRow,
-                    Tb("GIF tự thêm được chuẩn hoá về 128×128 và lưu vào “Của tôi” (%AppData%\\TienKeyboardStudio\\MyGIFs). Thư mục nguồn được nhớ trong settings.json. Nguồn ngoài gợi ý: GIPHY Pixel Art · Pixabay GIFs · GitHub RecalBoxDMD (~600 GIF retro).", "faint"))));
+                    Tb("GIF tự thêm được chuẩn hoá về 128×128 và lưu vào “Của tôi” (%AppData%\\TienKeyboardStudio\\MyGIFs). Thư mục nguồn được nhớ trong settings.json. Nguồn ngoài gợi ý: GIPHY Pixel Art · Pixabay GIFs · GitHub RecalBoxDMD (~600 GIF retro).", "faint"),
+                    Tb("Thêm từ link TikTok (Thử nghiệm)", "h3"),
+                    tiktokRow,
+                    Tb("Tính năng thử nghiệm: TikTok không có kênh tải chính thức cho bên thứ ba — app dùng dịch vụ phân giải công khai tikwm.com nên một số video có thể không lấy được (app sẽ báo lỗi rõ ràng). Việc chuyển video thành GIF cần công cụ ffmpeg: app tự tìm trong thư mục tools cạnh exe, trong %AppData%\\TienKeyboardStudio\\Tools, rồi trong PATH; chưa có thì bấm nút tải công cụ ở trên (chỉ tải khi bạn bấm).", "faint"),
+                    tiktokStatus)));
             return Scroll(root);
         }
 
@@ -2445,9 +2494,10 @@ namespace TienKeyboardStudio3
                         Entry = new GifEntry { Name = GifCatalog.PrettyName(f), Group = "Mine", GroupLabel = "Của tôi" },
                         IsFile = true, FilePath = f, GroupKey = "Mine",
                     });
-            // Thu muc OnlineLibrary canh exe (16 hieu ung dong goi san, v3.2.2)
-            if (Directory.Exists(OnlineCatalog.OnlineLibraryDir))
-                foreach (var f in GifLibraryStore.ScanFolder(OnlineCatalog.OnlineLibraryDir))
+            // v3.8: muc Online cua luoi GIF = cac GIF da tai ve cache
+            // (%AppData%/TienKeyboardStudio/OnlineLibrary) — khong con dong goi san.
+            if (Directory.Exists(OnlineCatalog.CacheDir))
+                foreach (var f in GifLibraryStore.ScanFolder(OnlineCatalog.CacheDir))
                     items.Add(new GifItem
                     {
                         Entry = new GifEntry { Name = "Online · " + GifCatalog.PrettyName(f), Group = "Online", GroupLabel = "Thư viện Online" },
@@ -2481,17 +2531,26 @@ namespace TienKeyboardStudio3
                 _gifWrap.Children.Add(card);
             }
             ApplyGifFilter();
+            // v3.8 (sua RAM): luoi chi doc thumb PNG nho da cache cho file local;
+            // GIF day du chi giai ma khi nguoi dung mo/phat. GIF nhung san (nho)
+            // giu duong cu.
             _ = Task.Run(async () =>
             {
+                string thumbDir = System.IO.Path.Combine(GifLibraryStore.RootDir, "ThumbCache");
                 foreach (var c in _gifCards)
                 {
                     try
                     {
                         var item2 = items[_gifCards.IndexOf(c)];
-                        var bmp = item2.IsFile
-                            ? await Task.Run(() => GifTools.LoadFrameFile(item2.FilePath, 96))
-                            : await Task.Run(() => GifTools.LoadFrame(c.Entry.AssetUri, 96));
-                        await Dispatcher.UIThread.InvokeAsync(() => c.SetFirstFrame(bmp));
+                        Bitmap bmp;
+                        if (item2.IsFile)
+                        {
+                            string png = GifThumbCache.EnsureThumbnail(item2.FilePath, thumbDir, 96);
+                            bmp = png != null ? new Bitmap(png) : null;
+                        }
+                        else bmp = await Task.Run(() => GifTools.LoadFrame(c.Entry.AssetUri, 96));
+                        if (bmp != null)
+                            await Dispatcher.UIThread.InvokeAsync(() => c.SetFirstFrame(bmp));
                     }
                     catch { }
                 }
@@ -2510,6 +2569,134 @@ namespace TienKeyboardStudio3
             {
                 string g = c.Entry.Group;
                 c.IsVisible = _gifFilter == null || g == _gifFilter;
+            }
+        }
+
+        // ===== v3.8: Them GIF tu link TikTok (thu nghiem) + ffmpeg theo nhu cau =====
+        private static string ToolsDir => System.IO.Path.Combine(GifLibraryStore.RootDir, "Tools");
+
+        private string LocateFfmpeg()
+            => FfmpegTools.Locate(AppContext.BaseDirectory, ToolsDir,
+                Environment.GetEnvironmentVariable("PATH") ?? "");
+
+        private async Task AddFromTikTokAsync(TextBox urlBox, TextBlock status, Func<int> targetOf)
+        {
+            string url = (urlBox.Text ?? "").Trim();
+            if (!TikTokResolver.LooksLikeTikTokUrl(url))
+            {
+                ShowToast("Hãy dán link video TikTok hợp lệ trước nhé.");
+                return;
+            }
+            string ffmpeg = LocateFfmpeg();
+            if (ffmpeg == null)
+            {
+                status.Text = "Chưa tìm thấy ffmpeg — bấm nút “" + FfmpegTools.EssentialsNote + "” ở trên để tải về thư mục Tools của app trước nhé.";
+                ShowToast("Chưa có ffmpeg để chuyển đổi video → GIF.");
+                return;
+            }
+            try
+            {
+                status.Text = "Đang phân giải link TikTok qua tikwm.com…";
+                TikTokResolveResult res;
+                using (var http = new System.Net.Http.HttpClient())
+                {
+                    http.Timeout = TimeSpan.FromSeconds(45);
+                    http.DefaultRequestHeaders.UserAgent.ParseAdd("TienVuKeyboardStudio/3.8");
+                    string json = await http.GetStringAsync(TikTokResolver.BuildApiUrl(url));
+                    res = TikTokResolver.ParseResponse(json);
+                }
+                if (res == null)
+                {
+                    status.Text = "Không lấy được video từ link này (tikwm không trả về video không watermark). Thử video khác nhé — đây là kênh không chính thức nên không phải video nào cũng lấy được.";
+                    AppendLog("TikTok: phân giải thất bại cho " + url);
+                    return;
+                }
+                GifLibraryStore.EnsureDirs();
+                string mp4 = System.IO.Path.Combine(GifLibraryStore.RootDir, "tiktok-tmp.mp4");
+                status.Text = $"Đang tải video{(string.IsNullOrEmpty(res.Title) ? "" : ": " + res.Title)}…";
+                using (var http = new System.Net.Http.HttpClient())
+                {
+                    http.Timeout = TimeSpan.FromMinutes(3);
+                    http.DefaultRequestHeaders.UserAgent.ParseAdd("TienVuKeyboardStudio/3.8");
+                    var bytes = await http.GetByteArrayAsync(res.PlayUrl);
+                    await Task.Run(() => File.WriteAllBytes(mp4, bytes));
+                }
+                var target = targetOf() == 1 ? GifTarget.Tft : GifTarget.LedStrip;
+                string baseName = "tiktok-" + DateTime.Now.ToString("yyyyMMdd-HHmmss");
+                string outGif = System.IO.Path.Combine(GifLibraryStore.MyGifsDir, baseName + ".gif");
+                status.Text = "Đang chuyển video thành GIF bằng ffmpeg…";
+                string args = FfmpegTools.BuildConvertArguments(mp4, outGif, target);
+                int exit = await Task.Run(() =>
+                {
+                    var psi = new System.Diagnostics.ProcessStartInfo(ffmpeg, args)
+                    {
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                        RedirectStandardError = true,
+                    };
+                    using (var p = System.Diagnostics.Process.Start(psi))
+                    {
+                        p.StandardError.ReadToEnd();
+                        p.WaitForExit(120000);
+                        return p.ExitCode;
+                    }
+                });
+                try { File.Delete(mp4); } catch { }
+                if (exit != 0 || !File.Exists(outGif))
+                {
+                    status.Text = "ffmpeg chuyển đổi thất bại (mã lỗi " + exit + "). Video có thể dùng định dạng lạ — thử video khác nhé.";
+                    AppendLog("TikTok: ffmpeg lỗi " + exit + " cho " + url);
+                    return;
+                }
+                RefreshGifGrid();
+                status.Text = $"Đã thêm GIF từ TikTok vào “Của tôi”: {baseName}.gif ({(target == GifTarget.Tft ? "128×128 cho TFT" : "dải LED 900px")}).";
+                AppendLog($"TikTok: {url} → {outGif}");
+                ShowToast("Đã thêm GIF từ TikTok vào thư viện.");
+                urlBox.Text = "";
+            }
+            catch (Exception ex)
+            {
+                status.Text = "Thêm từ TikTok thất bại: " + ex.Message;
+                AppendLog("Lỗi TikTok: " + ex.Message);
+            }
+        }
+
+        private async Task DownloadFfmpegToolAsync(TextBlock status)
+        {
+            try
+            {
+                status.Text = "Đang tải ffmpeg essentials từ gyan.dev (khoảng 30 MB)…";
+                string zipPath = System.IO.Path.Combine(GifLibraryStore.RootDir, "ffmpeg-essentials.zip");
+                GifLibraryStore.EnsureDirs();
+                using (var http = new System.Net.Http.HttpClient())
+                {
+                    http.Timeout = TimeSpan.FromMinutes(10);
+                    http.DefaultRequestHeaders.UserAgent.ParseAdd("TienVuKeyboardStudio/3.8");
+                    var bytes = await http.GetByteArrayAsync(FfmpegTools.EssentialsUrl);
+                    await Task.Run(() => File.WriteAllBytes(zipPath, bytes));
+                }
+                string dest = System.IO.Path.Combine(ToolsDir, "ffmpeg.exe");
+                await Task.Run(() =>
+                {
+                    Directory.CreateDirectory(ToolsDir);
+                    using (var zip = System.IO.Compression.ZipFile.OpenRead(zipPath))
+                    {
+                        System.IO.Compression.ZipArchiveEntry entry = null;
+                        foreach (var e in zip.Entries)
+                            if (e.FullName.EndsWith("/bin/ffmpeg.exe", StringComparison.OrdinalIgnoreCase)) { entry = e; break; }
+                        if (entry == null) throw new InvalidOperationException("Không thấy ffmpeg.exe trong gói tải về.");
+                        entry.ExtractToFile(dest, overwrite: true);
+                    }
+                });
+                try { File.Delete(zipPath); } catch { }
+                status.Text = "Đã cài ffmpeg vào thư mục Tools của app — giờ dán link TikTok và bấm “Thêm từ TikTok” được rồi.";
+                AppendLog("Đã tải + cài ffmpeg essentials vào " + dest);
+                ShowToast("Đã cài xong công cụ chuyển đổi ffmpeg.");
+            }
+            catch (Exception ex)
+            {
+                status.Text = "Tải ffmpeg thất bại: " + ex.Message;
+                AppendLog("Lỗi tải ffmpeg: " + ex.Message);
             }
         }
 
@@ -2717,7 +2904,7 @@ namespace TienKeyboardStudio3
             _onlineLedPlayer.Log = AppendLog;
             var ledState = new RgbAnimState { Brush = Color.FromRgb(0x7C, 0x3A, 0xED), Brightness = 3 };
             var ledKb = new KeyboardView { Mode = KeyboardMode.Animated, State = ledState };
-            var ledStatus = Tb("Chọn một hiệu ứng bên dưới — GIF đã đóng gói sẵn trong máy, app chuyển ngay thành đèn từng phím (không cần mạng).", "sub");
+            var ledStatus = Tb("Chọn một hiệu ứng đã tải bên dưới để chuyển thành đèn từng phím. Hiệu ứng chưa tải thì bấm “Tải về” trước (tải một lần, dùng mãi về sau).", "sub");
             OnlineGifItem selectedItem = null;
             string selectedPath = null;
 
@@ -2736,8 +2923,7 @@ namespace TienKeyboardStudio3
                     string path = OnlineCatalog.ResolvePath(card.Item);
                     if (path == null)
                     {
-                        ledStatus.Text = $"Không thấy file của “{card.Item.Name}” trong thư mục OnlineLibrary cạnh exe — hãy giải nén đủ cả thư mục từ file zip nhé.";
-                        AppendLog($"Online: thiếu file local cho “{card.Item.Name}”.");
+                        ledStatus.Text = $"“{card.Item.Name}” chưa được tải về — bấm nút “Tải về” trên thẻ của hiệu ứng để tải từ Drive của dự án trước nhé.";
                         return;
                     }
                     selectedPath = path;
@@ -2745,7 +2931,7 @@ namespace TienKeyboardStudio3
                     var anim = await Task.Run(() => GifLedConverter.Convert(path));
                     _onlineLedPlayer.Load(anim, ledState, ledKb);
                     ledStatus.Text = $"“{card.Item.Name}”: GIF gốc {anim.SourceWidth}×{anim.SourceHeight}, {anim.SourceFrames} frame → đã chuyển thành {anim.Frames.Count} frame đèn phím. Bấm Phát để xem trong app.";
-                    AppendLog($"Online: đã chuyển LED “{card.Item.Name}” từ file local ({anim.Frames.Count} frame).");
+                    AppendLog($"Online: đã chuyển LED “{card.Item.Name}” từ file đã tải ({anim.Frames.Count} frame).");
                 }
                 catch (Exception ex)
                 {
@@ -2754,11 +2940,45 @@ namespace TienKeyboardStudio3
                 }
             }
 
+            async Task DownloadOnlineAsync(OnlineGifCard card)
+            {
+                card.BeginDownload();
+                card.SetDownloading(0);
+                try
+                {
+                    var progress = new Progress<long>(n =>
+                        Dispatcher.UIThread.Post(() => card.SetDownloading(
+                            card.Item.Size > 0 ? (double)n / card.Item.Size : 0)));
+                    string path = await OnlineCatalog.Store.DownloadAsync(card.Item, progress);
+                    card.FinishDownload();
+                    AppendLog($"Online: đã tải “{card.Item.Name}” ({OnlineCatalogCore.FormatSize(card.Item.Size)}) vào bộ nhớ đệm.");
+                    ShowToast($"Đã tải xong “{card.Item.Name}”.");
+                    _ = SelectOnlineAsync(card);
+                }
+                catch (Exception ex)
+                {
+                    card.FinishDownload();
+                    ledStatus.Text = "Tải thất bại: " + ex.Message;
+                    AppendLog("Lỗi tải online: " + ex.Message);
+                    ShowToast("Tải không thành công: " + ex.Message);
+                }
+            }
+
             foreach (var item in catalog)
             {
-                var card = new OnlineGifCard(item, OnlineCatalog.ResolvePath(item) != null) { Margin = new Thickness(0, 0, 10, 10) };
+                var card = new OnlineGifCard(item) { Margin = new Thickness(0, 0, 10, 10) };
                 card.SelectedChanged += c => _ = SelectOnlineAsync(c);
                 card.UseClicked += c => _ = SelectOnlineAsync(c);
+                card.DownloadClicked += c => _ = DownloadOnlineAsync(c);
+                card.DeleteClicked += c =>
+                {
+                    if (OnlineCatalog.Store.DeleteDownloaded(c.Item))
+                    {
+                        c.RefreshState();
+                        if (ReferenceEquals(selectedItem, c.Item)) { selectedPath = null; }
+                        ShowToast($"Đã xoá bản đã tải của “{c.Item.Name}”.");
+                    }
+                };
                 cards.Add(card);
                 wrap.Children.Add(card);
                 var captured = card;
@@ -2794,13 +3014,13 @@ namespace TienKeyboardStudio3
 
             var playBtn = GhostBtn("Phát / Dừng", () =>
             {
-                if (_onlineLedPlayer.Anim == null) { ShowToast("Hãy chọn một hiệu ứng trước nhé."); return; }
+                if (_onlineLedPlayer.Anim == null) { ShowToast("Hãy chọn một hiệu ứng đã tải trước nhé."); return; }
                 if (_onlineLedPlayer.Timer.IsEnabled) _onlineLedPlayer.Stop();
                 else _onlineLedPlayer.Play();
             });
             var sendBtn = GhostBtn("Chạy lên đèn phím (thử nghiệm)", () =>
             {
-                if (_onlineLedPlayer.Anim == null) { ShowToast("Hãy chọn một hiệu ứng trước nhé."); return; }
+                if (_onlineLedPlayer.Anim == null) { ShowToast("Hãy chọn một hiệu ứng đã tải trước nhé."); return; }
                 bool on = !_onlineLedPlayer.Sending;
                 _onlineLedPlayer.SetSending(on);
                 ShowToast(on
@@ -2809,7 +3029,7 @@ namespace TienKeyboardStudio3
             });
             var tftBtn = WriteBtn("Nạp GIF này lên màn hình TFT", async () =>
             {
-                if (selectedPath == null) { ShowToast("Hãy chọn một hiệu ứng trước nhé."); return; }
+                if (selectedPath == null) { ShowToast("Hãy chọn một hiệu ứng đã tải trước nhé."); return; }
                 await UploadGifFileAsync(selectedPath, FitMode.Fill, null);
             }, primary: false);
 
@@ -2821,7 +3041,7 @@ namespace TienKeyboardStudio3
 
             var root = V(14,
                 Tb("Thư viện Online", "h1"),
-                Tb("16 hiệu ứng cộng đồng ĐÓNG GÓI SẴN trong thư mục OnlineLibrary cạnh exe — dùng hoàn toàn offline, không tải gì từ mạng. GIF gốc là hiệu ứng LED toàn phím dạng dải rộng; app lấy mẫu màu tại tâm từng phím để phát lên đèn phím, hoặc cắt về 128×128 để nạp màn hình TFT.", "sub"),
+                Tb("16 hiệu ứng cộng đồng được lưu trên Google Drive công khai của dự án — app chỉ hiển thị ảnh xem trước, GIF gốc chỉ tải về khi bạn bấm “Tải về” (tải một lần, lưu vào %AppData%\\TienKeyboardStudio\\OnlineLibrary, các lần sau dùng ngay không cần mạng). GIF gốc là hiệu ứng LED toàn phím dạng dải rộng; app lấy mẫu màu tại tâm từng phím để phát lên đèn phím, hoặc cắt về 128×128 để nạp màn hình TFT.", "sub"),
                 search,
                 wrap,
                 emptyNote,
@@ -2834,14 +3054,19 @@ namespace TienKeyboardStudio3
         {
             private readonly Avalonia.Controls.Image _img;
             private readonly TextBlock _status;
-            private readonly Button _useBtn;
+            private readonly Button _mainBtn;
+            private readonly Button _delBtn;
+            private readonly ProgressBar _progress;
             private bool _selected;
+            private bool _finished;
 
             public OnlineGifItem Item { get; }
             public event Action<OnlineGifCard> SelectedChanged;
             public event Action<OnlineGifCard> UseClicked;
+            public event Action<OnlineGifCard> DownloadClicked;
+            public event Action<OnlineGifCard> DeleteClicked;
 
-            public OnlineGifCard(OnlineGifItem item, bool available)
+            public OnlineGifCard(OnlineGifItem item)
             {
                 Item = item;
                 Classes.Add("pickcard");
@@ -2852,21 +3077,78 @@ namespace TienKeyboardStudio3
                     Width = 168, Height = 84, Stretch = Stretch.Uniform,
                     HorizontalAlignment = HorizontalAlignment.Center,
                 };
-                _status = new TextBlock
+                _status = new TextBlock { FontSize = 10, Foreground = UiBrushes.TextSecondary, TextWrapping = TextWrapping.Wrap };
+                _mainBtn = new Button { HorizontalAlignment = HorizontalAlignment.Stretch };
+                _mainBtn.Classes.Add("ghost");
+                _mainBtn.Click += (s, e) =>
                 {
-                    Text = available ? "Có sẵn trong máy · dùng ngay offline" : "Thiếu file (kiểm tra thư mục OnlineLibrary)",
-                    FontSize = 10, Foreground = UiBrushes.TextSecondary,
+                    if (OnlineCatalog.Store.StateOf(Item) == OnlineCacheState.Downloaded) UseClicked?.Invoke(this);
+                    else if (OnlineCatalog.Store.StateOf(Item) == OnlineCacheState.NotDownloaded) DownloadClicked?.Invoke(this);
                 };
-                _useBtn = new Button { Content = "Dùng hiệu ứng này", HorizontalAlignment = HorizontalAlignment.Stretch };
-                _useBtn.Classes.Add("ghost");
-                _useBtn.Click += (s, e) => UseClicked?.Invoke(this);
+                _delBtn = new Button { Content = "Xoá bản đã tải", HorizontalAlignment = HorizontalAlignment.Stretch };
+                _delBtn.Classes.Add("ghost");
+                _delBtn.Click += (s, e) => DeleteClicked?.Invoke(this);
+                _progress = new ProgressBar { Minimum = 0, Maximum = 1, Value = 0, IsVisible = false, Height = 4 };
                 var stack = new StackPanel { Spacing = 6 };
                 stack.Children.Add(_img);
                 stack.Children.Add(new TextBlock { Text = item.Name, FontSize = 12, FontWeight = FontWeight.SemiBold, TextWrapping = TextWrapping.Wrap });
                 stack.Children.Add(_status);
-                stack.Children.Add(_useBtn);
+                stack.Children.Add(_progress);
+                stack.Children.Add(_mainBtn);
+                stack.Children.Add(_delBtn);
                 Child = stack;
                 PointerPressed += (s, e) => SelectedChanged?.Invoke(this);
+                RefreshState();
+            }
+
+            public void RefreshState()
+            {
+                var state = OnlineCatalog.Store.StateOf(Item);
+                string size = OnlineCatalogCore.FormatSize(Item.Size);
+                switch (state)
+                {
+                    case OnlineCacheState.Downloaded:
+                        _status.Text = $"Đã tải ({size}) · dùng ngay offline";
+                        _mainBtn.Content = "Dùng hiệu ứng này";
+                        _mainBtn.IsEnabled = true;
+                        _delBtn.IsVisible = true;
+                        _progress.IsVisible = false;
+                        break;
+                    case OnlineCacheState.Downloading:
+                        _status.Text = $"Đang tải… ({size})";
+                        _mainBtn.Content = "Đang tải…";
+                        _mainBtn.IsEnabled = false;
+                        _delBtn.IsVisible = false;
+                        _progress.IsVisible = true;
+                        break;
+                    default:
+                        _status.Text = $"Chưa tải · {size} · bấm Tải về để dùng";
+                        _mainBtn.Content = "Tải về";
+                        _mainBtn.IsEnabled = true;
+                        _delBtn.IsVisible = false;
+                        _progress.IsVisible = false;
+                        break;
+                }
+            }
+
+            /// <summary>Chot trang thai sau khi tai xong — cac callback tien do
+            /// den tre (Progress bao qua hang doi UI) khong duoc ghi de nua.</summary>
+            public void BeginDownload() { _finished = false; }
+
+            public void FinishDownload()
+            {
+                _finished = true;
+                RefreshState();
+            }
+
+            public void SetDownloading(double fraction)
+            {
+                if (_finished) return;
+                _status.Text = $"Đang tải… {(int)(fraction * 100)}%";
+                _progress.IsVisible = true;
+                _progress.Value = fraction;
+                _mainBtn.IsEnabled = false;
+                _mainBtn.Content = "Đang tải…";
             }
 
             public void SetThumb(Bitmap bmp) { if (bmp != null) _img.Source = bmp; }
@@ -3223,7 +3505,7 @@ namespace TienKeyboardStudio3
                 string weatherLine = _weather != null
                     ? $"Hà Nội {_weather.TempC}°C · {_weather.Description}"
                     : "Hà Nội · chưa có dữ liệu thời tiết";
-                var bmp = WidgetRenderer.RenderClock(DateTime.Now, weatherLine, "T Keyboard Studio");
+                var bmp = WidgetRenderer.RenderClock(DateTime.Now, weatherLine, "Tien Vu Keyboard Studio");
                 SetWidgetBitmap(bmp);
             }
             if (_widgetAuto && _widgetTickCount % 5 == 0 && !_busy && _currentPage == "widget")
@@ -3258,7 +3540,7 @@ namespace TienKeyboardStudio3
                     string weatherLine = _weather != null
                         ? $"Hà Nội {_weather.TempC}°C · {_weather.Description}"
                         : "Hà Nội · chưa có dữ liệu thời tiết";
-                    bmp = WidgetRenderer.RenderClock(DateTime.Now, weatherLine, "T Keyboard Studio");
+                    bmp = WidgetRenderer.RenderClock(DateTime.Now, weatherLine, "Tien Vu Keyboard Studio");
                 }
                 byte[] stream;
                 using (var img = BitmapToImageSharp(bmp))
@@ -3428,9 +3710,11 @@ namespace TienKeyboardStudio3
                 Width = 64, Height = 64, Child = logoImg,
             };
             var aboutTexts = V(4,
-                Tb("T Keyboard Studio", "h2"),
-                Tb("Phiên bản 3.7.0 — bản thật: F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; lớp per-key/stream/nhạc là thử nghiệm có khoá an toàn (xem trang Per-key). Mới: Liquid Glass, hình nền + màu chủ đề, màn hình chào 3 phong cách, Chợ plugin, GameSense CS2 (GSI). v3.4 thêm Driver Pack 1: họ Sinowealth kb_by_v2 (AULA F75, Leobog Hi75, YUNZII Cake, GravaStar K1) — trang riêng, định danh bằng UUID 0x82 trước khi ghi, chưa kiểm chứng trên phần cứng thật. v3.5 thêm Driver Pack 2: nền tảng RongYuan (Akko, MonsGeek, EPOMAKER — 246 mục registry) — trang riêng, định danh bằng dev_id 0x8F trước khi ghi, mục chưa có dev_id đã kiểm chứng chỉ xem, chưa kiểm chứng trên phần cứng thật. v3.6 thêm Driver Pack 3: họ MCHOSE (31 model CZ: stack GLW Hall-effect + stack QHW; 18 model BY dùng chung kb_by_v2, chỉ xem vì chưa có UUID) — trang riêng, định danh bằng VID:PID registry + probe đọc trước khi ghi, checksum GLW là giả thuyết sum-mod-256 chưa kiểm chứng, stack legacy chỉ ghi log gói, chưa kiểm chứng trên phần cứng thật. v3.7 thêm Driver Pack 4: các họ SONiX anh em — S75 Pro/Nova75 (họ B, chung nền F75 Max; probe 0xF5 không phân biệt được với F75 Max nên ghi vẫn khoá sau công tắc thử nghiệm; Nova75 stream chỉ log), MAD60 (họ C, bắt tay fw protocol v9), HERO68 HE (họ D, chữ ký cmd 130 + checksum), WIN60 HE (họ E), WIN60 SE (họ F2, chỉ log — nhà sản xuất tự đánh dấu thử nghiệm) — và nền WitMod (Redragon K617 HE; định danh bằng probe 0x0D + khối support 0x01 sau khi quét bảng filter 36 cặp VID:PID). Cộng thêm tính năng cộng đồng: nút sao chép thông tin thiết bị (dán vào GitHub issue) và cập nhật bảng thiết bị từ repo khi bạn chủ động bấm. Tất cả Pack 4 chưa kiểm chứng trên phần cứng thật. Dry-run bật mặc định.", "sub"),
-                Tb("Logo Mẫu C — chữ “T” tạo hình từ phím spacebar — đã được người dùng duyệt.", "sub"),
+                Tb("Tien Vu Keyboard Studio", "h2"),
+                Tb("Phiên bản 3.8.0 — bản thật: F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; lớp per-key/stream/nhạc là thử nghiệm có khoá an toàn (xem trang Per-key). Mới: Liquid Glass, hình nền + màu chủ đề, màn hình chào 3 phong cách, Chợ plugin, GameSense CS2 (GSI). v3.4 thêm Driver Pack 1: họ Sinowealth kb_by_v2 (AULA F75, Leobog Hi75, YUNZII Cake, GravaStar K1) — trang riêng, định danh bằng UUID 0x82 trước khi ghi, chưa kiểm chứng trên phần cứng thật. v3.5 thêm Driver Pack 2: nền tảng RongYuan (Akko, MonsGeek, EPOMAKER — 246 mục registry) — trang riêng, định danh bằng dev_id 0x8F trước khi ghi, mục chưa có dev_id đã kiểm chứng chỉ xem, chưa kiểm chứng trên phần cứng thật. v3.6 thêm Driver Pack 3: họ MCHOSE (31 model CZ: stack GLW Hall-effect + stack QHW; 18 model BY dùng chung kb_by_v2, chỉ xem vì chưa có UUID) — trang riêng, định danh bằng VID:PID registry + probe đọc trước khi ghi, checksum GLW là giả thuyết sum-mod-256 chưa kiểm chứng, stack legacy chỉ ghi log gói, chưa kiểm chứng trên phần cứng thật. v3.7 thêm Driver Pack 4: các họ SONiX anh em — S75 Pro/Nova75 (họ B, chung nền F75 Max; probe 0xF5 không phân biệt được với F75 Max nên ghi vẫn khoá sau công tắc thử nghiệm; Nova75 stream chỉ log), MAD60 (họ C, bắt tay fw protocol v9), HERO68 HE (họ D, chữ ký cmd 130 + checksum), WIN60 HE (họ E), WIN60 SE (họ F2, chỉ log — nhà sản xuất tự đánh dấu thử nghiệm) — và nền WitMod (Redragon K617 HE; định danh bằng probe 0x0D + khối support 0x01 sau khi quét bảng filter 36 cặp VID:PID). Cộng thêm tính năng cộng đồng: nút sao chép thông tin thiết bị (dán vào GitHub issue) và cập nhật bảng thiết bị từ repo khi bạn chủ động bấm. Tất cả Pack 4 chưa kiểm chứng trên phần cứng thật. Dry-run bật mặc định.", "sub"),
+                Tb("v3.8: đổi tên thành Tien Vu Keyboard Studio + logo mới; Thư viện Online chuyển sang tải theo nhu cầu (không đóng gói GIF); thêm GIF từ link TikTok (thử nghiệm); app có chữ ký tác giả + tự kiểm tra toàn vẹn khi mở — bản bị chỉnh sửa sẽ hiện cảnh báo ở Trang chủ.", "sub"),
+                Tb("Phát triển bởi Vũ Minh Tiến — github.com/tiendz2k", "sub"),
+                Tb("Mã nguồn + bản chính thức: github.com/tiendz2k/T-Keyboard-Studio · " + AboutInfo.SignatureLine, "faint"),
                 Tb("Font chữ: Be Vietnam Pro (SIL OFL 1.1). GIF thư viện: tự làm cho Tiến. Giao thức per-key: Gavin Graham (AULA L99).", "faint"));
             var aboutCard = Card(H(14, logoWrap, aboutTexts));
 
@@ -5044,9 +5328,9 @@ namespace TienKeyboardStudio3
             try
             {
                 var icon = new WindowIcon(AssetLoader.Open(GifTools.Asset("Assets/logo.png")));
-                var tray = new TrayIcon { Icon = icon, ToolTipText = "T Keyboard Studio" };
+                var tray = new TrayIcon { Icon = icon, ToolTipText = "Tien Vu Keyboard Studio" };
                 var menu = new NativeMenu();
-                var openItem = new NativeMenuItem("Mở T Keyboard Studio");
+                var openItem = new NativeMenuItem("Mở Tien Vu Keyboard Studio");
                 openItem.Click += (s, e) => { Show(); Activate(); };
                 var exitItem = new NativeMenuItem("Thoát");
                 exitItem.Click += (s, e) => { _reallyExit = true; Close(); };

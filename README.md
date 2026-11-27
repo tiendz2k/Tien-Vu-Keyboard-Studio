@@ -130,3 +130,10 @@ MIT — xem file [`LICENSE`](LICENSE).
 ---
 
 *Dự án cá nhân, không liên kết với AULA, Leobog, Keychron, Wooting hay bất kỳ hãng bàn phím nào. Tên các hãng/mẫu phím thuộc về chủ sở hữu tương ứng.*
+
+## Mã băm các bản phát hành chính thức (SHA-256)
+
+- v3.8.0 Light: `41d9a4a15daf00c150ef259d5803887f3a43931cc4e27ea80ad4e0aa0341a7d3`
+- v3.8.0 Compressed: `02ad4c647041c45f28e5c57a7d8d913e2dc7c857ef5c8330721759229ce85556`
+- v3.7.0 Light: `458f454b3b5de922c3beaa294c4b52fd117872932e9e72f2cf031399b0b7f5ef`
+- v3.7.0 Compressed: `bacfea28a5c254a5808a2ce9fff19f701d6f50ab958d23fbda96ca3458719359`

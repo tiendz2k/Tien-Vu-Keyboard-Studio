@@ -139,7 +139,7 @@ namespace TienKeyboardStudio3
         {
             if (port <= 0 || port > 65535) port = 13650;
             if (string.IsNullOrEmpty(token)) token = Token;
-            return "\"T Keyboard Studio — CS2 GSI\"\n" +
+            return "\"Tien Vu Keyboard Studio — CS2 GSI\"\n" +
                    "{\n" +
                    $"  \"uri\"           \"http://127.0.0.1:{port}\"\n" +
                    "  \"timeout\"       \"5.0\"\n" +

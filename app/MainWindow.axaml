@@ -1,7 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="TienKeyboardStudio3.MainWindow"
-        Title="T Keyboard Studio"
+        Title="Tien Vu Keyboard Studio"
         Icon="/Assets/logo.png"
         Width="1180" Height="740"
         MinWidth="1040" MinHeight="640"
@@ -42,8 +42,8 @@
                 <Image Source="/Assets/logo.png" Width="42" Height="42" />
               </Border>
               <StackPanel VerticalAlignment="Center" Spacing="1">
-                <TextBlock Text="T Keyboard" FontSize="15.5" FontWeight="Bold" Foreground="#F4F4F8" />
-                <TextBlock Text="Tien Keyboard Studio" FontSize="10.5" Foreground="#8B88A0" />
+                <TextBlock Text="Tien Vu" FontSize="15.5" FontWeight="Bold" Foreground="#F4F4F8" />
+                <TextBlock Text="Keyboard Studio" FontSize="10.5" Foreground="#8B88A0" />
               </StackPanel>
             </StackPanel>
             <Border Height="1" Background="#14FFFFFF" Margin="2,14,2,10" />
@@ -59,7 +59,7 @@
                               FontSize="11.5" Foreground="#E7EAF2" />
               </StackPanel>
             </Border>
-            <TextBlock Text="T Keyboard Studio · v3.7.0" FontSize="10.5" Foreground="#6F6C84"
+            <TextBlock Text="Tien Vu Keyboard Studio · v3.8.0" FontSize="10.5" Foreground="#6F6C84"
                        HorizontalAlignment="Center" />
           </StackPanel>
 
@@ -78,6 +78,11 @@
       <Panel x:Name="PluginModalHost" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="24" />
     </Grid>
 
+    <!-- CHU KY TAC GIA (v3.8): dong nho mo o goc duoi phai, luon hien -->
+    <TextBlock Text="cre tiendz2k" FontSize="10" Foreground="#40FFFFFF"
+               HorizontalAlignment="Right" VerticalAlignment="Bottom"
+               Margin="0,0,10,6" IsHitTestVisible="False" />
+
     <!-- TOAST kinh mo -->
     <Border x:Name="Toast" Classes="toastcard" HorizontalAlignment="Right" VerticalAlignment="Bottom"
             Margin="0,0,26,24" MaxWidth="440" IsVisible="False" Opacity="0" IsHitTestVisible="False">
@@ -94,7 +99,7 @@
                   BoxShadow="0 0 44 0 #667C3AED">
             <Image Source="/Assets/logo.png" Width="92" Height="92" />
           </Border>
-          <TextBlock Text="T Keyboard Studio" FontSize="27" FontWeight="Bold" Foreground="#F4F4F8"
+          <TextBlock Text="Tien Vu Keyboard Studio" FontSize="27" FontWeight="Bold" Foreground="#F4F4F8"
                      HorizontalAlignment="Center" LetterSpacing="0.3" />
           <TextBlock x:Name="GreetingSub" Text="Chào mừng bạn trở lại" FontSize="13.5" Foreground="#A6A3B8"
                      HorizontalAlignment="Center" />

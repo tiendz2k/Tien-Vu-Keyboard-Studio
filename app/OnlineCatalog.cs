@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using SixLabors.ImageSharp;
@@ -11,25 +10,24 @@ using SixLabors.ImageSharp.Processing;
 
 namespace TienKeyboardStudio3
 {
-    /// <summary>Mot muc trong catalog Thu vien Online (ten + ten file GIF dong goi san).</summary>
-    public sealed class OnlineGifItem
-    {
-        public string Name { get; set; }
-        public string Source { get; set; }
-        public string File { get; set; }
-    }
-
     /// <summary>
-    /// Thu vien Online DONG GOI SAN 100% (v3.2.2): 16 GIF cong dong dang dai LED
-    /// rong nam san trong thu muc "OnlineLibrary" canh file exe; catalog nhung
-    /// trong app chi chua ten + ten file local. Trang nay KHONG tai mang, khong
-    /// chua bat ky URL ben thu ba nao — anh thumb va GIF goc deu doc thang tu dia.
-    /// (Tinh nang "dan URL de tai GIF cua rieng ban" o trang Man hinh GIF la
-    /// hanh dong chu dong cua nguoi dung — giu nguyen, nam o GifLibrary.)
+    /// Thu vien Online v3.8 — BAN GON: GIF goc KHONG con dong goi kem app nua.
+    /// Catalog (ten + link Google Drive cong khai cua chu du an + dung luong)
+    /// nhung san trong app; anh thumb PNG nho van dong goi de hien ngay.
+    /// GIF chi tai ve khi nguoi dung bam "Tai ve", luu vao
+    /// %AppData%/TienKeyboardStudio/OnlineLibrary/ (OnlineCacheStore quan ly
+    /// trang thai + kiem tra dung luong). Logic thuan nam o OnlineLibraryCore.cs.
     /// </summary>
     public static class OnlineCatalog
     {
-        public static string OnlineLibraryDir => Path.Combine(AppContext.BaseDirectory, "OnlineLibrary");
+        /// <summary>Thu muc chua thumb PNG dong goi san canh exe (chi anh nho, khong con GIF).</summary>
+        public static string BundledDir => Path.Combine(AppContext.BaseDirectory, "OnlineLibrary");
+
+        /// <summary>Thu muc cache GIF da tai (trong %AppData% cua app).</summary>
+        public static string CacheDir => Path.Combine(GifLibraryStore.RootDir, "OnlineLibrary");
+
+        private static OnlineCacheStore _store;
+        public static OnlineCacheStore Store => _store ??= new OnlineCacheStore(CacheDir);
 
         public static List<OnlineGifItem> LoadCatalog()
         {
@@ -39,38 +37,27 @@ namespace TienKeyboardStudio3
                 using (var stream = asm.GetManifestResourceStream("TienKeyboardStudio32.online-catalog.json"))
                 {
                     if (stream == null) return new List<OnlineGifItem>();
-                    var items = JsonSerializer.Deserialize<List<OnlineGifItem>>(stream,
-                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                    return items ?? new List<OnlineGifItem>();
+                    using (var r = new StreamReader(stream))
+                        return OnlineCatalogCore.ParseCatalog(r.ReadToEnd());
                 }
             }
             catch { return new List<OnlineGifItem>(); }
         }
 
-        /// <summary>Duong dan file GIF local cua muc; null neu thieu file (nguoi dung da xoa thu muc OnlineLibrary).</summary>
+        /// <summary>Duong dan file GIF trong cache; null neu chua tai.</summary>
         public static string ResolvePath(OnlineGifItem item)
-        {
-            if (item == null || string.IsNullOrEmpty(item.File)) return null;
-            string path = Path.Combine(OnlineLibraryDir, item.File);
-            return File.Exists(path) ? path : null;
-        }
+            => Store.IsDownloaded(item) ? Store.CachedPath(item) : null;
 
-        /// <summary>
-        /// Anh thumb cua muc: UU TIEN file PNG dong goi san trong OnlineLibrary/thumbs
-        /// (frame dai dien chon san luc dong goi, rong 320px) — doc rat nhe. Chi khi
-        /// thieu file PNG moi giai ma frame dau cua GIF (du phong; GIF dai LED co the
-        /// rat nhieu frame nen tranh dung duong nay hang loat).
-        /// </summary>
+        /// <summary>Anh thumb dong goi san (PNG nho canh exe) — doc rat nhe, khong giai ma GIF.</summary>
         public static async Task<Bitmap> LoadThumbnailAsync(OnlineGifItem item)
         {
-            if (item == null || string.IsNullOrEmpty(item.File)) return null;
-            string thumb = Path.Combine(OnlineLibraryDir, "thumbs",
-                Path.GetFileNameWithoutExtension(item.File) + ".png");
-            string path = File.Exists(thumb) ? thumb : ResolvePath(item);
-            if (path == null) return null;
+            string name = OnlineCatalogCore.ThumbFileName(item);
+            if (name == null) return null;
+            string thumb = Path.Combine(BundledDir, "thumbs", name);
+            if (!File.Exists(thumb)) return null;
             return await Task.Run(() =>
             {
-                using (var img = Image.Load<Rgba32>(path))
+                using (var img = Image.Load<Rgba32>(thumb))
                 using (var frame = img.Frames.CloneFrame(0))
                 {
                     if (frame.Width > 320)
