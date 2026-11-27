@@ -44,6 +44,43 @@ Bản dựng Avalonia (.NET 8) thể hiện giao diện thế hệ mới của a
 
 > ⚠️ Lưu ý nhận diện: một số mã VID/PID (ví dụ `258A:010C`) được **nhiều mẫu phím không liên quan dùng chung**. App luôn dò mã model của thiết bị trước khi cho phép ghi — không bao giờ dựa vào VID/PID đơn thuần.
 
+## Bảng thiết bị cộng đồng (devices-registry.json)
+
+Danh sách mẫu phím của app có thể được bổ sung mà **không cần phát hành bản app mới**: file [`docs/devices-registry.json`](docs/devices-registry.json) trong repo này là nguồn bảng mới nhất. Trong app: **Cài đặt → Bảng thiết bị cộng đồng → "Kiểm tra cập nhật bảng thiết bị"** (app chỉ tải khi bạn bấm — không tự gọi mạng nền). File tải về được kiểm tra định dạng (JSON hợp lệ, 10–5000 mục, không trùng tên, VID/PID trong 0–0xFFFF), lưu vào `%AppData%\TienKeyboardStudio\devices-registry.json` và áp dụng ở lần mở app sau — chỉ **bổ sung** mẫu mới, không ghi đè dữ liệu tích hợp; bảng tích hợp luôn là dự phòng.
+
+Cấu trúc mỗi mục trong mảng `devices`:
+
+```json
+{
+  "name": "Tên mẫu (duy nhất)",
+  "brand": "Hãng",
+  "layout": "75% · 80 phím",
+  "family": "sonix_sib",
+  "stack": "B",
+  "hasScreen": true, "screenW": 128, "screenH": 128,
+  "hasHE": false, "hasKnob": true,
+  "statusKind": 1,
+  "protocolStatus": "Mô tả trạng thái giao thức",
+  "idNote": "Ghi chú cách nhận diện",
+  "devIds": [],
+  "ids": [[3141, 32778]]
+}
+```
+
+- `ids`: các cặp `[vid, pid]` dạng **số thập phân**; `pid = -1` = khớp mọi PID của VID đó. `ids` rỗng = mục chỉ hiển thị (chưa biết VID:PID).
+- `family`: `kb_by_v2` | `rongyuan` | `mchose` | `sonix_sib` | `witmod` | trống. `stack`: stack trong họ (B/C/D/E/F2 của họ SONiX; GLW/QHW của MCHOSE…).
+
+## Đóng góp thông tin thiết bị
+
+Bạn có mẫu phím chưa được hỗ trợ (hoặc hỗ trợ chưa đầy đủ)? Hãy giúp cộng đồng:
+
+1. Cắm bàn phím bằng **USB có dây**, mở app, bấm **Quét bàn phím** ở trang Tổng quan.
+2. Nếu mẫu thuộc một họ driver đã có trang riêng (Sinowealth, RongYuan, MCHOSE, SONiX, WitMod), mở trang họ đó và chạy **Nhận diện / Probe** (các probe đều là lệnh đọc, an toàn).
+3. Bấm nút **"Sao chép thông tin thiết bị"** (có ở trang Tổng quan và mọi trang họ) — đoạn text gồm VID:PID, tên sản phẩm, usage page/usage, kích thước report, kết quả probe (UUID / dev_id / chuỗi sản phẩm 0x0D / tóm tắt 0xF5…), mẫu đang chọn và phiên bản app.
+4. Mở một **GitHub issue** trong repo này, dán đoạn vừa sao chép, kèm tên mẫu chính xác, link sản phẩm (nếu có) và ghi rõ probe nào chạy được / không chạy được.
+
+Thông tin này giúp xác định VID:PID và định danh thật của mẫu để đưa vào bảng thiết bị hoặc viết driver ở bản sau. Đoạn sao chép chỉ chứa thông tin phần cứng của bàn phím — **không** kèm thông tin cá nhân nào.
+
 ## Nguyên tắc an toàn
 
 1. **Dry-run là mặc định** — không lệnh ghi nào xuống phím khi chưa được người dùng chủ động cho phép.
@@ -58,6 +95,7 @@ Bản dựng Avalonia (.NET 8) thể hiện giao diện thế hệ mới của a
 - [`docs/PROTOCOLS-REFERENCE-APP.md`](docs/PROTOCOLS-REFERENCE-APP.md) — Hồ sơ trích xuất giao thức từ một app tham chiếu: 12 mẫu phím thuộc 6 họ giao thức (gồm S75 Pro / Nova75 dùng chung nền tảng F75 Max, AULA F75, GravaStar K1, MAD60 HE, HERO68 HE, WIN60 HE/SE…).
 - [`docs/PROTOCOLS-AULA-HUB.md`](docs/PROTOCOLS-AULA-HUB.md) — Toàn bộ giao thức trong app AULA Hub chính hãng: 7 họ chip (SparkLink V1/V2, HFD, RLW, Bytech HE, Bytech cơ…) kèm bảng lệnh và bằng chứng mã nguồn.
 - [`docs/devices.json`](docs/devices.json) — Bảng 114 mẫu bàn phím (VID:PID, họ chip, khả năng) dạng máy đọc, tổng hợp từ các hồ sơ trên.
+- [`docs/devices-registry.json`](docs/devices-registry.json) — Bảng thiết bị cộng đồng mà app tải về khi người dùng bấm kiểm tra cập nhật (định dạng ở mục "Bảng thiết bị cộng đồng" phía trên); sinh từ cơ sở dữ liệu mẫu hiện tại của app.
 - [`docs/PROTOCOLS-RONGYUAN.md`](docs/PROTOCOLS-RONGYUAN.md) — Giao thức nền tảng **RongYuan RY5088** trích từ Akko Cloud Driver v4 + MonsGeek V4 Driver: hai hãng dùng chung một nền tảng OEM (cùng pháp nhân ký EV, cùng giao thức) — bảng ~25 opcode, lệnh Hall-effect gộp (actuation/RT/DKS/SOCD), giao thức màn hình, hiệu chuẩn.
 - [`docs/devices-rongyuan.json`](docs/devices-rongyuan.json) — Bảng 172 thiết bị Akko + MonsGeek (gồm 52 mục MonsGeek có sẵn firmware-id).
 - [`docs/PROTOCOLS-YUNZII-CAKE.md`](docs/PROTOCOLS-YUNZII-CAKE.md) — Giao thức dòng **YUNZII Cake (C75/C98)**: hoá ra chạy chung nền tảng Sinowealth 258A:010C với AULA F75 (họ `kb_by_v2`) — đủ 12 lệnh có dây + giao thức dongle 2.4G, và quan trọng nhất là cơ chế **phân biệt model bằng UUID đọc từ thiết bị (lệnh 0x82)** vì C75/C98 trùng VID:PID.

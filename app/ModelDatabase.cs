@@ -118,10 +118,21 @@ namespace TienKeyboardStudio3
             },
             new KeyboardModel
             {
-                Name = "MADLIONS MAD60 HE", Layout = "60% · 61 phím",
-                ProtocolStatus = "Đã có giao thức mở — sẽ tích hợp", StatusKind = 1,
-                HasScreen = false, HasKnob = false,
-                Ids = { (0x373B, -1, "USB có dây") },
+                Name = "MADLIONS MAD60 HE", Layout = "60% · 70 LED",
+                ProtocolStatus = "Driver Pack 4 (họ C — MAD60) — chưa kiểm chứng phần cứng", StatusKind = 1,
+                HasScreen = false, HasKnob = false, HasHE = true,
+                Family = "sonix_sib", Stack = "C", Brand = "MADLIONS",
+                IdNote = "Nhận diện bằng bắt tay [1] → firmware protocol v9 (chỉ v9 mới được hỗ trợ). PID 105D = bản thường, 1054 = bản RGB.",
+                Ids = { (0x373B, 0x105D, "USB có dây"), (0x373B, 0x1054, "USB có dây") },
+            },
+            new KeyboardModel
+            {
+                Name = "MADLIONS MAD60 HE V2", Layout = "60% · 70 LED",
+                ProtocolStatus = "Driver Pack 4 (họ C — MAD60) — chưa kiểm chứng phần cứng", StatusKind = 1,
+                HasScreen = false, HasKnob = false, HasHE = true,
+                Family = "sonix_sib", Stack = "C", Brand = "MADLIONS",
+                IdNote = "Nhận diện bằng bắt tay [1] → firmware protocol v9. PID 1120 = bản V2.",
+                Ids = { (0x373B, 0x1120, "USB có dây") },
             },
             new KeyboardModel
             {
@@ -138,20 +149,68 @@ namespace TienKeyboardStudio3
             new KeyboardModel
             {
                 Name = "AULA S75 Pro", Layout = "75% · 80 phím",
-                ProtocolStatus = "Giao thức kín — để sau", StatusKind = 2,
+                ProtocolStatus = "Driver Pack 4 (họ B — SONiX 64B) — chưa kiểm chứng phần cứng", StatusKind = 1,
                 HasScreen = true, ScreenSize = 128, HasKnob = true,
+                Family = "sonix_sib", Stack = "B",
+                IdNote = "Chung VID:PID 0C45:800A và giao thức với F75 Max — probe 0xF5 KHÔNG phân biệt được S75 Pro với F75 Max; app dựa vào productName + mẫu bạn chọn, ghi/stream vẫn khóa sau công tắc thử nghiệm + tắt dry-run.",
+                Ids = { (0x0C45, 0x800A, "USB có dây") },
             },
             new KeyboardModel
             {
-                Name = "AULA Nova75", Layout = "75%",
-                ProtocolStatus = "Giao thức kín — để sau", StatusKind = 2,
+                Name = "AULA Nova75", Layout = "75% · 80 phím",
+                ProtocolStatus = "Driver Pack 4 (họ B) — stream chỉ ở mức log (trình ghi frame native chưa rõ)", StatusKind = 1,
                 HasScreen = true, ScreenSize = 128, HasKnob = true,
+                Family = "sonix_sib", Stack = "B",
+                IdNote = "Nhận diện bằng productName đúng \"AULA-NOVA75\". Trình ghi frame tăng tốc native của app gốc (hid_write_nova_frame) chưa rõ cách chia gói nên stream của Nova75 chỉ ghi log, không ghi thật.",
+                Ids = { (0x0C45, 0x800A, "USB có dây") },
             },
             new KeyboardModel
             {
                 Name = "AULA WIN60 HE", Layout = "60% · 61 phím",
-                ProtocolStatus = "Giao thức kín — để sau", StatusKind = 2,
+                ProtocolStatus = "Driver Pack 4 (họ E — WIN60 HE) — chưa kiểm chứng phần cứng", StatusKind = 1,
+                HasScreen = false, HasKnob = false, HasHE = true,
+                Family = "sonix_sib", Stack = "E",
+                IdNote = "Kênh lệnh usage page 0xFF33, report 1. Cùng VID:PID 2E3C:C365 còn xuất hiện ở nền WitMod trên usage page 0xFF1B — hai kênh khác nhau, không nhầm lẫn.",
+                Ids = { (0x2E3C, 0xC365, "USB có dây") },
+            },
+            new KeyboardModel
+            {
+                Name = "AULA WIN60 SE", Layout = "60% · 61 phím",
+                ProtocolStatus = "Driver Pack 4 (họ F2) — chỉ builder + log; nhà sản xuất tự đánh dấu thử nghiệm", StatusKind = 1,
                 HasScreen = false, HasKnob = false,
+                Family = "sonix_sib", Stack = "F2",
+                IdNote = "Giao thức dùng byte phiên ngẫu nhiên chọn khi kết nối; giao diện của chính nhà sản xuất ghi mẫu này là thử nghiệm/chưa kiểm chứng — app này chỉ dựng gói và ghi log, không ghi thật.",
+                Ids = { (0x38A6, 0x291A, "USB có dây") },
+            },
+            new KeyboardModel
+            {
+                Name = "Redragon K617 HE", Layout = "60% · 61 phím",
+                ProtocolStatus = "Driver Pack 4 (WitMod) — chưa kiểm chứng phần cứng", StatusKind = 1,
+                HasScreen = false, HasKnob = false, HasHE = true,
+                Family = "witmod", Brand = "Redragon",
+                IdNote = "Nền WitMod dùng chung bảng filter 36 cặp VID:PID (usage page 0xFF1B); probe quyết định là lệnh 0x0D (chuỗi sản phẩm, trường 4) + khối support của lệnh 0x01. App desktop của hãng nhận diện K617 HE bằng tiền tố productName \"7153\" (8 biến thể layout); VID:PID riêng của K617 HE không có trong code web — không đoán.",
+                Ids =
+                {
+                    (0x0416, 0x7000, "WitMod (dùng chung)"), (0x0416, 0x7372, "WitMod (dùng chung)"),
+                    (0x0416, 0x7402, "WitMod (dùng chung)"), (0x0416, 0x7410, "WitMod (dùng chung)"),
+                    (0x0416, 0x7472, "WitMod (dùng chung)"), (0x0416, 0x7474, "WitMod (dùng chung)"),
+                    (0x0416, 0x7500, "WitMod (dùng chung)"), (0x0416, 0x7501, "WitMod (dùng chung)"),
+                    (0x0416, 0x7502, "WitMod (dùng chung)"), (0x0416, 0x7503, "WitMod (dùng chung)"),
+                    (0x0416, 0x7600, "WitMod (dùng chung)"), (0x0416, 0x9258, "WitMod (dùng chung)"),
+                    (0x0416, 0xC345, "WitMod (dùng chung)"), (0x0416, 0xC375, "WitMod (dùng chung)"),
+                    (0x117F, 0x4006, "WitMod (dùng chung)"), (0x117F, 0x4007, "WitMod (dùng chung)"),
+                    (0x17EF, 0x61D4, "WitMod (dùng chung)"), (0x17EF, 0x61D6, "WitMod (dùng chung)"),
+                    (0x2E3C, 0x7500, "WitMod (dùng chung)"), (0x2E3C, 0x7501, "WitMod (dùng chung)"),
+                    (0x2E3C, 0x7502, "WitMod (dùng chung)"), (0x2E3C, 0x7503, "WitMod (dùng chung)"),
+                    (0x2E3C, 0x7504, "WitMod (dùng chung)"), (0x2E3C, 0x7505, "WitMod (dùng chung)"),
+                    (0x2E3C, 0x7508, "WitMod (dùng chung)"), (0x2E3C, 0x7509, "WitMod (dùng chung)"),
+                    (0x2E3C, 0x750A, "WitMod (dùng chung)"), (0x2E3C, 0x750B, "WitMod (dùng chung)"),
+                    (0x2E3C, 0xC365, "WitMod (dùng chung)"), (0x2E3C, 0xC366, "WitMod (dùng chung)"),
+                    (0x2E3C, 0xC367, "WitMod (dùng chung)"), (0x2E3C, 0xC368, "WitMod (dùng chung)"),
+                    (0x2E3C, 0xC369, "WitMod (dùng chung)"), (0x2E3C, 0xC370, "WitMod (dùng chung)"),
+                    (0x2E3C, 0xC371, "WitMod (dùng chung)"),
+                    (0x34D3, 0x5301, "WitMod (dùng chung)"),
+                },
             },
             new KeyboardModel
             {
@@ -162,8 +221,11 @@ namespace TienKeyboardStudio3
             new KeyboardModel
             {
                 Name = "AULA HERO68 HE", Layout = "65% · 68 phím",
-                ProtocolStatus = "Giao thức kín — để sau", StatusKind = 2,
-                HasScreen = false, HasKnob = false,
+                ProtocolStatus = "Driver Pack 4 (họ D — HERO68) — chưa kiểm chứng phần cứng", StatusKind = 1,
+                HasScreen = false, HasKnob = false, HasHE = true,
+                Family = "sonix_sib", Stack = "D",
+                IdNote = "Nhận diện bằng chữ ký danh tính của lệnh 130 ([17,0,0,0,0,3]) + checksum byte 62. Chỉ bản có dây; Air/Mini/Pro/Ultra không thuộc giao thức này.",
+                Ids = { (0x372E, 0x103E, "USB có dây") },
             },
             new KeyboardModel
             {

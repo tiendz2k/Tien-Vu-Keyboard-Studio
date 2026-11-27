@@ -51,6 +51,20 @@ namespace TienKeyboardStudio3
         private Border _mcHeCard;
         private Border _mcQhwCard;
         private int _mcProfile;
+        // v3.7 Driver Pack 4: cac ho anh em SONiX (B S75/Nova, C MAD60, D HERO68, E WIN60 HE, F2 WIN60 SE)
+        private readonly SonixSiblingsDevice _sx = new SonixSiblingsDevice();
+        private TextBlock _sxIdStatus;
+        private TextBlock _sxInfoStatus;
+        private Border _sxCardB;
+        private Border _sxCardC;
+        private Border _sxCardD;
+        private Border _sxCardE;
+        private Border _sxCardF2;
+        // v3.7 Driver Pack 4: nen tang WitMod (Redragon K617 HE...)
+        private readonly WitModDevice _wm = new WitModDevice();
+        private TextBlock _wmIdStatus;
+        private TextBlock _wmInfoStatus;
+        private TextBlock _regStatus;
         private bool _dryRun = true;
         private bool _experimental = false;
         private bool _busy;
@@ -168,6 +182,19 @@ namespace TienKeyboardStudio3
             _kb.DryRun = true;
             _ry.DryRun = true;
             _mc.DryRun = true;
+            _sx.Log = AppendLog;
+            _wm.Log = AppendLog;
+            _sx.DryRun = true;
+            _wm.DryRun = true;
+            // v3.7: ap dung bang thiet bi cong dong da tai ve (neu co va hop
+            // le) — chi BO SUNG mau moi, khong ghi de bang tich hop.
+            try
+            {
+                int addedReg = DeviceRegistry.ApplyTo(ModelDatabase.All);
+                if (addedReg > 0)
+                    AppendLog($"Bảng thiết bị cộng đồng: đã bổ sung {addedReg} mẫu từ file đã tải về trước đó.");
+            }
+            catch { }
 
             DryToggle.IsCheckedChanged += (s, e) => SetDryRun(DryToggle.IsChecked == true, fromUi: true);
 
@@ -196,6 +223,8 @@ namespace TienKeyboardStudio3
             _pages["kbbyv2"] = BuildKbByV2Page();
             _pages["rongyuan"] = BuildRongYuanPage();
             _pages["mchose"] = BuildMchosePage();
+            _pages["sonix"] = BuildSonixPage();
+            _pages["witmod"] = BuildWitModPage();
             _pages["store"] = BuildStorePage();
             _pages["widget"] = BuildWidgetPage();
             _pages["settings"] = BuildSettingsPage();
@@ -252,7 +281,7 @@ namespace TienKeyboardStudio3
             RefreshNavVisibility();
             RefreshWriteStates();
             ShowPage("home");
-            AppendLog("T Keyboard Studio v3.6.0 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
+            AppendLog("T Keyboard Studio v3.7.0 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
             AppendLog("Lộ trình an toàn lần đầu: Quét thiết bị → thử RGB (dry-run) → tắt Dry-run → RGB thật → Cài đặt 04 17 → Đồng hồ → GIF TFT nhỏ → Đọc thử 0xF5.");
         }
 
@@ -270,6 +299,8 @@ namespace TienKeyboardStudio3
             try { _kb.Dispose(); } catch { }
             try { _ry.Dispose(); } catch { }
             try { _mc.Dispose(); } catch { }
+            try { _sx.Dispose(); } catch { }
+            try { _wm.Dispose(); } catch { }
             try { _device.Dispose(); } catch { }
         }
 
@@ -399,6 +430,8 @@ namespace TienKeyboardStudio3
                 ("kbbyv2", "Họ Sinowealth (kb_by_v2)", "M4 5h16M4 12h16M4 19h16 M7 5v14 M12 5v14 M17 5v14"),
                 ("rongyuan", "Họ RongYuan", "M12 3.5 4 8v8l8 4.5 8-4.5V8Z M12 12 4 8 M12 12l8-4 M12 12v8.5"),
                 ("mchose", "Họ MCHOSE", "M12 21s-7.5-4.6-7.5-10.5A7.5 7.5 0 0 1 19.5 10.5C19.5 16.4 12 21 12 21Z M12 12.8v-5 M9.8 10.2 12 7.8l2.2 2.4"),
+                ("sonix", "Họ SONiX (S75/MAD60/HERO)", "M5 5h14v14H5z M9 5V3 M15 5V3 M9 19v2 M15 19v2 M5 10H3 M5 15H3 M19 10h2 M19 15h2"),
+                ("witmod", "Họ WitMod (Redragon)", "M4 17 17 4l3 3L7 20H4Z M14 7l3 3"),
                 ("store", "Chợ plugin", "M5.5 8h13l-.9 11.5A1.5 1.5 0 0 1 16.1 21H7.9a1.5 1.5 0 0 1-1.5-1.5L5.5 8Z M8.5 10.5V6.8a3.5 3.5 0 0 1 7 0v3.7"),
                 ("widget", "Widget TFT", "M4.5 15.5 A8.5 8.5 0 1 1 19.5 15.5 M12 15.5 16 10 M12 15.5 m-1.2 0 a1.2 1.2 0 1 0 2.4 0 a1.2 1.2 0 1 0-2.4 0"),
                 ("settings", "Đồng hồ & Cài đặt", "M12 12 m-9 0 a9 9 0 1 0 18 0 a9 9 0 1 0-18 0 M12 7v5.2l3.4 2"),
@@ -431,6 +464,8 @@ namespace TienKeyboardStudio3
                 if (key == "kbbyv2") show = _selectedModel.Family == "kb_by_v2";
                 if (key == "rongyuan") show = _selectedModel.Family == "rongyuan";
                 if (key == "mchose") show = _selectedModel.Family == "mchose";
+                if (key == "sonix") show = _selectedModel.Family == "sonix_sib";
+                if (key == "witmod") show = _selectedModel.Family == "witmod";
                 btn.IsVisible = show;
             }
             if (!_pages.ContainsKey(_currentPage)) return;
@@ -438,7 +473,9 @@ namespace TienKeyboardStudio3
                              || _currentPage == "perkey" && !_selectedModel.FullSupport
                              || _currentPage == "kbbyv2" && _selectedModel.Family != "kb_by_v2"
                              || _currentPage == "rongyuan" && _selectedModel.Family != "rongyuan"
-                             || _currentPage == "mchose" && _selectedModel.Family != "mchose";
+                             || _currentPage == "mchose" && _selectedModel.Family != "mchose"
+                             || _currentPage == "sonix" && _selectedModel.Family != "sonix_sib"
+                             || _currentPage == "witmod" && _selectedModel.Family != "witmod";
             if (curHidden) ShowPage("home");
         }
 
@@ -480,6 +517,8 @@ namespace TienKeyboardStudio3
             if (key == "widget") RenderWidgetFrame();
             if (key == "rongyuan") RefreshRyPage();
             if (key == "mchose") RefreshMcPage();
+            if (key == "sonix") RefreshSxPage();
+            if (key == "witmod") RefreshWmPage();
             if (key == "settings") { UpdateClockLabels(); RefreshTypingLabels(); RefreshGreetingStyleText(); }
             if (key != "perkey") _ledPlayer?.Stop();
             if (key != "online") _onlineLedPlayer?.Stop();
@@ -534,6 +573,8 @@ namespace TienKeyboardStudio3
             _kb.DryRun = on;
             _ry.DryRun = on;
             _mc.DryRun = on;
+            _sx.DryRun = on;
+            _wm.DryRun = on;
             DryTitle.Text = on ? "Dry-run đang bật" : "ĐANG GHI THẬT XUỐNG PHÍM";
             DryTitle.Foreground = new SolidColorBrush(on ? Color.FromRgb(0x34, 0xD3, 0x99) : Color.FromRgb(0xF5, 0x9B, 0x9B));
             DryDesc.Text = on
@@ -557,6 +598,8 @@ namespace TienKeyboardStudio3
             _kb.ExperimentalEnabled = on;
             _ry.ExperimentalEnabled = on;
             _mc.ExperimentalEnabled = on;
+            _sx.ExperimentalEnabled = on;
+            _wm.ExperimentalEnabled = on;
             AppendLog(on
                 ? "Lớp THỬ NGHIỆM per-key: BẬT. Lệnh 0x23/0x20/0x78 sẽ gửi THẬT khi Dry-run cũng tắt. Đây là giao thức tài liệu hoá trên AULA L99 (cùng nền tảng), CHƯA kiểm chứng trên F75 Max."
                 : "Lớp THỬ NGHIỆM per-key: TẮT. Lệnh 0x23/0x20/0x78 chỉ ghi log gói sẽ gửi.");
@@ -666,7 +709,9 @@ namespace TienKeyboardStudio3
             connectHeader.Children.Add(Tb("Bàn phím đang kết nối", "h2"));
             Grid.SetColumn(scanBtn, 1);
             connectHeader.Children.Add(scanBtn);
-            var connectCard = Card(V(12, connectHeader, _detectedPanel));
+            var connectCard = Card(V(12, connectHeader, _detectedPanel,
+                Tb("Dùng phím với mẫu chưa có trong bảng, hoặc muốn báo lỗi kèm thông tin máy? Bấm nút dưới đây để sao chép một đoạn thông tin thiết bị (VID:PID, kết quả probe, mẫu đang chọn, phiên bản app) rồi dán vào GitHub issue của dự án.", "faint"),
+                CopyInfoButton()));
 
             var homeKb = new KeyboardView { Mode = KeyboardMode.Animated, State = _rgb };
             var heroCard = Card(homeKb, 14);
@@ -695,7 +740,7 @@ namespace TienKeyboardStudio3
 
             var root = V(14,
                 Tb("Tổng quan", "h1"),
-                Tb("T Keyboard Studio v3.6.0 — bản thật: quét thiết bị HID thật, ghi xuống F75 Max qua giao thức đã kiểm chứng; Driver Pack 1 thêm họ Sinowealth kb_by_v2 (định danh 0x82 trước khi ghi); Driver Pack 2 thêm nền tảng RongYuan — Akko/MonsGeek/EPOMAKER (định danh dev_id 0x8F trước khi ghi); Driver Pack 3 thêm họ MCHOSE — stack GLW/CZ + QHW (định danh bằng PID registry + probe đọc trước khi ghi; họ BY dùng chung Pack 1, chỉ xem). Dry-run bật mặc định để an toàn.", "sub"),
+                Tb("T Keyboard Studio v3.7.0 — bản thật: quét thiết bị HID thật, ghi xuống F75 Max qua giao thức đã kiểm chứng; Driver Pack 1 thêm họ Sinowealth kb_by_v2 (định danh 0x82 trước khi ghi); Driver Pack 2 thêm nền tảng RongYuan — Akko/MonsGeek/EPOMAKER (định danh dev_id 0x8F trước khi ghi); Driver Pack 3 thêm họ MCHOSE — stack GLW/CZ + QHW (định danh bằng PID registry + probe đọc trước khi ghi; họ BY dùng chung Pack 1, chỉ xem); Driver Pack 4 thêm các họ SONiX anh em (S75 Pro/Nova75, MAD60, HERO68 HE, WIN60 HE/SE) và nền WitMod (Redragon K617 HE) — định danh bằng probe của từng họ trước khi ghi, chưa kiểm chứng trên phần cứng thật. Dry-run bật mặc định để an toàn.", "sub"),
                 connectCard,
                 heroCard,
                 stats,
@@ -801,14 +846,22 @@ namespace TienKeyboardStudio3
                         ? $"{model.Name}: thuộc nền tảng RongYuan (Driver Pack 2) — mở trang 'Họ RongYuan' và chạy Nhận diện (0x8F) trước khi ghi."
                         : model.Family == "mchose"
                             ? $"{model.Name}: thuộc họ MCHOSE (Driver Pack 3, stack {model.Stack}) — mở trang 'Họ MCHOSE' và chạy Nhận diện trước khi ghi."
-                            : $"{model.Name}: chế độ XEM TRƯỚC — giao diện/hiệu ứng xem được, tính năng ghi xuống phím đang khoá vì driver cho mẫu này chưa tích hợp.");
+                            : model.Family == "sonix_sib"
+                                ? $"{model.Name}: thuộc các họ SONiX anh em (Driver Pack 4, stack {model.Stack}) — mở trang 'Họ SONiX' và chạy Probe/Nhận diện trước khi ghi."
+                                : model.Family == "witmod"
+                                    ? $"{model.Name}: thuộc nền WitMod (Driver Pack 4) — mở trang 'Họ WitMod' và chạy Nhận diện (0x0D + 0x01) trước khi ghi."
+                                    : $"{model.Name}: chế độ XEM TRƯỚC — giao diện/hiệu ứng xem được, tính năng ghi xuống phím đang khoá vì driver cho mẫu này chưa tích hợp.");
             if ((_currentPage == "gif" || _currentPage == "widget") && !model.HasScreen) ShowPage("home");
             if (_currentPage == "perkey" && !model.FullSupport) ShowPage("home");
             if (_currentPage == "kbbyv2" && model.Family != "kb_by_v2") ShowPage("home");
             if (_currentPage == "rongyuan" && model.Family != "rongyuan") ShowPage("home");
             if (_currentPage == "mchose" && model.Family != "mchose") ShowPage("home");
+            if (_currentPage == "sonix" && model.Family != "sonix_sib") ShowPage("home");
+            if (_currentPage == "witmod" && model.Family != "witmod") ShowPage("home");
             if (_currentPage == "rongyuan") RefreshRyPage();
             if (_currentPage == "mchose") RefreshMcPage();
+            if (_currentPage == "sonix") RefreshSxPage();
+            if (_currentPage == "witmod") RefreshWmPage();
         }
 
         private Control BuildModelGrid()
@@ -1228,6 +1281,376 @@ namespace TienKeyboardStudio3
         {
             var packets = RongYuanHe.BuildBulkWrite(subOp, data);
             await RyWriteAsync(title, () => _ry.SendChunkedWrite(title, packets));
+        }
+
+        // ================= CONG DONG (v3.7): sao chep thong tin + bang thiet bi =================
+        private string RegistryStatusText()
+        {
+            var reg = DeviceRegistry.LoadDownloaded();
+            return reg != null
+                ? $"Đang có bảng đã tải về: phiên bản {reg.Version}, cập nhật {reg.Updated}, {reg.Devices.Count} mục — áp dụng ở lần mở app sau (chỉ bổ sung mẫu mới, không ghi đè bảng tích hợp)."
+                : "Chưa có bảng tải về — đang dùng bảng tích hợp sẵn trong app.";
+        }
+
+        private async Task CheckRegistryUpdateAsync()
+        {
+            if (_busy) { ShowToast("Đang bận — đợi thao tác trước xong đã."); return; }
+            _busy = true;
+            try
+            {
+                ShowToast("Đang tải bảng thiết bị từ GitHub…");
+                string json;
+                using (var http = new System.Net.Http.HttpClient { Timeout = TimeSpan.FromSeconds(30) })
+                    json = await http.GetStringAsync(DeviceRegistry.RawUrl);
+                if (!DeviceRegistry.TryParseValid(json, out var reg, out string error))
+                {
+                    ShowToast("Bảng tải về không hợp lệ: " + error);
+                    AppendLog("[Registry] Từ chối bảng tải về: " + error);
+                    return;
+                }
+                Directory.CreateDirectory(GifLibraryStore.RootDir);
+                File.WriteAllText(DeviceRegistry.LocalPath, json);
+                if (_regStatus != null) _regStatus.Text = RegistryStatusText();
+                ShowToast($"Đã lưu bảng thiết bị v{reg.Version} ({reg.Devices.Count} mục) — mở lại app để áp dụng.");
+                AppendLog($"[Registry] Đã tải và lưu bảng thiết bị v{reg.Version} ({reg.Devices.Count} mục, cập nhật {reg.Updated}).");
+            }
+            catch (Exception ex)
+            {
+                ShowToast("Không tải được bảng thiết bị: " + ex.Message);
+                AppendLog("[Registry] Lỗi tải bảng: " + ex.Message);
+            }
+            finally { _busy = false; }
+        }
+
+        private List<DeviceProbeInfo> CollectProbeInfos()
+        {
+            var summaries = new List<string>();
+            void Add(string label, string s) { if (!string.IsNullOrWhiteSpace(s)) summaries.Add(label + ": " + s); }
+            Add("kb_by_v2", _kbIdStatus?.Text);
+            Add("RongYuan", _ryIdStatus?.Text);
+            Add("MCHOSE", _mcIdStatus?.Text);
+            Add("SONiX anh em", _sx.LastIdSummary);
+            Add("WitMod", _wm.LastIdSummary);
+            string probeText = summaries.Count > 0 ? string.Join(" | ", summaries) : "";
+
+            var list = new List<DeviceProbeInfo>();
+            foreach (var d in _detected)
+            {
+                list.Add(new DeviceProbeInfo
+                {
+                    VidPid = $"{d.Vid:X4}:{d.Pid:X4}",
+                    ProductName = d.Model.Name,
+                    ProbeResults = string.IsNullOrEmpty(probeText) ? d.Model.ProtocolStatus : probeText,
+                    IdentifiedAs = d.Model.Name + " — " + d.Model.ProtocolStatus,
+                });
+            }
+            if (list.Count == 0 && summaries.Count > 0)
+            {
+                list.Add(new DeviceProbeInfo
+                {
+                    VidPid = _selectedModel.Ids.Count > 0 ? $"{_selectedModel.Ids[0].Vid:X4}:{(_selectedModel.Ids[0].Pid < 0 ? "????" : _selectedModel.Ids[0].Pid.ToString("X4"))}" : "",
+                    ProductName = _selectedModel.Name,
+                    ProbeResults = probeText,
+                    IdentifiedAs = _selectedModel.Name,
+                });
+            }
+            return list;
+        }
+
+        private async Task CopyDeviceInfoAsync()
+        {
+            try
+            {
+                string text = DeviceInfoReport.Build("3.7.0", _selectedModel, CollectProbeInfos());
+                var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
+                if (clipboard != null) await clipboard.SetTextAsync(text);
+                ShowToast("Đã sao chép thông tin thiết bị — dán vào GitHub issue là xong.");
+                AppendLog("[Cộng đồng] Đã sao chép thông tin thiết bị vào clipboard.");
+            }
+            catch (Exception ex)
+            {
+                ShowToast("Không sao chép được: " + ex.Message);
+            }
+        }
+
+        private Button CopyInfoButton()
+            => GhostBtn("Sao chép thông tin thiết bị", async () => await CopyDeviceInfoAsync());
+
+        private static (byte R, byte G, byte B) RainbowColor(double t)
+        {
+            // HSV -> RGB don gian (S=V=1) de tao frame cau vong cho stream thu
+            double h = (t - Math.Floor(t)) * 6.0;
+            double x = 1 - Math.Abs(h % 2 - 1);
+            double r = 0, g = 0, b = 0;
+            if (h < 1) { r = 1; g = x; }
+            else if (h < 2) { r = x; g = 1; }
+            else if (h < 3) { g = 1; b = x; }
+            else if (h < 4) { g = x; b = 1; }
+            else if (h < 5) { r = x; b = 1; }
+            else { r = 1; b = x; }
+            return ((byte)(r * 255), (byte)(g * 255), (byte)(b * 255));
+        }
+
+        // ================= TRANG HO SONiX ANH EM (Driver Pack 4, v3.7) =================
+        // 5 stack trong mot trang, moi stack mot the; the nao hien tuy
+        // thuoc vao Stack cua model dang chon (quy tac capability):
+        //  B = S75 Pro/Nova75 (chung nen F75 Max — probe 0xF5 khong phan
+        //      biet duoc voi F75 Max, trang co canh bao ro rang)
+        //  C = MAD60 (bat tay fw protocol v9), D = HERO68 HE (chu ky 130),
+        //  E = WIN60 HE (lenh 7), F2 = WIN60 SE (chi log).
+        private Control BuildSonixPage()
+        {
+            var warn = new Border
+            {
+                Background = new SolidColorBrush(Color.FromArgb(0x2E, 0xF5, 0x9B, 0x9B)),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(0x66, 0xF5, 0x9B, 0x9B)),
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(12),
+                Padding = new Thickness(14, 10),
+                Child = Tb("Chưa kiểm chứng trên phần cứng thật — các họ này được trích byte-level từ một ứng dụng driver đã giải phẫu (xem docs/PROTOCOLS-REFERENCE-APP.md trong repo), nhưng đội phát triển không sở hữu các mẫu phím này. Mọi lệnh ghi/stream đều khoá sau: probe nhận diện của họ + công tắc Thử nghiệm (trang Per-key) + tắt Dry-run; ngoài ra app chỉ ghi log gói tin. Ứng dụng gốc là streamer LED thuần (không ghi bền) và luôn sao lưu màu gốc rồi khôi phục khi dừng — app này cũng vậy.", null, 12),
+            };
+
+            _sxIdStatus = Tb("Chưa chạy probe/nhận diện cho họ này.", "sub");
+            _sxInfoStatus = Tb("", "sub");
+            var idCard = Card(V(10,
+                Tb("Nhận diện & probe (chạy thật, chỉ đọc)", "h2"),
+                _sxIdStatus,
+                _sxInfoStatus,
+                CopyInfoButton()));
+
+            // --- The B: S75 Pro / Nova75 ---
+            _sxCardB = Card(V(10,
+                Tb("Họ B — S75 Pro / Nova75 (nền SONiX 64 byte)", "h2"),
+                Tb("⚠ CẢNH BÁO TRÙNG NỀN TẢNG: S75 Pro và Nova75 dùng CHUNG VID:PID 0C45:800A và chung giao thức feature-report với chính F75 Max. Probe 0xF5 (đọc) chạy được trên cả ba máy và KHÔNG phân biệt được chúng với nhau — app chỉ gợi ý dựa trên productName (Nova75 phải đúng \"AULA-NOVA75\") và mẫu bạn đang chọn ở Tổng quan. Vì vậy stream của họ B luôn nằm sau công tắc Thử nghiệm + tắt Dry-run, và bạn phải chắc chắn máy đang cắm đúng là S75 Pro/Nova75 chứ không phải F75 Max.", "sub"),
+                Tb("Probe 0xF5: gửi lệnh đọc (byte[8]=9), kiểm ACK (reply[1]=opcode, reply[3]=1 sẵn sàng / 0xFF bận), đọc 9 khối trạng thái màu phím hiện tại.", "sub"),
+                PrimaryBtn("Probe 0xF5 (đọc trạng thái)", async () => await SxProbeAsync("Probe 0xF5 họ B", () => _sx.ProbeSonixB())),
+                Tb("Stream: lệnh 0x20 (byte[8]=8) → 8 khối frame [id,R,G,B] → lệnh 0x02 commit. Nova75 dùng trình ghi frame native tăng tốc trong app gốc mà cách chia gói chưa rõ — với Nova75 nút này CHỈ ghi log.", "sub"),
+                WriteBtn("Stream 1 frame cầu vồng", async () => await SxWriteAsync("Stream frame họ B", () =>
+                {
+                    var colors = new Dictionary<byte, (byte R, byte G, byte B)>();
+                    for (int i = 0; i < SonixBProtocol.S75ProKeyIds.Length; i++)
+                        colors[SonixBProtocol.S75ProKeyIds[i]] = RainbowColor(i / (double)SonixBProtocol.S75ProKeyIds.Length);
+                    return _sx.StreamFrameSonixB(_selectedModel.Name, colors);
+                }))));
+
+            // --- The C: MAD60 ---
+            _sxCardC = Card(V(10,
+                Tb("Họ C — MADLIONS MAD60 HE (V2 / thường / RGB)", "h2"),
+                Tb("Kênh output report 32 byte, usage page 0xFF60. Bắt tay: gửi [1] — firmware phải trả protocol v9 (d[1]=0, d[2]=9) mới được coi là nhận diện; khác v9 app từ chối như app gốc. Stream: vào chế độ custom từ gói info [8,65], gửi 10 gói frame (70 LED × RGB), khôi phục màu gốc khi xong.", "sub"),
+                PrimaryBtn("Bắt tay kiểm tra (fw protocol v9)", async () => await SxProbeAsync("Bắt tay MAD60", () => _sx.ProbeMad60())),
+                WriteBtn("Stream 1 frame cầu vồng", async () => await SxWriteAsync("Stream frame MAD60", () =>
+                {
+                    var rgb = new byte[Mad60Protocol.ColorBytes];
+                    for (int i = 0; i < Mad60Protocol.LedSlots; i++)
+                    {
+                        var c = RainbowColor(i / (double)Mad60Protocol.LedSlots);
+                        rgb[i * 3] = c.R; rgb[i * 3 + 1] = c.G; rgb[i * 3 + 2] = c.B;
+                    }
+                    return _sx.StreamFrameMad60(rgb);
+                }))));
+
+            // --- The D: HERO68 HE ---
+            _sxCardD = Card(V(10,
+                Tb("Họ D — AULA HERO68 HE", "h2"),
+                Tb("Report ID 9, gói 63 byte, checksum ở byte 62: (9 + tổng 63 byte) & 0xFF == 0xFF. Nhận diện bằng lệnh 130 — đáp trả phải chứa chữ ký [17,0,0,0,0,3]. Chỉ bản HERO68 có dây; bản Air/Mini/Pro/Ultra không thuộc giao thức này. Stream gom các phím trùng màu thành từng gói (tối đa 52 id/gói) và khôi phục màu gốc khi xong.", "sub"),
+                PrimaryBtn("Nhận diện (lệnh 130 + đọc đèn 132)", async () => await SxProbeAsync("Nhận diện HERO68", () => _sx.ProbeHero68())),
+                WriteBtn("Stream 1 frame cầu vồng", async () => await SxWriteAsync("Stream frame HERO68", () =>
+                {
+                    var keys = new List<(byte Id, byte R, byte G, byte B)>();
+                    for (int i = 0; i < Hero68Protocol.KeyIds.Length; i++)
+                    {
+                        var c = RainbowColor(i / (double)Hero68Protocol.KeyIds.Length);
+                        keys.Add((Hero68Protocol.KeyIds[i], c.R, c.G, c.B));
+                    }
+                    return _sx.StreamFrameHero68(keys);
+                }))));
+
+            // --- The E: WIN60 HE ---
+            _sxCardE = Card(V(10,
+                Tb("Họ E — AULA WIN60 HE", "h2"),
+                Tb("Kênh output report ID 1 trên usage page 0xFF33 (lưu ý: cùng VID:PID 2E3C:C365 còn xuất hiện ở nền WitMod trên usage page 0xFF1B — hai kênh khác nhau). Đọc đèn bằng lệnh 7 (12 byte trạng thái tại offset 5, ngữ nghĩa từng byte chưa được giải mã trong app gốc). Stream: bật bằng lệnh 23, gửi frame lưới 6×22=132 ô bằng lệnh 15 (8 gói, pacer 2 ms), heartbeat lệnh 1 mỗi giây khi stream dài.", "sub"),
+                PrimaryBtn("Đọc trạng thái đèn (lệnh 7)", async () => await SxProbeAsync("Đọc đèn WIN60 HE", () => _sx.ProbeWin60He())),
+                WriteBtn("Stream 1 frame cầu vồng", async () => await SxWriteAsync("Stream frame WIN60 HE", () =>
+                {
+                    var rgb = new byte[Win60HeProtocol.FrameBytes];
+                    for (int i = 0; i < Win60HeProtocol.GridSlots; i++)
+                    {
+                        var c = RainbowColor(i / (double)Win60HeProtocol.GridSlots);
+                        rgb[i * 3] = c.R; rgb[i * 3 + 1] = c.G; rgb[i * 3 + 2] = c.B;
+                    }
+                    return _sx.StreamFrameWin60He(rgb);
+                }))));
+
+            // --- The F2: WIN60 SE (chi log) ---
+            _sxCardF2 = Card(V(10,
+                Tb("Họ F2 — AULA WIN60 SE (chỉ builder + log)", "h2"),
+                Tb("Giao thức dùng một byte phiên NGẪU NHIÊN (1–254) chọn khi kết nối, đứng đầu mọi gói tin. Ngay trong giao diện của chính nhà sản xuất, mẫu này được ghi là thử nghiệm/chưa kiểm chứng — vì vậy app này CHỈ dựng gói và ghi log, không bao giờ ghi thật lên WIN60 SE. Nút dưới đây ghi log gói info + gói frame mẫu với byte phiên ngẫu nhiên.", "sub"),
+                GhostBtn("Ghi log gói mẫu WIN60 SE", () => _sx.LogWin60SeDemo())));
+
+            var root = V(14,
+                Tb("Họ SONiX (S75 / MAD60 / HERO68 / WIN60)", "h1"),
+                warn,
+                idCard,
+                _sxCardB,
+                _sxCardC,
+                _sxCardD,
+                _sxCardE,
+                _sxCardF2);
+            return Scroll(root);
+        }
+
+        private void RefreshSxPage()
+        {
+            var m = _selectedModel;
+            if (_sxCardB != null) _sxCardB.IsVisible = m.Stack == "B";
+            if (_sxCardC != null) _sxCardC.IsVisible = m.Stack == "C";
+            if (_sxCardD != null) _sxCardD.IsVisible = m.Stack == "D";
+            if (_sxCardE != null) _sxCardE.IsVisible = m.Stack == "E";
+            if (_sxCardF2 != null) _sxCardF2.IsVisible = m.Stack == "F2";
+            if (_sxIdStatus != null)
+                _sxIdStatus.Text = _sx.LastId != null
+                    ? $"Đã nhận diện: {_sx.LastId.ModelName} (stack {_sx.LastId.Stack}) — {_sx.LastId.Note}"
+                    : $"Mẫu đang chọn: {m.Name} (stack {(string.IsNullOrEmpty(m.Stack) ? "—" : m.Stack)}). Chưa chạy probe/nhận diện cho họ này.";
+            if (_sxInfoStatus != null)
+                _sxInfoStatus.Text = string.IsNullOrEmpty(_sx.LastIdSummary) ? "" : "Probe gần nhất: " + _sx.LastIdSummary;
+        }
+
+        private async Task SxProbeAsync(string title, Action work)
+        {
+            if (_busy) { ShowToast("Đang bận — đợi thao tác trước xong đã."); return; }
+            _busy = true;
+            try
+            {
+                await Task.Run(work);
+                RefreshSxPage();
+                ShowToast("Xong: " + title + " (xem trạng thái + nhật ký).");
+            }
+            catch (Exception ex) { AppendLog("LỖI: " + ex.Message); ShowToast("Lỗi: " + ex.Message); }
+            finally { _busy = false; }
+        }
+
+        private async Task SxWriteAsync(string title, Func<bool> work)
+        {
+            if (_busy) { ShowToast("Đang bận — đợi thao tác trước xong đã."); return; }
+            _busy = true;
+            try
+            {
+                bool sent = await Task.Run(work);
+                RefreshSxPage();
+                ShowToast(sent ? $"Đã gửi THẬT: {title}" : $"[Chỉ log] {title} — xem nhật ký để biết gói tin.");
+            }
+            catch (Exception ex) { AppendLog("LỖI: " + ex.Message); ShowToast("Lỗi: " + ex.Message); }
+            finally { _busy = false; }
+        }
+
+        // ================= TRANG HO WITMOD (Driver Pack 4, v3.7) =================
+        // Nhan dien: quet bang filter 36 cap VID:PID (usagePage 0xFF1B),
+        // probe quyet dinh = lenh 0x0D (chuoi san pham CSV, truong 4) +
+        // khoi support cua lenh 0x01. Khong qua probe -> chi xem.
+        private Control BuildWitModPage()
+        {
+            var warn = new Border
+            {
+                Background = new SolidColorBrush(Color.FromArgb(0x2E, 0xF5, 0x9B, 0x9B)),
+                BorderBrush = new SolidColorBrush(Color.FromArgb(0x66, 0xF5, 0x9B, 0x9B)),
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(12),
+                Padding = new Thickness(14, 10),
+                Child = Tb("Chưa kiểm chứng trên phần cứng thật — giao thức WitMod được trích byte-level từ web driver chính hãng đã giải mã (docs/PROTOCOLS-WITMOD-FULL.md trong repo). WitMod là nền tảng nhãn trắng dùng chung cho nhiều hãng nên 36 cặp VID:PID trong bảng filter KHÔNG nói lên mẫu máy; chỉ probe 0x0D + 0x01 mới quyết định. VID:PID riêng của K617 HE không có trong code web (app desktop của hãng nhận diện bằng tiền tố productName \"7153\") — app này không đoán. Mọi lệnh ghi đều khoá sau: đã qua probe + công tắc Thử nghiệm + tắt Dry-run.", null, 12),
+            };
+
+            _wmIdStatus = Tb("Chưa chạy nhận diện WitMod.", "sub");
+            _wmInfoStatus = Tb("", "sub");
+            var idCard = Card(V(10,
+                Tb("Nhận diện (probe 0x0D + 0x01 — chạy thật, chỉ đọc)", "h2"),
+                Tb("Quét mọi thiết bị khớp bảng filter 36 cặp VID:PID, gửi lệnh 0x0D lấy chuỗi sản phẩm (trường CSV thứ 5 là định danh product) và lệnh 0x01 lấy khối support (calibration, custom light, deadband, poll rate, RS/MDS…). Thiết bị không trả lời đúng cả hai lệnh sẽ bị bỏ qua (chỉ xem).", "sub"),
+                _wmIdStatus,
+                _wmInfoStatus,
+                PrimaryBtn("Nhận diện WitMod", async () => await WmProbeAsync()),
+                CopyInfoButton()));
+
+            var lightCard = Card(V(10,
+                Tb("Đèn chính (lệnh 0x07)", "h2"),
+                Tb("Đọc cấu hình đèn hiện tại (sub=1, chỉ đọc) hoặc ghi một cấu hình mẫu: chế độ 1, sáng tối đa, màu tím thương hiệu. Ghi thật cần đủ khoá 3 lớp; ngoài ra chỉ ghi log gói tin. ACK ghi = gói echo opcode+sub; app gốc cho gói đầu tối đa 100 ms rồi chuyển fire-and-forget — app này cũng vậy.", "sub"),
+                GhostBtn("Đọc cấu hình đèn", async () => await WmReadLightAsync()),
+                WriteBtn("Ghi cấu hình đèn mẫu (tím)", async () => await SxWriteAsync("Ghi đèn WitMod", () =>
+                    _wm.WriteMainLightConfig(new WitModProtocol.LightConfig
+                    {
+                        Mode = 1, Brightness = 5, Speed = 3,
+                        FgR = 0x7C, FgG = 0x3A, FgB = 0xED,
+                        BgR = 0, BgG = 0, BgB = 0,
+                        Direction = 0, FullColor = 0, Power = 1, Timer = 0,
+                    })))));
+
+            var advCard = Card(V(10,
+                Tb("Trigger / keymap / deadband (họ lệnh 0x21, 0x18, 0x26)", "h2"),
+                Tb("Đọc thử: trang keymap 0 và thông số trigger/poll-rate (chỉ đọc, chạy thật sau khi đã nhận diện). Ghi deadband ở đây là thao tác RESET: ghi 0 cho cả 132 phím (đúng ngữ nghĩa reset của driver gốc) — vẫn khoá 3 lớp như mọi lệnh ghi.", "sub"),
+                GhostBtn("Đọc trang keymap 0 + trigger/poll-rate", async () => await WmReadAdvancedAsync()),
+                WriteBtn("Reset deadband (ghi 0 toàn bộ)", async () => await SxWriteAsync("Reset deadband WitMod", () =>
+                    _wm.WriteDeadband(new byte[WitModProtocol.DeadbandImageBytes])))));
+
+            var root = V(14,
+                Tb("Họ WitMod (Redragon K617 HE)", "h1"),
+                warn,
+                idCard,
+                lightCard,
+                advCard);
+            return Scroll(root);
+        }
+
+        private void RefreshWmPage()
+        {
+            if (_wmIdStatus != null)
+                _wmIdStatus.Text = _wm.LastId != null && _wm.LastId.Known
+                    ? $"Đã nhận diện: {_wm.LastId.ModelName} ({_wm.LastId.Vid:X4}:{_wm.LastId.Pid:X4}) — product \"{_wm.LastId.ProductId}\", productName \"{_wm.LastId.ProductName}\"."
+                    : "Chưa chạy nhận diện WitMod (hoặc chưa thiết bị nào qua được probe).";
+            if (_wmInfoStatus != null)
+                _wmInfoStatus.Text = _wm.LastId != null && _wm.LastId.Known
+                    ? _wm.LastId.Note
+                    : (string.IsNullOrEmpty(_wm.LastIdSummary) ? "" : "Probe gần nhất: " + _wm.LastIdSummary);
+        }
+
+        private async Task WmProbeAsync()
+        {
+            if (_busy) { ShowToast("Đang bận — đợi thao tác trước xong đã."); return; }
+            _busy = true;
+            try
+            {
+                await Task.Run(() => _wm.Identify());
+                RefreshWmPage();
+                ShowToast(_wm.LastId != null && _wm.LastId.Known
+                    ? $"Đã nhận diện: {_wm.LastId.ModelName}."
+                    : "Không thiết bị WitMod nào qua được probe 0x0D/0x01.");
+            }
+            catch (Exception ex) { AppendLog("LỖI: " + ex.Message); ShowToast("Lỗi: " + ex.Message); }
+            finally { _busy = false; }
+        }
+
+        private async Task WmReadLightAsync()
+        {
+            if (_busy) { ShowToast("Đang bận — đợi thao tác trước xong đã."); return; }
+            _busy = true;
+            try
+            {
+                var cfg = await Task.Run(() => _wm.ReadMainLightConfig());
+                ShowToast(cfg != null ? "Đã đọc cấu hình đèn (xem nhật ký)." : "Chưa đọc được — hãy chạy Nhận diện trước.");
+            }
+            catch (Exception ex) { AppendLog("LỖI: " + ex.Message); ShowToast("Lỗi: " + ex.Message); }
+            finally { _busy = false; }
+        }
+
+        private async Task WmReadAdvancedAsync()
+        {
+            if (_busy) { ShowToast("Đang bận — đợi thao tác trước xong đã."); return; }
+            _busy = true;
+            try
+            {
+                string a = await Task.Run(() => _wm.ReadKeymapPageSummary());
+                string b = await Task.Run(() => _wm.ReadTriggerSummary());
+                ShowToast(a != null || b != null ? "Đã đọc keymap/trigger (xem nhật ký)." : "Chưa đọc được — hãy chạy Nhận diện trước.");
+            }
+            catch (Exception ex) { AppendLog("LỖI: " + ex.Message); ShowToast("Lỗi: " + ex.Message); }
+            finally { _busy = false; }
         }
 
         // ================= TRANG HO MCHOSE (Driver Pack 3, v3.6) =================
@@ -2923,7 +3346,15 @@ namespace TienKeyboardStudio3
                 }).Also(c => _drySwitch = FindPill(c)),
                 SettingRow("Khởi động cùng Windows", "Tự mở app khi đăng nhập Windows (ghi vào HKCU Run)", GetAutostart(), v => SetAutostart(v)),
                 SettingRow("Thu nhỏ xuống khay hệ thống", "Đóng cửa sổ thì app vẫn chạy nền ở khay", true, v => _trayEnabled = v),
-                Tb("App không tự kiểm tra cập nhật và không gọi mạng nào ngoài: tải GIF bạn chủ động bấm, thời tiết khi mở trang Widget, và server điều khiển qua LAN khi bạn bật.", "faint")));
+                Tb("App không tự kiểm tra cập nhật và không gọi mạng nào ngoài: tải GIF bạn chủ động bấm, thời tiết khi mở trang Widget, server điều khiển qua LAN khi bạn bật, và tải bảng thiết bị khi bạn bấm nút kiểm tra ở thẻ 'Bảng thiết bị cộng đồng' bên dưới.", "faint")));
+
+            // --- v3.7: bang thiet bi cong dong ---
+            _regStatus = Tb(RegistryStatusText(), "sub");
+            var regCard = Card(V(8,
+                Tb("Bảng thiết bị cộng đồng", "h2"),
+                Tb("Danh sách mẫu phím của app có thể được bổ sung mà không cần phát hành bản app mới. Bấm nút dưới đây để tải bảng mới nhất từ kho GitHub của dự án (chỉ tải khi bạn bấm — app không tự gọi mạng nền). File tải về được kiểm tra định dạng rồi lưu vào thư mục dữ liệu của app và áp dụng ở lần mở app SAU; bảng tích hợp sẵn luôn là phương án dự phòng.", "sub"),
+                _regStatus,
+                GhostBtn("Kiểm tra cập nhật bảng thiết bị", async () => await CheckRegistryUpdateAsync())));
 
             // --- Stage 2: ho so theo app ---
             _profileCurrent = Tb("App đang mở: —", "sub");
@@ -2998,7 +3429,7 @@ namespace TienKeyboardStudio3
             };
             var aboutTexts = V(4,
                 Tb("T Keyboard Studio", "h2"),
-                Tb("Phiên bản 3.6.0 — bản thật: F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; lớp per-key/stream/nhạc là thử nghiệm có khoá an toàn (xem trang Per-key). Mới: Liquid Glass, hình nền + màu chủ đề, màn hình chào 3 phong cách, Chợ plugin, GameSense CS2 (GSI). v3.4 thêm Driver Pack 1: họ Sinowealth kb_by_v2 (AULA F75, Leobog Hi75, YUNZII Cake, GravaStar K1) — trang riêng, định danh bằng UUID 0x82 trước khi ghi, chưa kiểm chứng trên phần cứng thật. v3.5 thêm Driver Pack 2: nền tảng RongYuan (Akko, MonsGeek, EPOMAKER — 246 mục registry) — trang riêng, định danh bằng dev_id 0x8F trước khi ghi, mục chưa có dev_id đã kiểm chứng chỉ xem, chưa kiểm chứng trên phần cứng thật. v3.6 thêm Driver Pack 3: họ MCHOSE (31 model CZ: stack GLW Hall-effect + stack QHW; 18 model BY dùng chung kb_by_v2, chỉ xem vì chưa có UUID) — trang riêng, định danh bằng VID:PID registry + probe đọc trước khi ghi, checksum GLW là giả thuyết sum-mod-256 chưa kiểm chứng, stack legacy chỉ ghi log gói, chưa kiểm chứng trên phần cứng thật. Dry-run bật mặc định.", "sub"),
+                Tb("Phiên bản 3.7.0 — bản thật: F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; lớp per-key/stream/nhạc là thử nghiệm có khoá an toàn (xem trang Per-key). Mới: Liquid Glass, hình nền + màu chủ đề, màn hình chào 3 phong cách, Chợ plugin, GameSense CS2 (GSI). v3.4 thêm Driver Pack 1: họ Sinowealth kb_by_v2 (AULA F75, Leobog Hi75, YUNZII Cake, GravaStar K1) — trang riêng, định danh bằng UUID 0x82 trước khi ghi, chưa kiểm chứng trên phần cứng thật. v3.5 thêm Driver Pack 2: nền tảng RongYuan (Akko, MonsGeek, EPOMAKER — 246 mục registry) — trang riêng, định danh bằng dev_id 0x8F trước khi ghi, mục chưa có dev_id đã kiểm chứng chỉ xem, chưa kiểm chứng trên phần cứng thật. v3.6 thêm Driver Pack 3: họ MCHOSE (31 model CZ: stack GLW Hall-effect + stack QHW; 18 model BY dùng chung kb_by_v2, chỉ xem vì chưa có UUID) — trang riêng, định danh bằng VID:PID registry + probe đọc trước khi ghi, checksum GLW là giả thuyết sum-mod-256 chưa kiểm chứng, stack legacy chỉ ghi log gói, chưa kiểm chứng trên phần cứng thật. v3.7 thêm Driver Pack 4: các họ SONiX anh em — S75 Pro/Nova75 (họ B, chung nền F75 Max; probe 0xF5 không phân biệt được với F75 Max nên ghi vẫn khoá sau công tắc thử nghiệm; Nova75 stream chỉ log), MAD60 (họ C, bắt tay fw protocol v9), HERO68 HE (họ D, chữ ký cmd 130 + checksum), WIN60 HE (họ E), WIN60 SE (họ F2, chỉ log — nhà sản xuất tự đánh dấu thử nghiệm) — và nền WitMod (Redragon K617 HE; định danh bằng probe 0x0D + khối support 0x01 sau khi quét bảng filter 36 cặp VID:PID). Cộng thêm tính năng cộng đồng: nút sao chép thông tin thiết bị (dán vào GitHub issue) và cập nhật bảng thiết bị từ repo khi bạn chủ động bấm. Tất cả Pack 4 chưa kiểm chứng trên phần cứng thật. Dry-run bật mặc định.", "sub"),
                 Tb("Logo Mẫu C — chữ “T” tạo hình từ phím spacebar — đã được người dùng duyệt.", "sub"),
                 Tb("Font chữ: Be Vietnam Pro (SIL OFL 1.1). GIF thư viện: tự làm cho Tiến. Giao thức per-key: Gavin Graham (AULA L99).", "faint"));
             var aboutCard = Card(H(14, logoWrap, aboutTexts));
@@ -3009,6 +3440,7 @@ namespace TienKeyboardStudio3
                 clockCard,
                 devSetCard,
                 appCard,
+                regCard,
                 profileCard,
                 macroCard,
                 typingCard,

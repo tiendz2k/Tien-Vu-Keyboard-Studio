@@ -1,0 +1,4784 @@
+{
+  "Version": 1,
+  "Updated": "2026-11-27",
+  "Devices": [
+    {
+      "Name": "AULA F75 Max",
+      "Brand": "",
+      "Layout": "75% \u00B7 TFT \u002B n\u00FAm xoay",
+      "Family": "",
+      "Stack": "",
+      "HasScreen": true,
+      "HasKnob": true,
+      "ProtocolStatus": "H\u1ED7 tr\u1EE3 \u0111\u1EA7y \u0111\u1EE7",
+      "IdNote": "",
+      "DevIds": [],
+      "Ids": [
+        [
+          3141,
+          32778
+        ],
+        [
+          1452,
+          591
+        ]
+      ]
+    },
+    {
+      "Name": "AULA F75",
+      "Brand": "",
+      "Layout": "75% \u00B7 80 ph\u00EDm",
+      "Family": "kb_by_v2",
+      "Stack": "",
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 1 (kb_by_v2) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng ch\u1EEF k\u00FD 0x82 [3,0,0,0,0,205] tr\u01B0\u1EDBc khi ghi",
+      "DevIds": [],
+      "Ids": [
+        [
+          9610,
+          268
+        ]
+      ]
+    },
+    {
+      "Name": "Leobog Hi75",
+      "Brand": "",
+      "Layout": "75% \u00B7 81 ph\u00EDm",
+      "Family": "kb_by_v2",
+      "Stack": "",
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 1 (kb_by_v2) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 UUID)",
+      "IdNote": "Ch\u01B0a c\u00F3 UUID/ch\u1EEF k\u00FD trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi",
+      "DevIds": [],
+      "Ids": [
+        [
+          9610,
+          268
+        ]
+      ]
+    },
+    {
+      "Name": "Leobog Hi75C Pro",
+      "Brand": "",
+      "Layout": "75% \u00B7 81 ph\u00EDm",
+      "Family": "kb_by_v2",
+      "Stack": "",
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 1 (kb_by_v2) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 UUID)",
+      "IdNote": "Ch\u01B0a c\u00F3 UUID/ch\u1EEF k\u00FD trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi",
+      "DevIds": [],
+      "Ids": [
+        [
+          9610,
+          268
+        ]
+      ]
+    },
+    {
+      "Name": "YUNZII C75 Cake Meow",
+      "Brand": "",
+      "Layout": "75% \u00B7 85 ph\u00EDm",
+      "Family": "kb_by_v2",
+      "Stack": "",
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 1 (kb_by_v2) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng UUID 0x82 = 0x030000000377 tr\u01B0\u1EDBc khi ghi",
+      "DevIds": [],
+      "Ids": [
+        [
+          9610,
+          268
+        ]
+      ]
+    },
+    {
+      "Name": "YUNZII C98 Cake Meow (ANSI)",
+      "Brand": "",
+      "Layout": "98% \u00B7 101 ph\u00EDm",
+      "Family": "kb_by_v2",
+      "Stack": "",
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 1 (kb_by_v2) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng UUID 0x82 = 0x0300000003FA tr\u01B0\u1EDBc khi ghi (tr\u00F9ng VID:PID v\u1EDBi C75)",
+      "DevIds": [],
+      "Ids": [
+        [
+          9610,
+          268
+        ]
+      ]
+    },
+    {
+      "Name": "YUNZII C98 Cake Meow ISO-DE",
+      "Brand": "",
+      "Layout": "98% \u00B7 102 ph\u00EDm",
+      "Family": "kb_by_v2",
+      "Stack": "",
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 1 (kb_by_v2) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng UUID 0x82 = 0x030000000538 tr\u01B0\u1EDBc khi ghi",
+      "DevIds": [],
+      "Ids": [
+        [
+          9610,
+          734
+        ]
+      ]
+    },
+    {
+      "Name": "YUNZII C98 Cake Meow ISO-FR",
+      "Brand": "",
+      "Layout": "98% \u00B7 102 ph\u00EDm",
+      "Family": "kb_by_v2",
+      "Stack": "",
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 1 (kb_by_v2) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng UUID 0x82 = 0x030000000539 tr\u01B0\u1EDBc khi ghi",
+      "DevIds": [],
+      "Ids": [
+        [
+          9610,
+          735
+        ]
+      ]
+    },
+    {
+      "Name": "Keychron V1",
+      "Brand": "",
+      "Layout": "65% \u00B7 84 ph\u00EDm",
+      "Family": "",
+      "Stack": "",
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "VIA ch\u00EDnh th\u1EE9c \u2014 s\u1EBD t\u00EDch h\u1EE3p",
+      "IdNote": "",
+      "DevIds": [],
+      "Ids": [
+        [
+          13364,
+          -1
+        ]
+      ]
+    },
+    {
+      "Name": "Wooting 60HE",
+      "Brand": "",
+      "Layout": "60% \u00B7 61 ph\u00EDm",
+      "Family": "",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "SDK ch\u00EDnh th\u1EE9c \u2014 s\u1EBD t\u00EDch h\u1EE3p",
+      "IdNote": "",
+      "DevIds": [],
+      "Ids": []
+    },
+    {
+      "Name": "MADLIONS MAD60 HE",
+      "Brand": "MADLIONS",
+      "Layout": "60% \u00B7 70 LED",
+      "Family": "sonix_sib",
+      "Stack": "C",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 4 (h\u1ECD C \u2014 MAD60) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "Nh\u1EADn di\u1EC7n b\u1EB1ng b\u1EAFt tay [1] \u2192 firmware protocol v9 (ch\u1EC9 v9 m\u1EDBi \u0111\u01B0\u1EE3c h\u1ED7 tr\u1EE3). PID 105D = b\u1EA3n th\u01B0\u1EDDng, 1054 = b\u1EA3n RGB.",
+      "DevIds": [],
+      "Ids": [
+        [
+          14139,
+          4189
+        ],
+        [
+          14139,
+          4180
+        ]
+      ]
+    },
+    {
+      "Name": "MADLIONS MAD60 HE V2",
+      "Brand": "MADLIONS",
+      "Layout": "60% \u00B7 70 LED",
+      "Family": "sonix_sib",
+      "Stack": "C",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 4 (h\u1ECD C \u2014 MAD60) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "Nh\u1EADn di\u1EC7n b\u1EB1ng b\u1EAFt tay [1] \u2192 firmware protocol v9. PID 1120 = b\u1EA3n V2.",
+      "DevIds": [],
+      "Ids": [
+        [
+          14139,
+          4384
+        ]
+      ]
+    },
+    {
+      "Name": "Royal Kludge RK84",
+      "Brand": "",
+      "Layout": "75% \u00B7 84 ph\u00EDm",
+      "Family": "",
+      "Stack": "",
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "\u0110\u00E3 c\u00F3 giao th\u1EE9c m\u1EDF \u2014 s\u1EBD t\u00EDch h\u1EE3p",
+      "IdNote": "",
+      "DevIds": [],
+      "Ids": []
+    },
+    {
+      "Name": "DrunkDeer A75",
+      "Brand": "",
+      "Layout": "75%",
+      "Family": "",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "\u0110\u00E3 c\u00F3 giao th\u1EE9c m\u1EDF \u2014 s\u1EBD t\u00EDch h\u1EE3p",
+      "IdNote": "",
+      "DevIds": [],
+      "Ids": []
+    },
+    {
+      "Name": "AULA S75 Pro",
+      "Brand": "",
+      "Layout": "75% \u00B7 80 ph\u00EDm",
+      "Family": "sonix_sib",
+      "Stack": "B",
+      "HasScreen": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 4 (h\u1ECD B \u2014 SONiX 64B) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "Chung VID:PID 0C45:800A v\u00E0 giao th\u1EE9c v\u1EDBi F75 Max \u2014 probe 0xF5 KH\u00D4NG ph\u00E2n bi\u1EC7t \u0111\u01B0\u1EE3c S75 Pro v\u1EDBi F75 Max; app d\u1EF1a v\u00E0o productName \u002B m\u1EABu b\u1EA1n ch\u1ECDn, ghi/stream v\u1EABn kh\u00F3a sau c\u00F4ng t\u1EAFc th\u1EED nghi\u1EC7m \u002B t\u1EAFt dry-run.",
+      "DevIds": [],
+      "Ids": [
+        [
+          3141,
+          32778
+        ]
+      ]
+    },
+    {
+      "Name": "AULA Nova75",
+      "Brand": "",
+      "Layout": "75% \u00B7 80 ph\u00EDm",
+      "Family": "sonix_sib",
+      "Stack": "B",
+      "HasScreen": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 4 (h\u1ECD B) \u2014 stream ch\u1EC9 \u1EDF m\u1EE9c log (tr\u00ECnh ghi frame native ch\u01B0a r\u00F5)",
+      "IdNote": "Nh\u1EADn di\u1EC7n b\u1EB1ng productName \u0111\u00FAng \u0022AULA-NOVA75\u0022. Tr\u00ECnh ghi frame t\u0103ng t\u1ED1c native c\u1EE7a app g\u1ED1c (hid_write_nova_frame) ch\u01B0a r\u00F5 c\u00E1ch chia g\u00F3i n\u00EAn stream c\u1EE7a Nova75 ch\u1EC9 ghi log, kh\u00F4ng ghi th\u1EADt.",
+      "DevIds": [],
+      "Ids": [
+        [
+          3141,
+          32778
+        ]
+      ]
+    },
+    {
+      "Name": "AULA WIN60 HE",
+      "Brand": "",
+      "Layout": "60% \u00B7 61 ph\u00EDm",
+      "Family": "sonix_sib",
+      "Stack": "E",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 4 (h\u1ECD E \u2014 WIN60 HE) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "K\u00EAnh l\u1EC7nh usage page 0xFF33, report 1. C\u00F9ng VID:PID 2E3C:C365 c\u00F2n xu\u1EA5t hi\u1EC7n \u1EDF n\u1EC1n WitMod tr\u00EAn usage page 0xFF1B \u2014 hai k\u00EAnh kh\u00E1c nhau, kh\u00F4ng nh\u1EA7m l\u1EABn.",
+      "DevIds": [],
+      "Ids": [
+        [
+          11836,
+          50021
+        ]
+      ]
+    },
+    {
+      "Name": "AULA WIN60 SE",
+      "Brand": "",
+      "Layout": "60% \u00B7 61 ph\u00EDm",
+      "Family": "sonix_sib",
+      "Stack": "F2",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 4 (h\u1ECD F2) \u2014 ch\u1EC9 builder \u002B log; nh\u00E0 s\u1EA3n xu\u1EA5t t\u1EF1 \u0111\u00E1nh d\u1EA5u th\u1EED nghi\u1EC7m",
+      "IdNote": "Giao th\u1EE9c d\u00F9ng byte phi\u00EAn ng\u1EABu nhi\u00EAn ch\u1ECDn khi k\u1EBFt n\u1ED1i; giao di\u1EC7n c\u1EE7a ch\u00EDnh nh\u00E0 s\u1EA3n xu\u1EA5t ghi m\u1EABu n\u00E0y l\u00E0 th\u1EED nghi\u1EC7m/ch\u01B0a ki\u1EC3m ch\u1EE9ng \u2014 app n\u00E0y ch\u1EC9 d\u1EF1ng g\u00F3i v\u00E0 ghi log, kh\u00F4ng ghi th\u1EADt.",
+      "DevIds": [],
+      "Ids": [
+        [
+          14502,
+          10522
+        ]
+      ]
+    },
+    {
+      "Name": "Redragon K617 HE",
+      "Brand": "Redragon",
+      "Layout": "60% \u00B7 61 ph\u00EDm",
+      "Family": "witmod",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 4 (WitMod) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "N\u1EC1n WitMod d\u00F9ng chung b\u1EA3ng filter 36 c\u1EB7p VID:PID (usage page 0xFF1B); probe quy\u1EBFt \u0111\u1ECBnh l\u00E0 l\u1EC7nh 0x0D (chu\u1ED7i s\u1EA3n ph\u1EA9m, tr\u01B0\u1EDDng 4) \u002B kh\u1ED1i support c\u1EE7a l\u1EC7nh 0x01. App desktop c\u1EE7a h\u00E3ng nh\u1EADn di\u1EC7n K617 HE b\u1EB1ng ti\u1EC1n t\u1ED1 productName \u00227153\u0022 (8 bi\u1EBFn th\u1EC3 layout); VID:PID ri\u00EAng c\u1EE7a K617 HE kh\u00F4ng c\u00F3 trong code web \u2014 kh\u00F4ng \u0111o\u00E1n.",
+      "DevIds": [],
+      "Ids": [
+        [
+          1046,
+          28672
+        ],
+        [
+          1046,
+          29554
+        ],
+        [
+          1046,
+          29698
+        ],
+        [
+          1046,
+          29712
+        ],
+        [
+          1046,
+          29810
+        ],
+        [
+          1046,
+          29812
+        ],
+        [
+          1046,
+          29952
+        ],
+        [
+          1046,
+          29953
+        ],
+        [
+          1046,
+          29954
+        ],
+        [
+          1046,
+          29955
+        ],
+        [
+          1046,
+          30208
+        ],
+        [
+          1046,
+          37464
+        ],
+        [
+          1046,
+          49989
+        ],
+        [
+          1046,
+          50037
+        ],
+        [
+          4479,
+          16390
+        ],
+        [
+          4479,
+          16391
+        ],
+        [
+          6127,
+          25044
+        ],
+        [
+          6127,
+          25046
+        ],
+        [
+          11836,
+          29952
+        ],
+        [
+          11836,
+          29953
+        ],
+        [
+          11836,
+          29954
+        ],
+        [
+          11836,
+          29955
+        ],
+        [
+          11836,
+          29956
+        ],
+        [
+          11836,
+          29957
+        ],
+        [
+          11836,
+          29960
+        ],
+        [
+          11836,
+          29961
+        ],
+        [
+          11836,
+          29962
+        ],
+        [
+          11836,
+          29963
+        ],
+        [
+          11836,
+          50021
+        ],
+        [
+          11836,
+          50022
+        ],
+        [
+          11836,
+          50023
+        ],
+        [
+          11836,
+          50024
+        ],
+        [
+          11836,
+          50025
+        ],
+        [
+          11836,
+          50032
+        ],
+        [
+          11836,
+          50033
+        ],
+        [
+          13523,
+          21249
+        ]
+      ]
+    },
+    {
+      "Name": "AULA WIN68 HE",
+      "Brand": "",
+      "Layout": "65% \u00B7 68 ph\u00EDm",
+      "Family": "",
+      "Stack": "",
+      "StatusKind": 2,
+      "ProtocolStatus": "Giao th\u1EE9c k\u00EDn \u2014 \u0111\u1EC3 sau",
+      "IdNote": "",
+      "DevIds": [],
+      "Ids": []
+    },
+    {
+      "Name": "AULA HERO68 HE",
+      "Brand": "",
+      "Layout": "65% \u00B7 68 ph\u00EDm",
+      "Family": "sonix_sib",
+      "Stack": "D",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 4 (h\u1ECD D \u2014 HERO68) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "Nh\u1EADn di\u1EC7n b\u1EB1ng ch\u1EEF k\u00FD danh t\u00EDnh c\u1EE7a l\u1EC7nh 130 ([17,0,0,0,0,3]) \u002B checksum byte 62. Ch\u1EC9 b\u1EA3n c\u00F3 d\u00E2y; Air/Mini/Pro/Ultra kh\u00F4ng thu\u1ED9c giao th\u1EE9c n\u00E0y.",
+      "DevIds": [],
+      "Ids": [
+        [
+          14126,
+          4158
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5075B",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 n\u00FAm xoay",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Thu\u1ED9c n\u1EC1n t\u1EA3ng RongYuan (Driver Pack 2) nh\u01B0ng ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng cho 5075B trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi",
+      "DevIds": [],
+      "Ids": []
+    },
+    {
+      "Name": "GravaStar Mercury K1",
+      "Brand": "",
+      "Layout": "75% \u00B7 79 ph\u00EDm",
+      "Family": "kb_by_v2",
+      "Stack": "",
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 1 (kb_by_v2) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng ch\u1EEF k\u00FD 0x82 [3,0,0,0,1,180] tr\u01B0\u1EDBc khi ghi (PID 0294 ho\u1EB7c 010C)",
+      "DevIds": [],
+      "Ids": [
+        [
+          9610,
+          660
+        ],
+        [
+          9610,
+          268
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek M1",
+      "Brand": "MonsGeek",
+      "Layout": "75% \u00B7 n\u00FAm xoay",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "M1 \u0111\u1EDDi \u0111\u1EA7u (h\u1ECD yc3121) thu\u1ED9c n\u1EC1n t\u1EA3ng RongYuan nh\u01B0ng ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek M3 V5",
+      "Brand": "MonsGeek",
+      "Layout": "TKL \u00B7 87 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x00000A19) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        2585
+      ],
+      "Ids": [
+        [
+          12625,
+          20528
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek M2 V5",
+      "Brand": "MonsGeek",
+      "Layout": "98% \u00B7 98 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x00000A29) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        2601
+      ],
+      "Ids": [
+        [
+          12625,
+          20528
+        ]
+      ]
+    },
+    {
+      "Name": "Akko Mineral02",
+      "Brand": "Akko",
+      "Layout": "98% \u00B7 102 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20528
+        ]
+      ]
+    },
+    {
+      "Name": "Akko Gem02",
+      "Brand": "Akko",
+      "Layout": "98% \u00B7 102 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20528
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek FUN75",
+      "Brand": "MonsGeek",
+      "Layout": "75% \u00B7 83 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x00000A58) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        2648
+      ],
+      "Ids": [
+        [
+          12625,
+          20525
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek FUN60 PRO",
+      "Brand": "MonsGeek",
+      "Layout": "60% \u00B7 61 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x00000A28, 0x000010C6, 0x00000AE1, 0x00000901, 0x00000900, 0x000009A0) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        2600,
+        4294,
+        2785,
+        2305,
+        2304,
+        2464
+      ],
+      "Ids": [
+        [
+          12625,
+          20521
+        ],
+        [
+          12625,
+          20528
+        ],
+        [
+          14763,
+          36886
+        ],
+        [
+          12625,
+          20527
+        ],
+        [
+          12625,
+          20525
+        ]
+      ]
+    },
+    {
+      "Name": "Akko MOD007S V3-HE UK",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 83 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20521
+        ]
+      ]
+    },
+    {
+      "Name": "Akko MOD007S V3-HE",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20528
+        ]
+      ]
+    },
+    {
+      "Name": "Akko RAY68",
+      "Brand": "Akko",
+      "Layout": "65% \u00B7 68 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20528
+        ]
+      ]
+    },
+    {
+      "Name": "Akko TAC75 HE",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 83 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20525
+        ]
+      ]
+    },
+    {
+      "Name": "Akko MOD007 V5 HE",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 81 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasScreen": true,
+      "ScreenW": 128,
+      "ScreenH": 128,
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20528
+        ],
+        [
+          12625,
+          20527
+        ],
+        [
+          12625,
+          20521
+        ]
+      ]
+    },
+    {
+      "Name": "Akko Mineral01",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 83 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20528
+        ]
+      ]
+    },
+    {
+      "Name": "Akko K0039",
+      "Brand": "Akko",
+      "Layout": "TKL \u00B7 87 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20528
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek FUN68",
+      "Brand": "MonsGeek",
+      "Layout": "65% \u00B7 68 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x00000AFB, 0x00000C13, 0x00000C4B) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        2811,
+        3091,
+        3147
+      ],
+      "Ids": [
+        [
+          12625,
+          20528
+        ],
+        [
+          12625,
+          20521
+        ],
+        [
+          12625,
+          20482
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5075 V3 HE",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20527
+        ],
+        [
+          12625,
+          20528
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5087 V3 HE",
+      "Brand": "Akko",
+      "Layout": "TKL \u00B7 87 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20527
+        ],
+        [
+          12625,
+          20521
+        ],
+        [
+          12625,
+          20528
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5075 V\u0417 HE",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20525
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek M3 V5 HE",
+      "Brand": "MonsGeek",
+      "Layout": "TKL \u00B7 87 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x00000B3A) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        2874
+      ],
+      "Ids": [
+        [
+          12625,
+          20528
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek M2 V5 HE",
+      "Brand": "MonsGeek",
+      "Layout": "98% \u00B7 98 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x00000B1D) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        2845
+      ],
+      "Ids": [
+        [
+          12625,
+          20528
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek M1 V5 HE",
+      "Brand": "MonsGeek",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x00000B03) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        2819
+      ],
+      "Ids": [
+        [
+          12625,
+          20528
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek M1 V5 TMR",
+      "Brand": "MonsGeek",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x00000B85, 0x000008C7, 0x00000A77, 0x000009E8, 0x00001074) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        2949,
+        2247,
+        2679,
+        2536,
+        4212
+      ],
+      "Ids": [
+        [
+          12625,
+          20528
+        ],
+        [
+          14574,
+          64
+        ]
+      ]
+    },
+    {
+      "Name": "Akko MOD007B V3-HE(US)",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20528
+        ]
+      ]
+    },
+    {
+      "Name": "Akko MOD007B V3-HE ISO",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 83 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20528
+        ]
+      ]
+    },
+    {
+      "Name": "Akko FUN60 KizunaAI SE",
+      "Brand": "Akko",
+      "Layout": "60% \u00B7 61 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20521
+        ]
+      ]
+    },
+    {
+      "Name": "Akko MOD68",
+      "Brand": "Akko",
+      "Layout": "65% \u00B7 68 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20521
+        ],
+        [
+          12625,
+          20528
+        ],
+        [
+          14574,
+          1
+        ]
+      ]
+    },
+    {
+      "Name": "Akko TAC87",
+      "Brand": "Akko",
+      "Layout": "TKL \u00B7 87 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20528
+        ],
+        [
+          12625,
+          16400
+        ],
+        [
+          12625,
+          20482
+        ]
+      ]
+    },
+    {
+      "Name": "Akko FUN87 KizunaAI PE",
+      "Brand": "Akko",
+      "Layout": "TKL \u00B7 92 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20521
+        ]
+      ]
+    },
+    {
+      "Name": "Akko Armor Alice",
+      "Brand": "Akko",
+      "Layout": "65% \u00B7 68 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20517
+        ],
+        [
+          12625,
+          20528
+        ]
+      ]
+    },
+    {
+      "Name": "Akko Gem 02",
+      "Brand": "Akko",
+      "Layout": "98% \u00B7 102 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20528
+        ]
+      ]
+    },
+    {
+      "Name": "Akko Gem 01",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 83 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20528
+        ]
+      ]
+    },
+    {
+      "Name": "Akko M1 V5 HE",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20528
+        ]
+      ]
+    },
+    {
+      "Name": "Akko MOD007S V3-HE US",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20521
+        ]
+      ]
+    },
+    {
+      "Name": "Akko MOD68 ISO",
+      "Brand": "Akko",
+      "Layout": "65% \u00B7 69 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20528
+        ],
+        [
+          14574,
+          9
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5087V3 HE TMR",
+      "Brand": "Akko",
+      "Layout": "TKL \u00B7 88 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          1
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5087 V5 HE",
+      "Brand": "Akko",
+      "Layout": "TKL \u00B7 87 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          1
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5108 V5 HE",
+      "Brand": "Akko",
+      "Layout": "Full-size \u00B7 108 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          1
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5075 V5 HE",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          1
+        ],
+        [
+          14763,
+          36886
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5075 V5 HE TMR",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20528
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5087 V5 HE TMR",
+      "Brand": "Akko",
+      "Layout": "TKL \u00B7 88 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          1
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5087 V5 HE TMR ISO",
+      "Brand": "Akko",
+      "Layout": "TKL \u00B7 88 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          1
+        ]
+      ]
+    },
+    {
+      "Name": "Akko MOD68 HE",
+      "Brand": "Akko",
+      "Layout": "65% \u00B7 68 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          1
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5087V5 HE",
+      "Brand": "Akko",
+      "Layout": "TKL \u00B7 88 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          1
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5075 V5 HE-B",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          1
+        ]
+      ]
+    },
+    {
+      "Name": "Akko MOD007 V5 HE TMR",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 83 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasScreen": true,
+      "ScreenW": 128,
+      "ScreenH": 128,
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          1
+        ]
+      ]
+    },
+    {
+      "Name": "Akko KF105",
+      "Brand": "Akko",
+      "Layout": "65% \u00B7 67 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasScreen": true,
+      "ScreenW": 240,
+      "ScreenH": 240,
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          1
+        ],
+        [
+          12625,
+          20482
+        ]
+      ]
+    },
+    {
+      "Name": "Akko KF106",
+      "Brand": "Akko",
+      "Layout": "65% \u00B7 67 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasScreen": true,
+      "ScreenW": 240,
+      "ScreenH": 240,
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          1
+        ],
+        [
+          12625,
+          20482
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5098 V5 HE TMR",
+      "Brand": "Akko",
+      "Layout": "98% \u00B7 98 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasScreen": true,
+      "ScreenW": 420,
+      "ScreenH": 116,
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          64
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5098 V5 HE",
+      "Brand": "Akko",
+      "Layout": "98% \u00B7 98 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasScreen": true,
+      "ScreenW": 420,
+      "ScreenH": 116,
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          1
+        ]
+      ]
+    },
+    {
+      "Name": "Akko RAID 75 HE",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          22
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5075 V5 HE ISO",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          1
+        ]
+      ]
+    },
+    {
+      "Name": "Akko KF105 TMR",
+      "Brand": "Akko",
+      "Layout": "65% \u00B7 67 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasScreen": true,
+      "ScreenW": 240,
+      "ScreenH": 240,
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          1
+        ]
+      ]
+    },
+    {
+      "Name": "Akko KF106 TMR",
+      "Brand": "Akko",
+      "Layout": "65% \u00B7 67 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasScreen": true,
+      "ScreenW": 240,
+      "ScreenH": 240,
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          1
+        ]
+      ]
+    },
+    {
+      "Name": "Akko MOD007 PC HE",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          64
+        ]
+      ]
+    },
+    {
+      "Name": "Akko PC75B Plus",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          1452,
+          591
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5075B Plus-S",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16387
+        ],
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 3098B Plus",
+      "Brand": "Akko",
+      "Layout": "98% \u00B7 98 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16387
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 3084BP-ISO-UK",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 85 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          1121,
+          16387
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 3084BP-ISO-DE",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 85 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16387
+        ]
+      ]
+    },
+    {
+      "Name": "Akko PC75B Plus\u002B",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16387
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5075B Plus",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          1121,
+          16387
+        ],
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5108BP-ISO-UK",
+      "Brand": "Akko",
+      "Layout": "Full-size \u00B7 108 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          1121,
+          16387
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5098B",
+      "Brand": "Akko",
+      "Layout": "98% \u00B7 97 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasScreen": true,
+      "ScreenW": 172,
+      "ScreenH": 320,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "Akko MU01",
+      "Brand": "Akko",
+      "Layout": "65% \u00B7 68 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "Akko MU02",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "Akko MOD007B HE PC",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16437
+        ]
+      ]
+    },
+    {
+      "Name": "Akko   ",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5108B Plus",
+      "Brand": "Akko",
+      "Layout": "Full-size \u00B7 108 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "Akko MOD007B HE",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16437
+        ]
+      ]
+    },
+    {
+      "Name": "Akko TOP75B",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 81 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16400
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 3108 V3",
+      "Brand": "Akko",
+      "Layout": "Full-size \u00B7 108 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16400
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 3087S US",
+      "Brand": "Akko",
+      "Layout": "TKL \u00B7 87 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16400
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5075S",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          10
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 3098S",
+      "Brand": "Akko",
+      "Layout": "98% \u00B7 98 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16400
+        ]
+      ]
+    },
+    {
+      "Name": "Akko MOD007B PC",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek MG108B",
+      "Brand": "MonsGeek",
+      "Layout": "Full-size \u00B7 108 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x000003C9, 0x00000AB3, 0x00000CAD) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        969,
+        2739,
+        3245
+      ],
+      "Ids": [
+        [
+          12625,
+          20482
+        ],
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5075 V3",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20482
+        ],
+        [
+          12625,
+          20556
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5087 V3",
+      "Brand": "Akko",
+      "Layout": "TKL \u00B7 87 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20482
+        ],
+        [
+          12625,
+          20556
+        ]
+      ]
+    },
+    {
+      "Name": "Akko Air01",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 84 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20482
+        ],
+        [
+          14574,
+          5
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5108 V5",
+      "Brand": "Akko",
+      "Layout": "Full-size \u00B7 108 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20482
+        ],
+        [
+          12625,
+          20556
+        ],
+        [
+          14574,
+          5
+        ]
+      ]
+    },
+    {
+      "Name": "Akko Air01 UK",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 84 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20482
+        ],
+        [
+          12625,
+          20566
+        ]
+      ]
+    },
+    {
+      "Name": "Akko MOD07 V5",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasScreen": true,
+      "ScreenW": 128,
+      "ScreenH": 128,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20482
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5098 V5",
+      "Brand": "Akko",
+      "Layout": "98% \u00B7 98 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasScreen": true,
+      "ScreenW": 420,
+      "ScreenH": 116,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          3
+        ],
+        [
+          14574,
+          70
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5087 V5",
+      "Brand": "Akko",
+      "Layout": "TKL \u00B7 88 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          3
+        ],
+        [
+          14574,
+          5
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5075 V5",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          3
+        ],
+        [
+          14574,
+          5
+        ]
+      ]
+    },
+    {
+      "Name": "Akko K0069",
+      "Brand": "Akko",
+      "Layout": "65% \u00B7 68 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          3
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5075 V5 ISO",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          5
+        ],
+        [
+          14574,
+          70
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5108 V5 ISO",
+      "Brand": "Akko",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          5
+        ]
+      ]
+    },
+    {
+      "Name": "Akko Linx 68",
+      "Brand": "Akko",
+      "Layout": "65% \u00B7 68 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          5
+        ]
+      ]
+    },
+    {
+      "Name": "Akko 5098 V5 ISO",
+      "Brand": "Akko",
+      "Layout": "98% \u00B7 98 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasScreen": true,
+      "ScreenW": 420,
+      "ScreenH": 116,
+      "HasKnob": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          70
+        ]
+      ]
+    },
+    {
+      "Name": "Akko MG108B V2",
+      "Brand": "Akko",
+      "Layout": "Full-size \u00B7 108 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          14574,
+          5
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek FUN60 Ultra TMR",
+      "Brand": "MonsGeek",
+      "Layout": "60% \u00B7 61 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x00000F0D) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        3853
+      ],
+      "Ids": [
+        [
+          14574,
+          1
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek FUN60 Ultra",
+      "Brand": "MonsGeek",
+      "Layout": "60% \u00B7 61 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x00000903, 0x0000094D, 0x00000930, 0x00000953) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        2307,
+        2381,
+        2352,
+        2387
+      ],
+      "Ids": [
+        [
+          12625,
+          20528
+        ],
+        [
+          12625,
+          20525
+        ],
+        [
+          12625,
+          20521
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek FUN60 MAX",
+      "Brand": "MonsGeek",
+      "Layout": "60% \u00B7 61 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x00000902, 0x00000CE3, 0x00000F42) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        2306,
+        3299,
+        3906
+      ],
+      "Ids": [
+        [
+          12625,
+          20528
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek FUN60",
+      "Brand": "MonsGeek",
+      "Layout": "60% \u00B7 61 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x000008FB) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        2299
+      ],
+      "Ids": [
+        [
+          12625,
+          20526
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek Shine68",
+      "Brand": "MonsGeek",
+      "Layout": "65% \u00B7 68 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x00000CC5, 0x00000CC6) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        3269,
+        3270
+      ],
+      "Ids": [
+        [
+          14574,
+          1
+        ],
+        [
+          14574,
+          9
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek FUN68 ISO",
+      "Brand": "MonsGeek",
+      "Layout": "65% \u00B7 68 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x00000D65) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        3429
+      ],
+      "Ids": [
+        [
+          14574,
+          9
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek Verve68",
+      "Brand": "MonsGeek",
+      "Layout": "65% \u00B7 68 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x00000D87, 0x00000AA1, 0x00000C1B) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        3463,
+        2721,
+        3099
+      ],
+      "Ids": [
+        [
+          12625,
+          20521
+        ],
+        [
+          12625,
+          20528
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek Verve68T",
+      "Brand": "MonsGeek",
+      "Layout": "65% \u00B7 68 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x00000D84) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        3460
+      ],
+      "Ids": [
+        [
+          12625,
+          20528
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek FUN60 PRO ISO",
+      "Brand": "MonsGeek",
+      "Layout": "60% \u00B7 61 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x00000E8A) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        3722
+      ],
+      "Ids": [
+        [
+          12625,
+          20528
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek FUN87 HE",
+      "Brand": "MonsGeek",
+      "Layout": "TKL \u00B7 88 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x00000FF8) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        4088
+      ],
+      "Ids": [
+        [
+          14574,
+          1
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek M1 V5 TMR ISO",
+      "Brand": "MonsGeek",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x0000103E, 0x00001073) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        4158,
+        4211
+      ],
+      "Ids": [
+        [
+          14574,
+          1
+        ],
+        [
+          14574,
+          64
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek FUN60 Pro JP",
+      "Brand": "MonsGeek",
+      "Layout": "60% \u00B7 61 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x00001054) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        4180
+      ],
+      "Ids": [
+        [
+          14763,
+          36886
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek M1W HE",
+      "Brand": "MonsGeek",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x00000644) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        1604
+      ],
+      "Ids": [
+        [
+          12625,
+          16437
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek M1 V5",
+      "Brand": "MonsGeek",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x0000078D) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        1933
+      ],
+      "Ids": [
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek MG75S HE",
+      "Brand": "MonsGeek",
+      "Layout": "75% \u00B7 83 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x0000068A) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        1674
+      ],
+      "Ids": [
+        [
+          12625,
+          16437
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek M1W",
+      "Brand": "MonsGeek",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x000003D7) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        983
+      ],
+      "Ids": [
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek M3W",
+      "Brand": "MonsGeek",
+      "Layout": "TKL \u00B7 87 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x000004B0) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        1200
+      ],
+      "Ids": [
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek M5W",
+      "Brand": "MonsGeek",
+      "Layout": "Full-size \u00B7 108 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x0000051C) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        1308
+      ],
+      "Ids": [
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek ICE75",
+      "Brand": "MonsGeek",
+      "Layout": "75% \u00B7 82 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x0000058B) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        1419
+      ],
+      "Ids": [
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "MonsGeek M7W",
+      "Brand": "MonsGeek",
+      "Layout": "65% \u00B7 68 ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng dev_id 0x8F (0x000004BF) tr\u01B0\u1EDBc khi ghi \u2014 VID:PID b\u1ECB d\u00F9ng chung gi\u1EEFa nhi\u1EC1u model",
+      "DevIds": [
+        1215
+      ],
+      "Ids": [
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER Aura75",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER Cypher 81",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ],
+        [
+          12625,
+          20523
+        ],
+        [
+          12625,
+          20527
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER Cypher 96",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER DS87",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER DynaTab 75",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER DynaTab 75X",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasScreen": true,
+      "ScreenW": 60,
+      "ScreenH": 9,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER EP108",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          9639,
+          9248
+        ],
+        [
+          9639,
+          16387
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER EP21",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16400
+        ],
+        [
+          12625,
+          16408
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER EP64",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16400
+        ],
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER EP68",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16408
+        ],
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ],
+        [
+          1121,
+          16386
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER EP75 pro",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER EP84",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ],
+        [
+          1121,
+          16386
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER EP84 PLUS",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16400
+        ],
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER EP84 pro",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER EP87",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16386
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER Eclair 75",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          1121,
+          16386
+        ]
+      ]
+    },
+    {
+      "Name": "Epomaker M65",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20525
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER HE65 Mag",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20523
+        ],
+        [
+          12625,
+          20527
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER HE65 Mec",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20517
+        ],
+        [
+          12625,
+          20518
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER HE68 Llte",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20521
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER HE68 Mag",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          20521
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER HE75 Mag",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ],
+        [
+          12625,
+          20523
+        ],
+        [
+          12625,
+          20527
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER KF850 UK",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasScreen": true,
+      "ScreenW": 60,
+      "ScreenH": 9,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER KF850-P UK",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER RT100",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "HasScreen": true,
+      "ScreenW": 240,
+      "ScreenH": 173,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ],
+        [
+          12625,
+          16400
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER RT65",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER RT80",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER Shadow-X",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16400
+        ],
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER Skyline 87",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          9639,
+          9248
+        ],
+        [
+          9639,
+          16387
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER TH-21",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          1121,
+          16387
+        ],
+        [
+          12625,
+          16400
+        ],
+        [
+          12625,
+          16401
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER TH100",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          1121,
+          16386
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER TH66",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ],
+        [
+          12625,
+          16400
+        ],
+        [
+          1121,
+          16386
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER TH68",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ],
+        [
+          1121,
+          16386
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER TH80",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16400
+        ],
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ],
+        [
+          1121,
+          16386
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER TH80 ISO",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER TH80 SE",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16400
+        ],
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER TH80X",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER TH96",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ],
+        [
+          12625,
+          16400
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER TH98",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          12625,
+          16401
+        ],
+        [
+          12625,
+          16405
+        ],
+        [
+          1452,
+          591
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER TK68",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          1452,
+          591
+        ]
+      ]
+    },
+    {
+      "Name": "EPOMAKER th96 WAP",
+      "Brand": "EPOMAKER",
+      "Layout": "B\u00E0n ph\u00EDm",
+      "Family": "rongyuan",
+      "Stack": "",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 2 (RongYuan) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 dev_id)",
+      "IdNote": "Ch\u01B0a c\u00F3 dev_id \u0111\u00E3 ki\u1EC3m ch\u1EE9ng trong t\u00E0i li\u1EC7u \u0111\u00E3 tr\u00EDch \u2014 app ch\u1EC9 cho xem, kh\u00F4ng cho ghi (kh\u00F4ng suy \u0111o\u00E1n dev_id)",
+      "DevIds": [],
+      "Ids": [
+        [
+          9639,
+          9248
+        ],
+        [
+          9639,
+          16387
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE Ace 60",
+      "Brand": "MCHOSE",
+      "Layout": "60% \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          16868,
+          8449
+        ],
+        [
+          16868,
+          8450
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE Ace 60 Pro",
+      "Brand": "MCHOSE",
+      "Layout": "60% \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          16868,
+          8451
+        ],
+        [
+          16868,
+          8452
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE Ace 60 Pro ISO FR",
+      "Brand": "MCHOSE",
+      "Layout": "60% \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          14391,
+          12352
+        ],
+        [
+          14391,
+          12353
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE Ace 60 Pro Nordic",
+      "Brand": "MCHOSE",
+      "Layout": "60% \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          14391,
+          12290
+        ],
+        [
+          14391,
+          12322
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE Ace 60X I",
+      "Brand": "MCHOSE",
+      "Layout": "60% \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          16868,
+          8486
+        ],
+        [
+          16868,
+          8487
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE Ace 60X II",
+      "Brand": "MCHOSE",
+      "Layout": "60% \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          16868,
+          8466
+        ],
+        [
+          16868,
+          8467
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE Ace 68 I",
+      "Brand": "MCHOSE",
+      "Layout": "65% \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          16868,
+          8468
+        ],
+        [
+          16868,
+          8469
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE Ace 68 Pro",
+      "Brand": "MCHOSE",
+      "Layout": "65% \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          16868,
+          8470
+        ],
+        [
+          16868,
+          8471
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE Ace 68 III",
+      "Brand": "MCHOSE",
+      "Layout": "65% \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          14391,
+          12291
+        ],
+        [
+          14391,
+          12330
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE Ace 68 Air II",
+      "Brand": "MCHOSE",
+      "Layout": "65% \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          16868,
+          8480
+        ],
+        [
+          16868,
+          8481
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE Ace 68 Air III",
+      "Brand": "MCHOSE",
+      "Layout": "65% \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          16868,
+          8498
+        ],
+        [
+          16868,
+          8499
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE Ace 68 Air 2",
+      "Brand": "MCHOSE",
+      "Layout": "65% \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          14391,
+          12298
+        ],
+        [
+          14391,
+          12299
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE Ace 68 GT",
+      "Brand": "MCHOSE",
+      "Layout": "65% \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          14391,
+          12295
+        ],
+        [
+          14391,
+          12297
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE Ace 68 Turbo 16K",
+      "Brand": "MCHOSE",
+      "Layout": "65% \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          14391,
+          12326
+        ],
+        [
+          14391,
+          12327
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE Ace 68 Turbo 8K",
+      "Brand": "MCHOSE",
+      "Layout": "65% \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          14391,
+          12328
+        ],
+        [
+          14391,
+          12329
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE Ace 68 V2 III",
+      "Brand": "MCHOSE",
+      "Layout": "65% \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          14391,
+          12324
+        ],
+        [
+          14391,
+          12325
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE Ace 75 8K",
+      "Brand": "MCHOSE",
+      "Layout": "75% \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          14391,
+          12348
+        ],
+        [
+          14391,
+          12349
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE G75 V2",
+      "Brand": "MCHOSE",
+      "Layout": "75% \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          14391,
+          8225
+        ],
+        [
+          14391,
+          8226
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE G87 V2",
+      "Brand": "MCHOSE",
+      "Layout": "TKL \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          14391,
+          8213
+        ],
+        [
+          14391,
+          8217
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE G87 V3",
+      "Brand": "MCHOSE",
+      "Layout": "TKL \u00B7 c\u01A1",
+      "Family": "mchose",
+      "Stack": "QHW",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE QHW) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getBaseInfo (0x0900) \u2014 VID/PID thi\u1EBFt b\u1ECB t\u1EF1 khai ph\u1EA3i kh\u1EDBp registry tr\u01B0\u1EDBc khi ghi.",
+      "DevIds": [],
+      "Ids": [
+        [
+          14391,
+          8233
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE G98 V3",
+      "Brand": "MCHOSE",
+      "Layout": "98% \u00B7 c\u01A1",
+      "Family": "mchose",
+      "Stack": "QHW",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE QHW) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getBaseInfo (0x0900) \u2014 VID/PID thi\u1EBFt b\u1ECB t\u1EF1 khai ph\u1EA3i kh\u1EDBp registry tr\u01B0\u1EDBc khi ghi.",
+      "DevIds": [],
+      "Ids": [
+        [
+          14391,
+          8229
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE God 60",
+      "Brand": "MCHOSE",
+      "Layout": "60% \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          14391,
+          12320
+        ],
+        [
+          14391,
+          12314
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE GT 75",
+      "Brand": "MCHOSE",
+      "Layout": "75% \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          14391,
+          12333
+        ],
+        [
+          14391,
+          12335
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE Jet 75 I",
+      "Brand": "MCHOSE",
+      "Layout": "75% \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          16868,
+          8472
+        ],
+        [
+          16868,
+          8473
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE Jet 75 II",
+      "Brand": "MCHOSE",
+      "Layout": "75% \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          16868,
+          8474
+        ],
+        [
+          16868,
+          8475
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE K87 V3",
+      "Brand": "MCHOSE",
+      "Layout": "TKL \u00B7 c\u01A1",
+      "Family": "mchose",
+      "Stack": "QHW",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE QHW) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getBaseInfo (0x0900) \u2014 VID/PID thi\u1EBFt b\u1ECB t\u1EF1 khai ph\u1EA3i kh\u1EDBp registry tr\u01B0\u1EDBc khi ghi.",
+      "DevIds": [],
+      "Ids": [
+        [
+          14391,
+          8227
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE K87S",
+      "Brand": "MCHOSE",
+      "Layout": "TKL \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          14391,
+          8206
+        ],
+        [
+          14391,
+          8207
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE K99 V3",
+      "Brand": "MCHOSE",
+      "Layout": "98% \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          14391,
+          8224
+        ],
+        [
+          14391,
+          8223
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE Mix 87 I",
+      "Brand": "MCHOSE",
+      "Layout": "TKL \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          16868,
+          8482
+        ],
+        [
+          16868,
+          8483
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE Mix 87 III",
+      "Brand": "MCHOSE",
+      "Layout": "TKL \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          14391,
+          12301
+        ],
+        [
+          14391,
+          12332
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE Zero75X",
+      "Brand": "MCHOSE",
+      "Layout": "75% \u00B7 Hall-effect",
+      "Family": "mchose",
+      "Stack": "GLW",
+      "HasHE": true,
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE GLW/CZ) \u2014 ch\u01B0a ki\u1EC3m ch\u1EE9ng ph\u1EA7n c\u1EE9ng",
+      "IdNote": "\u0110\u1ECBnh danh b\u1EB1ng VID:PID theo registry CZ \u002B probe \u0111\u1ECDc getInfo (cmd 3, \u0111\u00E1p 0xAA) tr\u01B0\u1EDBc khi ghi. Checksum GLW l\u00E0 gi\u1EA3 thuy\u1EBFt sum-mod-256 (h\u00E0m g\u1ED1c ch\u01B0a thu h\u1ED3i \u0111\u01B0\u1EE3c) \u2014 xem BUILD-INFO.",
+      "DevIds": [],
+      "Ids": [
+        [
+          16868,
+          8476
+        ],
+        [
+          16868,
+          8477
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE G87",
+      "Brand": "MCHOSE",
+      "Layout": "TKL \u00B7 c\u01A1",
+      "Family": "kb_by_v2",
+      "Stack": "BY",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE BY qua kb_by_v2) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 UUID)",
+      "IdNote": "Model MCHOSE h\u1ECD BY d\u00F9ng chung h\u1ECD kb_by_v2 (Driver Pack 1). T\u00E0i li\u1EC7u c\u1EE7a h\u00E3ng ph\u00E2n bi\u1EC7t c\u00E1c model n\u00E0y b\u1EB1ng productName USB (nhi\u1EC1u model d\u00F9ng chung 258A:010C); registry kb_by_v2 kh\u00F4ng c\u00F3 UUID/ch\u1EEF k\u00FD cho model MCHOSE BY n\u00E0o n\u00EAn app ch\u1EC9 cho xem \u2014 kh\u00F4ng suy \u0111o\u00E1n, gi\u1ED1ng Leobog.",
+      "DevIds": [],
+      "Ids": [
+        [
+          16868,
+          8193
+        ],
+        [
+          16868,
+          8705
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE G87 V2 (1K)",
+      "Brand": "MCHOSE",
+      "Layout": "TKL \u00B7 c\u01A1",
+      "Family": "kb_by_v2",
+      "Stack": "BY",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE BY qua kb_by_v2) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 UUID)",
+      "IdNote": "Model MCHOSE h\u1ECD BY d\u00F9ng chung h\u1ECD kb_by_v2 (Driver Pack 1). T\u00E0i li\u1EC7u c\u1EE7a h\u00E3ng ph\u00E2n bi\u1EC7t c\u00E1c model n\u00E0y b\u1EB1ng productName USB (nhi\u1EC1u model d\u00F9ng chung 258A:010C); registry kb_by_v2 kh\u00F4ng c\u00F3 UUID/ch\u1EEF k\u00FD cho model MCHOSE BY n\u00E0o n\u00EAn app ch\u1EC9 cho xem \u2014 kh\u00F4ng suy \u0111o\u00E1n, gi\u1ED1ng Leobog.",
+      "DevIds": [],
+      "Ids": [
+        [
+          14391,
+          8218
+        ],
+        [
+          14391,
+          8219
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE K99",
+      "Brand": "MCHOSE",
+      "Layout": "98% \u00B7 c\u01A1",
+      "Family": "kb_by_v2",
+      "Stack": "BY",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE BY qua kb_by_v2) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 UUID)",
+      "IdNote": "Model MCHOSE h\u1ECD BY d\u00F9ng chung h\u1ECD kb_by_v2 (Driver Pack 1). T\u00E0i li\u1EC7u c\u1EE7a h\u00E3ng ph\u00E2n bi\u1EC7t c\u00E1c model n\u00E0y b\u1EB1ng productName USB (nhi\u1EC1u model d\u00F9ng chung 258A:010C); registry kb_by_v2 kh\u00F4ng c\u00F3 UUID/ch\u1EEF k\u00FD cho model MCHOSE BY n\u00E0o n\u00EAn app ch\u1EC9 cho xem \u2014 kh\u00F4ng suy \u0111o\u00E1n, gi\u1ED1ng Leobog.",
+      "DevIds": [],
+      "Ids": [
+        [
+          1452,
+          591
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE K99 V2",
+      "Brand": "MCHOSE",
+      "Layout": "98% \u00B7 c\u01A1",
+      "Family": "kb_by_v2",
+      "Stack": "BY",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE BY qua kb_by_v2) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 UUID)",
+      "IdNote": "Model MCHOSE h\u1ECD BY d\u00F9ng chung h\u1ECD kb_by_v2 (Driver Pack 1). T\u00E0i li\u1EC7u c\u1EE7a h\u00E3ng ph\u00E2n bi\u1EC7t c\u00E1c model n\u00E0y b\u1EB1ng productName USB (nhi\u1EC1u model d\u00F9ng chung 258A:010C); registry kb_by_v2 kh\u00F4ng c\u00F3 UUID/ch\u1EEF k\u00FD cho model MCHOSE BY n\u00E0o n\u00EAn app ch\u1EC9 cho xem \u2014 kh\u00F4ng suy \u0111o\u00E1n, gi\u1ED1ng Leobog.",
+      "DevIds": [],
+      "Ids": [
+        [
+          9610,
+          268
+        ],
+        [
+          13652,
+          64009
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE G98",
+      "Brand": "MCHOSE",
+      "Layout": "98% \u00B7 c\u01A1",
+      "Family": "kb_by_v2",
+      "Stack": "BY",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE BY qua kb_by_v2) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 UUID)",
+      "IdNote": "Model MCHOSE h\u1ECD BY d\u00F9ng chung h\u1ECD kb_by_v2 (Driver Pack 1). T\u00E0i li\u1EC7u c\u1EE7a h\u00E3ng ph\u00E2n bi\u1EC7t c\u00E1c model n\u00E0y b\u1EB1ng productName USB (nhi\u1EC1u model d\u00F9ng chung 258A:010C); registry kb_by_v2 kh\u00F4ng c\u00F3 UUID/ch\u1EEF k\u00FD cho model MCHOSE BY n\u00E0o n\u00EAn app ch\u1EC9 cho xem \u2014 kh\u00F4ng suy \u0111o\u00E1n, gi\u1ED1ng Leobog.",
+      "DevIds": [],
+      "Ids": [
+        [
+          9610,
+          268
+        ],
+        [
+          13652,
+          64009
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE G98 Pro",
+      "Brand": "MCHOSE",
+      "Layout": "98% \u00B7 c\u01A1",
+      "Family": "kb_by_v2",
+      "Stack": "BY",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE BY qua kb_by_v2) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 UUID)",
+      "IdNote": "Model MCHOSE h\u1ECD BY d\u00F9ng chung h\u1ECD kb_by_v2 (Driver Pack 1). T\u00E0i li\u1EC7u c\u1EE7a h\u00E3ng ph\u00E2n bi\u1EC7t c\u00E1c model n\u00E0y b\u1EB1ng productName USB (nhi\u1EC1u model d\u00F9ng chung 258A:010C); registry kb_by_v2 kh\u00F4ng c\u00F3 UUID/ch\u1EEF k\u00FD cho model MCHOSE BY n\u00E0o n\u00EAn app ch\u1EC9 cho xem \u2014 kh\u00F4ng suy \u0111o\u00E1n, gi\u1ED1ng Leobog.",
+      "DevIds": [],
+      "Ids": [
+        [
+          9610,
+          441
+        ],
+        [
+          9610,
+          443
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE G98 V2",
+      "Brand": "MCHOSE",
+      "Layout": "98% \u00B7 c\u01A1",
+      "Family": "kb_by_v2",
+      "Stack": "BY",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE BY qua kb_by_v2) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 UUID)",
+      "IdNote": "Model MCHOSE h\u1ECD BY d\u00F9ng chung h\u1ECD kb_by_v2 (Driver Pack 1). T\u00E0i li\u1EC7u c\u1EE7a h\u00E3ng ph\u00E2n bi\u1EC7t c\u00E1c model n\u00E0y b\u1EB1ng productName USB (nhi\u1EC1u model d\u00F9ng chung 258A:010C); registry kb_by_v2 kh\u00F4ng c\u00F3 UUID/ch\u1EEF k\u00FD cho model MCHOSE BY n\u00E0o n\u00EAn app ch\u1EC9 cho xem \u2014 kh\u00F4ng suy \u0111o\u00E1n, gi\u1ED1ng Leobog.",
+      "DevIds": [],
+      "Ids": [
+        [
+          16868,
+          8707
+        ],
+        [
+          16868,
+          8196
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE UT98",
+      "Brand": "MCHOSE",
+      "Layout": "98% \u00B7 c\u01A1",
+      "Family": "kb_by_v2",
+      "Stack": "BY",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE BY qua kb_by_v2) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 UUID)",
+      "IdNote": "Model MCHOSE h\u1ECD BY d\u00F9ng chung h\u1ECD kb_by_v2 (Driver Pack 1). T\u00E0i li\u1EC7u c\u1EE7a h\u00E3ng ph\u00E2n bi\u1EC7t c\u00E1c model n\u00E0y b\u1EB1ng productName USB (nhi\u1EC1u model d\u00F9ng chung 258A:010C); registry kb_by_v2 kh\u00F4ng c\u00F3 UUID/ch\u1EEF k\u00FD cho model MCHOSE BY n\u00E0o n\u00EAn app ch\u1EC9 cho xem \u2014 kh\u00F4ng suy \u0111o\u00E1n, gi\u1ED1ng Leobog.",
+      "DevIds": [],
+      "Ids": [
+        [
+          16868,
+          8707
+        ],
+        [
+          16868,
+          8196
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE X75",
+      "Brand": "MCHOSE",
+      "Layout": "75% \u00B7 c\u01A1",
+      "Family": "kb_by_v2",
+      "Stack": "BY",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE BY qua kb_by_v2) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 UUID)",
+      "IdNote": "Model MCHOSE h\u1ECD BY d\u00F9ng chung h\u1ECD kb_by_v2 (Driver Pack 1). T\u00E0i li\u1EC7u c\u1EE7a h\u00E3ng ph\u00E2n bi\u1EC7t c\u00E1c model n\u00E0y b\u1EB1ng productName USB (nhi\u1EC1u model d\u00F9ng chung 258A:010C); registry kb_by_v2 kh\u00F4ng c\u00F3 UUID/ch\u1EEF k\u00FD cho model MCHOSE BY n\u00E0o n\u00EAn app ch\u1EC9 cho xem \u2014 kh\u00F4ng suy \u0111o\u00E1n, gi\u1ED1ng Leobog.",
+      "DevIds": [],
+      "Ids": [
+        [
+          9610,
+          268
+        ],
+        [
+          13652,
+          64009
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE X75 V2",
+      "Brand": "MCHOSE",
+      "Layout": "75% \u00B7 c\u01A1",
+      "Family": "kb_by_v2",
+      "Stack": "BY",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE BY qua kb_by_v2) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 UUID)",
+      "IdNote": "Model MCHOSE h\u1ECD BY d\u00F9ng chung h\u1ECD kb_by_v2 (Driver Pack 1). T\u00E0i li\u1EC7u c\u1EE7a h\u00E3ng ph\u00E2n bi\u1EC7t c\u00E1c model n\u00E0y b\u1EB1ng productName USB (nhi\u1EC1u model d\u00F9ng chung 258A:010C); registry kb_by_v2 kh\u00F4ng c\u00F3 UUID/ch\u1EEF k\u00FD cho model MCHOSE BY n\u00E0o n\u00EAn app ch\u1EC9 cho xem \u2014 kh\u00F4ng suy \u0111o\u00E1n, gi\u1ED1ng Leobog.",
+      "DevIds": [],
+      "Ids": [
+        [
+          9610,
+          268
+        ],
+        [
+          13652,
+          64009
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE GX87",
+      "Brand": "MCHOSE",
+      "Layout": "TKL \u00B7 c\u01A1",
+      "Family": "kb_by_v2",
+      "Stack": "BY",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE BY qua kb_by_v2) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 UUID)",
+      "IdNote": "Model MCHOSE h\u1ECD BY d\u00F9ng chung h\u1ECD kb_by_v2 (Driver Pack 1). T\u00E0i li\u1EC7u c\u1EE7a h\u00E3ng ph\u00E2n bi\u1EC7t c\u00E1c model n\u00E0y b\u1EB1ng productName USB (nhi\u1EC1u model d\u00F9ng chung 258A:010C); registry kb_by_v2 kh\u00F4ng c\u00F3 UUID/ch\u1EEF k\u00FD cho model MCHOSE BY n\u00E0o n\u00EAn app ch\u1EC9 cho xem \u2014 kh\u00F4ng suy \u0111o\u00E1n, gi\u1ED1ng Leobog.",
+      "DevIds": [],
+      "Ids": [
+        [
+          9610,
+          268
+        ],
+        [
+          13652,
+          64009
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE GX87 V2",
+      "Brand": "MCHOSE",
+      "Layout": "TKL \u00B7 c\u01A1",
+      "Family": "kb_by_v2",
+      "Stack": "BY",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE BY qua kb_by_v2) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 UUID)",
+      "IdNote": "Model MCHOSE h\u1ECD BY d\u00F9ng chung h\u1ECD kb_by_v2 (Driver Pack 1). T\u00E0i li\u1EC7u c\u1EE7a h\u00E3ng ph\u00E2n bi\u1EC7t c\u00E1c model n\u00E0y b\u1EB1ng productName USB (nhi\u1EC1u model d\u00F9ng chung 258A:010C); registry kb_by_v2 kh\u00F4ng c\u00F3 UUID/ch\u1EEF k\u00FD cho model MCHOSE BY n\u00E0o n\u00EAn app ch\u1EC9 cho xem \u2014 kh\u00F4ng suy \u0111o\u00E1n, gi\u1ED1ng Leobog.",
+      "DevIds": [],
+      "Ids": [
+        [
+          9610,
+          268
+        ],
+        [
+          13652,
+          64009
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE K87",
+      "Brand": "MCHOSE",
+      "Layout": "TKL \u00B7 c\u01A1",
+      "Family": "kb_by_v2",
+      "Stack": "BY",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE BY qua kb_by_v2) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 UUID)",
+      "IdNote": "Model MCHOSE h\u1ECD BY d\u00F9ng chung h\u1ECD kb_by_v2 (Driver Pack 1). T\u00E0i li\u1EC7u c\u1EE7a h\u00E3ng ph\u00E2n bi\u1EC7t c\u00E1c model n\u00E0y b\u1EB1ng productName USB (nhi\u1EC1u model d\u00F9ng chung 258A:010C); registry kb_by_v2 kh\u00F4ng c\u00F3 UUID/ch\u1EEF k\u00FD cho model MCHOSE BY n\u00E0o n\u00EAn app ch\u1EC9 cho xem \u2014 kh\u00F4ng suy \u0111o\u00E1n, gi\u1ED1ng Leobog.",
+      "DevIds": [],
+      "Ids": [
+        [
+          1452,
+          591
+        ],
+        [
+          13652,
+          64009
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE KX75",
+      "Brand": "MCHOSE",
+      "Layout": "75% \u00B7 c\u01A1",
+      "Family": "kb_by_v2",
+      "Stack": "BY",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE BY qua kb_by_v2) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 UUID)",
+      "IdNote": "Model MCHOSE h\u1ECD BY d\u00F9ng chung h\u1ECD kb_by_v2 (Driver Pack 1). T\u00E0i li\u1EC7u c\u1EE7a h\u00E3ng ph\u00E2n bi\u1EC7t c\u00E1c model n\u00E0y b\u1EB1ng productName USB (nhi\u1EC1u model d\u00F9ng chung 258A:010C); registry kb_by_v2 kh\u00F4ng c\u00F3 UUID/ch\u1EEF k\u00FD cho model MCHOSE BY n\u00E0o n\u00EAn app ch\u1EC9 cho xem \u2014 kh\u00F4ng suy \u0111o\u00E1n, gi\u1ED1ng Leobog.",
+      "DevIds": [],
+      "Ids": [
+        [
+          9610,
+          268
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE G75 Pro",
+      "Brand": "MCHOSE",
+      "Layout": "75% \u00B7 c\u01A1",
+      "Family": "kb_by_v2",
+      "Stack": "BY",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE BY qua kb_by_v2) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 UUID)",
+      "IdNote": "Model MCHOSE h\u1ECD BY d\u00F9ng chung h\u1ECD kb_by_v2 (Driver Pack 1). T\u00E0i li\u1EC7u c\u1EE7a h\u00E3ng ph\u00E2n bi\u1EC7t c\u00E1c model n\u00E0y b\u1EB1ng productName USB (nhi\u1EC1u model d\u00F9ng chung 258A:010C); registry kb_by_v2 kh\u00F4ng c\u00F3 UUID/ch\u1EEF k\u00FD cho model MCHOSE BY n\u00E0o n\u00EAn app ch\u1EC9 cho xem \u2014 kh\u00F4ng suy \u0111o\u00E1n, gi\u1ED1ng Leobog.",
+      "DevIds": [],
+      "Ids": [
+        [
+          9610,
+          268
+        ],
+        [
+          13652,
+          64009
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE G75 V2 (1K, BY variant)",
+      "Brand": "MCHOSE",
+      "Layout": "75% \u00B7 c\u01A1",
+      "Family": "kb_by_v2",
+      "Stack": "BY",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE BY qua kb_by_v2) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 UUID)",
+      "IdNote": "Model MCHOSE h\u1ECD BY d\u00F9ng chung h\u1ECD kb_by_v2 (Driver Pack 1). T\u00E0i li\u1EC7u c\u1EE7a h\u00E3ng ph\u00E2n bi\u1EC7t c\u00E1c model n\u00E0y b\u1EB1ng productName USB (nhi\u1EC1u model d\u00F9ng chung 258A:010C); registry kb_by_v2 kh\u00F4ng c\u00F3 UUID/ch\u1EEF k\u00FD cho model MCHOSE BY n\u00E0o n\u00EAn app ch\u1EC9 cho xem \u2014 kh\u00F4ng suy \u0111o\u00E1n, gi\u1ED1ng Leobog.",
+      "DevIds": [],
+      "Ids": [
+        [
+          14391,
+          12310
+        ],
+        [
+          16868,
+          8193
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE Z75",
+      "Brand": "MCHOSE",
+      "Layout": "75% \u00B7 c\u01A1",
+      "Family": "kb_by_v2",
+      "Stack": "BY",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE BY qua kb_by_v2) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 UUID)",
+      "IdNote": "Model MCHOSE h\u1ECD BY d\u00F9ng chung h\u1ECD kb_by_v2 (Driver Pack 1). T\u00E0i li\u1EC7u c\u1EE7a h\u00E3ng ph\u00E2n bi\u1EC7t c\u00E1c model n\u00E0y b\u1EB1ng productName USB (nhi\u1EC1u model d\u00F9ng chung 258A:010C); registry kb_by_v2 kh\u00F4ng c\u00F3 UUID/ch\u1EEF k\u00FD cho model MCHOSE BY n\u00E0o n\u00EAn app ch\u1EC9 cho xem \u2014 kh\u00F4ng suy \u0111o\u00E1n, gi\u1ED1ng Leobog.",
+      "DevIds": [],
+      "Ids": [
+        [
+          9610,
+          441
+        ],
+        [
+          9610,
+          443
+        ]
+      ]
+    },
+    {
+      "Name": "MCHOSE Z75S",
+      "Brand": "MCHOSE",
+      "Layout": "75% \u00B7 c\u01A1",
+      "Family": "kb_by_v2",
+      "Stack": "BY",
+      "StatusKind": 1,
+      "ProtocolStatus": "Driver Pack 3 (MCHOSE BY qua kb_by_v2) \u2014 ch\u1EC9 xem (ch\u01B0a c\u00F3 UUID)",
+      "IdNote": "Model MCHOSE h\u1ECD BY d\u00F9ng chung h\u1ECD kb_by_v2 (Driver Pack 1). T\u00E0i li\u1EC7u c\u1EE7a h\u00E3ng ph\u00E2n bi\u1EC7t c\u00E1c model n\u00E0y b\u1EB1ng productName USB (nhi\u1EC1u model d\u00F9ng chung 258A:010C); registry kb_by_v2 kh\u00F4ng c\u00F3 UUID/ch\u1EEF k\u00FD cho model MCHOSE BY n\u00E0o n\u00EAn app ch\u1EC9 cho xem \u2014 kh\u00F4ng suy \u0111o\u00E1n, gi\u1ED1ng Leobog.",
+      "DevIds": [],
+      "Ids": [
+        [
+          9610,
+          441
+        ],
+        [
+          9610,
+          443
+        ]
+      ]
+    }
+  ]
+}
