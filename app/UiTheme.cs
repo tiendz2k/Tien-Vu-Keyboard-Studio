@@ -71,6 +71,66 @@ namespace TienKeyboardStudio3
         }
     }
 
+    // =====================================================================
+    // v3.11.2 — Bang chrome SUY RA TU O MAU: truoc day doi o mau chi doi
+    // AccentA/B (gradient) + cham tren thanh tren cung, con moi be mat lon
+    // (the kinh, thanh ben, panel Cai dat, lop phu tren hinh nen) deu la
+    // mau trung tinh CO DINH va moi trang thai "dang chon" kieu AULA deu
+    // la pill TRANG trung tinh — nen 4 o AULA nhin gan nhu khong khac gi
+    // nhau (chi "Nguyen ban" doi ca chrome gradient nen thay ro). Gio moi
+    // o mau suy ra mot bo mau chrome day du: cac panel/thanh ben NHUOM
+    // HUE cua bang mau, pill dang chon la ban SANG nhuom hue (van sang,
+    // chu toi doc ro — giu ban sac pill trang AULA), slider + cong tac
+    // BAT mang mau accent. Logic thuan (chi so lieu mau) de test duoc;
+    // MainWindow ap cac so nay len brush dung chung.
+    // =====================================================================
+
+    /// <summary>Bo mau chrome day du cua mot o mau chu de.</summary>
+    public sealed class ChromePalette
+    {
+        public (byte R, byte G, byte B) AccentMid;                 // trung diem gradient A->B
+        public (byte R, byte G, byte B, byte A) PanelTint;         // nen thanh ben + thanh tren cung
+        public (byte R, byte G, byte B, byte A) CardTint;          // nen the/panel kinh
+        public (byte R, byte G, byte B, byte A) BorderTint;        // vien the (ban AULA)
+        public (byte R, byte G, byte B) SelTint;                   // pill dang chon: ban sang nhuom hue (mo, chu toi doc ro)
+        public (byte R, byte G, byte B, byte A) SettingsPanel;     // nen panel Cai dat (kem alpha gan dac)
+        public (byte R, byte G, byte B, byte A) SettingsContent;   // nen vung noi dung panel Cai dat
+        public (byte R, byte G, byte B) ShadeBase;                 // mau goc lop phu toi tren hinh nen (alpha do GlassMath quyet)
+    }
+
+    public static class ChromePalettes
+    {
+        public static (byte R, byte G, byte B) Mix((byte R, byte G, byte B) c, (byte R, byte G, byte B) other, double f)
+        {
+            byte M(byte x, byte y) => (byte)Math.Round(x + (y - x) * f);
+            return (M(c.R, other.R), M(c.G, other.G), M(c.B, other.B));
+        }
+
+        private static readonly (byte R, byte G, byte B) White = (0xFF, 0xFF, 0xFF);
+        private static readonly (byte R, byte G, byte B) SettingsBase = (0x12, 0x12, 0x1C);
+        private static readonly (byte R, byte G, byte B) SettingsContentBase = (0x10, 0x10, 0x18);
+        private static readonly (byte R, byte G, byte B) ShadeNeutral = (0x0B, 0x0B, 0x10);
+
+        public static ChromePalette For(ThemeTileDef t)
+        {
+            var mid = Mix(t.A, t.B, 0.5);
+            return new ChromePalette
+            {
+                AccentMid = mid,
+                PanelTint = (mid.R, mid.G, mid.B, 0x2E),
+                CardTint = (mid.R, mid.G, mid.B, 0x24),
+                BorderTint = (mid.R, mid.G, mid.B, 0x55),
+                SelTint = Mix(mid, White, 0.60),
+                SettingsPanel = WithAlpha(Mix(SettingsBase, mid, 0.20), 0xF5),
+                SettingsContent = WithAlpha(Mix(SettingsContentBase, mid, 0.20), 0xF2),
+                ShadeBase = Mix(ShadeNeutral, mid, 0.22),
+            };
+        }
+
+        private static (byte R, byte G, byte B, byte A) WithAlpha((byte R, byte G, byte B) c, byte a)
+            => (c.R, c.G, c.B, a);
+    }
+
     /// <summary>Toan hoc do mo kinh (thang 4–10 nhu AULA Hub).</summary>
     public static class GlassMath
     {

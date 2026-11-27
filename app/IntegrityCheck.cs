@@ -21,16 +21,27 @@ namespace TienKeyboardStudio3
     /// <summary>
     /// Kiem tra toan ven ban phat hanh (v3.8) — THUAN LOGIC, unit test duoc.
     ///
-    /// Cach lam: luc build, build.sh bam SHA-256 cac assembly cua app
-    /// (file exe apphost + cac DLL phu thuoc do app quan ly, KHONG bam file
-    /// runtime cua .NET) trong thu muc bien dich va nhung bang bam vao tai
-    /// nguyen cua app. Assembly chinh (TienKeyboardStudio.dll) KHONG nam
-    /// trong bang bam vi mot file khong the chua bam cua chinh no (nhung
-    /// bang bam vao la bam thay doi) — no duoc bao ve gian tiep qua bam cua
-    /// goi phat hanh cong bo tren repo. Khi chay, app doi chieu cac file assembly THUC SU
-    /// NAM CANH file exe (ban dong goi roi / ban bi giai nen - dong goi lai)
-    /// voi bang bam: file nao co mat ma bam khac -> canh bao "ban da bi chinh
-    /// sua" tren Trang chu (khong chan tinh nang).
+    /// Cach lam: luc build, build.sh bam SHA-256 cac DLL phu thuoc do app
+    /// quan ly (KHONG bam file runtime cua .NET) trong thu muc bien dich
+    /// va nhung bang bam vao tai nguyen cua app. Assembly chinh
+    /// (TienKeyboardStudio.dll) KHONG nam trong bang bam vi mot file khong
+    /// the chua bam cua chinh no (nhung bang bam vao la bam thay doi) — no
+    /// duoc bao ve gian tiep qua bam cua goi phat hanh cong bo tren repo.
+    ///
+    /// v3.11.2 — SUA LOI CANH BAO GIA tren ban chinh thuc: ban cu dua ca
+    /// "TienKeyboardStudio.exe" cua ban build ROI (apphost) vao bang bam,
+    /// trong khi ban phat hanh la exe SINGLE-FILE (bundle) — mot file exe
+    /// hoan toan khac, bam khac. Verify thay exe co mat canh minh ma bam
+    /// lech nen banner do hien tren MOI ban chinh thuc (Tien gap tren may
+    /// that). Nay: (1) build.sh khong bam exe nua (exe bundle cung theo
+    /// nguyen tac "file khong tu chua bam cua chinh no", bao ve qua bam
+    /// zip cong bo); (2) Verify TU BO QUA muc trung ten file exe dang
+    /// chay, phong thu ngay ca khi bang bam cu/con sot muc exe.
+    ///
+    /// Khi chay, app doi chieu cac file assembly THUC SU NAM CANH file
+    /// exe (ban dong goi roi / ban bi giai nen - dong goi lai) voi bang
+    /// bam: file nao co mat ma bam khac -> canh bao "ban da bi chinh sua"
+    /// tren Trang chu (khong chan tinh nang).
     ///
     /// Gioi han trung thuc: day la lop RAN DE sua doi thong thuong (hex-edit,
     /// thay DLL, dong goi lai kem bang bam cu). Nguoi du kien tri van co the
@@ -41,7 +52,7 @@ namespace TienKeyboardStudio3
     {
         public const string ResourceName = "TienKeyboardStudio38.integrity-manifest.json";
         public const string TamperWarning =
-            "Bản này đã bị chỉnh sửa so với bản gốc — tải bản chính thức tại github.com/tiendz2k/T-Keyboard-Studio";
+            "Bản này đã bị chỉnh sửa so với bản gốc — tải bản chính thức tại github.com/tiendz2k/Tien-Vu-Keyboard-Studio";
 
         public static IntegrityManifest ParseManifest(string json)
         {
@@ -85,8 +96,16 @@ namespace TienKeyboardStudio3
         {
             var bad = new List<string>();
             if (manifest == null || manifest.Files == null || string.IsNullOrEmpty(baseDir)) return bad;
+            // v3.11.2: bo qua chinh file exe dang chay — exe single-file
+            // khong bao gio khop bam apphost trong bang bam (xem ghi chu
+            // lop), dua vao la canh bao gia tren ban chinh thuc.
+            string selfName = null;
+            try { selfName = Path.GetFileName(Environment.ProcessPath); } catch { }
             foreach (var kv in manifest.Files)
             {
+                if (!string.IsNullOrEmpty(selfName) &&
+                    string.Equals(kv.Key, selfName, StringComparison.OrdinalIgnoreCase))
+                    continue;
                 string path = Path.Combine(baseDir, kv.Key);
                 if (!File.Exists(path)) continue;
                 string actual;

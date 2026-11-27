@@ -21,6 +21,14 @@
     <SolidColorBrush x:Key="OkGreen" Color="#34D399" />
     <!-- Trang AULA: nen nut chinh / muc dang chon -->
     <SolidColorBrush x:Key="PillWhite" Color="#F4F4F6" />
+    <!-- v3.11.2: brush chrome NHUOM HUE theo o mau (ApplyChromePalette doi mau tai cho) -->
+    <SolidColorBrush x:Key="PanelTintBrush" Color="#2E4F86EE" />
+    <SolidColorBrush x:Key="CardTintBrush" Color="#244F86EE" />
+    <SolidColorBrush x:Key="CardBorderBrush" Color="#554F86EE" />
+    <SolidColorBrush x:Key="SelTintBrush" Color="#B9CFF8" />
+    <SolidColorBrush x:Key="AccentSolidBrush" Color="#4F86EE" />
+    <SolidColorBrush x:Key="SettingsPanelBrush" Color="#F51E2946" />
+    <SolidColorBrush x:Key="SettingsContentBrush" Color="#F21D2843" />
     <SolidColorBrush x:Key="PillWhiteHover" Color="#FFFFFF" />
     <SolidColorBrush x:Key="PillInk" Color="#121218" />
   </Application.Resources>
@@ -31,16 +39,16 @@
          vien toc sang (hairline) ro, bo goc lon mem — hinh nen xuyen qua ro ret.
          Bo cuc giu nguyen; chi doi chat lieu be mat. -->
     <Style Selector="Border.card">
-      <Setter Property="Background" Value="#12FFFFFF" />
-      <Setter Property="BorderBrush" Value="#30FFFFFF" />
+      <Setter Property="Background" Value="{StaticResource CardTintBrush}" />
+      <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}" />
       <Setter Property="BorderThickness" Value="1" />
       <Setter Property="CornerRadius" Value="24" />
       <Setter Property="Padding" Value="18" />
       <Setter Property="BoxShadow" Value="inset 0 1 0 0 #38FFFFFF, inset 0 -1 0 0 #0D000000, 0 12 30 0 #66000000, 0 2 6 0 #33000000" />
     </Style>
     <Style Selector="Border.cardflat">
-      <Setter Property="Background" Value="#0EFFFFFF" />
-      <Setter Property="BorderBrush" Value="#24FFFFFF" />
+      <Setter Property="Background" Value="{StaticResource CardTintBrush}" />
+      <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}" />
       <Setter Property="BorderThickness" Value="1" />
       <Setter Property="CornerRadius" Value="18" />
       <Setter Property="Padding" Value="14" />
@@ -140,7 +148,7 @@
       <Setter Property="FontWeight" Value="SemiBold" />
     </Style>
     <Style Selector="Button.nav.sel /template/ ContentPresenter">
-      <Setter Property="Background" Value="{StaticResource PillWhite}" />
+      <Setter Property="Background" Value="{StaticResource SelTintBrush}" />
       <Setter Property="TextElement.Foreground" Value="{StaticResource PillInk}" />
     </Style>
 
@@ -159,10 +167,10 @@
     </Style>
     <Style Selector="Button.chip.sel">
       <Setter Property="Foreground" Value="{StaticResource PillInk}" />
-      <Setter Property="BorderBrush" Value="#F4F4F6" />
+      <Setter Property="BorderBrush" Value="{StaticResource SelTintBrush}" />
     </Style>
     <Style Selector="Button.chip.sel /template/ ContentPresenter">
-      <Setter Property="Background" Value="{StaticResource PillWhite}" />
+      <Setter Property="Background" Value="{StaticResource SelTintBrush}" />
       <Setter Property="TextElement.Foreground" Value="{StaticResource PillInk}" />
     </Style>
 
@@ -183,7 +191,7 @@
       <Setter Property="FontWeight" Value="SemiBold" />
     </Style>
     <Style Selector="Button.seg.sel /template/ ContentPresenter">
-      <Setter Property="Background" Value="{StaticResource PillWhite}" />
+      <Setter Property="Background" Value="{StaticResource SelTintBrush}" />
       <Setter Property="TextElement.Foreground" Value="{StaticResource PillInk}" />
     </Style>
     <Style Selector="Border.segtray">
@@ -196,8 +204,8 @@
 
     <!-- The chon (hieu ung / GIF / thiet bi / mau phim) — cung lop kinh, bo goc lon -->
     <Style Selector="Border.pickcard">
-      <Setter Property="Background" Value="#10FFFFFF" />
-      <Setter Property="BorderBrush" Value="#26FFFFFF" />
+      <Setter Property="Background" Value="{StaticResource CardTintBrush}" />
+      <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}" />
       <Setter Property="BorderThickness" Value="1" />
       <Setter Property="CornerRadius" Value="18" />
       <Setter Property="Padding" Value="10" />
@@ -213,9 +221,10 @@
       <Setter Property="FontSize" Value="13" />
     </Style>
 
-    <!-- Slider: duong truot trung tinh, num trang (bo gradient) -->
+    <!-- Slider: v3.11.2 — phan da truot mang MAU ACCENT cua o dang chon
+         (truoc day trang trung tinh nen doi o mau khong thay gi o slider) -->
     <Style Selector="Slider">
-      <Setter Property="Foreground" Value="{StaticResource PillWhite}" />
+      <Setter Property="Foreground" Value="{StaticResource AccentSolidBrush}" />
     </Style>
 
     <!-- Thanh cuon mong, nhe -->

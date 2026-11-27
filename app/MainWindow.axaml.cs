@@ -324,7 +324,7 @@ namespace TienKeyboardStudio3
             RefreshWriteStates();
             ShowPage("home");
             _ = RunIntegrityCheckAsync();
-            AppendLog("Tien Vu Keyboard Studio v3.11.1 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
+            AppendLog("Tien Vu Keyboard Studio v3.11.2 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
             AppendLog("Lộ trình an toàn lần đầu: Quét thiết bị → thử RGB (dry-run) → tắt Dry-run → RGB thật → Cài đặt 04 17 → Đồng hồ → GIF TFT nhỏ → Đọc thử 0xF5.");
         }
 
@@ -447,7 +447,7 @@ namespace TienKeyboardStudio3
         private (Control Root, Action<int> Select) Segmented(string[] labels, int initial, Action<int> onChange)
         {
             var tray = new Border { Classes = { "segtray" } };
-            var row = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2 };
+            var row = new WrapPanel { Orientation = Orientation.Horizontal, ItemWidth = double.NaN, ItemHeight = double.NaN };
             var btns = new List<Button>();
             for (int i = 0; i < labels.Length; i++)
             {
@@ -811,7 +811,7 @@ namespace TienKeyboardStudio3
             Grid.SetColumn(scanBtn, 1);
             connectHeader.Children.Add(scanBtn);
             var connectCard = Card(V(12, connectHeader, _detectedPanel,
-                Tb("Dùng phím với mẫu chưa có trong bảng, hoặc muốn báo lỗi kèm thông tin máy? Bấm nút dưới đây để sao chép một đoạn thông tin thiết bị (VID:PID, kết quả probe, mẫu đang chọn, phiên bản app) rồi dán vào GitHub issue của dự án.", "faint"),
+                Tb("Sao chép thông tin thiết bị để báo lỗi hoặc dùng với mẫu chưa có trong bảng.", "faint"),
                 CopyInfoButton()));
 
             var homeKb = new KeyboardView { Mode = KeyboardMode.Animated, State = _rgb };
@@ -859,7 +859,7 @@ namespace TienKeyboardStudio3
                 stats,
                 Tb("Tất cả mẫu được hỗ trợ", "h2"),
                 models,
-                Tb("“Hỗ trợ” = app dùng được với mẫu đó hôm nay: ghi thật (F75 Max) hoặc qua trang riêng của họ giao thức (xem trước / nhận diện / chỉ xem). Chi tiết khả năng từng mẫu nằm ở trang của họ giao thức.", "faint"),
+                Tb("“Hỗ trợ” = app dùng được với mẫu đó hôm nay; “Chưa hỗ trợ” = mới có trong danh sách, chưa có driver.", "faint"),
                 logCard);
             return Scroll(root);
         }
@@ -914,31 +914,31 @@ namespace TienKeyboardStudio3
             var max = found.FirstOrDefault(d => d.Model.FullSupport);
             if (max != null)
             {
-                string detail = $"{max.Connection} · VID {max.Vid:X4}:{max.Pid:X4} · {max.InterfaceCount} giao diện HID";
-                if (f75Ifaces.Count > 0)
-                    detail += " · " + string.Join(", ", f75Ifaces.Select(i => i.Role).Distinct());
+                // v3.11.2: the chi con ten + pill + MOT dong ngan (DeviceCardLine);
+                // VID/so giao dien/vai tro kenh la thong so ky thuat — xem o
+                // "Sao chep thong tin thiet bi", khong in len the nua.
                 bool selected = _selectedModel.FullSupport;
                 _detectedPanel.Children.Add(DeviceCard(
                     max.Model.Name, selected ? "Đang sử dụng" : "Đã phát hiện", Color.FromRgb(0x34, 0xD3, 0x99),
-                    detail + " · Hỗ trợ đầy đủ tính năng (nạp GIF cần cáp USB-C)", null));
+                    DeviceCardLine.Build(max.Connection, fullSupport: true), null));
             }
             foreach (var d in found.Where(d => !d.Model.FullSupport))
             {
                 var btn = GhostBtn("Xem trước mẫu này", () => SelectModel(d.Model));
                 _detectedPanel.Children.Add(DeviceCard(
                     d.Model.Name, "Đã phát hiện", Color.FromRgb(0xC4, 0xB5, 0xFD),
-                    $"{d.Connection} · VID {d.Vid:X4}:{d.Pid:X4} · {d.Model.ProtocolStatus}", btn));
+                    DeviceCardLine.Build(d.Connection, fullSupport: false), btn));
             }
             if (found.Count == 0)
             {
-                _detectedPanel.Children.Add(Tb("Không tìm thấy bàn phím nào trong danh sách hỗ trợ. Hãy cắm F75 Max bằng cáp USB-C rồi quét lại (Bluetooth/đầu thu 2.4G không nạp được màn hình và cài đặt).", "sub"));
+                _detectedPanel.Children.Add(Tb("Không tìm thấy bàn phím nào. Hãy cắm phím bằng cáp USB rồi quét lại.", "sub"));
             }
             else
             {
                 // 258A:010C dung chung cho nhieu phim — canh bao trung lap neu co
                 var shared = found.GroupBy(d => (d.Vid, d.Pid)).Where(g => g.Count() > 1).ToList();
                 foreach (var g in shared)
-                    _detectedPanel.Children.Add(Tb($"Lưu ý: VID {g.Key.Vid:X4}:{g.Key.Pid:X4} được dùng chung bởi {string.Join(" và ", g.Select(x => x.Model.Name))} — với họ kb_by_v2, app chỉ cho ghi sau khi định danh bằng lệnh 0x82 khớp registry (trang 'Họ Sinowealth'); với nền tảng RongYuan, app chỉ cho ghi sau khi định danh bằng dev_id 0x8F khớp registry (trang 'Họ RongYuan'); các họ khác chờ driver riêng.", "faint"));
+                    _detectedPanel.Children.Add(Tb("Lưu ý: các mẫu trên dùng chung một mã kết nối — app định danh chính xác ở trang riêng của từng họ.", "faint"));
             }
             AppendLog($"Quét thiết bị: tìm thấy {found.Count} mẫu khớp ({string.Join(", ", found.Select(f => f.Model.Name))}).");
             if (!auto) ShowToast(found.Count > 0 ? $"Quét xong: {found.Count} thiết bị khớp." : "Không tìm thấy bàn phím hỗ trợ nào.");
@@ -951,23 +951,21 @@ namespace TienKeyboardStudio3
             RefreshNavVisibility();
             RefreshWriteStates();
             AppendLog($"Đã chọn mẫu: {model.Name} — {model.ProtocolStatus}.");
+            // v3.11.2: toast rut gon — bo so hieu driver pack/stack/opcode,
+            // chi con huong dan mo trang ho + chay Nhan dien.
+            string familyPage =
+                model.Family == "kb_by_v2" ? "Họ Sinowealth" :
+                model.Family == "rongyuan" ? "Họ RongYuan" :
+                model.Family == "mchose" ? "Họ MCHOSE" :
+                model.Family == "sonix_sib" ? "Họ SONiX" :
+                model.Family == "witmod" ? "Họ WitMod" :
+                model.Family == "dareu" ? "Họ DareU" :
+                model.Family == "aulahub" ? "Họ AULA Hub" : null;
             ShowToast(model.FullSupport
                 ? $"Đang dùng {model.Name} (hỗ trợ đầy đủ)."
-                : model.Family == "kb_by_v2"
-                    ? $"{model.Name}: thuộc họ Sinowealth (Driver Pack 1) — mở trang 'Họ Sinowealth (kb_by_v2)' và chạy Nhận diện (0x82) trước khi ghi."
-                    : model.Family == "rongyuan"
-                        ? $"{model.Name}: thuộc nền tảng RongYuan (Driver Pack 2) — mở trang 'Họ RongYuan' và chạy Nhận diện (0x8F) trước khi ghi."
-                        : model.Family == "mchose"
-                            ? $"{model.Name}: thuộc họ MCHOSE (Driver Pack 3, stack {model.Stack}) — mở trang 'Họ MCHOSE' và chạy Nhận diện trước khi ghi."
-                            : model.Family == "sonix_sib"
-                                ? $"{model.Name}: thuộc các họ SONiX anh em (Driver Pack 4, stack {model.Stack}) — mở trang 'Họ SONiX' và chạy Probe/Nhận diện trước khi ghi."
-                                : model.Family == "witmod"
-                                    ? $"{model.Name}: thuộc nền WitMod (Driver Pack 4) — mở trang 'Họ WitMod' và chạy Nhận diện (0x0D + 0x01) trước khi ghi."
-                                    : model.Family == "dareu"
-                                        ? $"{model.Name}: thuộc họ DareU (Driver Pack 5, họ {model.Stack}) — mở trang 'Họ DareU' và chạy Nhận diện (registry PID) trước khi ghi."
-                                        : model.Family == "aulahub"
-                                            ? $"{model.Name}: thuộc các họ AULA Hub (Driver Pack 5, {model.Stack}) — mở trang 'Họ AULA Hub' và chạy Nhận diện (VID:PID + usage page) trước khi ghi."
-                                            : $"{model.Name}: chế độ XEM TRƯỚC — giao diện/hiệu ứng xem được, tính năng ghi xuống phím đang khoá vì driver cho mẫu này chưa tích hợp.");
+                : familyPage != null
+                    ? $"{model.Name}: mở trang '{familyPage}' và chạy Nhận diện trước khi ghi."
+                    : $"{model.Name}: chế độ XEM TRƯỚC — xem được giao diện/hiệu ứng, chưa ghi xuống phím được.");
             if ((_currentPage == "gif" || _currentPage == "widget") && !model.HasScreen) ShowPage("home");
             if (_currentPage == "perkey" && !model.FullSupport) ShowPage("home");
             if (_currentPage == "kbbyv2" && model.Family != "kb_by_v2") ShowPage("home");
@@ -1060,7 +1058,7 @@ namespace TienKeyboardStudio3
             _kbIdStatus = Tb("Chưa nhận diện. Hãy cắm phím họ Sinowealth (VID 258A) bằng cáp USB rồi bấm Nhận diện.", "sub");
             var idCard = Card(V(10,
                 Tb("1 · Nhận diện thiết bị (bắt buộc trước khi ghi)", "h2"),
-                Tb("VID:PID 258A:010C bị dùng chung bởi nhiều board khác nhau (AULA F75, Leobog Hi75, YUNZII C75/C98, GravaStar K1…). App đọc định danh từ chính thiết bị bằng lệnh 0x82 (chỉ đọc) và đối chiếu registry: khớp mới mở khoá ghi; không khớp hoặc không đọc được → chỉ xem. Leobog Hi75/Hi75C Pro chưa có UUID trong tài liệu đã trích nên luôn ở chế độ chỉ xem.", "sub"),
+                Tb("Nhiều mẫu dùng chung một mã USB nên app định danh bằng lệnh đọc từ chính thiết bị trước khi cho ghi.", "sub"),
                 PrimaryBtn("Nhận diện thiết bị (đọc 0x82 — chỉ đọc)", async () =>
                 {
                     if (_busy) { ShowToast("Đang bận thao tác trước — đợi một chút nhé."); return; }
@@ -1098,7 +1096,7 @@ namespace TienKeyboardStudio3
 
             var writeCard = Card(V(10,
                 Tb("3 · Ghi xuống phím (khoá an toàn 3 lớp)", "h2"),
-                Tb("Chỉ gửi thật khi: đã định danh khớp registry + công tắc Thử nghiệm BẬT + Dry-run TẮT. Thiếu một điều kiện, app chỉ ghi log gói sẽ gửi (hoặc từ chối nếu chưa định danh). Sau lệnh ghi keymap, app chờ 100 ms theo tài liệu gốc.", "sub"),
+                Tb("Chỉ gửi thật khi: đã định danh khớp + Thử nghiệm BẬT + Dry-run TẮT. Thiếu một điều kiện, app chỉ ghi log.", "sub"),
                 H(10,
                     PrimaryBtn("Ghi đèn mẫu cầu vồng (0x06)", async () =>
                     {
@@ -1181,7 +1179,7 @@ namespace TienKeyboardStudio3
             var idCard = Card(V(10,
                 Tb("1 · Nhận diện thiết bị (bắt buộc trước khi ghi)", "h2"),
                 _ryModelInfo,
-                Tb("VID:PID của nền này bị dùng chung rất rộng (riêng PID 0x5030 dùng cho gần như toàn bộ dòng RY5088 của cả Akko lẫn MonsGeek). App đọc dev_id 32-bit từ chính thiết bị bằng lệnh 0x8F (chỉ đọc) và đối chiếu registry 246 mục đã trích từ driver chính hãng: chỉ 52 mục MonsGeek có sẵn dev_id đã kiểm chứng — khớp một trong số đó mới mở khoá ghi; ngoài ra (kể cả khi đọc được dev_id lạ) → chỉ xem, app không suy đoán.", "sub"),
+                Tb("Các mẫu nền này dùng chung mã USB; app đọc mã định danh từ chính thiết bị và đối chiếu danh sách — khớp mới cho ghi, còn lại chỉ xem.", "sub"),
                 PrimaryBtn("Nhận diện thiết bị (đọc 0x8F — chỉ đọc)", async () =>
                 {
                     if (_busy) { ShowToast("Đang bận thao tác trước — đợi một chút nhé."); return; }
@@ -1220,7 +1218,7 @@ namespace TienKeyboardStudio3
                 await RyWriteAsync($"Chọn profile {idx} (0x04)", () => _ry.SendWrite("Chon profile RongYuan", RongYuanProtocol.BuildSetProfile(idx))));
             var writeCard = Card(V(10,
                 Tb("3 · Ghi xuống phím (khoá an toàn 3 lớp)", "h2"),
-                Tb("Chỉ gửi thật khi: đã định danh khớp registry (dev_id) + công tắc Thử nghiệm BẬT + Dry-run TẮT. Thiếu một điều kiện, app chỉ ghi log gói sẽ gửi (hoặc từ chối nếu chưa định danh).", "sub"),
+                Tb("Chỉ gửi thật khi: đã định danh khớp + Thử nghiệm BẬT + Dry-run TẮT. Thiếu một điều kiện, app chỉ ghi log.", "sub"),
                 Tb("Chọn profile đang hoạt động:", "sub"),
                 profileSeg.Root,
                 H(10,
@@ -1254,10 +1252,10 @@ namespace TienKeyboardStudio3
                 await RyWriteHeBulkAsync($"Điểm kích hoạt {mm:0.0} mm mọi phím", RongYuanHe.SubActuation,
                     RongYuanHe.SerializeU16(RyRepeatRaw(RongYuanHe.MmToRaw(mm, _ryScale))));
             });
-            _ryCalStatus = Tb("Hiệu chuẩn chỉ chạy khi cắm dây. Luồng theo driver gốc: bật báo cáo (27) → ghi mốc MIN (28, thả hết phím, chờ ~2 giây) → ghi mốc MAX (30, nhấn hết cỡ) → tắt báo cáo.", "sub");
+            _ryCalStatus = Tb("Hiệu chuẩn chỉ chạy khi cắm dây, theo đúng luồng của driver gốc.", "sub");
             var heContent = V(10,
                 Tb("4 · Hall-effect (lệnh gộp 0x65/0xE5)", "h2"),
-                Tb("Toàn bộ cấu hình từ tính đi qua một lệnh gộp với sub-op theo từng mảng: 0=điểm kích hoạt, 1=điểm nhả, 2/3=Rapid Trigger nhấn/nhả, 4=DKS, 5=Mod-Tap (lượng tử 10 ms), 6=vùng chết đáy, 7=mode byte (bit7 = Rapid Trigger, 7 = Snap/SOCD), 251=vùng chết đỉnh, 252=loại switch, 254/255=đọc realtime. Giá trị = mm × hệ số theo firmware; dải phổ biến 0.1–3.3 mm (bản Ultra/TMR tối đa 3.4 mm).", "sub"),
+                Tb("Mọi cấu hình từ tính (điểm kích hoạt/nhả, Rapid Trigger, DKS…) đi qua một lệnh gộp của nền tảng.", "sub"),
                 Tb("Hệ số quy đổi theo lớp firmware:", "sub"),
                 scaleSeg.Root,
                 Tb("Điểm kích hoạt cho mọi phím:", "sub"),
@@ -1309,7 +1307,7 @@ namespace TienKeyboardStudio3
             // --- Muc man hinh: chi hien voi model co man hinh (RefreshRyPage) ---
             var screenContent = V(10,
                 Tb("5 · Màn hình TFT", "h2"),
-                Tb("Đường nạp theo hồ sơ EPOMAKER (mức byte): xoá flash (0x2C, ACK magic AA AA 55 55) → gói chuẩn bị 165 (RGB565) / 169 (RGB888) chờ ACK resp[1]==1 → dữ liệu 37/41 theo mảnh 56 byte, nhịp ~3 ms. Lưu ý trung thực: thứ tự quét pixel (hàng/cột) và chiều byte RGB565 của từng firmware chưa tái dựng dứt khoát trong hồ sơ — bản này đóng gói RGB565 big-endian theo hàng (row-major); ảnh nạp lên có thể bị lệch/xoay trên phím thật cho tới khi kiểm chứng được bằng thiết bị.", "sub"),
+                Tb("Đường nạp màn hình EPOMAKER đã trích được ở mức giao thức; các mục tương ứng nằm bên dưới.", "sub"),
                 H(10,
                     PrimaryBtn("Nạp ảnh mẫu (gradient) lên màn hình", async () =>
                     {
@@ -1564,10 +1562,10 @@ namespace TienKeyboardStudio3
             // --- The B: S75 Pro / Nova75 ---
             _sxCardB = Card(V(10,
                 Tb("Họ B — S75 Pro / Nova75 (nền SONiX 64 byte)", "h2"),
-                Tb("⚠ CẢNH BÁO TRÙNG NỀN TẢNG: S75 Pro và Nova75 dùng CHUNG VID:PID 0C45:800A và chung giao thức feature-report với chính F75 Max. Probe 0xF5 (đọc) chạy được trên cả ba máy và KHÔNG phân biệt được chúng với nhau — app chỉ gợi ý dựa trên productName (Nova75 phải đúng \"AULA-NOVA75\") và mẫu bạn đang chọn ở Tổng quan. Vì vậy stream của họ B luôn nằm sau công tắc Thử nghiệm + tắt Dry-run, và bạn phải chắc chắn máy đang cắm đúng là S75 Pro/Nova75 chứ không phải F75 Max.", "sub"),
+                Tb("⚠ S75 Pro và Nova75 dùng chung mã USB và giao thức với F75 Max — lệnh đọc không phân biệt được chúng với F75 Max; hãy chắc chắn đúng mẫu đang cắm trước khi ghi.", "sub"),
                 Tb("Probe 0xF5: gửi lệnh đọc (byte[8]=9), kiểm ACK (reply[1]=opcode, reply[3]=1 sẵn sàng / 0xFF bận), đọc 9 khối trạng thái màu phím hiện tại.", "sub"),
                 PrimaryBtn("Probe 0xF5 (đọc trạng thái)", async () => await SxProbeAsync("Probe 0xF5 họ B", () => _sx.ProbeSonixB())),
-                Tb("Stream: lệnh 0x20 (byte[8]=8) → 8 khối frame [id,R,G,B] → lệnh 0x02 commit. Nova75 dùng trình ghi frame native tăng tốc trong app gốc mà cách chia gói chưa rõ — với Nova75 nút này CHỈ ghi log.", "sub"),
+                Tb("Stream đèn dùng chung cơ chế với F75 Max; Nova75 ghi frame bằng trình riêng nên tạm chỉ ghi log.", "sub"),
                 WriteBtn("Stream 1 frame cầu vồng", async () => await SxWriteAsync("Stream frame họ B", () =>
                 {
                     var colors = new Dictionary<byte, (byte R, byte G, byte B)>();
@@ -1579,7 +1577,7 @@ namespace TienKeyboardStudio3
             // --- The C: MAD60 ---
             _sxCardC = Card(V(10,
                 Tb("Họ C — MADLIONS MAD60 HE (V2 / thường / RGB)", "h2"),
-                Tb("Kênh output report 32 byte, usage page 0xFF60. Bắt tay: gửi [1] — firmware phải trả protocol v9 (d[1]=0, d[2]=9) mới được coi là nhận diện; khác v9 app từ chối như app gốc. Stream: vào chế độ custom từ gói info [8,65], gửi 10 gói frame (70 LED × RGB), khôi phục màu gốc khi xong.", "sub"),
+                Tb("MAD60 HE kết nối qua kênh riêng của hãng; bắt tay cần đúng phiên bản firmware mới cho ghi.", "sub"),
                 PrimaryBtn("Bắt tay kiểm tra (fw protocol v9)", async () => await SxProbeAsync("Bắt tay MAD60", () => _sx.ProbeMad60())),
                 WriteBtn("Stream 1 frame cầu vồng", async () => await SxWriteAsync("Stream frame MAD60", () =>
                 {
@@ -1595,7 +1593,7 @@ namespace TienKeyboardStudio3
             // --- The D: HERO68 HE ---
             _sxCardD = Card(V(10,
                 Tb("Họ D — AULA HERO68 HE", "h2"),
-                Tb("Report ID 9, gói 63 byte, checksum ở byte 62: (9 + tổng 63 byte) & 0xFF == 0xFF. Nhận diện bằng lệnh 130 — đáp trả phải chứa chữ ký [17,0,0,0,0,3]. Chỉ bản HERO68 có dây; bản Air/Mini/Pro/Ultra không thuộc giao thức này. Stream gom các phím trùng màu thành từng gói (tối đa 52 id/gói) và khôi phục màu gốc khi xong.", "sub"),
+                Tb("HERO68 HE dùng kênh riêng kèm checksum; nhận diện bằng lệnh đọc trước khi ghi.", "sub"),
                 PrimaryBtn("Nhận diện (lệnh 130 + đọc đèn 132)", async () => await SxProbeAsync("Nhận diện HERO68", () => _sx.ProbeHero68())),
                 WriteBtn("Stream 1 frame cầu vồng", async () => await SxWriteAsync("Stream frame HERO68", () =>
                 {
@@ -1611,7 +1609,7 @@ namespace TienKeyboardStudio3
             // --- The E: WIN60 HE ---
             _sxCardE = Card(V(10,
                 Tb("Họ E — AULA WIN60 HE", "h2"),
-                Tb("Kênh output report ID 1 trên usage page 0xFF33 (lưu ý: cùng VID:PID 2E3C:C365 còn xuất hiện ở nền WitMod trên usage page 0xFF1B — hai kênh khác nhau). Đọc đèn bằng lệnh 7 (12 byte trạng thái tại offset 5, ngữ nghĩa từng byte chưa được giải mã trong app gốc). Stream: bật bằng lệnh 23, gửi frame lưới 6×22=132 ô bằng lệnh 15 (8 gói, pacer 2 ms), heartbeat lệnh 1 mỗi giây khi stream dài.", "sub"),
+                Tb("WIN60 HE dùng lưới phím riêng trên kênh của hãng; nhận diện trước khi ghi.", "sub"),
                 PrimaryBtn("Đọc trạng thái đèn (lệnh 7)", async () => await SxProbeAsync("Đọc đèn WIN60 HE", () => _sx.ProbeWin60He())),
                 WriteBtn("Stream 1 frame cầu vồng", async () => await SxWriteAsync("Stream frame WIN60 HE", () =>
                 {
@@ -1627,7 +1625,7 @@ namespace TienKeyboardStudio3
             // --- The F2: WIN60 SE (chi log) ---
             _sxCardF2 = Card(V(10,
                 Tb("Họ F2 — AULA WIN60 SE (chỉ builder + log)", "h2"),
-                Tb("Giao thức dùng một byte phiên NGẪU NHIÊN (1–254) chọn khi kết nối, đứng đầu mọi gói tin. Ngay trong giao diện của chính nhà sản xuất, mẫu này được ghi là thử nghiệm/chưa kiểm chứng — vì vậy app này CHỈ dựng gói và ghi log, không bao giờ ghi thật lên WIN60 SE. Nút dưới đây ghi log gói info + gói frame mẫu với byte phiên ngẫu nhiên.", "sub"),
+                Tb("WIN60 SE dùng byte phiên ngẫu nhiên mỗi lần kết nối; chính hãng cũng ghi là thử nghiệm — cẩn thận khi ghi.", "sub"),
                 GhostBtn("Ghi log gói mẫu WIN60 SE", () => _sx.LogWin60SeDemo())));
 
             var root = V(14,
@@ -1706,7 +1704,7 @@ namespace TienKeyboardStudio3
             _wmInfoStatus = Tb("", "sub");
             var idCard = Card(V(10,
                 Tb("Nhận diện (probe 0x0D + 0x01 — chạy thật, chỉ đọc)", "h2"),
-                Tb("Quét mọi thiết bị khớp bảng filter 36 cặp VID:PID, gửi lệnh 0x0D lấy chuỗi sản phẩm (trường CSV thứ 5 là định danh product) và lệnh 0x01 lấy khối support (calibration, custom light, deadband, poll rate, RS/MDS…). Thiết bị không trả lời đúng cả hai lệnh sẽ bị bỏ qua (chỉ xem).", "sub"),
+                Tb("Quét thiết bị khớp bảng của hãng rồi đọc chuỗi sản phẩm để định danh trước khi ghi.", "sub"),
                 _wmIdStatus,
                 _wmInfoStatus,
                 PrimaryBtn("Nhận diện WitMod", async () => await WmProbeAsync()),
@@ -1714,7 +1712,7 @@ namespace TienKeyboardStudio3
 
             var lightCard = Card(V(10,
                 Tb("Đèn chính (lệnh 0x07)", "h2"),
-                Tb("Đọc cấu hình đèn hiện tại (sub=1, chỉ đọc) hoặc ghi một cấu hình mẫu: chế độ 1, sáng tối đa, màu tím thương hiệu. Ghi thật cần đủ khoá 3 lớp; ngoài ra chỉ ghi log gói tin. ACK ghi = gói echo opcode+sub; app gốc cho gói đầu tối đa 100 ms rồi chuyển fire-and-forget — app này cũng vậy.", "sub"),
+                Tb("Đọc cấu hình đèn hiện tại (chỉ đọc) hoặc ghi một cấu hình mẫu để kiểm tra.", "sub"),
                 GhostBtn("Đọc cấu hình đèn", async () => await WmReadLightAsync()),
                 WriteBtn("Ghi cấu hình đèn mẫu (tím)", async () => await SxWriteAsync("Ghi đèn WitMod", () =>
                     _wm.WriteMainLightConfig(new WitModProtocol.LightConfig
@@ -1727,7 +1725,7 @@ namespace TienKeyboardStudio3
 
             var advCard = Card(V(10,
                 Tb("Trigger / keymap / deadband (họ lệnh 0x21, 0x18, 0x26)", "h2"),
-                Tb("Đọc thử: trang keymap 0 và thông số trigger/poll-rate (chỉ đọc, chạy thật sau khi đã nhận diện). Ghi deadband ở đây là thao tác RESET: ghi 0 cho cả 132 phím (đúng ngữ nghĩa reset của driver gốc) — vẫn khoá 3 lớp như mọi lệnh ghi.", "sub"),
+                Tb("Đọc thử keymap + thông số trigger (chỉ đọc). Ghi deadband nằm ở mục bên dưới.", "sub"),
                 GhostBtn("Đọc trang keymap 0 + trigger/poll-rate", async () => await WmReadAdvancedAsync()),
                 WriteBtn("Reset deadband (ghi 0 toàn bộ)", async () => await SxWriteAsync("Reset deadband WitMod", () =>
                     _wm.WriteDeadband(new byte[WitModProtocol.DeadbandImageBytes])))));
@@ -1820,7 +1818,7 @@ namespace TienKeyboardStudio3
             var idCard = Card(V(10,
                 Tb("1 · Nhận diện thiết bị (bắt buộc trước khi ghi)", "h2"),
                 _mcModelInfo,
-                Tb("Định danh hai lớp: (a) VID:PID + usage page khớp registry CZ đã trích từ cardList/SDK của hãng; (b) probe đọc từ chính thiết bị — stack GLW đọc getInfo (cmd 3) và đòi đáp trả đúng khuôn 0xAA/cmd/offset, stack QHW đọc getBaseInfo (0x0900) và đòi VID/PID thiết bị tự khai khớp registry. Không khớp một trong hai lớp → chỉ xem, app không suy đoán.", "sub"),
+                Tb("Định danh hai lớp: mã USB + probe đọc từ thiết bị; khớp mới mở các mục ghi.", "sub"),
                 PrimaryBtn("Nhận diện thiết bị (probe đọc — chỉ đọc)", async () =>
                 {
                     if (_busy) { ShowToast("Đang bận thao tác trước — đợi một chút nhé."); return; }
@@ -1923,7 +1921,7 @@ namespace TienKeyboardStudio3
             });
             var heContent = V(10,
                 Tb("3 · Hall-effect GLW (cmd 0xA0/0xA1 + hiệu chuẩn)", "h2"),
-                Tb("Vùng trigger: 128 phím × 8 byte tại offset 1024×profile. Mỗi bản ghi: loại switch (4 bit), mode phím, hành trình nhấn/RT nhấn/RT nhả dạng 9-bit lưu −1, độ chính xác nhấn/nhả 2 bit, vùng chết 7-bit/phim. Ngoài ra SDK còn có DKS (0xA2, 32 slot × 24 byte), Mod-Tap (0xA4) và Toggle (0xA6) — bản này đã có builder + unit test cho cả ba, giao diện ghi DKS/MT/TGL để đợt sau. Giá trị dưới đây là ĐƠN VỊ THÔ: quy đổi thô→mm nằm ở tầng giao diện của hãng (mỗi model một bảng hệ số) và chưa thu hồi được.", "sub"),
+                Tb("Vùng trigger gồm điểm kích hoạt/nhả và các chế độ nâng cao cho từng phím.", "sub"),
                 Tb("Profile làm việc (dùng cho cả mục Đọc và mục này):", "sub"),
                 profileSeg.Root,
                 Tb("Ghi đồng nhất cả 128 phím — CẨN THẬN: ghi đè toàn bộ vùng trigger của profile, kể cả các phím bạn đã tinh chỉnh riêng. Nên đọc vùng trigger hiện tại (mục 2) trước:", "sub"),
@@ -1942,7 +1940,7 @@ namespace TienKeyboardStudio3
             // --- Muc QHW: chi hien voi stack QHW (RefreshMcPage) ---
             var qhwContent = V(10,
                 Tb("3 · QHW: đèn LED + hiệu ứng LED toàn phím", "h2"),
-                Tb("Stack QHW KHÔNG có lệnh Hall-effect/trigger nào trong kênh vendor (đã rà toàn bộ SDK — đây là khoảng trống đã tài liệu hoá, không phải thiếu sót của app). “GIF” của QHW là HIỆU ỨNG LED TOÀN PHÍM: chuỗi khung delta (chỉ ghi phím đổi màu) + thời lượng, tối đa 36.800 byte, kèm meta CRC32 — không phải màn hình (không model MCHOSE nào có màn hình). Định dạng offset của từng gói ghi nội dung GIF chưa được tái dựng dứt khoát trong hồ sơ nên bản này chỉ dựng + ghi log bản mẫu, chưa gửi xuống phím.", "sub"),
+                Tb("Stack QHW không có lệnh trigger trong kênh của hãng — các mục trigger không áp dụng cho stack này.", "sub"),
                 H(10,
                     PrimaryBtn("Gửi màu cầu vồng realtime 5 phím đầu (0x0306)", async () =>
                     {
@@ -1976,7 +1974,7 @@ namespace TienKeyboardStudio3
             // --- Muc legacy: builders + log-only ---
             var legacyCard = Card(V(10,
                 Tb("4 · Stack legacy (0x11/0x12, XOR 0xFF) — chỉ xem trước gói", "h2"),
-                Tb("Stack cổ của hãng (chuột + phím đời cũ): feature report, mọi byte dữ liệu XOR 0xFF. Bản này chỉ có builder + giải mã đã qua unit test; TRANSPORT CHƯA MỞ — các nút dưới đây chỉ ghi log gói logic và dạng dây, không gửi gì xuống thiết bị (dry-run-only).", "sub"),
+                Tb("Stack cổ (phím/chuột đời cũ): bản này chỉ có bộ dựng gói + ghi log, chưa gửi thật.", "sub"),
                 H(10,
                     GhostBtn("Gói đọc thông tin + pin (0x11 0x06)", () =>
                     {
@@ -2087,7 +2085,7 @@ namespace TienKeyboardStudio3
             var idCard = Card(V(10,
                 Tb("1 · Nhận diện thiết bị (bắt buộc trước khi ghi)", "h2"),
                 _duModelInfo,
-                Tb("Định danh đúng cơ chế của hãng: VID:PID (VID duy nhất 0x260D) → mục registry → họ giao thức theo FwType (0 TG, 1 HS, 2 JM, 3 QF, 4/5 OHID, 6 TG-RT, 7 dongle). Sau khi mở, app chạy thêm probe ĐỌC của từng họ (TG đọc FW + tên; OHID truy vấn version; JM đọc CID/MID/JmType).", "sub"),
+                Tb("Định danh bằng mã USB → danh sách của hãng → họ giao thức tương ứng.", "sub"),
                 PrimaryBtn("Nhận diện thiết bị (mở + probe đọc — chỉ đọc)", async () =>
                 {
                     if (_busy) { ShowToast("Đang bận thao tác trước — đợi một chút nhé."); return; }
@@ -2123,7 +2121,7 @@ namespace TienKeyboardStudio3
             _duInfoStatus = Tb("", "sub");
             var tgCard = Card(V(10,
                 Tb("2 · Họ TG / HS: đèn LED + đọc trạng thái", "h2"),
-                Tb("Khung TG: feature report 64 byte, header 6 byte [TargetId, Size, Class, Cmd (|0x80 = GET), Profile, 0], không checksum; ACK = poll đáp trả 10 ms × 20 tới khi nibble trạng thái == 2. Lớp lệnh LED FRAME (4) / CUSTOM (8) chỉ có mã lệnh trong enum của hãng — bản web không có mã gửi nên app KHÔNG dựng gói stream cho hai lệnh này. Chỉ số hiệu ứng LED nằm trong JSON cấu hình riêng của từng model; nút dưới đây gửi LED EFFECT với chỉ số thô để thử đường truyền.", "sub"),
+                Tb("Khung lệnh TG đã trích từ driver web chính hãng; các mục ghi nằm bên dưới.", "sub"),
                 H(10,
                     GhostBtn("Đọc lại probe (FW / version / CID)", async () =>
                     {
@@ -2145,7 +2143,7 @@ namespace TienKeyboardStudio3
             });
             var heContent = V(10,
                 Tb("3 · Magnetic Axis (lớp 13 — chỉ TG-RT)", "h2"),
-                Tb("Mã hoá hành trình theo TravelVersion của model: EK75 RT = v1 (uint16 BE, bước 0.02 mm, dải 0.3–3.3 mm, mặc định 1.5 mm). Gồm GLOBAL_KEY_TRAVEL, SINGLE_TRIGGER, RAPID_TRIGGER (init/nhấn/nhả), DEAD_ZONE, MT/TGL/DKS, SOCD, GAME_MODE và hiệu chuẩn hành trình theo đúng luồng của hãng (vào hiệu chuẩn → nhấn các phím xuống hết cỡ → thoát).", "sub"),
+                Tb("Hành trình phím mã hoá theo từng model (bước và dải mm khác nhau) — app tự dùng đúng thông số của model đã định danh.", "sub"),
                 Tb("Hành trình toàn cục (áp cho mọi phím):", "sub"),
                 travelSeg.Root,
                 H(10,
@@ -2179,7 +2177,7 @@ namespace TienKeyboardStudio3
             // --- Muc OHID: chi hien voi model OHID (RefreshDareUPage) ---
             var ohidContent = V(10,
                 Tb("3 · OHID: trigger + lưu cấu hình", "h2"),
-                Tb("Khung OHID: [0xAA, Len, Cmd (|0x80 khi ghi), Checksum = Σ(byte+index), Data…] 64 byte. Hầu hết lệnh SET phải gọi tiếp ORDER SAVE_USER (2) — app tự gửi kèm. Bản ghi trigger: SINGLE 4 byte/phim [keyId, 0, travelLE16], RT 5 byte/phim [keyId, 0, valueLE24]. RGB_KEY/RGB_MATRIX có mã lệnh nhưng định dạng bản ghi KHÔNG có trong hồ sơ web driver → chỉ ghi log, không đoán byte.", "sub"),
+                Tb("Khung OHID có checksum riêng; hầu hết lệnh ghi phải kèm trạng thái khoá của phím.", "sub"),
                 H(10,
                     PrimaryBtn("Single Trigger phím 0 (travel thô LE 500)", async () =>
                         await DuWriteAsync("OHID Single Trigger phím 0", () =>
@@ -2195,7 +2193,7 @@ namespace TienKeyboardStudio3
             // --- Muc JM/QF: chi hien voi model JM/QF (RefreshDareUPage) ---
             var jmContent = V(10,
                 Tb("3 · JM / QF: truyền buffer theo địa chỉ", "h2"),
-                Tb("Report 16 byte (ReportId 8), checksum nguyên văn từ mã hãng: s = Σ các byte trước; trả s < 55 ? 85 − s : 341 − s (dạng rút gọn (0x55 − Σ) mod 256 chỉ là suy luận toán học). Truyền buffer (keymap/macro): 10 byte/gói, địa chỉ BE tự tăng, count cộng 128 cho các gói chưa phải gói cuối. Nút dưới đây ghi một buffer mẫu 20 byte tại địa chỉ 0x0000 để thử đường truyền.", "sub"),
+                Tb("Khung ngắn 16 byte với checksum theo công thức của hãng.", "sub"),
                 H(10,
                     PrimaryBtn("Ghi buffer mẫu 20 byte @0x0000", async () =>
                         await DuWriteAsync("JM ghi buffer mẫu", () =>
@@ -2262,7 +2260,7 @@ namespace TienKeyboardStudio3
             var idCard = Card(V(10,
                 Tb("1 · Nhận diện thiết bị (bắt buộc trước khi ghi)", "h2"),
                 _ahModelInfo,
-                Tb("Định danh bằng VID:PID + usage page theo registry AULA Hub (0xFF68 = HFD, 0xFFA0 = SparkLink V1, 0xFFB0 = SparkLink V2) — một cặp VID:PID có thể thuộc nhiều họ khác nhau, usage page mới quyết định. Sau khi mở, app chạy probe ĐỌC của từng họ (HFD đọc khối thông tin 56 byte; SparkLink V1 đồng bộ BoardID; SparkLink V2 đọc phiên bản giao thức).", "sub"),
+                Tb("Định danh bằng mã USB + usage page theo danh sách AULA Hub.", "sub"),
                 PrimaryBtn("Nhận diện thiết bị (mở + probe đọc — chỉ đọc)", async () =>
                 {
                     if (_busy) { ShowToast("Đang bận thao tác trước — đợi một chút nhé."); return; }
@@ -2319,7 +2317,7 @@ namespace TienKeyboardStudio3
             // --- Muc HFD: chi hien voi model HFD (RefreshAulaHubPage) ---
             var hfdContent = V(10,
                 Tb("3 · HFD: đèn, per-key, RT, màn hình TFT", "h2"),
-                Tb("Khung HFD: [0xAA, cmd, len, addrLE16, hdr, payload@8], đáp trả [0x55, cmd…], không checksum trên đường chính (ngoại lệ duy nhất: lệnh nhạc legacy 53 có checksum ở byte 31). Khối per-key 512 byte = 128 ô [ledId, R, G, B]; khối RT 1024 byte = 128 bản ghi 8 byte (giá trị ÷100). Màn hình TFT NOVA98 240×135 RGB565 đi qua giao diện phụ 0xFF67 với header lệnh 80 riêng và đáp trả chờ ở responseCmd 65 (điểm lạ ghi nguyên văn từ mã hãng). Dongle 2.4G của HFD dùng BỘ LỆNH RIÊNG (55/59/60, màu RGB565) — không forward giao thức có dây.", "sub"),
+                Tb("Khung HFD là họ lớn nhất của AULA Hub; chi tiết lệnh nằm ở các mục bên dưới.", "sub"),
                 H(10,
                     PrimaryBtn("Đặt hiệu ứng LED tĩnh (mode 1, tím)", async () =>
                         await AhWriteAsync("HFD LED tĩnh", () => _ah.HfdSetLedEffect(1, 4, 2, (0x7C, 0x3A, 0xED)))),
@@ -2332,13 +2330,13 @@ namespace TienKeyboardStudio3
                         })),
                     GhostBtn("Ghi bản ghi RT ô 0 (1.5 / 0.5 / 0.5 mm)", async () =>
                         await AhWriteAsync("HFD RT ô 0", () => _ah.HfdSetRtRecord(0, true, 1.5, 0.5, 0.5)))),
-                Tb("Upload animation TFT (NOVA98) cần giao diện phụ 0xFF67 và nguồn khung hình 240×135 — tầng thiết bị đã có sẵn (bảng trễ 256 byte + header lệnh 80); bản này chưa nối nguồn khung từ trang GIF nên chưa có nút upload, tránh gửi khung rỗng xuống màn hình thật.", "sub"));
+                Tb("Nạp animation TFT (NOVA98) cần giao diện phụ riêng — đang hoàn thiện, hiện xem trước là chính.", "sub"));
             _ahHfdCard = Card(hfdContent);
 
             // --- Muc SparkLink V1: chi hien voi model SLV1 (RefreshAulaHubPage) ---
             var slv1Content = V(10,
                 Tb("3 · SparkLink V1 (KB2): đèn bền + hành trình", "h2"),
-                Tb("Khung 64 byte [0x5C, len, cmd, checksum, payload]; checksum chỉ phụ thuộc byte payload cuối. Per-key BỀN (ghi vào bộ nhớ, KHÔNG có stream realtime ở họ này): mỗi phím một gói KRGB [cờ, key, R, G, B] và kết thúc bằng gói lưu key 254. Hành trình qua khối DB (mm × 1000, LE16). ACK kiểu FIFO, timeout 1000 ms, tối đa 3 lần thử.", "sub"),
+                Tb("Per-key bền + trigger của họ này đã có bộ dựng lệnh; gửi thật vẫn qua cổng an toàn chung.", "sub"),
                 H(10,
                     PrimaryBtn("Đặt khối đèn PRGB (tĩnh, tím, sáng 4/5)", async () =>
                         await AhWriteAsync("SparkLink V1 PRGB", () =>
@@ -2359,7 +2357,7 @@ namespace TienKeyboardStudio3
             // --- Muc SparkLink V2: chi hien voi model SLV2 (RefreshAulaHubPage) ---
             var slv2Content = V(10,
                 Tb("3 · SparkLink V2: đèn, per-key, stream DirectDrive, trigger", "h2"),
-                Tb("Khung [category, sub, payload] — không magic/length/checksum. Ma trận điện luôn 6×21 = 126 ô, mỗi chunk 15 ô (B,G,R,flag). Per-key bền dùng sub 4; stream DirectDrive dùng CÙNG khung nhưng byte[1]=5 và fire-and-forget; stream GIF dùng gói [5,5,0,chunk] với nhịp max(1, round(300/speed)) ms. Khung trigger 27 byte (mm × 1000). Dot-matrix BOX 63 đi qua category 10 (CustomCommand).", "sub"),
+                Tb("Ma trận phím 6×21; các mục bên dưới thao tác theo từng vùng của ma trận.", "sub"),
                 H(10,
                     PrimaryBtn("Đặt đèn nền (tĩnh, tím, sáng 80/100)", async () =>
                         await AhWriteAsync("SparkLink V2 đèn nền", () => _ah.SlV2SetLightingBase(0, 1, 0, 80, 3))),
@@ -2527,7 +2525,7 @@ namespace TienKeyboardStudio3
 
             var root = V(14,
                 Tb("Ánh sáng RGB", "h1"),
-                Tb("Chọn hiệu ứng để xem chạy trực tiếp trên bàn phím. “Áp dụng xuống phím” gửi khối 04 13 đã kiểm chứng xuống F75 Max (tôn trọng Dry-run). Với mẫu khác, trang này chỉ xem trước.", "sub"),
+                Tb("Chọn hiệu ứng để xem trên bàn phím mô phỏng; “Áp dụng xuống phím” gửi hiệu ứng xuống F75 Max.", "sub"),
                 Card(kb, 14),
                 Tb("Hiệu ứng firmware (20)", "h2"),
                 wrap,
@@ -2584,15 +2582,15 @@ namespace TienKeyboardStudio3
             _musicPlayBtn.HorizontalAlignment = HorizontalAlignment.Left;
 
             var (modeSeg, _) = Segmented(
-                new[] { "Visualizer stream 0x20", "Nhịp firmware 04 13", "Feed phổ 0x78" }, 0,
+                new[] { "Visualizer", "Nhịp firmware", "Feed phổ" }, 0,
                 i =>
                 {
                     _musicMode = i;
                     _musicExpLogged = false;
                     if (_musicPlaying) RestartMusicSend();
-                    ShowToast(i == 0 ? "Chế độ Visualizer: cột phím chạy trong app; gửi xuống phím qua stream 0x20 (lớp thử nghiệm)."
-                        : i == 1 ? "Chế độ Nhịp firmware: bắt nhịp bass và pulse độ sáng bằng hiệu ứng firmware đã kiểm chứng (04 13) — chạy live theo Dry-run thường."
-                        : "Chế độ Feed 0x78: gửi 23 dải phổ xuống phím (lớp thử nghiệm, dry-run/gated).");
+                    ShowToast(i == 0 ? "Visualizer: cột sóng trong app; gửi xuống phím là lớp thử nghiệm."
+                        : i == 1 ? "Nhịp firmware: pulse độ sáng theo bass bằng hiệu ứng có sẵn trong phím."
+                        : "Feed phổ: gửi 23 dải phổ xuống phím (lớp thử nghiệm).");
                 });
 
             var gain = new Slider { Minimum = 0.4, Maximum = 1.8, Value = 1.0, Width = 230 };
@@ -2605,17 +2603,14 @@ namespace TienKeyboardStudio3
             var controlCard = Card(V(12,
                 Tb("Điều khiển", "h2"),
                 _musicPlayBtn,
-                H(10, Tb("Chế độ gửi:", "sub"), modeSeg),
+                V(4, Tb("Chế độ gửi:", "sub"), modeSeg),
                 V(4, Tb("Độ nhạy (biên độ cột sóng)", "sub"), gain),
-                H(10, Tb("Chế độ nền:", "sub"), bgSeg)));
+                V(4, Tb("Chế độ nền:", "sub"), bgSeg)));
 
             var howCard = Card(V(8,
                 Tb("Hoạt động thế nào?", "h2"),
-                Tb("• Bắt toàn bộ âm thanh hệ thống qua WASAPI loopback (NAudio) — không cần micro; FFT ra 23 dải phổ 30Hz–16kHz.", "sub"),
-                Tb("• Visualizer: cột sóng chạy ngay trong app. Gửi xuống phím thật dùng stream 0x20 — thuộc lớp THỬ NGHIỆM (tài liệu trên L99, chưa kiểm chứng trên Max) nên bị khoá sau công tắc thử nghiệm + Dry-run.", "sub"),
-                Tb("• Nhịp firmware: pulse độ sáng bằng chính hiệu ứng 04 13 đã kiểm chứng — chế độ duy nhất của trang này chạy live theo Dry-run thường.", "sub"),
-                Tb("• Feed 0x78: khối phổ nhạc của nền tảng (rhythm/nền/biên độ/23 mức) — cũng thuộc lớp thử nghiệm.", "sub"),
-                Tb("• Nếu máy không bắt được âm thanh (không có thiết bị phát), app tự chuyển sang phổ mô phỏng để xem trước.", "faint")));
+                Tb("App bắt âm thanh hệ thống (WASAPI) và biến thành cột sóng trên phím; không bắt được thì dùng phổ mô phỏng.", "sub"),
+                Tb("Visualizer và Feed phổ là lớp thử nghiệm — chỉ gửi thật khi bật Thử nghiệm và tắt Dry-run.", "sub")));
 
             var cols = new Grid { ColumnDefinitions = new ColumnDefinitions("*,*"), ColumnSpacing = 14 };
             cols.Children.Add(controlCard);
@@ -2624,7 +2619,7 @@ namespace TienKeyboardStudio3
 
             var root = V(14,
                 Tb("Theo nhạc", "h1"),
-                Tb("Bàn phím nhảy theo nhạc như một dàn đèn equalizer — bắt nhạc thật từ máy tính của bạn.", "sub"),
+                Tb("Bàn phím nhảy theo nhạc — bắt nhạc thật từ máy tính của bạn.", "sub"),
                 chip,
                 Card(kb, 14),
                 cols);
@@ -2908,17 +2903,17 @@ namespace TienKeyboardStudio3
 
             var root = V(14,
                 Tb("Màn hình GIF", "h1"),
-                Tb("GIF phát ngay trong ô màn hình TFT trên bàn phím và ở khung xem trước lớn. Mọi GIF đều được app tự chuẩn hoá về 128×128, tối đa 255 frame, rồi nạp qua kênh màn hình đã kiểm chứng (cần cáp USB-C). Kéo-thả file/thư mục GIF vào cửa sổ app để thêm vào thư viện.", "sub"),
+                Tb("GIF được chuẩn hoá về 128×128 rồi phát trên màn hình TFT của phím.", "sub"),
                 topGrid,
                 Tb("Thư viện GIF", "h2"),
                 filterRow,
                 _gifWrap,
                 actionRow,
                 Card(V(10, Tb("Thêm GIF của bạn", "h3"), libRow,
-                    Tb("GIF tự thêm được chuẩn hoá về 128×128 và lưu vào “Của tôi” (%AppData%\\TienKeyboardStudio\\MyGIFs). Thư mục nguồn được nhớ trong settings.json. Nguồn ngoài gợi ý: GIPHY Pixel Art · Pixabay GIFs · GitHub RecalBoxDMD (~600 GIF retro).", "faint"),
+                    Tb("GIF tự thêm lưu vào “Của tôi” trong thư mục dữ liệu của app.", "faint"),
                     Tb("Thêm từ link TikTok (Thử nghiệm)", "h3"),
                     tiktokRow,
-                    Tb("Tính năng thử nghiệm: TikTok không có kênh tải chính thức cho bên thứ ba — app dùng dịch vụ phân giải công khai tikwm.com nên một số video có thể không lấy được (app sẽ báo lỗi rõ ràng). Việc chuyển video thành GIF cần công cụ ffmpeg: app tự tìm trong thư mục tools cạnh exe, trong %AppData%\\TienKeyboardStudio\\Tools, rồi trong PATH; chưa có thì bấm nút tải công cụ ở trên (chỉ tải khi bạn bấm).", "faint"),
+                    Tb("Lấy GIF từ link TikTok là tính năng thử nghiệm (qua dịch vụ phân giải công khai) — có thể lỗi khi TikTok đổi cơ chế.", "faint"),
                     tiktokStatus)));
             return Scroll(root);
         }
@@ -3509,12 +3504,12 @@ namespace TienKeyboardStudio3
 
             var root = V(14,
                 Tb("Thư viện Online", "h1"),
-                Tb("16 hiệu ứng cộng đồng được lưu trên Google Drive công khai của dự án — app chỉ hiển thị ảnh xem trước, GIF gốc chỉ tải về khi bạn bấm “Tải về” (tải một lần, lưu vào %AppData%\\TienKeyboardStudio\\OnlineLibrary, các lần sau dùng ngay không cần mạng). GIF gốc là hiệu ứng LED toàn phím dạng dải rộng; app lấy mẫu màu tại tâm từng phím để phát lên đèn phím, hoặc cắt về 128×128 để nạp màn hình TFT.", "sub"),
+                Tb("GIF cộng đồng lưu trên Drive của dự án — app hiện ảnh xem trước, bấm tải mới lấy GIF gốc về.", "sub"),
                 search,
                 wrap,
                 emptyNote,
                 ledCard,
-                CardFlat(Tb("Nguồn ngoài khác để tự tìm GIF: GIPHY Pixel Art · Pixabay GIFs · GitHub RecalBoxDMD (~600 GIF retro) — tải về rồi kéo-thả vào app để thêm vào thư viện. Tôn trọng bản quyền của tác giả GIF khi dùng lại.", "faint")));
+                CardFlat(Tb("Nguồn GIF ngoài gợi ý: GIPHY Pixel Art · Pixabay GIFs · GitHub RecalBoxDMD.", "faint")));
             return Scroll(root);
         }
 
@@ -3676,7 +3671,7 @@ namespace TienKeyboardStudio3
             // --- Ve mau tung phim ---
             var paintState = new RgbAnimState { PaintMode = true, Brightness = 4 };
             var kb = new KeyboardView { Mode = KeyboardMode.Animated, State = paintState, Interactive = true, Painted = _painted };
-            _paintInfo = Tb("Chạm vào từng phím trên hình để tô màu. Shift_R và Alt_R dùng chung light_index 0x54 trong dữ liệu của hãng — khi gửi, hai phím này nhận cùng một màu (giới hạn của dữ liệu gốc, chờ kiểm chứng trên phím thật).", "sub");
+            _paintInfo = Tb("Chạm vào từng phím trên hình để tô màu. (Shift_R và Alt_R dùng chung một kênh đèn trong dữ liệu hãng.)", "sub");
             kb.KeyClicked += (id, label) =>
             {
                 if (_eraseMode) _painted.Remove(id);
@@ -3732,7 +3727,7 @@ namespace TienKeyboardStudio3
                 palette,
                 _paintInfo,
                 H(10, probeBtn, sendBtn),
-                Tb("Đọc 0xF5 chạy LIVE (chỉ đọc, không ghi gì) kể cả khi Dry-run đang bật — đây là bước kiểm chứng an toàn đầu tiên. Đóng app chính hãng/app của shop trước khi đọc để tránh tranh kênh. Gửi 0x23: khi chưa mở khoá, app ghi log đủ 13 gói của phiên ghi (begin → header → 9 khối → commit → end) + khối chọn hiệu ứng Custom 0x80.", "faint")));
+                Tb("Đọc thử 0xF5 là bước kiểm chứng an toàn đầu tiên: chỉ đọc, không ghi gì xuống phím.", "faint")));
 
             // --- GIF -> LED ---
             var ledState = new RgbAnimState { Brush = Color.FromRgb(0x7C, 0x3A, 0xED), Brightness = 3 };
@@ -3741,7 +3736,7 @@ namespace TienKeyboardStudio3
             var ledItems = CollectGifItems();
             ledPicker.ItemsSource = ledItems.Select(i => i.Entry.Name).ToList();
             if (ledItems.Count > 0) ledPicker.SelectedIndex = 0;
-            var ledInfo = Tb("Chọn GIF bất kỳ (thư viện, Của tôi, Thư viện Online đóng gói sẵn — kể cả GIF dải LED rộng) rồi bấm Nạp GIF: app lấy mẫu màu tại tâm rect từng phím theo hình học XML của F75 Max.", "sub");
+            var ledInfo = Tb("Chọn GIF rồi bấm Nạp GIF để stream lên đèn phím (lớp thử nghiệm).", "sub");
             var loadLedBtn = GhostBtn("Nạp GIF", async () =>
             {
                 int idx = ledPicker.SelectedIndex;
@@ -3928,7 +3923,7 @@ namespace TienKeyboardStudio3
                 selectorRow,
                 H(12, uploadBtn, _widgetProgress, autoSwitch, Tb("Tự động đẩy mỗi 5 giây", "sub"), weatherBtn),
                 BuildWeatherLocationCard(),
-                Tb("Widget “Đang phát”: Windows SMTC (System Media Transport Controls) cần tích hợp WinRT riêng — để tránh làm nặng/không ổn định bản build này, tính năng để ở trạng thái Đang phát triển (xem BUILD-INFO). Widget thông số và đồng hồ là dữ liệu thật.", "faint"));
+                Tb("Widget “Đang phát” đang là bản mô phỏng (Windows SMTC chưa tích hợp).", "faint"));
             return Scroll(root);
         }
 
@@ -4039,16 +4034,22 @@ namespace TienKeyboardStudio3
         }
 
         // Dong thoi tiet tren widget dong ho: xem truoc trong app va day
-        // len TFT dung CHUNG mot ham (ban cu viet cung "Ha Noi" o duong
+        // len TFT dung CHUNG mot cap ham (ban cu viet cung "Ha Noi" o duong
         // day len TFT nen ke ca khi tai duoc thoi tiet noi khac, man hinh
         // phim van hien Ha Noi).
-        private string WeatherLineText()
+        // v3.11.2: tach lam HAI dong cho khung TFT 128px — dong noi chon
+        // rieng, dong nhiet do + trang thai rieng. Ban cu gop mot dong dai
+        // ("Kuwana, Nhat Ban 12°C · Mua phun") nen tran ca hai ben man
+        // hinh nho (Tien chup lai tu F75 Max that).
+        private string WeatherPlaceText() => _weatherPlace;
+
+        private string WeatherDetailText()
         {
             if (_weather != null)
-                return $"{_weatherPlace} {_weather.TempC}°C · {_weather.Description}";
+                return $"{_weather.TempC}°C · {_weather.Description}";
             if (_weatherTried && !_weatherLastOk)
-                return _weatherPlace + " · chưa tải được thời tiết";
-            return _weatherPlace + " · chưa có dữ liệu thời tiết";
+                return "chưa tải được thời tiết";
+            return "chưa có dữ liệu thời tiết";
         }
 
         private void RenderWidgetFrame()
@@ -4089,7 +4090,7 @@ namespace TienKeyboardStudio3
                 if (_weather == null && (!_weatherTried ||
                     (!_weatherLastOk && (DateTime.UtcNow - _weatherLastAttemptUtc).TotalSeconds > 30)))
                     _ = FetchWeatherAsync();
-                var bmp = WidgetRenderer.RenderClock(DateTime.Now, WeatherLineText(), "Tien Vu Keyboard Studio");
+                var bmp = WidgetRenderer.RenderClock(DateTime.Now, WeatherPlaceText(), WeatherDetailText());
                 SetWidgetBitmap(bmp);
             }
             if (_widgetAuto && _widgetTickCount % 5 == 0 && !_busy && _currentPage == "widget")
@@ -4121,7 +4122,7 @@ namespace TienKeyboardStudio3
                 }
                 else
                 {
-                    bmp = WidgetRenderer.RenderClock(DateTime.Now, WeatherLineText(), "Tien Vu Keyboard Studio");
+                    bmp = WidgetRenderer.RenderClock(DateTime.Now, WeatherPlaceText(), WeatherDetailText());
                 }
                 byte[] stream;
                 using (var img = BitmapToImageSharp(bmp))
@@ -4425,7 +4426,7 @@ namespace TienKeyboardStudio3
                 Tb("Điều khiển từ điện thoại", "h1"),
                 Tb("PC cắm phím và chạy app → app hiện mã QR thật → điện thoại quét (cùng Wi-Fi) → mở trang điều khiển → chọn hiệu ứng/GIF → PC ghi xuống phím.", "sub"),
                 cols,
-                CardFlat(Tb("Lưu ý: điện thoại không chỉnh trực tiếp được phím — F75 Max không nhận cài đặt qua Bluetooth và iOS giới hạn kết nối với phụ kiện. PC là cầu nối bắt buộc và phải đang mở app; điện thoại chỉ gửi lệnh qua mạng nhà tới PC.", "faint")));
+                CardFlat(Tb("Điện thoại không chỉnh trực tiếp được phím — điện thoại ra lệnh qua app PC, app PC mới ghi xuống phím.", "faint")));
             return Scroll(root);
         }
 
@@ -5226,7 +5227,7 @@ namespace TienKeyboardStudio3
                 Tb("Plugin có sẵn trong app", "h2"),
                 filterRow,
                 wrap,
-                CardFlat(Tb("Cơ chế thật của trang này: các plugin khởi động là tính năng THẬT của app — plugin đang bật sẽ quyết định màn hình chào mỗi lần mở app, cấu hình lưu trong settings.json. Hai mục gắn nhãn “Ý tưởng · đang phát triển” chỉ là ý tưởng đang làm — chưa bật được, không có chức năng ẩn và app không tải/cài bất cứ thứ gì từ mạng.", "faint")));
+                CardFlat(Tb("Plugin đang bật sẽ là màn hình chào mỗi lần mở app. Mục “Ý tưởng · đang phát triển” chưa dùng được.", "faint")));
             RefreshMyPlugins();
             return Scroll(root);
         }
@@ -5457,7 +5458,7 @@ namespace TienKeyboardStudio3
             var listenTop = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto") };
             listenTop.Children.Add(V(2,
                 Tb("Dịch vụ lắng nghe CS2 (GSI)", "h3"),
-                Tb("CS2 tự gửi trạng thái trận đấu về máy bạn qua Game State Integration — chuẩn mở của Valve. App chỉ nhận dữ liệu game tự gửi trên localhost, không đọc bộ nhớ game.", "sub")));
+                Tb("CS2 gửi trạng thái trận đấu về app qua Game State Integration (chuẩn mở của Valve).", "sub")));
             listenSw.VerticalAlignment = VerticalAlignment.Center;
             Grid.SetColumn(listenSw, 1);
             listenTop.Children.Add(listenSw);
@@ -5602,7 +5603,7 @@ namespace TienKeyboardStudio3
             // --- Diem hon ban goc ---
             var plusCard = Card(V(8,
                 Tb("Điểm hơn bản gốc", "h2"),
-                Tb("Ở app tham khảo, GameSense chỉ mở trang web / chạy chương trình khi chết và phủ overlay chống loá khi bị flash — KHÔNG có phản ứng bằng đèn theo game. Ở T Keyboard, cùng sự kiện đó còn đẩy xuống ĐÈN PHÍM qua kênh stream của chính app (qua lớp thử nghiệm có khoá an toàn).", "sub")));
+                Tb("Tham khảo app gốc: GameSense ở đó cũng chỉ mở web/chạy chương trình + overlay chống loá — bản này làm tương tự, cộng thêm phản ứng bằng đèn phím.", "sub")));
             plusCard.BorderBrush = UiBrushes.AccentGradient();
             plusCard.BorderThickness = new Thickness(1.6);
 

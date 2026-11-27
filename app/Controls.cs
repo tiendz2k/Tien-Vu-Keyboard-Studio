@@ -31,6 +31,13 @@ namespace TienKeyboardStudio3
         public static readonly SolidColorBrush GlassBorder = new SolidColorBrush(Color.FromArgb(0x17, 0xFF, 0xFF, 0xFF));
         // v3.11 AULA-style: vien "dang chon" = trang trung tinh (khong con gradient)
         public static readonly SolidColorBrush SelBorder = new SolidColorBrush(Color.FromRgb(0xF4, 0xF4, 0xF6));
+        // v3.11.2: mau ranh BAT cua PillSwitch (che do AULA) + mau goc lop
+        // phu toi tren hinh nen. Ca hai duoc ApplyChromePalette (MainWindow)
+        // cap nhat THEO O MAU dang chon — GlassBorder/CardFill/SelBorder
+        // cung vay: doi .Color tren instance dung chung la moi control
+        // dang giu brush tu ve lai, khong can dung lai trang.
+        public static readonly SolidColorBrush ToggleOn = new SolidColorBrush(Color.FromRgb(0xF4, 0xF4, 0xF6));
+        public static Color ShadeBase = Color.FromRgb(0x0B, 0x0B, 0x10);
         // v3.11: true khi dang dung chu de "Nguyen ban" (chrome gradient ban
         // truoc) — cac control ve tay (PillSwitch) doc co nay de doi cach ve.
         public static bool LegacyChrome;
@@ -84,10 +91,13 @@ namespace TienKeyboardStudio3
             base.Render(ctx);
             var rect = new Rect(0, 0, Bounds.Width, Bounds.Height);
             // v3.11 AULA-style (port Preview v0.11.3): TAT = ranh DO, BAT =
-            // ranh TRANG + num toi. Che do "Nguyen ban" (LegacyChrome): BAT =
-            // ranh GRADIENT tim->cyan + num trang (dung chrome ban truoc).
+            // ranh TRANG + num toi. v3.11.2: mau BAT la ban sang NHUOM HUE
+            // cua o mau dang chon (UiBrushes.ToggleOn) — van sang/trang ve
+            // ban sac AULA nhung doi theo bang mau. Che do "Nguyen ban"
+            // (LegacyChrome): BAT = ranh GRADIENT tim->cyan + num trang
+            // (dung chrome ban truoc).
             var offRed = Color.FromRgb(0xD9, 0x3A, 0x3E);
-            var onWhite = Color.FromRgb(0xF4, 0xF4, 0xF6);
+            var onWhite = UiBrushes.ToggleOn.Color;
             byte Lerp(byte a, byte b) => (byte)(a + (b - a) * _pos);
             float rad = (float)(rect.Height / 2);
             if (UiBrushes.LegacyChrome)

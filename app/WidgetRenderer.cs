@@ -169,48 +169,40 @@ namespace TienKeyboardStudio3
         }
 
         // ---------- Widget 3: Dong ho that + thoi tiet ----------
-        // weatherLine/footLine = null -> chu mo phong cua ban Preview.
-        // Ban that truyen thoi tiet that (Open-Meteo) hoac thong bao chua co.
-        public static Bitmap RenderClock(DateTime now, string weatherLine = null, string footLine = null)
+        // v3.11.2: bo cuc chu nam o WidgetTextLayout (logic thuan, co test).
+        // placeLine/detailLine = null -> chu mo phong cua ban Preview.
+        // Ban that truyen noi chon + nhiet do/trang thai that (Open-Meteo).
+        // Dong chan trang ten app DA GO theo yeu cau cua Tien: man hinh
+        // 128px nho, dong thoi tiet tach lam hai dong (noi chon / nhiet do
+        // + trang thai) de khong tran hai ben nhu ban cu.
+        public static Bitmap RenderClock(DateTime now, string placeLine = null, string detailLine = null)
         {
             var rtb = NewBitmap();
             using (var ctx = rtb.CreateDrawingContext())
             {
                 Bg(ctx);
-                string time = now.ToString("HH:mm");
-                var ft = Text(time, 40, Ink, 700);
-                ctx.DrawText(ft, new Point((128 - ft.Width) / 2, 16));
-                // duong accent gradient duoi gio
-                var line = new LinearGradientBrush
+                var lines = WidgetTextLayout.ClockLines(now,
+                    placeLine ?? "Hà Nội", detailLine ?? "24°C · Có mây",
+                    (s, size, w) => Text(s, size, Ink, w).Width);
+                foreach (var ln in lines)
                 {
-                    StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
-                    EndPoint = new RelativePoint(1, 0, RelativeUnit.Relative),
-                    GradientStops = { new GradientStop(Violet, 0), new GradientStop(Cyan, 1) },
-                };
-                ctx.DrawRectangle(line, null, new Rect(34, 66, 60, 3), 1.5f, 1.5f);
-                string date = WeekdayVi(now.DayOfWeek) + " · " + now.ToString("dd/MM/yyyy");
-                var fd = Text(date, 10, Sub, 600);
-                ctx.DrawText(fd, new Point((128 - fd.Width) / 2, 78));
-                var fw = Text(weatherLine ?? "Hà Nội 24°C · Có mây", 9.5, Ink);
-                ctx.DrawText(fw, new Point((128 - fw.Width) / 2, 96));
-                var fp = Text(footLine ?? "Pin phím 87%", 8.5, Sub);
-                ctx.DrawText(fp, new Point((128 - fp.Width) / 2, 112));
+                    var color = ln.Role == "date" ? Sub : Ink;
+                    var ft = Text(ln.Text, ln.Size, color, ln.Weight);
+                    ctx.DrawText(ft, new Point((128 - ft.Width) / 2, ln.Y));
+                    if (ln.Role == "time")
+                    {
+                        // duong accent gradient duoi gio
+                        var line = new LinearGradientBrush
+                        {
+                            StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
+                            EndPoint = new RelativePoint(1, 0, RelativeUnit.Relative),
+                            GradientStops = { new GradientStop(Violet, 0), new GradientStop(Cyan, 1) },
+                        };
+                        ctx.DrawRectangle(line, null, new Rect(34, 65, 60, 3), 1.5f, 1.5f);
+                    }
+                }
             }
             return rtb;
-        }
-
-        private static string WeekdayVi(DayOfWeek d)
-        {
-            switch (d)
-            {
-                case DayOfWeek.Sunday: return "Chủ Nhật";
-                case DayOfWeek.Monday: return "Thứ Hai";
-                case DayOfWeek.Tuesday: return "Thứ Ba";
-                case DayOfWeek.Wednesday: return "Thứ Tư";
-                case DayOfWeek.Thursday: return "Thứ Năm";
-                case DayOfWeek.Friday: return "Thứ Sáu";
-                default: return "Thứ Bảy";
-            }
         }
     }
 }

@@ -239,7 +239,7 @@ namespace TienKeyboardStudio3
             int sleepVal = 2, responseVal = 2;
             var devSetCard = Card(V(8,
                 Tb("Cài đặt thiết bị (khối 04 17)", "h2"),
-                Tb("Khối cài đặt này được mohin7 và VitalyArt tài liệu hoá NGAY TRÊN F75 Max (Win lock, khoá Alt+F4/Alt+Tab, chuyển Fn, giờ ngủ, độ phản hồi phím 1–5) và đi qua cùng khung giao dịch với khối sáng. Vẫn tôn trọng Dry-run như mọi thao tác ghi.", "sub"),
+                Tb("Các công tắc dưới đây ghi xuống khối cài đặt của phím (khoá Win, tự ngủ, độ nhạy…) — chỉ áp dụng cho F75 Max.", "sub"),
                 SettingRow("Khoá phím Windows", "Chặn phím Win khi chơi game", false, v => winLock = v),
                 SettingRow("Khoá Alt+F4", "Chặn tổ hợp Alt+F4", false, v => altF4 = v),
                 SettingRow("Khoá Alt+Tab", "Chặn tổ hợp Alt+Tab", false, v => altTab = v),
@@ -268,13 +268,13 @@ namespace TienKeyboardStudio3
                 }),
                 SettingRow("Khởi động cùng Windows", "Tự mở app khi đăng nhập Windows (ghi vào HKCU Run)", GetAutostart(), v => SetAutostart(v)),
                 SettingRow("Thu nhỏ xuống khay hệ thống", "Đóng cửa sổ thì app vẫn chạy nền ở khay", true, v => _trayEnabled = v),
-                Tb("App không tự kiểm tra cập nhật và không gọi mạng nào ngoài: tải GIF bạn chủ động bấm, thời tiết khi mở trang Widget, server điều khiển qua LAN khi bạn bật, tải bảng thiết bị khi bạn bấm nút kiểm tra ở thẻ 'Bảng thiết bị cộng đồng' bên dưới, đo vị trí thời tiết qua IP khi bạn mở trang Widget ở chế độ tự động, và tải plugin khi bạn chủ động dán link ở Chợ plugin.", "faint")));
+                Tb("App không tự kiểm tra cập nhật; chỉ gọi mạng khi bạn chủ động bấm (tải GIF, thời tiết, danh sách mẫu).", "faint")));
 
             // --- Bang thiet bi cong dong ---
             _regStatus = Tb(RegistryStatusText(), "sub");
             var regCard = Card(V(8,
                 Tb("Bảng thiết bị cộng đồng", "h2"),
-                Tb("Danh sách mẫu phím của app có thể được bổ sung mà không cần phát hành bản app mới. Bấm nút dưới đây để tải bảng mới nhất từ kho GitHub của dự án (chỉ tải khi bạn bấm — app không tự gọi mạng nền). File tải về được kiểm tra định dạng rồi lưu vào thư mục dữ liệu của app và áp dụng ở lần mở app SAU; bảng tích hợp sẵn luôn là phương án dự phòng.", "sub"),
+                Tb("Danh sách mẫu có thể cập nhật không cần bản app mới — bấm nút dưới để tải bản mới nhất từ repo của dự án.", "sub"),
                 _regStatus,
                 GhostBtn("Kiểm tra cập nhật bảng thiết bị", async () => await CheckRegistryUpdateAsync())));
 
@@ -284,7 +284,7 @@ namespace TienKeyboardStudio3
             RefreshProfileList();
             var profileCard = Card(V(10,
                 Tb("Hồ sơ theo ứng dụng (Stage 2)", "h2"),
-                Tb("Khi bật, app theo dõi cửa sổ đang active; nếu app đó đã được gán hồ sơ, app tự áp hiệu ứng RGB (+ GIF TFT nếu có) đã lưu. Áp dụng vẫn tôn trọng Dry-run.", "sub"),
+                Tb("Khi bật, app tự áp hồ sơ RGB/GIF đã gán khi bạn chuyển sang app đó.", "sub"),
                 SettingRow("Bật theo dõi ứng dụng", "GetForegroundWindow, kiểm tra mỗi 0,7 giây", false, v =>
                 {
                     _profilesOn = v;
@@ -357,7 +357,7 @@ namespace TienKeyboardStudio3
             box.Classes.Add("search");
             var card = Card(V(10,
                 Tb("Gửi phản hồi", "h2"),
-                Tb("Phản hồi đi thẳng tới tác giả của Tien Vu Keyboard Studio qua trang GitHub Issues của dự án (công khai). Soạn nội dung tại đây, rồi bấm “Sao chép” và dán vào issue mới — hoặc mở thẳng trang Issues.", "sub"),
+                Tb("Phản hồi đi tới trang GitHub Issues của dự án (công khai).", "sub"),
                 box,
                 H(10,
                     PrimaryBtn("Sao chép phản hồi", async () =>
@@ -400,7 +400,7 @@ namespace TienKeyboardStudio3
                 CornerRadius = new CornerRadius(14), ClipToBounds = true,
                 Width = 64, Height = 64, Child = logoImg,
             };
-            var aboutPara = Tb("Phiên bản 3.11.1 — bản sửa lỗi + gọn giao diện theo phản hồi dùng thật trên máy của Tiến: thời tiết widget sửa tận gốc (mọi lỗi đều HIỆN rõ kèm loại lỗi và tự thử lại thay vì im lặng như trước; đo vị trí qua IP thêm nhà cung cấp dự phòng khi bị giới hạn tần suất; bỏ chữ “Hà Nội” viết cứng ở thẻ widget và ở đường đẩy lên màn hình TFT); panel Cài đặt làm đặc hơn để chữ không bị nội dung phía sau xuyên qua; thanh bên cuộn được khi cửa sổ thấp và hàng thẻ widget tự xuống dòng khi cửa sổ hẹp; trang Tổng quan bỏ hẳn đoạn giới thiệu dài, danh sách mẫu gom theo hãng chỉ còn tên + pill Hỗ trợ/Chưa hỗ trợ; ghi công theme gom về duy nhất mục Giới thiệu này (+ README đi kèm); thẻ “Kiểm tra đầu thu 2.4G” đã GỠ — Tiến đã chạy thử trên đầu thu thật và kết quả đúng như nghiên cứu: đầu thu không có kênh màn hình. Nền tảng giữ nguyên từ v3.11 (giao diện kiểu AULA Hub, nền động từ video ngắn ≤12 giây, nhập plugin thủ công dữ liệu thuần, thời tiết tự động theo mạng, 4 theme chào của v3.10, Driver Pack 1–5). F75 Max hỗ trợ đầy đủ qua giao thức đã kiểm chứng; các họ còn lại định danh bằng probe đọc trước khi ghi và chưa kiểm chứng trên phần cứng thật. Dry-run bật mặc định.", "sub");
+            var aboutPara = Tb("Phiên bản 3.11.2 — sửa widget đồng hồ + thời tiết TFT (bỏ dòng chân trang, thời tiết tách 2 dòng hết tràn), sửa các ô màu AULA nhuộm rõ toàn giao diện, thẻ thiết bị gọn (bỏ thông số kỹ thuật), trang Nhạc hết chồng chữ, sửa lỗi banner toàn vẹn hiện oan trên bản chính thức, và rà soát gọn toàn app. F75 Max hỗ trợ đầy đủ; các họ còn lại định danh bằng probe đọc trước khi ghi, chưa kiểm chứng trên phần cứng thật. Dry-run bật mặc định.", "sub");
             aboutPara.MaxWidth = 640; // cot ngang H() cho chieu rong vo han — gioi han de chu xuong dong trong the
             var aboutTexts = V(4,
                 Tb("Tien Vu Keyboard Studio", "h2"),
@@ -426,6 +426,7 @@ namespace TienKeyboardStudio3
             _ui.ThemeTile = t.Id;
             _ui.AccentIndex = t.AccentIndex;
             ApplyAccent(Color.FromRgb(t.A.R, t.A.G, t.A.B), Color.FromRgb(t.B.R, t.B.G, t.B.B));
+            ApplyChromePalette(ChromePalettes.For(t));
             UiBrushes.LegacyChrome = t.Legacy;
             SetCls(this, "legacy", t.Legacy);
             foreach (var sw in this.GetVisualDescendants().OfType<PillSwitch>()) sw.InvalidateVisual();
@@ -437,6 +438,48 @@ namespace TienKeyboardStudio3
                 SaveUi();
                 ShowToast("Đã áp dụng màu chủ đề: " + t.Name + (t.Legacy ? " — chrome gradient của bản trước" : ""));
             }
+        }
+
+        // v3.11.2: ap bo mau chrome cua o dang chon len MOI be mat lon.
+        // Nguyen nhan ban cu "doi o mau ma khong thay gi": ApplyAccent chi
+        // doi gradient accent (diem nhan nho) trong khi the kinh/thanh
+        // ben/panel Cai dat/lop phu hinh nen la mau trung tinh co dinh va
+        // trang thai dang chon kieu AULA la pill trang trung tinh. Gio:
+        // doi .Color TAI CHO tren cac brush dung chung (ca XAML resource
+        // lan UiBrushes) — moi control dang giu instance deu tu ve lai,
+        // khong can dung lai trang, ke ca tren hinh nen phu kin cua so.
+        private void ApplyChromePalette(ChromePalette p)
+        {
+            // Brush code-side dung chung
+            UiBrushes.CardFill.Color = Color.FromArgb(p.CardTint.A, p.CardTint.R, p.CardTint.G, p.CardTint.B);
+            UiBrushes.GlassBorder.Color = Color.FromArgb(p.BorderTint.A, p.BorderTint.R, p.BorderTint.G, p.BorderTint.B);
+            UiBrushes.SelBorder.Color = Color.FromRgb(p.SelTint.R, p.SelTint.G, p.SelTint.B);
+            UiBrushes.ToggleOn.Color = Color.FromRgb(p.SelTint.R, p.SelTint.G, p.SelTint.B);
+            UiBrushes.ShadeBase = Color.FromRgb(p.ShadeBase.R, p.ShadeBase.G, p.ShadeBase.B);
+            // Tai nguyen XAML dung chung (style the kinh / pill dang chon /
+            // slider / panel Cai dat deu tro toi cac brush nay)
+            SetResourceBrushColor("PanelTintBrush", Color.FromArgb(p.PanelTint.A, p.PanelTint.R, p.PanelTint.G, p.PanelTint.B));
+            SetResourceBrushColor("CardTintBrush", Color.FromArgb(p.CardTint.A, p.CardTint.R, p.CardTint.G, p.CardTint.B));
+            SetResourceBrushColor("CardBorderBrush", Color.FromArgb(p.BorderTint.A, p.BorderTint.R, p.BorderTint.G, p.BorderTint.B));
+            SetResourceBrushColor("SelTintBrush", Color.FromRgb(p.SelTint.R, p.SelTint.G, p.SelTint.B));
+            SetResourceBrushColor("AccentSolidBrush", Color.FromRgb(p.AccentMid.R, p.AccentMid.G, p.AccentMid.B));
+            SetResourceBrushColor("SettingsPanelBrush", Color.FromArgb(p.SettingsPanel.A, p.SettingsPanel.R, p.SettingsPanel.G, p.SettingsPanel.B));
+            SetResourceBrushColor("SettingsContentBrush", Color.FromArgb(p.SettingsContent.A, p.SettingsContent.R, p.SettingsContent.G, p.SettingsContent.B));
+            // Lop phu toi tren hinh nen: giu nguyen alpha (do mo kinh),
+            // chi doi mau goc sang hue cua bang mau
+            if (BackdropShade != null && BackdropShade.Background is LinearGradientBrush g && g.GradientStops.Count >= 2)
+            {
+                g.GradientStops[0].Color = Color.FromArgb(g.GradientStops[0].Color.A, p.ShadeBase.R, p.ShadeBase.G, p.ShadeBase.B);
+                g.GradientStops[1].Color = Color.FromArgb(g.GradientStops[1].Color.A, p.ShadeBase.R, p.ShadeBase.G, p.ShadeBase.B);
+            }
+        }
+
+        private static void SetResourceBrushColor(string key, Color color)
+        {
+            if (Application.Current != null &&
+                Application.Current.Resources.TryGetValue(key, out var res) &&
+                res is SolidColorBrush b)
+                b.Color = color;
         }
 
         private void RefreshNavSelectionColors()
@@ -594,7 +637,7 @@ namespace TienKeyboardStudio3
             RefreshPaletteTiles();
             var paletteSection = V(10,
                 Tb("Màu chủ đề", "h2"),
-                Tb("Mỗi ô là một bảng màu xem trước trực tiếp — bấm ô hoặc nút bên dưới là áp dụng ngay cho toàn app và được nhớ trong settings.json (đồng bộ với các chấm màu trên thanh trên cùng). Riêng ô “Nguyên bản” khôi phục cả CHROME gradient tím→cyan mặc định của bản thật v3.9.x: nút chính và mục đang chọn trở lại nền gradient chữ trắng thay cho pill trắng.", "sub"),
+                Tb("Bấm một ô để áp dụng ngay cho toàn app (panel, thanh bên, mục đang chọn đều nhuộm hue của ô). Ô “Nguyên bản” khôi phục chrome gradient của bản trước.", "sub"),
                 paletteRow);
 
             // --- 2. Che do chu de: the mo phong UI thu nho ---
@@ -807,7 +850,7 @@ namespace TienKeyboardStudio3
                     Tb("Nền động tự tạm dừng khi cửa sổ app mất focus.", "faint")));
             var wallpaperSection = V(10,
                 Tb("Hình nền", "h2"),
-                Tb("Hình nền phủ TOÀN cửa sổ (từ mép này sang mép kia), mọi panel kính nổi trong suốt phía trên. Hai hình “mực” là tranh gốc tự tạo cho app, không sao chép từ hãng hay anime nào. Ảnh tải lên được nén (cạnh dài nhất 1920px, JPEG) và lưu thật vào thư mục Backgrounds của app.", "sub"),
+                Tb("Hình nền phủ toàn cửa sổ, panel kính nổi phía trên. Hai hình “mực” là tranh gốc của app.", "sub"),
                 wpRow,
                 Tb("Nền động (live wallpaper)", "h3"),
                 liveRow);
@@ -827,7 +870,7 @@ namespace TienKeyboardStudio3
             };
             var glassSection = V(10,
                 Tb("Độ mờ kính", "h2"),
-                Tb("AULA Hub làm mờ hình nền phía sau panel trong khoảng 4–10px. Avalonia không có backdrop-blur thật nên app áp độ mờ lên chính ảnh nền sau lớp kính — kéo thử khi đang dùng hình nền tranh sẽ thấy rõ nhất. Giá trị được lưu lại.", "sub"),
+                Tb("Độ mờ làm mềm hình nền sau panel (4–10). Kéo để chỉnh, app nhớ lựa chọn.", "sub"),
                 H(12, Tb("4 · trong, nét", "faint"), glassSlider, Tb("10 · mờ, dịu", "faint"), glassValue));
 
             // --- 5. Man hinh chao ---
@@ -870,8 +913,11 @@ namespace TienKeyboardStudio3
             if (BackdropShade.Background is LinearGradientBrush g && g.GradientStops.Count >= 2)
             {
                 var (top, bottom) = GlassMath.ShadeAlphas(level);
-                g.GradientStops[0].Color = Color.FromArgb(top, 0x0B, 0x0B, 0x10);
-                g.GradientStops[1].Color = Color.FromArgb(bottom, 0x0B, 0x0B, 0x10);
+                // v3.11.2: mau goc cua lop phu = hue cua o mau dang chon
+                // (UiBrushes.ShadeBase), khong con den trung tinh co dinh
+                var sb = UiBrushes.ShadeBase;
+                g.GradientStops[0].Color = Color.FromArgb(top, sb.R, sb.G, sb.B);
+                g.GradientStops[1].Color = Color.FromArgb(bottom, sb.R, sb.G, sb.B);
             }
             if (save) SaveUi();
         }
@@ -1109,7 +1155,7 @@ namespace TienKeyboardStudio3
                 });
             return Card(V(8,
                 Tb("Vị trí thời tiết", "h2"),
-                Tb("Tự động theo mạng (mặc định): app đo vị trí qua địa chỉ IP (ipapi.co, miễn phí, không cần key) rồi lấy thời tiết Open-Meteo tại đó; kết quả đo được nhớ 24 giờ. Chọn tay: nhập tên thành phố để ghi đè — hữu ích khi bật VPN (vị trí IP đi theo đầu ra VPN).", "sub"),
+                Tb("Tự động theo mạng (mặc định): app đoán vị trí qua địa chỉ IP rồi lấy thời tiết. Bật VPN thì vị trí theo đầu ra VPN — khi đó nên chọn tay.", "sub"),
                 modeSeg,
                 _weatherLocText,
                 _weatherStatusText,
@@ -1132,10 +1178,10 @@ namespace TienKeyboardStudio3
                 MinWidth = 360,
             };
             _importUrlBox.Classes.Add("search");
-            _importStatus = Tb("Gói plugin là DỮ LIỆU THUẦN (manifest.json + ảnh/GIF) — app kiểm tra nghiêm ngặt và TỪ CHỐI mọi gói chứa file thực thi/script. Plugin đã cài hiện ở mục “Plugin của tôi” bên dưới và dùng được làm màn hình chào ngay.", "faint");
+            _importStatus = Tb("Gói plugin chỉ là dữ liệu (manifest + ảnh/GIF); app từ chối mọi gói chứa file chạy/script.", "faint");
             return Card(V(8,
                 Tb("Thêm plugin thủ công", "h2"),
-                Tb("Dán link (file .zip trực tiếp hoặc trang repo GitHub — app tự lấy bản zip của nhánh mặc định) hoặc chọn file .zip trên máy. Định dạng manifest được mô tả trong README của bản phát hành; gói mẫu đi kèm trong thư mục cài app để thử ngay.", "sub"),
+                Tb("Dán link .zip hoặc link repo GitHub, hoặc chọn file .zip trên máy.", "sub"),
                 H(10, _importUrlBox,
                     PrimaryBtn("Tải & cài từ link", async () => await ImportFromUrlAsync()),
                     GhostBtn("Chọn file .zip…", async () => await ImportFromFileAsync())),

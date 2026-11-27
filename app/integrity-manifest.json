@@ -1,6 +1,6 @@
 {
  "App": "Tien Vu Keyboard Studio",
- "Version": "3.11.1",
+ "Version": "3.11.2",
  "Author": "tiendz2k",
  "Files": {
   "Avalonia.Base.dll": "d453ec090ab58d2a6bc85e84738c6c96f8a9e94789c31fd94a9a071d5314dd0b",
@@ -35,7 +35,6 @@
   "QRCoder.dll": "3c5674f67a97fd9ed38dd537d892ee9efd328afad4d6c1d67f99fde2c108dd57",
   "SixLabors.ImageSharp.dll": "609a57965d0a7b5ccfb79d919ea7384e7ec86c03266b0390a19bd5f2104bc353",
   "SkiaSharp.dll": "17ee1284313749f73a5cf5f309318d831741a8d6d397c998c5fc6485843c28bb",
-  "TienKeyboardStudio.exe": "9518e4ca335566a9e0f6dcedf5b215ee3d2b87ba8718ff7d7af9731c720dc4f3",
   "Tmds.DBus.Protocol.dll": "111fddda3d7f523e41d8fe55380fa60ce4fa09ef0984972e97030790d18aa7d6",
   "av_libglesv2.dll": "9b203e40323b49dad29546a52b8b67d200bba8ff4cab9709a79cede23ba847d4",
   "libHarfBuzzSharp.dll": "eb76238c9e8e41d44b5a5b18167c4c5b39ca5db4277af5dbe92d730f0fc14a7d",
