@@ -22,7 +22,6 @@ Bản dựng Avalonia (.NET 8) thể hiện giao diện thế hệ mới của a
 
 ## Lộ trình phát triển (Roadmap)
 
-- [ ] **RGB từng phím (per-key)** và **stream GIF → đèn LED toàn phím** cho F75 Max — giao thức đã có tài liệu (xem `docs/PROTOCOL-F75MAX.md`), đang ở giai đoạn kiểm chứng an toàn trên phần cứng
 - [ ] **Chế độ nháy đèn theo nhạc** (phân tích âm thanh trên PC, stream xuống phím)
 - [ ] **Widget trên màn hình TFT**: thông số máy (CPU/GPU/RAM/nhiệt độ), nhạc đang phát, đồng hồ & thời tiết tuỳ biến
 - [ ] **Điều khiển từ điện thoại**: PC cắm phím hiện mã QR, điện thoại quét (cùng Wi-Fi nhà) để đổi hiệu ứng / nạp GIF từ xa
@@ -87,28 +86,19 @@ Thông tin này giúp xác định VID:PID và định danh thật của mẫu �
 2. **Kiểm chứng trước khi ghi thật** — mọi giao thức mới đều đi qua thang kiểm chứng: mô phỏng → đọc thử (read-only) → ghi tối thiểu → ghi đầy đủ.
 3. **Factory reset trước tiên** — trước bất kỳ thử nghiệm ghi nào, quy trình khôi phục cài đặt gốc phải được xác nhận hoạt động.
 4. **Không telemetry** — app không thu thập, không gửi dữ liệu đi đâu. Mạng chỉ dùng khi người dùng chủ động tải GIF.
-5. **Mã nguồn mở về giao thức** — tài liệu giao thức tổng hợp được công bố trong thư mục `docs/` để cộng đồng cùng kiểm chứng.
+5. **Giao thức không công bố** — tài liệu giao thức chi tiết là tài sản riêng của dự án và không được công khai; repo chỉ công bố mã nguồn của app để kiểm chứng tính an toàn.
 
 ## Tài liệu
 
-- [`docs/PROTOCOL-F75MAX.md`](docs/PROTOCOL-F75MAX.md) — Tổng hợp giao thức HID của AULA F75 Max: các khối lệnh đã kiểm chứng và các phát hiện per-key / streaming / music từ nền tảng anh em L99.
-- [`docs/PROTOCOLS-REFERENCE-APP.md`](docs/PROTOCOLS-REFERENCE-APP.md) — Hồ sơ trích xuất giao thức từ một app tham chiếu: 12 mẫu phím thuộc 6 họ giao thức (gồm S75 Pro / Nova75 dùng chung nền tảng F75 Max, AULA F75, GravaStar K1, MAD60 HE, HERO68 HE, WIN60 HE/SE…).
-- [`docs/PROTOCOLS-AULA-HUB.md`](docs/PROTOCOLS-AULA-HUB.md) — Toàn bộ giao thức trong app AULA Hub chính hãng: 7 họ chip (SparkLink V1/V2, HFD, RLW, Bytech HE, Bytech cơ…) kèm bảng lệnh và bằng chứng mã nguồn.
+Tài liệu giao thức chi tiết không được công khai trong repo này. Thư mục `docs/` chỉ chứa các bảng thiết bị dạng máy đọc phục vụ app và cộng đồng người dùng:
+
 - [`docs/devices.json`](docs/devices.json) — Bảng 114 mẫu bàn phím (VID:PID, họ chip, khả năng) dạng máy đọc, tổng hợp từ các hồ sơ trên.
 - [`docs/devices-registry.json`](docs/devices-registry.json) — Bảng thiết bị cộng đồng mà app tải về khi người dùng bấm kiểm tra cập nhật (định dạng ở mục "Bảng thiết bị cộng đồng" phía trên); sinh từ cơ sở dữ liệu mẫu hiện tại của app.
-- [`docs/PROTOCOLS-RONGYUAN.md`](docs/PROTOCOLS-RONGYUAN.md) — Giao thức nền tảng **RongYuan RY5088** trích từ Akko Cloud Driver v4 + MonsGeek V4 Driver: hai hãng dùng chung một nền tảng OEM (cùng pháp nhân ký EV, cùng giao thức) — bảng ~25 opcode, lệnh Hall-effect gộp (actuation/RT/DKS/SOCD), giao thức màn hình, hiệu chuẩn.
 - [`docs/devices-rongyuan.json`](docs/devices-rongyuan.json) — Bảng 172 thiết bị Akko + MonsGeek (gồm 52 mục MonsGeek có sẵn firmware-id).
-- [`docs/PROTOCOLS-YUNZII-CAKE.md`](docs/PROTOCOLS-YUNZII-CAKE.md) — Giao thức dòng **YUNZII Cake (C75/C98)**: hoá ra chạy chung nền tảng Sinowealth 258A:010C với AULA F75 (họ `kb_by_v2`) — đủ 12 lệnh có dây + giao thức dongle 2.4G, và quan trọng nhất là cơ chế **phân biệt model bằng UUID đọc từ thiết bị (lệnh 0x82)** vì C75/C98 trùng VID:PID.
 - [`docs/devices-yunzii.json`](docs/devices-yunzii.json) — Bảng thiết bị dòng YUNZII Cake (5 mục, kèm UUID).
-- [`docs/PROTOCOLS-REDRAGON-WITMOD.md`](docs/PROTOCOLS-REDRAGON-WITMOD.md) — **Redragon K617 HE** và nền tảng white-label **WitMod** đứng sau nó (cùng lõi dùng cho nhiều hãng: Fantech, Machenike, Keycool, KZZI, Cidoo…): transport (usage page 0xFF1B), bảng 36 cặp VID:PID của WebHID, cấu trúc KeyInfo.
-- [`docs/PROTOCOLS-WITMOD-FULL.md`](docs/PROTOCOLS-WITMOD-FULL.md) — **WitMod mức byte (đợt 2)**: giải mã toàn bộ web app bị làm rối → khôi phục **bảng lệnh đầy đủ 0x01–0x26** (trạng thái, đèn, keymap, macro, họ trigger/hiệu chuẩn 0x21, phím nâng cao DKS/MT/TGL 0x22, SOCD 0x24, deadband 0x26), khung trang big-endian, quy tắc ACK/pacing — không checksum trên đường gửi. Đủ để triển khai lại driver.
-- [`docs/NOTES-XINMENG-X98PRO.md`](docs/NOTES-XINMENG-X98PRO.md) — Ghi chú Xinmeng X98 Pro: **chưa trích được** vì hãng không có kênh tải công khai kiểm chứng được (link duy nhất là OneDrive cá nhân của shop) — hồ sơ ghi rõ tình trạng nguồn và đính chính: X98 Pro không có màn hình.
-- [`docs/PROTOCOLS-DAREU.md`](docs/PROTOCOLS-DAREU.md) — **DareU All-in-One/A+** (trích từ web driver chính thức dr.dareu.com; CDN desktop chặn tải nên bản cài chưa kết luận): một VID 0x260D cho 190 PID, họ giao thức theo `FwType` — **TG/TG-RT** (EK75/EK75 RT; lớp lệnh Magnetic Axis đầy đủ: rapid trigger 3 giá trị, dead zone, hiệu chuẩn, DKS/SOCD), **OHID**, **JM/QF**. Không mẫu nào trong catalog có màn hình LCD.
 - [`docs/devices-dareu.json`](docs/devices-dareu.json) — Bảng 187 thiết bị DareU.
 - [`docs/devices-redragon.json`](docs/devices-redragon.json) — Bảng thiết bị WitMod/Redragon trích từ app.
-- [`docs/PROTOCOLS-MCHOSE.md`](docs/PROTOCOLS-MCHOSE.md) — **MCHOSE M HUB**: app là vỏ Electron cho web driver WebHID, bên trong có **4 stack giao thức** — BY (cơ, cùng họ `kb_by_v2` với YUNZII Cake), legacy XOR 0xFF, **GLW/CZ cho dòng Ace 68/Jet75** (khối Hall-effect giải mã ở mức byte: actuation/RT/DKS/MT/TGL/hiệu chuẩn), và QHW (V3). Không mẫu nào của MCHOSE có màn hình thật.
 - [`docs/devices-mchose.json`](docs/devices-mchose.json) — Bảng 49 bàn phím MCHOSE (31 cấu hình CZ có đủ VID:PID).
-- [`docs/PROTOCOLS-EPOMAKER.md`](docs/PROTOCOLS-EPOMAKER.md) — **EPOMAKER Driver hợp nhất v2.1.92**: hoá ra cũng là một bản white-label của nền tảng **RongYuan** (cùng họ Akko/MonsGeek — giao thức lõi đã có trong `PROTOCOLS-RONGYUAN.md`); giá trị mới là bảng thiết bị EPOMAKER và **giao thức màn hình mức byte của RT100** (240×173 RGB565: xoá flash → gói chuẩn bị 165/169 → dữ liệu 37/41, gói 56 B) cùng nhóm lệnh màn hình 32–53. TH80 Pro/Galaxy100 là QMK/VIA (đã công khai) nên bỏ qua.
 - [`docs/devices-epomaker.json`](docs/devices-epomaker.json) — Bảng 74 thiết bị EPOMAKER.
 - [`preview/README-XEM-TRUOC.md`](preview/README-XEM-TRUOC.md) — Giới thiệu bản xem trước giao diện.
 
