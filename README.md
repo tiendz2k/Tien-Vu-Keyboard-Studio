@@ -112,15 +112,6 @@ Thông tin này giúp xác định VID:PID và định danh thật của mẫu �
 - [`docs/devices-epomaker.json`](docs/devices-epomaker.json) — Bảng 74 thiết bị EPOMAKER.
 - [`preview/README-XEM-TRUOC.md`](preview/README-XEM-TRUOC.md) — Giới thiệu bản xem trước giao diện.
 
-## Nguồn giao thức & lời cảm ơn
-
-T Keyboard Studio đứng trên vai các dự án mã nguồn mở sau — phần giao thức của app được xây dựng và kiểm chứng dựa trên tài liệu/mã nguồn công khai của họ:
-
-- **[mohin7/aula-f75max](https://github.com/mohin7/aula-f75max)** (AULA Studio) — driver F75 Max mã nguồn mở, nguồn kiểm chứng chính cho các khối lệnh đèn / cài đặt / đồng hồ / màn hình.
-- **[VitalyArt/Aula-F75-Max-Driver](https://github.com/VitalyArt/Aula-F75-Max-Driver)** — driver F75 Max độc lập thứ hai, dùng để đối chiếu byte-for-byte.
-- **[Gavin Graham / Revisory676 — aula-l99-linux](https://github.com/Revisory676/aula-l99-linux)** — dự án reverse-engineering AULA L99 (cùng nền tảng phần cứng SONiX `0C45:800A`); nguồn tài liệu cho giao thức **per-key (0x23), đọc ngược (0xF5), streaming thời gian thực (0x20) và kênh nhạc (0x78)**.
-- **[keylux](https://github.com/SibteProf/keylux)** — tham chiếu UX và giao thức cho AULA F75 bản thường (nền tảng Sinowealth).
-
 Font chữ Be Vietnam Pro (SIL Open Font License 1.1) được dùng trong giao diện.
 
 ## Giấy phép
