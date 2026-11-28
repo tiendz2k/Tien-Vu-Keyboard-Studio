@@ -246,6 +246,9 @@ namespace TienKeyboardStudio3
     {
         public new int Effect;
         public Color BaseColor = Color.FromRgb(0x7C, 0x3A, 0xED);
+        // v3.13: dang o che do Da sac thi the xem truoc ve cau vong
+        // theo vi tri thanh (khop PreviewInk), khong phang mot mau.
+        public bool Multi;
         private bool _active;
         public bool Active
         {
@@ -284,29 +287,32 @@ namespace TienKeyboardStudio3
             }
         }
 
+        // v3.13: mau cua thanh tai vi tri x — Da sac thi hue cau vong.
+        private Color Ink(double x) => Multi ? KeyboardView.Hsv(x, 0.85, 1) : BaseColor;
+
         private Color BarColor(int i, int n)
         {
             double x = (double)i / n;
             switch (Effect)
             {
                 case 0: return Color.FromRgb(0x24, 0x24, 0x2E);
-                case 1: return BaseColor;
+                case 1: return Ink(x);
                 case 6: return KeyboardView.Hsv(x, 0.85, 1);
                 case 8: return KeyboardView.Hsv(Frac(_t * 0.08), 0.85, 1);
                 case 10: return KeyboardView.Hsv(Frac(x - _t * 0.13), 0.85, 1);
                 case 11: return KeyboardView.Hsv(Frac(x * 1.6 - _t * 0.16), 0.9, 1);
                 case 12: return KeyboardView.Hsv(Frac(x + _t * 0.09), 0.85, 1);
-                case 7: return KeyboardView.Scale(BaseColor, 0.25 + 0.75 * (0.5 + 0.5 * Math.Sin(_t * 2.4)));
-                case 17: return KeyboardView.Scale(BaseColor, 0.2 + 0.8 * Math.Pow(Math.Max(0, Math.Sin(_t * 3.4)), 1.6));
+                case 7: return KeyboardView.Scale(Ink(x), 0.25 + 0.75 * (0.5 + 0.5 * Math.Sin(_t * 2.4)));
+                case 17: return KeyboardView.Scale(Ink(x), 0.2 + 0.8 * Math.Pow(Math.Max(0, Math.Sin(_t * 3.4)), 1.6));
                 case 4:
                     return _rng.NextDouble() < 0.16
                         ? KeyboardView.Hsv(_rng.NextDouble(), 0.8, 1)
                         : Color.FromRgb(0x1B, 0x19, 0x28);
-                case 2: return _rng.NextDouble() < 0.10 ? BaseColor : Color.FromRgb(0x1B, 0x19, 0x28);
-                case 3: return _rng.NextDouble() < 0.10 ? Color.FromRgb(0x1B, 0x19, 0x28) : BaseColor;
+                case 2: return _rng.NextDouble() < 0.10 ? Ink(x) : Color.FromRgb(0x1B, 0x19, 0x28);
+                case 3: return _rng.NextDouble() < 0.10 ? Color.FromRgb(0x1B, 0x19, 0x28) : Ink(x);
                 default:
                     double v = 0.45 + 0.55 * (0.5 + 0.5 * Math.Sin(x * 9 - _t * 3.2));
-                    return KeyboardView.Scale(BaseColor, v);
+                    return KeyboardView.Scale(Ink(x), v);
             }
         }
 

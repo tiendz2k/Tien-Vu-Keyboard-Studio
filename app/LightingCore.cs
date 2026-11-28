@@ -136,9 +136,64 @@ namespace TienKeyboardStudio3
         public double MusicGain { get; set; } = 1.0;      // do nhay 0.4..1.8
         // Thoi gian thuc 0x20: hieu ung dang chon (8 = Tat)
         public int RtEffect { get; set; } = 8;
+        // v3.13: che do mau cua stream thoi gian thuc (0 Don sac,
+        // 1 Cau vong, 2 Bang mau). Mac dinh Cau vong — ban cu khong co
+        // truong nay thi nap len dung mac dinh nay.
+        public int RtColorMode { get; set; } = 1;
         // GIF -> LED
         public double GifBrightness { get; set; } = 1.0;  // 0.2..1.5
         public int GifBlackLevel { get; set; } = 24;      // 0..60
+    }
+
+    /// <summary>
+    /// v3.13: quy tac CHE DO MAU cho hieu ung firmware + mo hinh mau
+    /// xem truoc thuan logic (test duoc). Firmware chi co MOT co nhieu
+    /// mau (byte[8] khoi 04 13): UI dat ten la "Da sac" (bat co) /
+    /// "Don sac" (tat co, dung mau da chon). Mac dinh theo hieu ung:
+    /// moi hieu ung dong (2..19) mac dinh Da sac; Tat (0) va Tinh (1)
+    /// mac dinh Don sac (Tinh dung dung mau da chon).
+    /// </summary>
+    public static class ColorModes
+    {
+        public const int Single = 0;
+        public const int Rainbow = 1;
+        public const int Palette = 2;
+
+        /// <summary>Mac dinh Da sac (Multi=true) cho hieu ung id.</summary>
+        public static bool DefaultMultiForEffect(int effectId)
+            => effectId >= 2 && effectId <= 19;
+
+        /// <summary>
+        /// Mau "muc" cua mot phim trong xem truoc firmware: Don sac ->
+        /// mau co ban; Da sac -> hue cau vong theo vi tri ngang cua phim
+        /// (xUnits 0..16 giong KeyboardView), moi phim mot hue.
+        /// </summary>
+        public static (byte R, byte G, byte B) PreviewInk(bool multi,
+            (byte R, byte G, byte B) brush, double xUnits)
+        {
+            if (!multi) return brush;
+            double f = xUnits / 16.0;
+            f -= Math.Floor(f);
+            return ColorMath.HsvToRgb(f * 360.0, 0.85, 1.0);
+        }
+
+        /// <summary>Dem so hue phan biet (thung bucketDeg do) trong cac
+        /// mau du sang (kenh lon nhat > nguong) — dung kiem chung khung
+        /// hinh stream that su nhieu hue.</summary>
+        public static int DistinctHueCount(
+            IEnumerable<(byte R, byte G, byte B)> colors, int bucketDeg = 30, int minChannel = 40)
+        {
+            var seen = new HashSet<int>();
+            foreach (var c in colors)
+            {
+                if (Math.Max(c.R, Math.Max(c.G, c.B)) <= minChannel) continue;
+                var hsv = ColorMath.RgbToHsv(c.R, c.G, c.B);
+                if (hsv.S < 0.3) continue;
+                int bucket = (int)(hsv.H / Math.Max(1, bucketDeg)) % (360 / Math.Max(1, bucketDeg));
+                seen.Add(bucket);
+            }
+            return seen.Count;
+        }
     }
 
     /// <summary>Anh xa dieu khien nhac (UI) -> tham so khoi 0x78.</summary>
@@ -397,6 +452,23 @@ namespace TienKeyboardStudio3
         };
         public const int OffIndex = 8;
 
+        // v3.13: che do mau cua stream (khop ColorModes).
+        public static readonly string[] ColorModeNames = { "Đơn sắc", "Cầu vồng", "Bảng màu" };
+
+        /// <summary>Bang mau chon san cho che do "Bang mau": 8 mau ruc
+        /// phan bo rai khap ban phim theo hash cua tung phim.</summary>
+        public static readonly (byte R, byte G, byte B)[] StreamPalette =
+        {
+            (0xEF, 0x44, 0x44), // do
+            (0xF9, 0x73, 0x16), // cam
+            (0xFA, 0xCC, 0x15), // vang
+            (0x34, 0xD3, 0x99), // luc
+            (0x22, 0xD3, 0xEE), // cyan
+            (0x3B, 0x82, 0xF6), // duong
+            (0x7C, 0x3A, 0xED), // tim
+            (0xF4, 0x72, 0xB6), // hong
+        };
+
         /// <summary>Khoang cach frame theo toc do UI 0..4: 130ms -> 50ms.</summary>
         public static int FrameIntervalMs(int speedUi)
             => 130 - Math.Max(0, Math.Min(4, speedUi)) * 20;
@@ -409,75 +481,102 @@ namespace TienKeyboardStudio3
             return (x & 0xFFFFFF) / (double)0x1000000;
         }
 
+        /// <summary>Tuong thich nguoc (v3.12): mac dinh che do Don sac —
+        /// hanh vi giong het ban cu (may generator 4/5/6 von da mang hue
+        /// rieng nen van nhieu mau ke ca o Don sac).</summary>
         public static L99Protocol.StreamQuad[] Generate(int effectId, double t,
             (byte R, byte G, byte B) baseColor, double bright01)
+            => Generate(effectId, t, baseColor, bright01, ColorModes.Single);
+
+        /// <summary>
+        /// v3.13: moi generator tach thanh (p = mau sac do sang 0..1,
+        /// inherent = hue von co cua rieng generator, neu co) roi che
+        /// do mau quyet dinh mau cuoi:
+        /// - Don sac: dung inherent neu co, khong thi mau goc nhan p.
+        /// - Cau vong: inherent giu nguyen; phan con lai nhan hue cau
+        ///   vong chay theo vi tri ngang + thoi gian, nhan p.
+        /// - Bang mau: mau lay tu StreamPalette theo hash cua phim
+        ///   (generator co inherent thi chi so bang truot theo thoi
+        ///   gian cho mau chay), nhan p.
+        /// </summary>
+        public static L99Protocol.StreamQuad[] Generate(int effectId, double t,
+            (byte R, byte G, byte B) baseColor, double bright01, int colorMode)
         {
             var slots = MaxKeyData.StreamSlots;
             var quads = new L99Protocol.StreamQuad[slots.Length];
             double b = Math.Max(0, Math.Min(1, bright01));
+            int mode = Math.Max(0, Math.Min(2, colorMode));
             for (int i = 0; i < slots.Length; i++)
             {
                 var s = slots[i];
-                (byte R, byte G, byte B) c = (0, 0, 0);
+                double p = 0;                       // mau sac do sang 0..1
+                (byte R, byte G, byte B)? inherent = null;
                 switch (effectId)
                 {
                     case 0: // Tinh sang
-                        c = ColorMath.Scale(baseColor, b);
+                        p = 1.0;
                         break;
                     case 1: // Sao dem: nhap nhay theo pha rieng tung phim
                         {
                             double ph = Hash01(s.Id) * Math.PI * 2;
                             double sp = 0.6 + Hash01(s.Id * 7 + 3) * 1.8;
-                            double tw = Math.Pow(0.5 + 0.5 * Math.Sin(t * sp + ph), 3.0);
-                            c = ColorMath.Scale(baseColor, b * tw);
+                            p = Math.Pow(0.5 + 0.5 * Math.Sin(t * sp + ph), 3.0);
                             break;
                         }
                     case 2: // Lay dong: song sang chay ngang, bien do mem
-                        {
-                            double w = 0.55 + 0.45 * Math.Sin(t * 2.2 - s.CX * 9.0 + Math.Sin(t * 0.7 + s.CY * 5.0));
-                            c = ColorMath.Scale(baseColor, b * w);
-                            break;
-                        }
+                        p = 0.55 + 0.45 * Math.Sin(t * 2.2 - s.CX * 9.0 + Math.Sin(t * 0.7 + s.CY * 5.0));
+                        break;
                     case 3: // Tho dong: tho toan ban phim
-                        {
-                            double br = 0.25 + 0.75 * (0.5 + 0.5 * Math.Sin(t * 1.6));
-                            c = ColorMath.Scale(baseColor, b * br);
-                            break;
-                        }
+                        p = 0.25 + 0.75 * (0.5 + 0.5 * Math.Sin(t * 1.6));
+                        break;
                     case 4: // Suoi mau: phun tu tam duoi len — hue theo khoang cach + thoi gian
                         {
                             double dx = s.CX - 0.5, dy = 1.0 - s.CY;
                             double d = Math.Sqrt(dx * dx + dy * dy);
-                            double hue = (d * 300 - t * 90) % 360;
-                            var hc = ColorMath.HsvToRgb(hue, 0.85, 1.0);
-                            double fall = Math.Max(0.15, 1.0 - d * 0.8);
-                            c = ColorMath.Scale(hc, b * fall);
+                            inherent = ColorMath.HsvToRgb(d * 300 - t * 90, 0.85, 1.0);
+                            p = Math.Max(0.15, 1.0 - d * 0.8);
                             break;
                         }
                     case 5: // Song cau vong: hue chay theo truc ngang
-                        {
-                            var hc = ColorMath.HsvToRgb(s.CX * 360 - t * 70, 0.85, 1.0);
-                            c = ColorMath.Scale(hc, b);
-                            break;
-                        }
+                        inherent = ColorMath.HsvToRgb(s.CX * 360 - t * 70, 0.85, 1.0);
+                        p = 1.0;
+                        break;
                     case 6: // Dong chay: hue chay cheo (ngang + doc)
-                        {
-                            var hc = ColorMath.HsvToRgb((s.CX + s.CY) * 220 - t * 80, 0.85, 1.0);
-                            c = ColorMath.Scale(hc, b);
-                            break;
-                        }
+                        inherent = ColorMath.HsvToRgb((s.CX + s.CY) * 220 - t * 80, 0.85, 1.0);
+                        p = 1.0;
+                        break;
                     case 7: // Xoay dinh: mot dinh sang quay quanh tam ban phim
                         {
                             double ang = Math.Atan2(s.CY - 0.5, s.CX - 0.5);
                             double peak = t * 1.8 % (Math.PI * 2);
                             double diff = Math.Abs(((ang - peak) % (Math.PI * 2) + Math.PI * 3) % (Math.PI * 2) - Math.PI);
                             double glow = Math.Pow(Math.Max(0, 1.0 - diff / 1.1), 2.0);
-                            c = ColorMath.Scale(baseColor, b * (0.08 + 0.92 * glow));
+                            p = 0.08 + 0.92 * glow;
                             break;
                         }
                     default: // Tat (8) va id la
-                        c = (0, 0, 0);
+                        p = 0;
                         break;
+                }
+                (byte R, byte G, byte B) c;
+                if (p <= 0)
+                {
+                    c = (0, 0, 0);
+                }
+                else if (mode == ColorModes.Rainbow && inherent == null)
+                {
+                    var hc = ColorMath.HsvToRgb(s.CX * 360 - t * 60, 0.85, 1.0);
+                    c = ColorMath.Scale(hc, b * p);
+                }
+                else if (mode == ColorModes.Palette)
+                {
+                    int idx = (int)(Hash01(s.Id * 31 + 7) * StreamPalette.Length) % StreamPalette.Length;
+                    if (inherent != null) idx = (idx + (int)(t * 2)) % StreamPalette.Length;
+                    c = ColorMath.Scale(StreamPalette[idx], b * p);
+                }
+                else // Don sac (va Cau vong cho generator co hue rieng)
+                {
+                    c = ColorMath.Scale(inherent ?? baseColor, b * p);
                 }
                 quads[i] = new L99Protocol.StreamQuad(s.Id, c.R, c.G, c.B);
             }

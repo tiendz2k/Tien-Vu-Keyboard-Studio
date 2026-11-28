@@ -203,7 +203,7 @@ namespace TienKeyboardStudio3
             if (_flashes.Count < 7 && _rng.NextDouble() < 0.35)
             {
                 var k = Keys[_rng.Next(Keys.Count)];
-                Color c = eff == 4
+                Color c = eff == 4 || State.Multi
                     ? Hsv((_rng.NextDouble()), 0.8, 1.0)
                     : State.Brush;
                 _flashes.Add((k.Id, _t, c));
@@ -265,6 +265,12 @@ namespace TienKeyboardStudio3
             double bscale = 0.2 + 0.8 * ((st.Brightness + 1) / 5.0);
             double t = _t;
             double x = k.CX, y = k.CY;
+            // v3.13: "muc" cua phim — Da sac thi moi phim mot hue cau
+            // vong theo vi tri ngang (khop LightingCore.ColorModes.
+            // PreviewInk), Don sac thi mau da chon. Cac hieu ung truoc
+            // day chi nhan do sang tren mau don (5,7,13,15,17,18...)
+            // nay dung ink nen Da sac thay ro tren xem truoc.
+            Color ink = st.Multi ? Hsv(Frac(x / 16.0), 0.85, 1.0) : st.Brush;
             double dirCoord = st.Direction == 1 ? y : st.Direction == 2 ? -x : st.Direction == 3 ? -y : x;
             Color c;
             switch (st.Effect)
@@ -323,7 +329,7 @@ namespace TienKeyboardStudio3
                         if (f.Id == k.Id) c = Mix(c, f.Col, Math.Max(0, 1 - (t - f.Start) / 0.8));
                     return Scale(c, bscale);
                 case 3: // Single Off: nen sang, phim ngau nhien tat dan
-                    c = st.Brush;
+                    c = ink;
                     foreach (var f in _flashes)
                         if (f.Id == k.Id) c = Mix(c, Color.FromRgb(0x10, 0x10, 0x18), Math.Max(0, 1 - (t - f.Start) / 0.8));
                     return Scale(c, bscale);
@@ -336,13 +342,13 @@ namespace TienKeyboardStudio3
                     {
                         double ph = Frac(y * 0.22 - t * 0.55 + Hash(k.Id) * 0.35);
                         double v = Math.Pow(Math.Max(0, 1 - ph), 2.2);
-                        c = Scale(st.Brush, 0.12 + v);
+                        c = Scale(ink, 0.12 + v);
                         return Scale(c, bscale);
                     }
                 case 6: // Colourful: cau vong theo cot
                     c = Hsv(Frac(x / 16.0), 0.85, 1.0); return Scale(c, bscale);
                 case 7: // Breathing
-                    c = Scale(st.Brush, 0.15 + 0.85 * (0.5 + 0.5 * Math.Sin(t * 2.2))); return Scale(c, bscale);
+                    c = Scale(ink, 0.15 + 0.85 * (0.5 + 0.5 * Math.Sin(t * 2.2))); return Scale(c, bscale);
                 case 8: // Spectrum: doi mau toan ban
                     c = Hsv(Frac(t * 0.06), 0.85, 1.0); return Scale(c, bscale);
                 case 9: // Outward: song lan tu tam ra
@@ -362,7 +368,7 @@ namespace TienKeyboardStudio3
                         c = Hsv(Frac(ang + t * 0.08), 0.85, 1.0); return Scale(c, bscale);
                     }
                 case 13: // Explode: bung sang roi tan (mo phong bang flash mau co)
-                    c = Scale(st.Brush, 0.25);
+                    c = Scale(ink, 0.25);
                     foreach (var f in _flashes)
                         if (f.Id == k.Id) c = Mix(c, Colors.White, Math.Max(0, 1 - (t - f.Start) / 0.8) * 0.7);
                     return Scale(c, bscale);
@@ -376,7 +382,7 @@ namespace TienKeyboardStudio3
                     {
                         double d = Dist(x, y, 8, 3);
                         double v = Math.Pow(0.5 + 0.5 * Math.Sin(d * 2.4 - t * 4.5), 2.0);
-                        c = Scale(st.Brush, 0.15 + 0.85 * v); return Scale(c, bscale);
+                        c = Scale(ink, 0.15 + 0.85 * v); return Scale(c, bscale);
                     }
                 case 16: // Flowing: sang chay theo huong
                     {
@@ -387,12 +393,12 @@ namespace TienKeyboardStudio3
                 case 17: // Pulsating: nhip manh
                     {
                         double s = Math.Sin(t * 3.2);
-                        c = Scale(st.Brush, 0.2 + 0.8 * Math.Pow(Math.Max(0, s), 1.6)); return Scale(c, bscale);
+                        c = Scale(ink, 0.2 + 0.8 * Math.Pow(Math.Max(0, s), 1.6)); return Scale(c, bscale);
                     }
                 case 18: // Tilt: dai sang quet cheo
                     {
                         double v = Math.Pow(0.5 + 0.5 * Math.Sin((x * 0.8 + y) * 0.9 - t * 2.6), 1.5);
-                        c = Scale(st.Brush, 0.2 + 0.8 * v); return Scale(c, bscale);
+                        c = Scale(ink, 0.2 + 0.8 * v); return Scale(c, bscale);
                     }
                 case 19: // Shuttle: dai sang chay qua lai
                     {

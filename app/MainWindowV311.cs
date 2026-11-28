@@ -407,7 +407,7 @@ namespace TienKeyboardStudio3
                 CornerRadius = new CornerRadius(14), ClipToBounds = true,
                 Width = 64, Height = 64, Child = logoImg,
             };
-            var aboutPara = Tb("Phiên bản 3.12.0 — nâng cấp ánh sáng: bộ chọn màu tự do (vòng HSV + nhập RGB/hex + màu gần đây) cho trang RGB và vẽ per-key; scheme đèn có tên (lưu/áp dụng/đổi tên/xoá, xuất/nhập JSON + XML); mở khoá tham số nhạc 0x78 (kiểu nhịp, biên độ, nền, sáng nền); hiệu ứng thời gian thực stream 0x20 có tên + slider độ sáng/ngưỡng đen cho GIF→LED; trạng thái đèn được nhớ qua các lần mở app và hồ sơ theo ứng dụng lưu đủ bộ thông số. F75 Max hỗ trợ đầy đủ; các họ còn lại định danh bằng probe đọc trước khi ghi, chưa kiểm chứng trên phần cứng thật. Dry-run bật mặc định.", "sub");
+            var aboutPara = Tb("Phiên bản 3.13.0 — bản rực màu: hiệu ứng firmware có chế độ màu Đơn sắc / Đa sắc rõ ràng (hiệu ứng động mặc định Đa sắc — firmware tự rải cầu vồng, xem trước trong app cũng rải màu theo từng phím); hiệu ứng thời gian thực stream 0x20 thêm chế độ màu Đơn sắc / Cầu vồng / Bảng màu (mặc định Cầu vồng). Kế thừa v3.12: bộ chọn màu tự do, scheme đèn có tên, mở khoá tham số nhạc 0x78, trạng thái đèn được nhớ. F75 Max hỗ trợ đầy đủ; các họ còn lại định danh bằng probe đọc trước khi ghi, chưa kiểm chứng trên phần cứng thật. Dry-run bật mặc định.", "sub");
             aboutPara.MaxWidth = 640; // cot ngang H() cho chieu rong vo han — gioi han de chu xuong dong trong the
             var aboutTexts = V(4,
                 Tb("Tien Vu Keyboard Studio", "h2"),

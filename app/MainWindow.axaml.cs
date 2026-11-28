@@ -325,7 +325,7 @@ namespace TienKeyboardStudio3
             RefreshWriteStates();
             ShowPage("home");
             _ = RunIntegrityCheckAsync();
-            AppendLog("Tien Vu Keyboard Studio v3.12.0 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
+            AppendLog("Tien Vu Keyboard Studio v3.13.0 đã mở. Dry-run ĐANG BẬT — mọi thao tác chỉ ghi log, không ghi xuống phím.");
             AppendLog("Lộ trình an toàn lần đầu: Quét thiết bị → thử RGB (dry-run) → tắt Dry-run → RGB thật → Cài đặt 04 17 → Đồng hồ → GIF TFT nhỏ → Đọc thử 0xF5.");
         }
 
@@ -2444,7 +2444,7 @@ namespace TienKeyboardStudio3
             for (int i = 0; i < 20; i++)
             {
                 int idx = i;
-                var pv = new EffectPreview { Effect = idx, BaseColor = _rgb.Brush };
+                var pv = new EffectPreview { Effect = idx, BaseColor = _rgb.Brush, Multi = _rgb.Multi };
                 var content = V(7, pv, Tb(EffectFriendlyNames[idx], null, 11.5));
                 var card = new Border
                 {
@@ -2471,24 +2471,35 @@ namespace TienKeyboardStudio3
                 ("Lục", Color.FromRgb(0x34, 0xD3, 0x99)), ("Dương", Color.FromRgb(0x3B, 0x82, 0xF6)),
                 ("Trắng", Color.FromRgb(0xF8, 0xFA, 0xFC)),
             };
-            var multiChip = new Button { Content = "Nhiều màu (cầu vồng)" };
-            multiChip.Classes.Add("chip");
-            SetCls(multiChip, "sel", _rgb.Multi);
-            multiChip.Click += (s, e) =>
-            {
-                _rgb.Multi = !_rgb.Multi;
-                SetCls(multiChip, "sel", _rgb.Multi);
-                kb.InvalidateVisual();
-                QueuePersistLighting();
-                ShowToast(_rgb.Multi ? "Đã bật chế độ nhiều màu cho các hiệu ứng hỗ trợ" : "Đã tắt chế độ nhiều màu");
-            };
+            // v3.13: CHE DO MAU lo ro — Da sac (co nhieu mau byte[8]=1,
+            // firmware tu rai cau vong) / Don sac (mau da chon). Chon
+            // hieu ung moi thi che do nhay ve mac dinh cua hieu ung do
+            // (xem SelectEffect); nguoi dung doi tay thi lua chon do
+            // duoc luu trong trang thai den nhu truong Multi truoc day.
+            var (colorModeSeg, selectColorMode) = Segmented(
+                new[] { "Đơn sắc", "Đa sắc" }, _rgb.Multi ? 1 : 0, i =>
+                {
+                    _rgb.Multi = i == 1;
+                    foreach (var p in previews) { p.Multi = _rgb.Multi; p.InvalidateVisual(); }
+                    kb.InvalidateVisual();
+                    QueuePersistLighting();
+                    ShowToast(_rgb.Multi
+                        ? "Đa sắc: firmware tự rải nhiều màu cho hiệu ứng."
+                        : "Đơn sắc: dùng đúng màu đã chọn.");
+                });
+            _selectFwColorMode = selectColorMode;
             var picker = new ColorPickerPanel(swatchColors);
             picker.SetColor(_rgb.Brush);
             picker.SetRecents(RecentColorList());
             picker.ColorChanged += c =>
             {
                 _rgb.Brush = c;
-                if (_rgb.Multi) { _rgb.Multi = false; SetCls(multiChip, "sel", false); }
+                if (_rgb.Multi)
+                {
+                    _rgb.Multi = false;
+                    selectColorMode(0);
+                    foreach (var p in previews) p.Multi = false;
+                }
                 foreach (var p in previews) p.BaseColor = c;
                 kb.InvalidateVisual();
                 QueuePersistLighting();
@@ -2499,7 +2510,7 @@ namespace TienKeyboardStudio3
                 picker.SetRecents(RecentColorList());
                 PersistLightingNow();
             };
-            var colorRow = H(16, picker, V(8, Tb("Nhiều màu", "sub"), multiChip));
+            var colorRow = H(16, picker, V(8, Tb("Chế độ màu", "sub"), colorModeSeg));
             colorRow.Children[1].VerticalAlignment = VerticalAlignment.Top;
 
             var bright = new Slider { Minimum = 0, Maximum = 4, Value = _rgb.Brightness, Width = 210 };
@@ -2550,9 +2561,22 @@ namespace TienKeyboardStudio3
             return list;
         }
 
+        // v3.13: ham chon lai cua segmented Che do mau o trang RGB
+        // (de SelectEffect nhay che do ve mac dinh cua hieu ung).
+        private Action<int> _selectFwColorMode;
+
         private void SelectEffect(int idx, List<EffectPreview> previews, List<Border> cards)
         {
             _rgb.Effect = idx;
+            // v3.13: hieu ung dong mac dinh Da sac, Tat/Tinh mac dinh
+            // Don sac — nhay che do theo hieu ung vua chon.
+            bool defMulti = ColorModes.DefaultMultiForEffect(idx);
+            if (_rgb.Multi != defMulti)
+            {
+                _rgb.Multi = defMulti;
+                _selectFwColorMode?.Invoke(defMulti ? 1 : 0);
+            }
+            foreach (var p in previews) { p.Multi = _rgb.Multi; p.InvalidateVisual(); }
             SelectEffectVisual(idx, previews, cards);
             if (_homeFxValue != null) _homeFxValue.Text = EffectFriendlyNames[idx];
             QueuePersistLighting();
@@ -3420,6 +3444,8 @@ namespace TienKeyboardStudio3
             public (byte R, byte G, byte B) BaseColor = (0x7C, 0x3A, 0xED);
             public double Brightness01 = 0.75;
             public int SpeedUi = 2;
+            // v3.13: che do mau stream (0 Don sac, 1 Cau vong, 2 Bang mau)
+            public int ColorMode = ColorModes.Rainbow;
             private double _t;
             private bool _sendBusy;
             private bool _loggedOnce;
@@ -3443,7 +3469,7 @@ namespace TienKeyboardStudio3
                 if (State == null) return;
                 Timer.Interval = TimeSpan.FromMilliseconds(RealtimeEffects.FrameIntervalMs(SpeedUi));
                 _t += Timer.Interval.TotalSeconds * (0.6 + SpeedUi * 0.35);
-                var quads = RealtimeEffects.Generate(EffectId, _t, BaseColor, Brightness01);
+                var quads = RealtimeEffects.Generate(EffectId, _t, BaseColor, Brightness01, ColorMode);
                 var dict = new Dictionary<string, Color>();
                 for (int i = 0; i < quads.Length; i++)
                     dict["k" + MaxKeyData.StreamSlots[i].ViewIndex] = Color.FromRgb(quads[i].R, quads[i].G, quads[i].B);
@@ -3758,6 +3784,7 @@ namespace TienKeyboardStudio3
         private double _gifBrightness = 1.0;
         private int _gifBlackLevel = GifLedConverter.DefaultBlackLevel;
         private int _rtSelected = RealtimeEffects.OffIndex;
+        private int _rtColorMode = ColorModes.Rainbow; // v3.13
         private string _activeSchemeName = "";
         private Action _refreshSchemeList;
         private DispatcherTimer _lightPersistTimer;
@@ -3788,6 +3815,7 @@ namespace TienKeyboardStudio3
             _gifBrightness = ClampD(L.GifBrightness, 0.2, 1.5);
             _gifBlackLevel = ClampI(L.GifBlackLevel, 0, 60);
             _rtSelected = ClampI(L.RtEffect, 0, RealtimeEffects.OffIndex);
+            _rtColorMode = ClampI(L.RtColorMode, 0, 2);
             _activeSchemeName = L.PaintedSchemeName ?? "";
             if (!string.IsNullOrEmpty(_activeSchemeName))
             {
@@ -3834,6 +3862,7 @@ namespace TienKeyboardStudio3
             L.MusicBgBrightness = _rhythmBgBrightness;
             L.MusicGain = _music.MusicGain;
             L.RtEffect = _rtSelected;
+            L.RtColorMode = _rtColorMode;
             L.GifBrightness = _gifBrightness;
             L.GifBlackLevel = _gifBlackLevel;
             try { GifLibraryStore.Save(_ui); } catch { }
@@ -4200,6 +4229,7 @@ namespace TienKeyboardStudio3
                         _rtPlayer.BaseColor = (_paintColor.R, _paintColor.G, _paintColor.B);
                         _rtPlayer.Brightness01 = rtBright.Value / 4.0;
                         _rtPlayer.SpeedUi = (int)Math.Round(rtSpeed.Value);
+                        _rtPlayer.ColorMode = _rtColorMode;
                         _rtPlayer.Start(idx);
                     }
                     QueuePersistLighting();
@@ -4207,14 +4237,25 @@ namespace TienKeyboardStudio3
                 rtBtns.Add(b);
                 rtWrap.Children.Add(b);
             }
+            // v3.13: che do mau cho stream — mac dinh Cau vong.
+            _rtPlayer.ColorMode = _rtColorMode;
+            var (rtModeSeg, _) = Segmented(RealtimeEffects.ColorModeNames, _rtColorMode, i =>
+            {
+                _rtColorMode = i;
+                _rtPlayer.ColorMode = i;
+                QueuePersistLighting();
+            });
+            var rtModeRow = H(10, Tb("Chế độ màu:", "sub"), rtModeSeg);
+            rtModeRow.Children[0].VerticalAlignment = VerticalAlignment.Center;
             var rtCard = Card(V(12,
                 Tb("Hiệu ứng thời gian thực (stream 0x20)", "h2"),
                 rtKb,
                 rtWrap,
+                rtModeRow,
                 H(24,
                     V(4, Tb("Độ sáng", "sub"), rtBright),
                     V(4, Tb("Tốc độ", "sub"), rtSpeed)),
-                Tb("Màu gốc lấy từ màu vẽ per-key đang chọn. Lớp thử nghiệm như GIF→LED.", "faint")));
+                Tb("Đơn sắc dùng màu vẽ per-key đang chọn; Cầu vồng và Bảng màu tự rải nhiều màu.", "faint")));
 
             _expLogBox = new TextBox
             {
