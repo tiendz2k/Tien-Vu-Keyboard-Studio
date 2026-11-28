@@ -120,6 +120,8 @@ namespace TienKeyboardStudio3
                         if (s.RecentColors == null) s.RecentColors = new List<string>();
                         if (s.Plugins == null) s.Plugins = new Dictionary<string, PluginState>();
                         if (s.GameSense == null) s.GameSense = new GameSenseSettings();
+                        if (s.Lighting != null && s.Lighting.ScheduleRules == null)
+                            s.Lighting.ScheduleRules = new List<ScheduleRuleData>();
                         if (string.IsNullOrEmpty(s.Background)) s.Background = "default";
                         if (string.IsNullOrEmpty(s.GreetingPlugin)) s.GreetingPlugin = "tien-galaxy-boot";
                         return s;

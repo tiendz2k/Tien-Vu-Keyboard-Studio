@@ -143,6 +143,18 @@ namespace TienKeyboardStudio3
         // GIF -> LED
         public double GifBrightness { get; set; } = 1.0;  // 0.2..1.5
         public int GifBlackLevel { get; set; } = 24;      // 0..60
+        // v3.15: Ambilight (stream 0x20 theo man hinh PC)
+        public int AmbilightMode { get; set; } = 0;       // 0 Toan man hinh, 1 Vien
+        public int AmbilightFps { get; set; } = 15;       // 10/15/20
+        public double AmbilightBrightness { get; set; } = 1.0; // 0.2..1.5
+        public int AmbilightBlackLevel { get; set; } = 24;     // 0..60
+        // v3.15: hieu ung go phim phan ung (-1 = tat; 0 Song lan,
+        // 1 Vet sang, 2 Mua phim — xem ReactiveEffects)
+        public int ReactiveEffect { get; set; } = -1;
+        // v3.15: lich trinh den theo gio (LightingSchedule.cs). File
+        // settings cu khong co -> tat + danh sach rong, nap binh thuong.
+        public bool ScheduleEnabled { get; set; } = false;
+        public List<ScheduleRuleData> ScheduleRules { get; set; } = new List<ScheduleRuleData>();
     }
 
     /// <summary>

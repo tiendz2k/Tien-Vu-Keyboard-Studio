@@ -242,6 +242,11 @@ namespace TienKeyboardStudio3
             _gsi.EventReceived += (ev, payload) => Dispatcher.UIThread.Post(() => HandleGsiEvent(ev));
 
             RestoreLightingState(); // v3.12: truoc khi dung trang (trang doc _rgb/_painted)
+            // v3.15: hook vi tri phim -> engine go phim phan ung. Hook
+            // chi chay khi cong tac Thong ke go phim dang bat (opt-in
+            // dung chung) nen ngoai luc do khong co su kien nao ca.
+            _typing.KeyPositionPressed += view => _reactivePlayer.OnKey(view);
+            InitSchedule(); // v3.15: lich trinh den (baseline, khong gui ngay)
             BuildNav();
             _pages["home"] = BuildHomePage();
             _pages["rgb"] = BuildRgbPage();
@@ -322,7 +327,7 @@ namespace TienKeyboardStudio3
             RefreshWriteStates();
             ShowPage("home");
             _ = RunIntegrityCheckAsync();
-            AppendLog("Tien Vu Keyboard Studio v3.14.0 đã mở. Mọi thao tác áp dụng trực tiếp xuống phím qua USB-C.");
+            AppendLog("Tien Vu Keyboard Studio v3.15.0 đã mở. Mọi thao tác áp dụng trực tiếp xuống phím qua USB-C.");
             AppendLog("Lần đầu: Quét thiết bị → chọn đúng mẫu → dùng các trang tính năng; các họ khác cần bấm Nhận diện (probe đọc) trước khi ghi.");
             _ = SilentAppUpdateCheckAsync();
         }
@@ -719,8 +724,14 @@ namespace TienKeyboardStudio3
         }
 
         private Task ApplyRgbAsync(int effect, Color c, bool multi, int brightUi, int speedUi, int direction)
-            => RunStepsAsync("Áp dụng hiệu ứng RGB",
+        {
+            // v3.15: ap den bang tay (ke ca lich trinh goi ham nay —
+            // ApplyScheduleRule da ghi nho Key truoc) -> thang lich
+            // trinh cho den bien luat tiep theo.
+            MarkManualLightingChange();
+            return RunStepsAsync("Áp dụng hiệu ứng RGB",
                 () => F75Protocol.BuildLighting(effect, c.R, c.G, c.B, multi, brightUi + 1, speedUi + 1, direction));
+        }
 
         private async Task UploadStreamAsync(byte[] stream, string title, ProgressBar bar)
         {
@@ -761,7 +772,15 @@ namespace TienKeyboardStudio3
             string name = System.IO.Path.GetFileName(path);
             try
             {
-                stream = await Task.Run(() => DisplayEncoder.Encode(path, fit, msg => AppendLog(msg)));
+                // v3.15: cache chuyen doi — file da ma hoa (chon truoc
+                // o trang Man hinh GIF la da tien chuyen nen) thi gui
+                // ngay, khong con buoc loading giai ma/ma hoa.
+                var res = await Task.Run(() => _displayCache.GetOrEncode(path, fit,
+                    (p, f) => DisplayEncoder.Encode(p, f, msg => AppendLog(msg))));
+                stream = res.Stream;
+                AppendLog(res.FromCache
+                    ? $"Màn hình TFT: dùng cache chuyển đổi của “{name}” ({res.Chunks} chunk) — bỏ qua mã hoá."
+                    : $"Màn hình TFT: đã mã hoá “{name}” ({res.Chunks} chunk) và lưu cache cho lần sau.");
             }
             catch (Exception ex)
             {
@@ -769,6 +788,7 @@ namespace TienKeyboardStudio3
                 ShowToast("Lỗi mã hoá GIF: " + ex.Message);
                 return;
             }
+            _widgetGate.Reset(); // man hinh vua doi sang GIF — widget cu khong con tren man
             await UploadStreamAsync(stream, "GIF " + name, bar);
         }
 
@@ -2408,6 +2428,8 @@ namespace TienKeyboardStudio3
                 wrap.Children.Add(card);
             }
             SelectEffectVisual(_rgb.Effect, previews, cards);
+            _rgbPreviews = previews; // v3.15: lich trinh can dong bo lai hinh
+            _rgbCards = cards;
 
             // v3.12: bo chon mau TU DO (o SV + thanh hue + nhap RGB/hex +
             // 9 mau mac dinh + mau gan day) thay hang o mau co dinh.
@@ -2485,6 +2507,27 @@ namespace TienKeyboardStudio3
                 await ApplyRgbAsync(_rgb.Effect, _rgb.Brush, _rgb.Multi, (int)_rgb.Brightness, (int)_rgb.Speed, _rgb.Direction));
             applyBtn.HorizontalAlignment = HorizontalAlignment.Left;
 
+            // --- v3.15: lich trinh den theo gio ---
+            _schedPanel = new StackPanel { Spacing = 6 };
+            RefreshScheduleRows();
+            var schedCard = Card(V(10,
+                Tb("Lịch trình đèn theo giờ", "h3"),
+                SettingRow("Bật lịch trình", "Đến giờ đã đặt, app tự áp độ sáng / hiệu ứng / tắt đèn. Đổi đèn bằng tay sẽ thắng cho đến luật tiếp theo.", LightingState.ScheduleEnabled, v =>
+                {
+                    LightingState.ScheduleEnabled = v;
+                    SaveSchedule();
+                    ShowToast(v ? "Đã bật lịch trình đèn." : "Đã tắt lịch trình đèn.");
+                }),
+                _schedPanel,
+                GhostBtn("Thêm luật", () =>
+                {
+                    LightingState.ScheduleRules.Add(new ScheduleRuleData
+                    { StartMinutes = 22 * 60, Kind = ScheduleRuleData.KindBrightness, BrightnessPercent = 40 });
+                    SaveSchedule();
+                    RefreshScheduleRows();
+                }),
+                Tb("Mỗi luật: giờ bắt đầu (HH:mm) · loại (Độ sáng / Hiệu ứng / Tắt đèn) · giá trị (% độ sáng 0–100 hoặc số hiệu ứng 0–19). Luật sau ghi đè luật trước theo giờ.", "faint")));
+
             var root = V(14,
                 Tb("Ánh sáng RGB", "h1"),
                 Tb("Chọn hiệu ứng để xem trên bàn phím mô phỏng; “Áp dụng xuống phím” gửi hiệu ứng xuống F75 Max.", "sub"),
@@ -2495,7 +2538,8 @@ namespace TienKeyboardStudio3
                     Tb("Màu chính", "h3"), colorRow,
                     sliderGrid,
                     dirRow,
-                    applyBtn)));
+                    applyBtn)),
+                schedCard);
             return Scroll(root);
         }
 
@@ -2635,6 +2679,7 @@ namespace TienKeyboardStudio3
 
         private void StartMusic()
         {
+            ClaimStream(StreamOwner.Music); // v3.15: mot chu stream 0x20
             _audio.Start();
             _musicPlaying = true;
             _musicTimer.Start();
@@ -2822,6 +2867,21 @@ namespace TienKeyboardStudio3
                 screenFrames = frames;
                 kb.ScreenFrames = frames;
                 GifTools.DisposeFrames(old);
+                // v3.15: TIEN CHUYEN DOI NEN ngay khi chon GIF — bam
+                // "Nap len phim" sau do chi viec gui (cache da san).
+                string prePath = path;
+                var preFit = _gifFit == GifFitMode.Fill ? FitMode.Fill : _gifFit == GifFitMode.Fit ? FitMode.Fit : FitMode.Stretch;
+                _ = Task.Run(() =>
+                {
+                    try
+                    {
+                        var r = _displayCache.GetOrEncode(prePath, preFit,
+                            (p, f) => DisplayEncoder.Encode(p, f, null));
+                        if (!r.FromCache)
+                            AppendLog($"Màn hình GIF: đã tiền chuyển đổi “{item.Entry.Name}” ({r.Chunks} chunk) — nạp lên phím sẽ tức thì.");
+                    }
+                    catch { /* tien chuyen doi la lop tang toc — loi thi bo qua */ }
+                });
             }
             _applyGifSelection = ApplySelection;
 
@@ -3272,6 +3332,9 @@ namespace TienKeyboardStudio3
             public KeyboardView Target;
             public ExperimentalDevice Exp;
             public Action<string> Log;
+            // v3.15: dieu phoi stream 0x20 — mot chu stream tai mot thoi
+            // diem (ClaimStream o MainWindow dung cac player khac).
+            public Action Claim;
             public bool Sending;
             private bool _sendBusy;
             private bool _loggedOnce;
@@ -3289,6 +3352,7 @@ namespace TienKeyboardStudio3
             public void Play()
             {
                 if (Anim == null || Anim.Frames.Count == 0) return;
+                Claim?.Invoke();
                 Timer.Interval = TimeSpan.FromMilliseconds(IntervalMs());
                 Timer.Start();
             }
@@ -3301,6 +3365,7 @@ namespace TienKeyboardStudio3
                 _loggedOnce = false;
                 if (on && Anim != null)
                 {
+                    Claim?.Invoke();
                     if (!Timer.IsEnabled) Play();
                     MaybeSend();
                 }
@@ -3360,6 +3425,7 @@ namespace TienKeyboardStudio3
             public KeyboardView Target;
             public ExperimentalDevice Exp;
             public Action<string> Log;
+            public Action Claim; // v3.15: dieu phoi stream (ClaimStream)
             public int EffectId = RealtimeEffects.OffIndex;
             public (byte R, byte G, byte B) BaseColor = (0x7C, 0x3A, 0xED);
             public double Brightness01 = 0.75;
@@ -3377,6 +3443,7 @@ namespace TienKeyboardStudio3
             {
                 EffectId = effectId;
                 _loggedOnce = false;
+                Claim?.Invoke();
                 Timer.Interval = TimeSpan.FromMilliseconds(RealtimeEffects.FrameIntervalMs(SpeedUi));
                 Timer.Start();
                 Tick(null, null);
@@ -3417,12 +3484,171 @@ namespace TienKeyboardStudio3
         private readonly LedPlayer _ledPlayer = new LedPlayer();
         private readonly LedPlayer _onlineLedPlayer = new LedPlayer();
         private readonly RealtimeLedPlayer _rtPlayer = new RealtimeLedPlayer();
+        private readonly AmbilightPlayer _ambiPlayer = new AmbilightPlayer();
+        private readonly ReactiveLedPlayer _reactivePlayer = new ReactiveLedPlayer();
+
+        // ================= v3.15: DIEU PHOI STREAM 0x20 =================
+        // Mot chu stream tai mot thoi diem (DESIGN §0.1): player nao
+        // Start thi ClaimStream dung moi nguon stream khac. Khong hang
+        // doi, khong tron frame.
+        private enum StreamOwner { None, Gif, Realtime, Music, Ambilight, Reactive }
+        private StreamOwner _streamOwner = StreamOwner.None;
+
+        private void ClaimStream(StreamOwner owner)
+        {
+            _streamOwner = owner;
+            if (owner != StreamOwner.Gif) { _ledPlayer.Stop(); _onlineLedPlayer.Stop(); }
+            if (owner != StreamOwner.Realtime) _rtPlayer.Stop();
+            if (owner != StreamOwner.Ambilight) _ambiPlayer.Stop();
+            if (owner != StreamOwner.Reactive) _reactivePlayer.Stop();
+            if (owner != StreamOwner.Music && _musicPlaying) StopMusic();
+        }
+
+        // v3.15: bo phat AMBILIGHT — chup man hinh chinh (GDI) -> lay
+        // mau median theo vung phim (ScreenSampler) -> stream 0x20.
+        // Chup + lay mau tren thread nen; frame cham thi bo nhip, khong
+        // xep hang (cung ky luat _sendBusy cua cac player khac).
+        private sealed class AmbilightPlayer
+        {
+            public readonly DispatcherTimer Timer = new DispatcherTimer();
+            public RgbAnimState State;
+            public KeyboardView Target;
+            public ExperimentalDevice Exp;
+            public Action<string> Log;
+            public Action Claim;
+            public int Mode = ScreenSampler.ModeFull;
+            public int Fps = 15;
+            public double Brightness = 1.0;
+            public int BlackLevel = ScreenSampler.DefaultBlackLevel;
+            private bool _busy;
+            private bool _sendBusy;
+            private bool _captureFailed;
+
+            public AmbilightPlayer() { Timer.Tick += Tick; }
+            public bool Running => Timer.IsEnabled;
+
+            public void Start()
+            {
+                Claim?.Invoke();
+                Timer.Interval = TimeSpan.FromMilliseconds(1000 / Math.Max(10, Math.Min(20, Fps)));
+                Timer.Start();
+                Tick(null, null);
+            }
+
+            public void Stop() { Timer.Stop(); }
+
+            private void Tick(object sender, EventArgs e)
+            {
+                if (State == null || _busy) return;
+                _busy = true;
+                int mode = Mode, bl = BlackLevel;
+                double br = Brightness;
+                Task.Run(() =>
+                {
+                    L99Protocol.StreamQuad[] quads = null;
+                    bool ok = ScreenCapture.CapturePrimaryBgra(192, 108, out var bgra);
+                    if (ok) quads = ScreenSampler.SampleAll(bgra, 192, 108, mode, bl, br);
+                    Dispatcher.UIThread.Post(() =>
+                    {
+                        _busy = false;
+                        if (!Timer.IsEnabled) return;
+                        if (!ok || quads == null)
+                        {
+                            if (!_captureFailed)
+                            {
+                                _captureFailed = true;
+                                Log?.Invoke("Ambilight: không chụp được màn hình — tính năng chỉ chạy trên Windows (màn hình chính).");
+                            }
+                            return;
+                        }
+                        _captureFailed = false;
+                        var dict = new Dictionary<string, Color>();
+                        for (int i = 0; i < quads.Length; i++)
+                            dict["k" + MaxKeyData.StreamSlots[i].ViewIndex] = Color.FromRgb(quads[i].R, quads[i].G, quads[i].B);
+                        State.FrameColors = dict;
+                        State.PaintMode = false;
+                        Target?.InvalidateVisual();
+                        if (Exp == null || _sendBusy) return;
+                        _sendBusy = true;
+                        var steps = L99Protocol.BuildStreamFrameSteps(quads.ToList());
+                        Task.Run(() =>
+                        {
+                            try { Exp.SendSteps("Ambilight 0x20", steps); }
+                            catch (Exception ex) { Log?.Invoke("Lỗi Ambilight: " + ex.Message); }
+                            _sendBusy = false;
+                        });
+                    });
+                });
+            }
+        }
+
+        // v3.15: bo phat hieu ung GO PHIM PHAN UNG — su kien (vi tri
+        // phim, moc thoi gian) tu hook dung chung voi Thong ke go phim
+        // dua vao ReactiveEngine; frame sinh o 20fps, gui qua 0x20 nhu
+        // cac player stream khac.
+        private sealed class ReactiveLedPlayer
+        {
+            public readonly DispatcherTimer Timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(50) };
+            public RgbAnimState State;
+            public KeyboardView Target;
+            public ExperimentalDevice Exp;
+            public Action<string> Log;
+            public Action Claim;
+            public readonly ReactiveEngine Engine = new ReactiveEngine();
+            public int EffectId = -1;
+            public (byte R, byte G, byte B) BaseColor = (0x7C, 0x3A, 0xED);
+            public double Brightness01 = 0.75;
+            public int ColorMode = ColorModes.Rainbow;
+            private readonly System.Diagnostics.Stopwatch _clock = System.Diagnostics.Stopwatch.StartNew();
+            private bool _sendBusy;
+
+            public ReactiveLedPlayer() { Timer.Tick += Tick; }
+            public bool Running => Timer.IsEnabled;
+            public double NowSec => _clock.Elapsed.TotalSeconds;
+
+            /// <summary>Nhan su kien go: CHI index vi tri phim (hook da
+            /// dich VK -> vi tri o TypingStatsService).</summary>
+            public void OnKey(int viewIndex) => Engine.AddEvent(viewIndex, NowSec);
+
+            public void Start(int effectId)
+            {
+                EffectId = effectId;
+                Claim?.Invoke();
+                Engine.Clear();
+                Timer.Start();
+                Tick(null, null);
+            }
+
+            public void Stop() { Timer.Stop(); }
+
+            private void Tick(object sender, EventArgs e)
+            {
+                if (State == null || EffectId < 0) return;
+                var quads = Engine.Generate(EffectId, NowSec, BaseColor, Brightness01, ColorMode);
+                var dict = new Dictionary<string, Color>();
+                for (int i = 0; i < quads.Length; i++)
+                    dict["k" + MaxKeyData.StreamSlots[i].ViewIndex] = Color.FromRgb(quads[i].R, quads[i].G, quads[i].B);
+                State.FrameColors = dict;
+                State.PaintMode = false;
+                Target?.InvalidateVisual();
+                if (Exp == null || _sendBusy) return;
+                _sendBusy = true;
+                var steps = L99Protocol.BuildStreamFrameSteps(quads.ToList());
+                Task.Run(() =>
+                {
+                    try { Exp.SendSteps("Stream gõ phím phản ứng 0x20", steps); }
+                    catch (Exception ex) { Log?.Invoke("Lỗi gõ phím phản ứng: " + ex.Message); }
+                    _sendBusy = false;
+                });
+            }
+        }
 
         // ================= TRANG 5: THU VIEN ONLINE =================
         private Control BuildOnlinePage()
         {
             _onlineLedPlayer.Exp = _exp;
             _onlineLedPlayer.Log = AppendLog;
+            _onlineLedPlayer.Claim = () => { ClaimStream(StreamOwner.Gif); _ledPlayer.Stop(); };
             var ledState = new RgbAnimState { Brush = Color.FromRgb(0x7C, 0x3A, 0xED), Brightness = 3 };
             var ledKb = new KeyboardView { Mode = KeyboardMode.Animated, State = ledState };
             var ledStatus = Tb("Chọn một hiệu ứng đã tải bên dưới để chuyển thành đèn từng phím. Hiệu ứng chưa tải thì bấm “Tải về” trước (tải một lần, dùng mãi về sau).", "sub");
@@ -3696,8 +3922,20 @@ namespace TienKeyboardStudio3
         private int _gifBlackLevel = GifLedConverter.DefaultBlackLevel;
         private int _rtSelected = RealtimeEffects.OffIndex;
         private int _rtColorMode = ColorModes.Rainbow; // v3.13
+        // v3.15: Ambilight + go phim phan ung (luu trong LightingStateData)
+        private int _ambiMode = ScreenSampler.ModeFull;
+        private int _ambiFps = 15;
+        private double _ambiBrightness = 1.0;
+        private int _ambiBlackLevel = ScreenSampler.DefaultBlackLevel;
+        private int _reactiveSelected = -1; // -1 tat; 0..2 ReactiveEffects
+        // v3.15: day TFT nhanh — cache chuyen doi + cong day widget
+        private readonly DisplayCacheStore _displayCache = new DisplayCacheStore(DisplayCacheStore.DefaultDir);
+        private readonly WidgetPushGate _widgetGate = new WidgetPushGate();
+        // v3.15: Now Playing that (GSMTC) — khoi tao luoi khi mo widget
+        private readonly NowPlayingService _nowPlaying = new NowPlayingService();
         private string _activeSchemeName = "";
         private Action _refreshSchemeList;
+        private Action _clearReactiveChips; // v3.15: bo chon chip go phim phan ung
         private DispatcherTimer _lightPersistTimer;
         private static string SchemesDir => Path.Combine(GifLibraryStore.RootDir, "LightingSchemes");
 
@@ -3727,6 +3965,11 @@ namespace TienKeyboardStudio3
             _gifBlackLevel = ClampI(L.GifBlackLevel, 0, 60);
             _rtSelected = ClampI(L.RtEffect, 0, RealtimeEffects.OffIndex);
             _rtColorMode = ClampI(L.RtColorMode, 0, 2);
+            _ambiMode = ClampI(L.AmbilightMode, 0, 1);
+            _ambiFps = L.AmbilightFps == 10 || L.AmbilightFps == 20 ? L.AmbilightFps : 15;
+            _ambiBrightness = ClampD(L.AmbilightBrightness, 0.2, 1.5);
+            _ambiBlackLevel = ClampI(L.AmbilightBlackLevel, 0, 60);
+            _reactiveSelected = ClampI(L.ReactiveEffect, -1, ReactiveEffects.Names.Length - 1);
             _activeSchemeName = L.PaintedSchemeName ?? "";
             if (!string.IsNullOrEmpty(_activeSchemeName))
             {
@@ -3774,9 +4017,159 @@ namespace TienKeyboardStudio3
             L.MusicGain = _music.MusicGain;
             L.RtEffect = _rtSelected;
             L.RtColorMode = _rtColorMode;
+            L.AmbilightMode = _ambiMode;
+            L.AmbilightFps = _ambiFps;
+            L.AmbilightBrightness = _ambiBrightness;
+            L.AmbilightBlackLevel = _ambiBlackLevel;
+            L.ReactiveEffect = _reactiveSelected;
             L.GifBrightness = _gifBrightness;
             L.GifBlackLevel = _gifBlackLevel;
             try { GifLibraryStore.Save(_ui); } catch { }
+        }
+
+        /// <summary>v3.15: truy cap trang thai den (tao moi neu settings
+        /// chua co) — dung cho lich trinh + cac the moi.</summary>
+        private LightingStateData LightingState => _ui.Lighting ?? (_ui.Lighting = new LightingStateData());
+
+        // ================= v3.15: LICH TRINH DEN THEO GIO =================
+        private DispatcherTimer _scheduleTimer;
+        private string _scheduleLastKey = "";
+        private DateTime _scheduleManualUntil = DateTime.MinValue;
+        private StackPanel _schedPanel;
+
+        /// <summary>Khoi tao lich trinh: baseline = luat dang hieu luc
+        /// coi nhu da ap (mo app KHONG gui lenh den bat ngo); timer 20s
+        /// chi ap khi sang luat moi.</summary>
+        private void InitSchedule()
+        {
+            try { _scheduleLastKey = LightingSchedule.ActiveKey(LightingState.ScheduleRules, DateTime.Now); }
+            catch { _scheduleLastKey = ""; }
+            _scheduleTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(20) };
+            _scheduleTimer.Tick += (s, e) => ScheduleTick();
+            _scheduleTimer.Start();
+        }
+
+        /// <summary>Doi den bang tay -> thang lich trinh den bien luat
+        /// tiep theo (ApplyRgbAsync goi ham nay; ApplyScheduleRule da
+        /// ghi nho Key truoc khi ap nen khong tu khoa chinh no).</summary>
+        private void MarkManualLightingChange()
+        {
+            var L = _ui.Lighting;
+            if (L == null || !L.ScheduleEnabled) return;
+            _scheduleManualUntil = LightingSchedule.NextBoundary(L.ScheduleRules, DateTime.Now);
+        }
+
+        private void ScheduleTick()
+        {
+            var L = _ui.Lighting;
+            if (L == null || !L.ScheduleEnabled) return;
+            var d = LightingSchedule.Evaluate(L.ScheduleRules, DateTime.Now, _scheduleLastKey, _scheduleManualUntil);
+            if (!d.ShouldApply) return;
+            _scheduleLastKey = d.Key;
+            ApplyScheduleRule(d.Rule);
+        }
+
+        private void ApplyScheduleRule(ScheduleRuleData rule)
+        {
+            try
+            {
+                if (rule.Kind == ScheduleRuleData.KindOff)
+                {
+                    _rgb.Effect = 0;
+                    RefreshRgbVisuals();
+                    _ = ApplyRgbAsync(0, _rgb.Brush, false, (int)_rgb.Brightness, (int)_rgb.Speed, _rgb.Direction);
+                    AppendLog("[Lịch trình] Đã tắt đèn theo lịch trình.");
+                }
+                else if (rule.Kind == ScheduleRuleData.KindEffect)
+                {
+                    _rgb.Effect = rule.EffectId;
+                    _rgb.Multi = ColorModes.DefaultMultiForEffect(rule.EffectId);
+                    RefreshRgbVisuals();
+                    _ = ApplyRgbAsync(_rgb.Effect, _rgb.Brush, _rgb.Multi, (int)_rgb.Brightness, (int)_rgb.Speed, _rgb.Direction);
+                    AppendLog($"[Lịch trình] Đã áp hiệu ứng “{EffectFriendlyNames[rule.EffectId]}” theo lịch trình.");
+                }
+                else
+                {
+                    int bui = LightingSchedule.BrightnessUiFromPercent(rule.BrightnessPercent);
+                    _rgb.Brightness = bui;
+                    _ = ApplyRgbAsync(_rgb.Effect, _rgb.Brush, _rgb.Multi, bui, (int)_rgb.Speed, _rgb.Direction);
+                    AppendLog($"[Lịch trình] Đã đặt độ sáng {rule.BrightnessPercent}% theo lịch trình.");
+                }
+                QueuePersistLighting();
+            }
+            catch (Exception ex) { AppendLog("[Lịch trình] Lỗi áp luật: " + ex.Message); }
+        }
+
+        private void SaveSchedule()
+        {
+            _scheduleLastKey = ""; // sua luat xong: danh gia lai tu dau
+            try { GifLibraryStore.Save(_ui); } catch { }
+        }
+
+        private void RefreshScheduleRows()
+        {
+            if (_schedPanel == null) return;
+            _schedPanel.Children.Clear();
+            var rules = LightingSchedule.Sorted(LightingState.ScheduleRules);
+            LightingState.ScheduleRules = rules;
+            foreach (var rule in rules)
+            {
+                var captured = rule;
+                var timeBox = new TextBox { Text = LightingSchedule.FormatMinutes(rule.StartMinutes), Width = 70 };
+                timeBox.LostFocus += (s, e) =>
+                {
+                    captured.StartMinutes = LightingSchedule.ParseTimeToMinutes(timeBox.Text, captured.StartMinutes);
+                    timeBox.Text = LightingSchedule.FormatMinutes(captured.StartMinutes);
+                    SaveSchedule();
+                };
+                var kindBox = new ComboBox
+                {
+                    Width = 130,
+                    ItemsSource = new[] { "Độ sáng", "Hiệu ứng", "Tắt đèn" },
+                    SelectedIndex = Math.Max(0, Math.Min(2, rule.Kind)),
+                };
+                kindBox.SelectionChanged += (s, e) =>
+                {
+                    captured.Kind = kindBox.SelectedIndex < 0 ? 0 : kindBox.SelectedIndex;
+                    SaveSchedule();
+                };
+                var valBox = new TextBox
+                {
+                    Text = rule.Kind == ScheduleRuleData.KindEffect ? rule.EffectId.ToString() : rule.BrightnessPercent.ToString(),
+                    Width = 70,
+                };
+                valBox.LostFocus += (s, e) =>
+                {
+                    if (int.TryParse((valBox.Text ?? "").Trim(), out int v))
+                    {
+                        if (captured.Kind == ScheduleRuleData.KindEffect) captured.EffectId = ClampI(v, 0, 19);
+                        else captured.BrightnessPercent = ClampI(v, 0, 100);
+                    }
+                    SaveSchedule();
+                };
+                var delBtn = GhostBtn("Xoá", () =>
+                {
+                    LightingState.ScheduleRules.Remove(captured);
+                    SaveSchedule();
+                    RefreshScheduleRows();
+                });
+                _schedPanel.Children.Add(H(8, timeBox, kindBox, valBox, delBtn));
+            }
+        }
+
+        /// <summary>v3.15: dong bo lai hinh trang RGB sau khi lich
+        /// trinh (hoac nguon ngoai trang) doi hieu ung/mau.</summary>
+        private List<EffectPreview> _rgbPreviews;
+        private List<Border> _rgbCards;
+        private void RefreshRgbVisuals()
+        {
+            if (_rgbPreviews != null && _rgbCards != null)
+            {
+                foreach (var p in _rgbPreviews) { p.Multi = _rgb.Multi; p.BaseColor = _rgb.Brush; p.InvalidateVisual(); }
+                SelectEffectVisual(_rgb.Effect, _rgbPreviews, _rgbCards);
+            }
+            _selectFwColorMode?.Invoke(_rgb.Multi ? 1 : 0);
+            if (_homeFxValue != null) _homeFxValue.Text = EffectFriendlyNames[_rgb.Effect];
         }
         private TextBlock _paintInfo;
 
@@ -3784,6 +4177,7 @@ namespace TienKeyboardStudio3
         {
             _ledPlayer.Exp = _exp;
             _ledPlayer.Log = AppendLog;
+            _ledPlayer.Claim = () => { ClaimStream(StreamOwner.Gif); _onlineLedPlayer.Stop(); };
 
             // --- Ve mau tung phim ---
             var paintState = new RgbAnimState { PaintMode = true, Brightness = 4 };
@@ -3972,11 +4366,44 @@ namespace TienKeyboardStudio3
                 }
                 catch (Exception ex) { schemeStatus.Text = "Nhập thất bại: " + ex.Message; }
             });
+            // --- v3.15: chia se scheme bang MA TVKS1 (dan ma la nhan) ---
+            var shareCodeBox = new TextBox { Watermark = "Dán mã TVKS1:… để nhập scheme được chia sẻ", Width = 340 };
+            var shareBtn = GhostBtn("Chia sẻ bằng mã", async () =>
+            {
+                string name = SelectedScheme();
+                if (name == null) { schemeStatus.Text = "Hãy chọn scheme cần chia sẻ."; return; }
+                var sc = schemeStore.Load(name);
+                if (sc == null) { schemeStatus.Text = "Không đọc được scheme."; return; }
+                try
+                {
+                    string code = SchemeShare.Encode(sc);
+                    shareCodeBox.Text = code;
+                    if (Clipboard != null) await Clipboard.SetTextAsync(code);
+                    schemeStatus.Text = $"Đã tạo mã chia sẻ cho “{name}” và sao chép vào clipboard — gửi mã này cho người khác dán vào ô mã là có scheme.";
+                }
+                catch (Exception ex) { schemeStatus.Text = "Tạo mã thất bại: " + ex.Message; }
+            });
+            var importCodeBtn = GhostBtn("Nhập mã", () =>
+            {
+                string code = (shareCodeBox.Text ?? "").Trim();
+                if (code.Length == 0) { schemeStatus.Text = "Hãy dán mã TVKS1:… vào ô mã trước."; return; }
+                if (!SchemeShare.TryDecode(code, out var sc, out string err))
+                { schemeStatus.Text = "Nhập mã thất bại: " + err; return; }
+                try
+                {
+                    schemeStore.Save(sc);
+                    RefreshSchemes();
+                    schemeBox.SelectedItem = sc.Name;
+                    schemeStatus.Text = $"Đã nhập scheme “{sc.Name}” ({sc.Keys.Count} phím) từ mã chia sẻ — bấm Áp dụng để dùng.";
+                }
+                catch (Exception ex) { schemeStatus.Text = "Nhập mã thất bại: " + ex.Message; }
+            });
             var schemeBlock = V(8,
                 Tb("Scheme đèn của tôi", "h3"),
                 H(10, schemeNameBox, schemeSaveBtn),
                 H(10, schemeBox, schemeApplyBtn, schemeRenameBtn, schemeDeleteBtn),
-                H(10, schemeExportBtn, schemeImportBtn),
+                H(10, schemeExportBtn, schemeImportBtn, shareBtn),
+                H(10, shareCodeBox, importCodeBtn),
                 schemeStatus);
 
             var probeBtn = GhostBtn("Đọc thử màu phím (0xF5) — chỉ đọc", async () => await ProbeColorsAsync(kb));
@@ -4068,6 +4495,13 @@ namespace TienKeyboardStudio3
             // --- v3.12: hieu ung THOI GIAN THUC (generator -> stream 0x20) ---
             _rtPlayer.Exp = _exp;
             _rtPlayer.Log = AppendLog;
+            _rtPlayer.Claim = () => ClaimStream(StreamOwner.Realtime);
+            _ambiPlayer.Exp = _exp;
+            _ambiPlayer.Log = AppendLog;
+            _ambiPlayer.Claim = () => ClaimStream(StreamOwner.Ambilight);
+            _reactivePlayer.Exp = _exp;
+            _reactivePlayer.Log = AppendLog;
+            _reactivePlayer.Claim = () => ClaimStream(StreamOwner.Reactive);
             var rtState = new RgbAnimState { Brush = Color.FromRgb(0x7C, 0x3A, 0xED), Brightness = 3 };
             var rtKb = new KeyboardView { Mode = KeyboardMode.Animated, State = rtState };
             _rtPlayer.State = rtState;
@@ -4095,6 +4529,8 @@ namespace TienKeyboardStudio3
                 b.Click += (s, e) =>
                 {
                     _rtSelected = idx;
+                    _reactivePlayer.Stop(); // v3.15: mot chu stream
+                    _clearReactiveChips?.Invoke();
                     foreach (var o in rtBtns) SetCls(o, "sel", o == b);
                     if (idx == RealtimeEffects.OffIndex)
                     {
@@ -4121,6 +4557,7 @@ namespace TienKeyboardStudio3
             {
                 _rtColorMode = i;
                 _rtPlayer.ColorMode = i;
+                _reactivePlayer.ColorMode = i;
                 QueuePersistLighting();
             });
             var rtModeRow = H(10, Tb("Chế độ màu:", "sub"), rtModeSeg);
@@ -4134,6 +4571,143 @@ namespace TienKeyboardStudio3
                     V(4, Tb("Độ sáng", "sub"), rtBright),
                     V(4, Tb("Tốc độ", "sub"), rtSpeed)),
                 Tb("Đơn sắc dùng màu vẽ per-key đang chọn; Cầu vồng và Bảng màu tự rải nhiều màu.", "faint")));
+
+            // --- v3.15: hieu ung GO PHIM PHAN UNG (su kien vi tri phim
+            // tu hook dung chung voi Thong ke go phim) ---
+            var reactiveState = new RgbAnimState { Brush = Color.FromRgb(0x7C, 0x3A, 0xED), Brightness = 3 };
+            var reactiveKb = new KeyboardView { Mode = KeyboardMode.Animated, State = reactiveState };
+            _reactivePlayer.State = reactiveState;
+            _reactivePlayer.Target = reactiveKb;
+            _reactivePlayer.ColorMode = _rtColorMode;
+            var reactiveStatus = Tb(_typingOn
+                ? "Đang theo dõi vị trí phím gõ. Chọn một hiệu ứng rồi gõ thử."
+                : "Bật công tắc theo dõi phím bên dưới để hiệu ứng nhận phím gõ thật (xem trước trong app vẫn chạy).", "sub");
+            var reactiveBtns = new List<Button>();
+            var reactiveWrap = new WrapPanel();
+            _clearReactiveChips = () =>
+            {
+                foreach (var o in reactiveBtns) SetCls(o, "sel", false);
+                _reactiveSelected = -1;
+            };
+            for (int i = 0; i < ReactiveEffects.Names.Length; i++)
+            {
+                int idx = i;
+                var b = new Button { Content = ReactiveEffects.Names[idx], Margin = new Thickness(0, 0, 8, 8) };
+                b.Classes.Add("chip");
+                if (idx == _reactiveSelected) b.Classes.Add("sel");
+                b.Click += (s, e) =>
+                {
+                    _reactiveSelected = idx;
+                    foreach (var o in reactiveBtns) SetCls(o, "sel", o == b);
+                    _rtPlayer.Stop();
+                    foreach (var o in rtBtns) SetCls(o, "sel", false);
+                    _rtSelected = RealtimeEffects.OffIndex;
+                    rtState.FrameColors = null;
+                    rtKb.InvalidateVisual();
+                    _reactivePlayer.BaseColor = (_paintColor.R, _paintColor.G, _paintColor.B);
+                    _reactivePlayer.Brightness01 = rtBright.Value / 4.0;
+                    _reactivePlayer.ColorMode = _rtColorMode;
+                    _reactivePlayer.Start(idx);
+                    if (!_typingOn)
+                        reactiveStatus.Text = "Đang xem trước trong app. Muốn đèn chạy theo phím gõ thật: bật công tắc theo dõi phím bên dưới.";
+                    QueuePersistLighting();
+                };
+                reactiveBtns.Add(b);
+                reactiveWrap.Children.Add(b);
+            }
+            var reactiveOffBtn = GhostBtn("Tắt hiệu ứng gõ", () =>
+            {
+                _reactivePlayer.Stop();
+                _clearReactiveChips?.Invoke();
+                reactiveState.FrameColors = null;
+                reactiveKb.InvalidateVisual();
+                QueuePersistLighting();
+            });
+            var hookRow = SettingRow("Theo dõi vị trí phím gõ",
+                "Dùng chung công tắc với Thống kê gõ phím — chỉ vị trí phím + thời điểm, trong RAM, không ghi nội dung/log",
+                _typingOn, v =>
+                {
+                    _typingOn = v;
+                    if (v) { _typing.Start(); reactiveStatus.Text = "Đang theo dõi vị trí phím gõ. Chọn một hiệu ứng rồi gõ thử."; }
+                    else
+                    {
+                        _typing.Stop();
+                        _reactivePlayer.Stop();
+                        reactiveStatus.Text = "Đã tắt theo dõi phím — hiệu ứng gõ không còn nhận phím thật.";
+                    }
+                    RefreshTypingLabels();
+                });
+            var reactiveCard = Card(V(12,
+                Tb("Hiệu ứng gõ phím phản ứng (stream 0x20)", "h2"),
+                reactiveKb,
+                reactiveWrap,
+                H(10, reactiveOffBtn),
+                hookRow,
+                reactiveStatus));
+
+            // --- v3.15: AMBILIGHT (man hinh PC -> stream 0x20) ---
+            var ambiState = new RgbAnimState { Brush = Color.FromRgb(0x7C, 0x3A, 0xED), Brightness = 3 };
+            var ambiKb = new KeyboardView { Mode = KeyboardMode.Animated, State = ambiState };
+            _ambiPlayer.State = ambiState;
+            _ambiPlayer.Target = ambiKb;
+            _ambiPlayer.Mode = _ambiMode;
+            _ambiPlayer.Fps = _ambiFps;
+            _ambiPlayer.Brightness = _ambiBrightness;
+            _ambiPlayer.BlackLevel = _ambiBlackLevel;
+            var ambiStatus = Tb("Đèn phím chạy theo màu trên màn hình chính của PC (xem phim/chơi game).", "sub");
+            var (ambiModeSeg, _) = Segmented(new[] { "Toàn màn hình", "Viền màn hình" }, _ambiMode, i =>
+            {
+                _ambiMode = i;
+                _ambiPlayer.Mode = i;
+                QueuePersistLighting();
+            });
+            var (ambiFpsSeg, _) = Segmented(new[] { "10", "15", "20" },
+                _ambiFps == 10 ? 0 : _ambiFps == 20 ? 2 : 1, i =>
+                {
+                    _ambiFps = i == 0 ? 10 : i == 2 ? 20 : 15;
+                    _ambiPlayer.Fps = _ambiFps;
+                    if (_ambiPlayer.Running) { _ambiPlayer.Stop(); _ambiPlayer.Start(); }
+                    QueuePersistLighting();
+                });
+            var ambiBright = new Slider { Minimum = 0.2, Maximum = 1.5, Value = _ambiBrightness, Width = 200 };
+            ambiBright.PropertyChanged += (s, e) =>
+            {
+                if (e.Property == Slider.ValueProperty) { _ambiBrightness = ambiBright.Value; _ambiPlayer.Brightness = _ambiBrightness; QueuePersistLighting(); }
+            };
+            var ambiBlack = new Slider { Minimum = 0, Maximum = 60, Value = _ambiBlackLevel, Width = 200 };
+            ambiBlack.PropertyChanged += (s, e) =>
+            {
+                if (e.Property == Slider.ValueProperty) { _ambiBlackLevel = (int)Math.Round(ambiBlack.Value); _ambiPlayer.BlackLevel = _ambiBlackLevel; QueuePersistLighting(); }
+            };
+            var ambiBtn = GhostBtn("Bật Ambilight", () =>
+            {
+                if (_ambiPlayer.Running)
+                {
+                    _ambiPlayer.Stop();
+                    ambiStatus.Text = "Đã tắt Ambilight.";
+                }
+                else
+                {
+                    _ambiPlayer.Mode = _ambiMode;
+                    _ambiPlayer.Fps = _ambiFps;
+                    _ambiPlayer.Brightness = _ambiBrightness;
+                    _ambiPlayer.BlackLevel = _ambiBlackLevel;
+                    _ambiPlayer.Start();
+                    ambiStatus.Text = "Đang chạy Ambilight — mở phim/game lên xem đèn theo màu màn hình.";
+                }
+            });
+            var ambiCard = Card(V(12,
+                Tb("Ambilight — đèn theo màn hình PC (stream 0x20)", "h2"),
+                ambiKb,
+                H(16,
+                    V(4, Tb("Vùng lấy mẫu", "sub"), ambiModeSeg),
+                    V(4, Tb("Khung hình/giây", "sub"), ambiFpsSeg)),
+                H(24,
+                    V(4, Tb("Độ sáng", "sub"), ambiBright),
+                    V(4, Tb("Ngưỡng đen (blackLevel)", "sub"), ambiBlack)),
+                H(10, ambiBtn),
+                ambiStatus,
+                Tb("Chỉ màn hình chính. Nội dung có DRM (Netflix, app xem phim bản quyền…) chụp ra khung đen — giới hạn của Windows, không phải lỗi app.", "faint")));
 
             _expLogBox = new TextBox
             {
@@ -4154,6 +4728,8 @@ namespace TienKeyboardStudio3
                 paintCard,
                 ledCard,
                 rtCard,
+                reactiveCard,
+                ambiCard,
                 logCard);
             return Scroll(root);
         }
@@ -4235,7 +4811,7 @@ namespace TienKeyboardStudio3
             var kinds = new (string Title, string Desc)[]
             {
                 ("Thông số máy", "CPU · RAM thật của máy này + GPU NVIDIA qua nvidia-smi (nếu có)"),
-                ("Đang phát", "Đang phát triển — SMTC của Windows chưa tích hợp; hiện bản mô phỏng có ghi rõ"),
+                ("Đang phát", "Bài hát đang phát THẬT qua SMTC của Windows (Spotify, YouTube trên trình duyệt…)"),
                 ("Đồng hồ & thời tiết", "Giờ thật của máy + thời tiết Hà Nội (Open-Meteo, không cần API key)"),
             };
             // v3.11.1: WrapPanel thay hang StackPanel ngang — cua so hep thi
@@ -4285,7 +4861,7 @@ namespace TienKeyboardStudio3
                 selectorRow,
                 H(12, uploadBtn, _widgetProgress, autoSwitch, Tb("Tự động đẩy mỗi 5 giây", "sub"), weatherBtn),
                 BuildWeatherLocationCard(),
-                Tb("Widget “Đang phát” đang là bản mô phỏng (Windows SMTC chưa tích hợp).", "faint"));
+                Tb("Widget “Đang phát” lấy dữ liệu thật từ Windows (SMTC) — hành vi thật chỉ kiểm chứng được trên Windows.", "faint"));
             return Scroll(root);
         }
 
@@ -4440,9 +5016,7 @@ namespace TienKeyboardStudio3
             }
             else if (_widgetKind == 1)
             {
-                double t = (DateTime.Now - DateTime.Today).TotalSeconds;
-                var bmp = WidgetRenderer.RenderNowPlaying(t % WidgetRenderer.SongDuration, t);
-                SetWidgetBitmap(bmp);
+                SetWidgetBitmap(BuildNowPlayingBitmap());
             }
             else
             {
@@ -4466,6 +5040,30 @@ namespace TienKeyboardStudio3
             if (old != null && !ReferenceEquals(old, bmp)) old.Dispose();
         }
 
+        /// <summary>
+        /// v3.15: dung bitmap widget Dang phat tu du lieu GSMTC that.
+        /// Service chi khoi dong khi widget nay duoc xem/day (lazy —
+        /// khong cham WinRT luc mo app). Chua co session -> khung Idle.
+        /// </summary>
+        private Bitmap BuildNowPlayingBitmap()
+        {
+            try { _nowPlaying.EnsureStarted(); } catch { }
+            var snap = _nowPlaying.Snapshot;
+            double phase = (DateTime.Now - DateTime.Today).TotalSeconds;
+            if (snap == null || !snap.Available)
+                return WidgetRenderer.RenderNowPlayingIdle();
+            var data = new WidgetRenderer.MediaViewData
+            {
+                Title = snap.Title,
+                Artist = snap.Artist,
+                PositionSec = NowPlayingLogic.ProgressAt(snap, DateTime.UtcNow),
+                DurationSec = snap.DurationSec,
+                IsPlaying = snap.IsPlaying,
+                ArtPngBytes = _nowPlaying.ArtPng,
+            };
+            return WidgetRenderer.RenderNowPlayingReal(data, phase);
+        }
+
         private async Task UploadCurrentWidgetAsync()
         {
             try
@@ -4479,8 +5077,7 @@ namespace TienKeyboardStudio3
                 }
                 else if (_widgetKind == 1)
                 {
-                    double t = (DateTime.Now - DateTime.Today).TotalSeconds;
-                    bmp = WidgetRenderer.RenderNowPlaying(t % WidgetRenderer.SongDuration, t);
+                    bmp = BuildNowPlayingBitmap();
                 }
                 else
                 {
@@ -4489,6 +5086,15 @@ namespace TienKeyboardStudio3
                 byte[] stream;
                 using (var img = BitmapToImageSharp(bmp))
                     stream = DisplayStreamBuilder.Build(new[] { img }, 1000);
+                // v3.15: noi dung widget khong doi thi bo qua lan day
+                // (dong ho dung yen, nhac tam dung o khung giong het…)
+                // — tiet kiem kenh man hinh va thoi gian cho.
+                if (!_widgetGate.ShouldPush(stream))
+                {
+                    AppendLog("Widget TFT: nội dung chưa thay đổi — bỏ qua lần đẩy này.");
+                    ShowToast("Widget chưa thay đổi — không cần đẩy lại.");
+                    return;
+                }
                 await UploadStreamAsync(stream, "Widget TFT", _widgetProgress);
             }
             catch (Exception ex)

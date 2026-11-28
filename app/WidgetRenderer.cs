@@ -111,61 +111,105 @@ namespace TienKeyboardStudio3
             Bar(ctx, 10, y + 15, 108, 5, frac, color);
         }
 
-        // ---------- Widget 2: Dang phat (mo phong) ----------
-        public const string SongTitle = "Midnight Drive";
-        public const string SongArtist = "TienMix · Mô phỏng";
-        public const int SongDuration = 204; // 3:24
+        // ---------- Widget 2: Dang phat THAT (v3.15, GSMTC) ----------
+        // Ban mo phong cu (SongTitle/SongArtist/SongDuration) DA XOA —
+        // du lieu that den tu NowPlayingService (Windows.Media.Control),
+        // MainWindow dung thanh MediaViewData roi goi renderer nay.
+        // Khong co session -> RenderNowPlayingIdle (khong giu bai cu
+        // dong bang).
+        public struct MediaViewData
+        {
+            public string Title;
+            public string Artist;
+            public double PositionSec;
+            public double DurationSec;
+            public bool IsPlaying;
+            public byte[] ArtPngBytes; // PNG 46x46 hoac null
+        }
 
-        public static Bitmap RenderNowPlaying(double progressSec, double phase)
+        public static Bitmap RenderNowPlayingReal(MediaViewData d, double phase)
         {
             var rtb = NewBitmap();
             using (var ctx = rtb.CreateDrawingContext())
             {
                 Bg(ctx);
-                // bia album: dia nhua gradient + vong tron dong tam
                 var art = new Rect(10, 12, 46, 46);
-                var artBrush = new LinearGradientBrush
+                Bitmap artBmp = null;
+                if (d.ArtPngBytes != null && d.ArtPngBytes.Length > 0)
                 {
-                    StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
-                    EndPoint = new RelativePoint(1, 1, RelativeUnit.Relative),
-                    GradientStops = { new GradientStop(Violet, 0), new GradientStop(Cyan, 1) },
-                };
+                    try { artBmp = new Bitmap(new System.IO.MemoryStream(d.ArtPngBytes)); }
+                    catch { artBmp = null; }
+                }
                 using (ctx.PushClip(new RoundedRect(art, 8, 8)))
                 {
-                    ctx.DrawRectangle(artBrush, null, art);
-                    var ringPen = new Pen(new SolidColorBrush(Color.FromArgb(0x50, 0xFF, 0xFF, 0xFF)), 1);
-                    foreach (double rr in new[] { 16.0, 11.0, 6.0 })
-                        ctx.DrawEllipse(null, ringPen, art.Center, rr, rr);
-                    ctx.DrawEllipse(Brushes.White, null, art.Center, 2.2, 2.2);
+                    if (artBmp != null)
+                    {
+                        ctx.DrawImage(artBmp, art);
+                    }
+                    else
+                    {
+                        // Khong co thumbnail: dia gradient nhu khung cu.
+                        var artBrush = new LinearGradientBrush
+                        {
+                            StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
+                            EndPoint = new RelativePoint(1, 1, RelativeUnit.Relative),
+                            GradientStops = { new GradientStop(Violet, 0), new GradientStop(Cyan, 1) },
+                        };
+                        ctx.DrawRectangle(artBrush, null, art);
+                        var ringPen = new Pen(new SolidColorBrush(Color.FromArgb(0x50, 0xFF, 0xFF, 0xFF)), 1);
+                        foreach (double rr in new[] { 16.0, 11.0, 6.0 })
+                            ctx.DrawEllipse(null, ringPen, art.Center, rr, rr);
+                        ctx.DrawEllipse(Brushes.White, null, art.Center, 2.2, 2.2);
+                    }
                 }
-                var t1 = Text(SongTitle, 11.5, Ink, 700);
+                artBmp?.Dispose();
+                // Cat chu dai theo chieu rong con lai (54px) de khong tran.
+                string title = WidgetTextLayout.FitToWidth(d.Title ?? "", 56,
+                    (s, size, w) => Text(s, size, Ink, w).Width, 11.5, 700);
+                string artist = WidgetTextLayout.FitToWidth(d.Artist ?? "", 56,
+                    (s, size, w) => Text(s, size, Sub, w).Width, 8.5, 400);
+                var t1 = Text(title, 11.5, Ink, 700);
                 ctx.DrawText(t1, new Point(64, 14));
-                var t2 = Text(SongArtist, 8.5, Sub);
+                var t2 = Text(artist, 8.5, Sub);
                 ctx.DrawText(t2, new Point(64, 32));
-                // 3 cot EQ nho nhay theo pha
+                // 3 cot EQ: chi nhay khi dang phat that
                 for (int i = 0; i < 3; i++)
                 {
-                    double hgt = 5 + 6 * Math.Abs(Math.Sin(phase * 2.2 + i * 1.3));
+                    double hgt = d.IsPlaying ? 5 + 6 * Math.Abs(Math.Sin(phase * 2.2 + i * 1.3)) : 5;
                     ctx.DrawRectangle(new SolidColorBrush(Cyan), null,
                         new Rect(64 + i * 7, 58 - hgt, 4, hgt), 1.5f, 1.5f);
                 }
-                var np = Text("ĐANG PHÁT", 7.5, Sub, 600);
+                var np = Text(d.IsPlaying ? "ĐANG PHÁT" : "TẠM DỪNG", 7.5, Sub, 600);
                 ctx.DrawText(np, new Point(88, 47));
-                // tien trinh
-                double frac = Math.Min(1, progressSec / SongDuration);
+                double frac = d.DurationSec > 0 ? Math.Min(1, d.PositionSec / d.DurationSec) : 0;
                 Bar(ctx, 10, 96, 108, 5, frac, Violet);
-                var cur = Text(Fmt(progressSec), 8.5, Sub);
+                var cur = Text(NowPlayingLogic.FormatTime(d.PositionSec), 8.5, Sub);
                 ctx.DrawText(cur, new Point(10, 106));
-                var tot = Text(Fmt(SongDuration), 8.5, Sub);
+                var tot = Text(NowPlayingLogic.FormatTime(d.DurationSec), 8.5, Sub);
                 ctx.DrawText(tot, new Point(128 - 10 - tot.Width, 106));
             }
             return rtb;
         }
 
-        private static string Fmt(double sec)
+        /// <summary>Khung khi khong co nhac nao dang phat (graceful absence).</summary>
+        public static Bitmap RenderNowPlayingIdle()
         {
-            int s = (int)sec;
-            return (s / 60) + ":" + (s % 60).ToString("00");
+            var rtb = NewBitmap();
+            using (var ctx = rtb.CreateDrawingContext())
+            {
+                Bg(ctx);
+                var art = new Rect(41, 16, 46, 46);
+                var ringPen = new Pen(new SolidColorBrush(Color.FromArgb(0x60, 0x8B, 0x93, 0xB8)), 1.5);
+                ctx.DrawEllipse(null, ringPen, art.Center, 20, 20);
+                ctx.DrawEllipse(new SolidColorBrush(Sub), null, art.Center, 3, 3);
+                var t1 = Text("Chưa có nhạc", 11.5, Ink, 700);
+                ctx.DrawText(t1, new Point((128 - t1.Width) / 2, 74));
+                var t2 = Text("đang phát", 11.5, Ink, 700);
+                ctx.DrawText(t2, new Point((128 - t2.Width) / 2, 90));
+                var t3 = Text("Mở Spotify hoặc trình duyệt", 7.5, Sub);
+                ctx.DrawText(t3, new Point((128 - t3.Width) / 2, 110));
+            }
+            return rtb;
         }
 
         // ---------- Widget 3: Dong ho that + thoi tiet ----------

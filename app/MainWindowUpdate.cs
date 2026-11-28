@@ -33,6 +33,9 @@ namespace TienKeyboardStudio3
         private Button _updDownloadBtn;
         private Button _updOpenDirBtn;
         private string _updDownloadedPath;
+        // v3.15: kho scheme den cong dong
+        private TextBlock _schemeLibStatus;
+        private StackPanel _schemeLibPanel;
 
         // ---------------- Muc Cap nhat ----------------
         private Control BuildUpdateSection()
@@ -76,8 +79,114 @@ namespace TienKeyboardStudio3
                 _updGifStatus,
                 GhostBtn("Kiểm tra / cập nhật", async () => await RefreshGifCatalogAsync())));
 
+            // --- v3.15: kho scheme den cong dong (catalog tren repo;
+            // tai ve -> kiem bam -> ghi thang vao thu muc
+            // LightingSchemes nen tu xuat hien trong "Bo den cua toi") ---
+            _schemeLibStatus = Tb("Bấm “Tải danh sách” để xem các scheme đèn cộng đồng.", "sub");
+            _schemeLibPanel = new StackPanel { Spacing = 6 };
+            var schemeCard = Card(V(8,
+                Tb("Kho scheme đèn cộng đồng", "h2"),
+                Tb("Scheme tải về nằm ngay trong “Bộ đèn của tôi” ở trang Per-key. Chia sẻ scheme của bạn bằng mã TVKS1 ở trang Per-key.", "sub"),
+                _schemeLibStatus,
+                _schemeLibPanel,
+                GhostBtn("Tải danh sách", async () => await FetchSchemeCatalogAsync())));
+
             RefreshUpdateLabels();
-            return Scroll(V(14, appCard, regCard, gifCard));
+            return Scroll(V(14, appCard, regCard, gifCard, schemeCard));
+        }
+
+        // ---------------- v3.15: Kho scheme cong dong ----------------
+        private async Task FetchSchemeCatalogAsync()
+        {
+            if (_schemeLibStatus != null) _schemeLibStatus.Text = "Đang tải danh sách…";
+            try
+            {
+                string json;
+                using (var http = new HttpClient { Timeout = TimeSpan.FromSeconds(20) })
+                {
+                    http.DefaultRequestHeaders.UserAgent.ParseAdd("TienVuKeyboardStudio/" + AboutInfo.Version);
+                    json = await http.GetStringAsync(SchemeCatalogCore.CatalogUrl);
+                }
+                var items = SchemeCatalogCore.ParseCatalog(json);
+                if (items.Count == 0)
+                {
+                    if (_schemeLibStatus != null) _schemeLibStatus.Text = "Không kiểm tra được — thử lại sau.";
+                    return;
+                }
+                if (_schemeLibStatus != null)
+                    _schemeLibStatus.Text = $"Có {items.Count} scheme trong kho cộng đồng:";
+                if (_schemeLibPanel != null)
+                {
+                    _schemeLibPanel.Children.Clear();
+                    var store = new LightingSchemeStore(SchemesDir);
+                    foreach (var item in items)
+                    {
+                        var captured = item;
+                        bool owned = store.Load(item.Name) != null;
+                        var rowStatus = Tb(owned ? "Đã có trong Bộ đèn của tôi" : "", "faint");
+                        var btn = GhostBtn(owned ? "Tải lại" : "Tải về", async () =>
+                        {
+                            await DownloadSchemeAsync(captured, rowStatus);
+                        });
+                        _schemeLibPanel.Children.Add(V(2,
+                            H(10, Tb(item.Name, "h3"), Tb(string.IsNullOrWhiteSpace(item.Author) ? "" : "· " + item.Author, "faint")),
+                            H(10, btn, rowStatus)));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                AppendLog("[Cập nhật] Lỗi tải kho scheme: " + ex.Message);
+                if (_schemeLibStatus != null) _schemeLibStatus.Text = "Không kiểm tra được — thử lại sau.";
+            }
+        }
+
+        private async Task DownloadSchemeAsync(SchemeCatalogItem item, TextBlock rowStatus)
+        {
+            string url = SchemeCatalogCore.DownloadUrlOf(item);
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                if (rowStatus != null) rowStatus.Text = "Mục này thiếu link tải.";
+                return;
+            }
+            string dest = Path.Combine(SchemesDir,
+                LightingSchemeStore.SanitizeFileName(item.Name) + ".json");
+            if (rowStatus != null) rowStatus.Text = "Đang tải…";
+            var (ok, error) = await UpdateCore.DownloadAndVerifyAsync(url, dest, item.Sha256);
+            if (!ok)
+            {
+                AppendLog("[Cập nhật] Tải scheme thất bại: " + error);
+                if (rowStatus != null) rowStatus.Text = "Tải thất bại — thử lại sau.";
+                return;
+            }
+            // Kiem lai noi dung: phai la scheme hop le cua app.
+            try
+            {
+                string text = File.ReadAllText(dest);
+                if (!SchemeShare.ValidateDownloaded(text, out var sc, out string verr))
+                {
+                    try { File.Delete(dest); } catch { }
+                    if (rowStatus != null) rowStatus.Text = "File scheme không hợp lệ: " + verr;
+                    return;
+                }
+                // Ghi lai bang chinh store (ten chuan cua scheme).
+                new LightingSchemeStore(SchemesDir).Save(sc);
+                if (!string.Equals(sc.Name, item.Name, StringComparison.OrdinalIgnoreCase))
+                {
+                    // File tam theo ten catalog khac ten scheme -> xoa ban trung.
+                    try { if (File.Exists(dest)) File.Delete(dest); } catch { }
+                }
+            }
+            catch (Exception ex)
+            {
+                AppendLog("[Cập nhật] Kiểm scheme tải về lỗi: " + ex.Message);
+                if (rowStatus != null) rowStatus.Text = "Tải xong nhưng kiểm tra lỗi — thử lại sau.";
+                return;
+            }
+            _refreshSchemeList?.Invoke();
+            if (rowStatus != null) rowStatus.Text = "Đã có trong Bộ đèn của tôi (trang Per-key).";
+            ShowToast($"Đã tải scheme “{item.Name}”.");
+            AppendLog($"[Cập nhật] Đã tải scheme cộng đồng: {item.Name}");
         }
 
         private void RefreshUpdateLabels()

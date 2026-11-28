@@ -1,6 +1,6 @@
 {
-  "version": "3.14.0",
-  "notes": "Bản hoàn thiện: bỏ Dry-run và công tắc thử nghiệm (mọi thao tác áp dụng trực tiếp), thêm mục Cập nhật trong Cài đặt.",
-  "lightUrl": "https://drive.google.com/uc?export=download&id=1pqjZkIkghkrHJV6dGNHS8VpctkbIn_k7",
-  "sha256": "9314a6b649d61efe9915d53e95f9e982562f238a5a4526dc06444c1ddab89735"
+  "lightUrl": "https://drive.google.com/uc?export=download&id=1WUKJAybbqOrjmpp7STy0or9EJr4i8lrC",
+  "notes": "Ambilight theo màn hình PC, Now Playing thật (SMTC), kho scheme đèn cộng đồng + mã chia sẻ TVKS1, hiệu ứng gõ phím phản ứng, lịch trình đèn theo giờ, đẩy TFT nhanh hơn (cache chuyển đổi).",
+  "sha256": "8feb415bd251c918327644b5375a1498ad4bc84a14071ef31dca5881f5a9baaa",
+  "version": "3.15.0"
 }

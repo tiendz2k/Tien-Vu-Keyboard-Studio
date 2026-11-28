@@ -1,0 +1,23 @@
+{
+ "version": 1,
+ "items": [
+  {
+   "name": "Sóng cầu vồng",
+   "author": "tiendz2k",
+   "file": "song-cau-vong.json",
+   "url": "https://raw.githubusercontent.com/tiendz2k/Tien-Vu-Keyboard-Studio/main/docs/schemes/song-cau-vong.json",
+   "driveId": "",
+   "size": 1588,
+   "sha256": "7d43206fb7360e119a945a3261ff3a2b4575177d996b5b0e2273edc33dd367bd"
+  },
+  {
+   "name": "Bảng màu lễ hội",
+   "author": "tiendz2k",
+   "file": "bang-mau-le-hoi.json",
+   "url": "https://raw.githubusercontent.com/tiendz2k/Tien-Vu-Keyboard-Studio/main/docs/schemes/bang-mau-le-hoi.json",
+   "driveId": "",
+   "size": 1592,
+   "sha256": "7bda160ce19c2dbee62396d63c68c8bf613a8190e122cfbb9278d83535959d27"
+  }
+ ]
+}

@@ -10,9 +10,17 @@ namespace TienKeyboardStudio3
     // so lan nhan theo VI TRI phim (de ve heatmap) + tong so phim + WPM.
     // TUYET DOI khong ghi noi dung, khong ghi chuoi phim, khong luu thu tu
     // go — chi co bo dem tong hop trong RAM, xoa khi tat app.
+    // v3.15: hook con phat su kien KeyPositionPressed (CHI index vi tri
+    // phim, khong ma VK) cho hieu ung go phim phan ung (ReactiveCore) —
+    // DUNG CHUNG mot cong tac opt-in nay: tat dem phim la khong con su
+    // kien nao duoc tao ra. Su kien chi song trong RAM cua engine phan
+    // ung, khong ghi log/file.
     // =====================================================================
     public sealed class TypingStatsService : IDisposable
     {
+        /// <summary>v3.15: phat khi mot phim trong bang duoc nhan — tham
+        /// so CHI la index vi tri phim tren KeyboardView (0..79).</summary>
+        public event Action<int> KeyPositionPressed;
         // Bo dem theo index phim cua KeyboardView (0..79); -1 = phim ngoai bang.
         public int[] KeyCounts { get; } = new int[80];
         public long TotalKeys { get; private set; }
@@ -130,7 +138,10 @@ namespace TienKeyboardStudio3
                         if (_recentTicks.Count > 20000) _recentTicks.Dequeue();
                     }
                     if (VkToView.TryGetValue((int)data.vkCode, out int view) && view >= 0 && view < 80)
+                    {
                         KeyCounts[view]++;
+                        try { KeyPositionPressed?.Invoke(view); } catch { }
+                    }
                 }
             }
             return CallNextHookEx(_hook, nCode, wParam, lParam);

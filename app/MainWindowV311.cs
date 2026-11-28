@@ -401,7 +401,7 @@ namespace TienKeyboardStudio3
                 CornerRadius = new CornerRadius(14), ClipToBounds = true,
                 Width = 64, Height = 64, Child = logoImg,
             };
-            var aboutPara = Tb("Phiên bản 3.14.0 — bản hoàn thiện: bỏ hẳn Dry-run và các công tắc thử nghiệm, mọi thao tác áp dụng trực tiếp xuống phím (các họ khác vẫn định danh bằng probe đọc trước khi ghi). Thêm mục Cập nhật trong Cài đặt: kiểm tra bản app mới, cập nhật bảng thiết bị và làm mới thư viện GIF online. Kế thừa v3.13: chế độ màu Đơn sắc / Đa sắc cho hiệu ứng firmware và stream, bộ chọn màu tự do, scheme đèn có tên, tham số nhạc 0x78, trạng thái đèn được nhớ. F75 Max hỗ trợ đầy đủ; các họ còn lại chưa kiểm chứng trên phần cứng thật.", "sub");
+            var aboutPara = Tb("Phiên bản 3.15.0 — thêm Ambilight theo màn hình PC, widget Now Playing thật qua SMTC của Windows, kho scheme đèn cộng đồng + mã chia sẻ TVKS1, hiệu ứng gõ phím phản ứng (Sóng lan / Vệt sáng / Mưa phím), lịch trình đèn theo giờ, và đẩy TFT nhanh hơn nhờ cache chuyển đổi. Kế thừa v3.14: không Dry-run, không công tắc thử nghiệm — mọi thao tác áp dụng trực tiếp xuống phím (các họ khác vẫn định danh bằng probe đọc trước khi ghi); mục Cập nhật trong Cài đặt; chế độ màu Đơn sắc / Đa sắc; bộ chọn màu tự do; scheme đèn có tên; trạng thái đèn được nhớ. F75 Max hỗ trợ đầy đủ; các họ còn lại chưa kiểm chứng trên phần cứng thật.", "sub");
             aboutPara.MaxWidth = 640; // cot ngang H() cho chieu rong vo han — gioi han de chu xuong dong trong the
             var aboutTexts = V(4,
                 Tb("Tien Vu Keyboard Studio", "h2"),
