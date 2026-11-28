@@ -183,4 +183,149 @@ namespace TienKeyboardStudio3
             return 255;
         }
     }
+
+    // =====================================================================
+    // v3.16 — BO CHINH MAU Ambilight: co che ColorAdjustment cua
+    // Hyperion.ng (MIT, © Hyperion Project) — cong thuc duoc port lai
+    // theo mo ta trong bao cao nghien cuu ma nguon mo: gamma tung kenh,
+    // saturationGain, luminanceGain va luminanceMinimum (san do sang —
+    // canh gan den nhung chua den han van phat sang nhe thay vi "chet"
+    // den; den thuan 0 giu nguyen 0). Ap DUNG SAU lay mau, TRUOC lam
+    // muot (dung thu tu pipeline cua Hyperion).
+    // =====================================================================
+    public sealed class ColorCorrectionSettings
+    {
+        public double GammaR = 1.0;
+        public double GammaG = 1.0;
+        public double GammaB = 1.0;
+        public double SaturationGain = 1.15;  // LED thuong nhat hon man hinh — tang nhe mac dinh
+        public double LuminanceGain = 1.0;
+        public double LuminanceMinimum = 0.05; // 0..0.3 (HSL lightness)
+
+        public static double ClampGamma(double g) => Math.Max(0.4, Math.Min(2.8, g));
+        public static double ClampGain(double g) => Math.Max(0, Math.Min(2, g));
+        public static double ClampLumGain(double g) => Math.Max(0.4, Math.Min(1.6, g));
+        public static double ClampLumMin(double v) => Math.Max(0, Math.Min(0.3, v));
+
+        public ColorCorrectionSettings Sanitized() => new ColorCorrectionSettings
+        {
+            GammaR = ClampGamma(GammaR),
+            GammaG = ClampGamma(GammaG),
+            GammaB = ClampGamma(GammaB),
+            SaturationGain = ClampGain(SaturationGain),
+            LuminanceGain = ClampLumGain(LuminanceGain),
+            LuminanceMinimum = ClampLumMin(LuminanceMinimum),
+        };
+    }
+
+    public static class ColorCorrection
+    {
+        /// <summary>Ap bo chinh mau len mot mau RGB: gamma tung kenh
+        /// (tren thang 0..1) -> HSL: nhan saturation/luminance -> san
+        /// luminanceMinimum (chi khi mau khong phai den thuan) -> RGB.</summary>
+        public static (byte R, byte G, byte B) Apply((byte R, byte G, byte B) c, ColorCorrectionSettings s)
+        {
+            if (s == null) s = new ColorCorrectionSettings();
+            double r = Math.Pow(c.R / 255.0, ColorCorrectionSettings.ClampGamma(s.GammaR));
+            double g = Math.Pow(c.G / 255.0, ColorCorrectionSettings.ClampGamma(s.GammaG));
+            double b = Math.Pow(c.B / 255.0, ColorCorrectionSettings.ClampGamma(s.GammaB));
+
+            RgbToHsl(r, g, b, out double h, out double sat, out double lig);
+            sat = Math.Max(0, Math.Min(1, sat * ColorCorrectionSettings.ClampGain(s.SaturationGain)));
+            lig = Math.Max(0, Math.Min(1, lig * ColorCorrectionSettings.ClampLumGain(s.LuminanceGain)));
+            double lumMin = ColorCorrectionSettings.ClampLumMin(s.LuminanceMinimum);
+            if (lig > 0 && lig < lumMin) lig = lumMin;
+            var rgb = HslToRgb(h, sat, lig);
+            return (ColorMath.ToByte(rgb.R * 255), ColorMath.ToByte(rgb.G * 255), ColorMath.ToByte(rgb.B * 255));
+        }
+
+        /// <summary>Ap len ca khung stream (giu nguyen id tung o).</summary>
+        public static L99Protocol.StreamQuad[] ApplyToFrame(
+            IReadOnlyList<L99Protocol.StreamQuad> quads, ColorCorrectionSettings s)
+        {
+            var outp = new L99Protocol.StreamQuad[quads.Count];
+            for (int i = 0; i < quads.Count; i++)
+            {
+                var q = quads[i];
+                var c = Apply((q.R, q.G, q.B), s);
+                outp[i] = new L99Protocol.StreamQuad(q.Id, c.R, c.G, c.B);
+            }
+            return outp;
+        }
+
+        private static void RgbToHsl(double r, double g, double b,
+            out double h, out double s, out double l)
+        {
+            double max = Math.Max(r, Math.Max(g, b));
+            double min = Math.Min(r, Math.Min(g, b));
+            l = (max + min) / 2;
+            double d = max - min;
+            if (d < 1e-9) { h = 0; s = 0; return; }
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+            if (max == r) h = 60 * (((g - b) / d) % 6);
+            else if (max == g) h = 60 * ((b - r) / d + 2);
+            else h = 60 * ((r - g) / d + 4);
+            if (h < 0) h += 360;
+        }
+
+        private static (double R, double G, double B) HslToRgb(double h, double s, double l)
+        {
+            h = ((h % 360) + 360) % 360;
+            double chroma = (1 - Math.Abs(2 * l - 1)) * s;
+            double x = chroma * (1 - Math.Abs((h / 60.0) % 2 - 1));
+            double m = l - chroma / 2;
+            double r, g, b;
+            if (h < 60) { r = chroma; g = x; b = 0; }
+            else if (h < 120) { r = x; g = chroma; b = 0; }
+            else if (h < 180) { r = 0; g = chroma; b = x; }
+            else if (h < 240) { r = 0; g = x; b = chroma; }
+            else if (h < 300) { r = x; g = 0; b = chroma; }
+            else { r = chroma; g = 0; b = x; }
+            return (r + m, g + m, b + m);
+        }
+    }
+
+    // =====================================================================
+    // v3.16 — LAM MUOT MAU THEO THOI GIAN: co che LinearColorSmoothing
+    // cua Hyperion.ng (MIT, © Hyperion Project) — moi tick xuat, tung
+    // phim noi suy TUYEN TINH ve phia mau dich theo ti le dt/thoi-gian-
+    // lam-muot, tach roi khoi fps chup hinh: chup 10fps van cho stream
+    // 20fps muot. Khong bao gio vuot qua dich (k kep 0..1), khong dao
+    // dao. smoothingMs = 0 -> nhay thang toi dich.
+    // =====================================================================
+    public sealed class ColorSmoother
+    {
+        private float[] _cur; // 3 kenh x so o, thang 0..255
+        private bool _hasSize;
+
+        public void Reset() { _hasSize = false; _cur = null; }
+
+        /// <summary>Mot buoc noi suy: targets la khung dich moi nhat;
+        /// dtSec la thoi gian that tu buoc truoc. Tra khung da lam muot
+        /// (id giu nguyen theo targets).</summary>
+        public L99Protocol.StreamQuad[] Step(
+            IReadOnlyList<L99Protocol.StreamQuad> targets, double dtSec, int smoothingMs)
+        {
+            int n = targets.Count;
+            if (!_hasSize || _cur == null || _cur.Length != n * 3)
+            {
+                _cur = new float[n * 3]; // bat dau tu den — fade-in mem nhu Hyperion
+                _hasSize = true;
+            }
+            double k = smoothingMs <= 0 ? 1.0
+                : Math.Max(0, Math.Min(1, dtSec * 1000.0 / smoothingMs));
+            var outp = new L99Protocol.StreamQuad[n];
+            for (int i = 0; i < n; i++)
+            {
+                var t = targets[i];
+                int o = i * 3;
+                _cur[o] += (float)((t.R - _cur[o]) * k);
+                _cur[o + 1] += (float)((t.G - _cur[o + 1]) * k);
+                _cur[o + 2] += (float)((t.B - _cur[o + 2]) * k);
+                outp[i] = new L99Protocol.StreamQuad(t.Id,
+                    ColorMath.ToByte(_cur[o]), ColorMath.ToByte(_cur[o + 1]), ColorMath.ToByte(_cur[o + 2]));
+            }
+            return outp;
+        }
+    }
 }

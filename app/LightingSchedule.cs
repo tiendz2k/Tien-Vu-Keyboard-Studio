@@ -22,11 +22,17 @@ namespace TienKeyboardStudio3
         public const int KindBrightness = 0; // chi doi do sang
         public const int KindEffect = 1;     // doi hieu ung firmware
         public const int KindOff = 2;        // tat den (hieu ung 0)
+        // v3.16: luat ap mot SCHEME den theo ten (tu LightingSchemes) —
+        // y tuong "slot ap profile theo ten" cua OpenRGB Scheduler
+        // (GPL — chi hoc khai niem). Settings cu khong co truong nay:
+        // SchemeName mac dinh "" va Kind cu 0..2 giu nguyen.
+        public const int KindScheme = 3;     // ap scheme den theo ten
 
         public int StartMinutes { get; set; } = 480;   // 0..1439 (480 = 08:00)
         public int Kind { get; set; } = KindBrightness;
         public int BrightnessPercent { get; set; } = 60; // 0..100 (Kind = Brightness)
         public int EffectId { get; set; } = 10;          // 0..19 (Kind = Effect)
+        public string SchemeName { get; set; } = "";     // (Kind = Scheme)
     }
 
     public sealed class ScheduleDecision
@@ -47,9 +53,10 @@ namespace TienKeyboardStudio3
                 .Select(r => new ScheduleRuleData
                 {
                     StartMinutes = Math.Max(0, Math.Min(1439, r.StartMinutes)),
-                    Kind = Math.Max(0, Math.Min(2, r.Kind)),
+                    Kind = Math.Max(0, Math.Min(3, r.Kind)),
                     BrightnessPercent = Math.Max(0, Math.Min(100, r.BrightnessPercent)),
                     EffectId = Math.Max(0, Math.Min(19, r.EffectId)),
+                    SchemeName = r.SchemeName ?? "",
                 })
                 .OrderBy(r => r.StartMinutes)
                 .ToList();

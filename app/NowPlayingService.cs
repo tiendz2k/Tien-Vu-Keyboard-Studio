@@ -54,6 +54,11 @@ namespace TienKeyboardStudio3
         {
             var manager = await GlobalSystemMediaTransportControlsSessionManager.RequestAsync();
             var sessions = manager.GetSessions();
+            // v3.16: danh dau "session hien tai" (giu phim media) theo
+            // AUMID de NowPlayingLogic pha hoa — session nay dang Paused
+            // KHONG duoc thang session dang Playing (xem NowPlayingCore).
+            string currentAumid = null;
+            try { currentAumid = manager.GetCurrentSession()?.SourceAppUserModelId; } catch { }
             var infos = new List<MediaSessionInfo>();
             var byInfo = new Dictionary<MediaSessionInfo, GlobalSystemMediaTransportControlsSession>();
 
@@ -75,6 +80,8 @@ namespace TienKeyboardStudio3
                             ? Math.Max(0, (timeline.EndTime - timeline.StartTime).TotalSeconds) : 0,
                         IsPlaying = playback != null &&
                             playback.PlaybackStatus == GlobalSystemMediaTransportControlsSessionPlaybackStatus.Playing,
+                        IsCurrentSession = currentAumid != null &&
+                            session.SourceAppUserModelId == currentAumid,
                         SourceName = FriendlySource(session.SourceAppUserModelId),
                         LastUpdatedUtc = timeline != null ? timeline.LastUpdatedTime.UtcDateTime : DateTime.UtcNow,
                     };

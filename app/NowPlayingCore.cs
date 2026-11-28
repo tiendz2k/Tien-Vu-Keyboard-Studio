@@ -21,6 +21,13 @@ namespace TienKeyboardStudio3
         public double PositionSec { get; set; }
         public double DurationSec { get; set; }
         public bool IsPlaying { get; set; }
+        /// <summary>v3.16: session nay co phai "session hien tai" cua
+        /// GSMTC (session dang giu phim media — GetCurrentSession)
+        /// khong. CHI dung lam moc pha hoa khi cac moc thoi gian bang
+        /// nhau: mot session hien tai dang PAUSED khong bao gio thang
+        /// mot session dang PLAYING (bai hoc tu ModernFlyouts /
+        /// WebNowPlaying — MIT).</summary>
+        public bool IsCurrentSession { get; set; }
         public string SourceName { get; set; } = "";
         /// <summary>Moc thoi gian (UTC) ma PositionSec duoc do — GSMTC
         /// chi cho anh chup, phai noi suy theo moc nay khi dang phat.</summary>
@@ -32,23 +39,37 @@ namespace TienKeyboardStudio3
     public static class NowPlayingLogic
     {
         /// <summary>
-        /// Chon session de hien khi co nhieu nguon cung phat: uu tien
-        /// session dang Playing co tieu de; khong co thi session Paused
-        /// co tieu de duoc cap nhat gan nhat; session thieu Title bi bo
-        /// qua. Khong session nao hop le -> null.
+        /// Chon session de hien khi co nhieu nguon cung phat (v3.16 —
+        /// mau chon session cua ModernFlyouts/WebNowPlaying, MIT):
+        /// 1) Session dang Playing THANG session giu phim media dang
+        ///    Paused — GetCurrentSession() co the ket o mot tab trinh
+        ///    duyet da dung trong khi Spotify dang phat.
+        /// 2) Trong cung nhom Playing (hoac cung nhom Paused): session
+        ///    duoc cap nhat GAN NHAT thang; bang moc thoi gian thi
+        ///    session hien tai (IsCurrentSession) thang.
+        /// Session thieu Title bi bo qua. Khong hop le -> null.
         /// </summary>
         public static MediaSessionInfo ChooseSession(IReadOnlyList<MediaSessionInfo> sessions)
         {
             if (sessions == null) return null;
-            MediaSessionInfo bestPaused = null;
+            MediaSessionInfo bestPlaying = null, bestPaused = null;
             foreach (var s in sessions)
             {
                 if (s == null || !s.Available || string.IsNullOrWhiteSpace(s.Title)) continue;
-                if (s.IsPlaying) return s;
-                if (bestPaused == null || s.LastUpdatedUtc > bestPaused.LastUpdatedUtc)
-                    bestPaused = s;
+                if (s.IsPlaying) { if (IsBetterCandidate(s, bestPlaying)) bestPlaying = s; }
+                else if (IsBetterCandidate(s, bestPaused)) bestPaused = s;
             }
-            return bestPaused;
+            return bestPlaying ?? bestPaused;
+        }
+
+        /// <summary>Ung vien thang ung vien dang giu: moc cap nhat moi
+        /// hon, hoac bang moc thi co co session-hien-tai.</summary>
+        private static bool IsBetterCandidate(MediaSessionInfo cand, MediaSessionInfo cur)
+        {
+            if (cur == null) return true;
+            if (cand.LastUpdatedUtc != cur.LastUpdatedUtc)
+                return cand.LastUpdatedUtc > cur.LastUpdatedUtc;
+            return cand.IsCurrentSession && !cur.IsCurrentSession;
         }
 
         /// <summary>

@@ -401,7 +401,7 @@ namespace TienKeyboardStudio3
                 CornerRadius = new CornerRadius(14), ClipToBounds = true,
                 Width = 64, Height = 64, Child = logoImg,
             };
-            var aboutPara = Tb("Phiên bản 3.15.0 — thêm Ambilight theo màn hình PC, widget Now Playing thật qua SMTC của Windows, kho scheme đèn cộng đồng + mã chia sẻ TVKS1, hiệu ứng gõ phím phản ứng (Sóng lan / Vệt sáng / Mưa phím), lịch trình đèn theo giờ, và đẩy TFT nhanh hơn nhờ cache chuyển đổi. Kế thừa v3.14: không Dry-run, không công tắc thử nghiệm — mọi thao tác áp dụng trực tiếp xuống phím (các họ khác vẫn định danh bằng probe đọc trước khi ghi); mục Cập nhật trong Cài đặt; chế độ màu Đơn sắc / Đa sắc; bộ chọn màu tự do; scheme đèn có tên; trạng thái đèn được nhớ. F75 Max hỗ trợ đầy đủ; các họ còn lại chưa kiểm chứng trên phần cứng thật.", "sub");
+            var aboutPara = Tb("Phiên bản 3.16.0 — Ambilight mượt hơn (làm mượt màu theo thời gian + bộ chỉnh màu gamma/bão hoà/độ sáng), Now Playing chọn đúng phiên đang phát và thanh tiến trình chạy mượt, thêm hiệu ứng gõ phím Đa sóng / Bản đồ nhiệt / Chữ thập, luật lịch trình áp được scheme đèn theo tên. Kế thừa v3.15: Ambilight theo màn hình PC, widget Now Playing thật qua SMTC, kho scheme đèn cộng đồng + mã chia sẻ TVKS1, lịch trình đèn theo giờ, đẩy TFT nhanh nhờ cache chuyển đổi; không Dry-run, không công tắc thử nghiệm — mọi thao tác áp dụng trực tiếp xuống phím (các họ khác vẫn định danh bằng probe đọc trước khi ghi); mục Cập nhật trong Cài đặt; chế độ màu Đơn sắc / Đa sắc; bộ chọn màu tự do; trạng thái đèn được nhớ. F75 Max hỗ trợ đầy đủ; các họ còn lại chưa kiểm chứng trên phần cứng thật.", "sub");
             aboutPara.MaxWidth = 640; // cot ngang H() cho chieu rong vo han — gioi han de chu xuong dong trong the
             var aboutTexts = V(4,
                 Tb("Tien Vu Keyboard Studio", "h2"),
@@ -409,6 +409,7 @@ namespace TienKeyboardStudio3
                 Tb("Phát triển bởi Vũ Minh Tiến — github.com/tiendz2k", "sub"),
                 Tb("Mã nguồn + bản chính thức: github.com/tiendz2k/Tien-Vu-Keyboard-Studio · " + AboutInfo.SignatureLine, "faint"),
                 Tb("Font chữ: Be Vietnam Pro (SIL OFL 1.1). GIF thư viện: tự làm cho Tiến. Giao thức per-key: Gavin Graham (AULA L99).", "faint"),
+                Tb("Cơ chế Ambilight (làm mượt + chỉnh màu): Hyperion.ng (MIT). Mẫu xử lý phiên Now Playing: ModernFlyouts-Community (MIT).", "faint"),
                 BuildAboutCredits());
             var aboutCard = Card(H(14, logoWrap, aboutTexts));
             return Scroll(V(14, aboutCard));

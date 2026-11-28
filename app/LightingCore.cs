@@ -148,6 +148,17 @@ namespace TienKeyboardStudio3
         public int AmbilightFps { get; set; } = 15;       // 10/15/20
         public double AmbilightBrightness { get; set; } = 1.0; // 0.2..1.5
         public int AmbilightBlackLevel { get; set; } = 24;     // 0..60
+        // v3.16: lam muot mau + bo chinh mau Ambilight (co che
+        // Hyperion.ng, MIT — xem AmbilightCore.cs). File settings cu
+        // khong co -> dung mac dinh nay (hanh vi gan nhu cu, chi them
+        // lam muot 200ms + tang nhe bao hoa + san sang 0.05).
+        public int AmbilightSmoothingMs { get; set; } = 200;   // 0..500
+        public double AmbilightGammaR { get; set; } = 1.0;     // 0.4..2.8
+        public double AmbilightGammaG { get; set; } = 1.0;
+        public double AmbilightGammaB { get; set; } = 1.0;
+        public double AmbilightSaturation { get; set; } = 1.15; // 0..2
+        public double AmbilightLumGain { get; set; } = 1.0;     // 0.4..1.6
+        public double AmbilightLumMin { get; set; } = 0.05;     // 0..0.3
         // v3.15: hieu ung go phim phan ung (-1 = tat; 0 Song lan,
         // 1 Vet sang, 2 Mua phim — xem ReactiveEffects)
         public int ReactiveEffect { get; set; } = -1;

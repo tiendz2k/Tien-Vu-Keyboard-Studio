@@ -327,7 +327,7 @@ namespace TienKeyboardStudio3
             RefreshWriteStates();
             ShowPage("home");
             _ = RunIntegrityCheckAsync();
-            AppendLog("Tien Vu Keyboard Studio v3.15.0 đã mở. Mọi thao tác áp dụng trực tiếp xuống phím qua USB-C.");
+            AppendLog("Tien Vu Keyboard Studio v3.16.0 đã mở. Mọi thao tác áp dụng trực tiếp xuống phím qua USB-C.");
             AppendLog("Lần đầu: Quét thiết bị → chọn đúng mẫu → dùng các trang tính năng; các họ khác cần bấm Nhận diện (probe đọc) trước khi ghi.");
             _ = SilentAppUpdateCheckAsync();
         }
@@ -2512,7 +2512,7 @@ namespace TienKeyboardStudio3
             RefreshScheduleRows();
             var schedCard = Card(V(10,
                 Tb("Lịch trình đèn theo giờ", "h3"),
-                SettingRow("Bật lịch trình", "Đến giờ đã đặt, app tự áp độ sáng / hiệu ứng / tắt đèn. Đổi đèn bằng tay sẽ thắng cho đến luật tiếp theo.", LightingState.ScheduleEnabled, v =>
+                SettingRow("Bật lịch trình", "Đến giờ đã đặt, app tự áp độ sáng / hiệu ứng / scheme / tắt đèn. Đổi đèn bằng tay sẽ thắng cho đến luật tiếp theo.", LightingState.ScheduleEnabled, v =>
                 {
                     LightingState.ScheduleEnabled = v;
                     SaveSchedule();
@@ -2526,7 +2526,7 @@ namespace TienKeyboardStudio3
                     SaveSchedule();
                     RefreshScheduleRows();
                 }),
-                Tb("Mỗi luật: giờ bắt đầu (HH:mm) · loại (Độ sáng / Hiệu ứng / Tắt đèn) · giá trị (% độ sáng 0–100 hoặc số hiệu ứng 0–19). Luật sau ghi đè luật trước theo giờ.", "faint")));
+                Tb("Mỗi luật: giờ bắt đầu (HH:mm) · loại (Độ sáng / Hiệu ứng / Tắt đèn / Scheme đèn) · giá trị (% độ sáng 0–100, số hiệu ứng 0–19 hoặc tên scheme). Luật sau ghi đè luật trước theo giờ.", "faint")));
 
             var root = V(14,
                 Tb("Ánh sáng RGB", "h1"),
@@ -3520,6 +3520,11 @@ namespace TienKeyboardStudio3
             public int Fps = 15;
             public double Brightness = 1.0;
             public int BlackLevel = ScreenSampler.DefaultBlackLevel;
+            // v3.16: bo chinh mau + lam muot (co che Hyperion.ng, MIT)
+            public ColorCorrectionSettings Correction = new ColorCorrectionSettings();
+            public int SmoothingMs = 200;
+            private readonly ColorSmoother _smoother = new ColorSmoother();
+            private readonly System.Diagnostics.Stopwatch _clock = new System.Diagnostics.Stopwatch();
             private bool _busy;
             private bool _sendBusy;
             private bool _captureFailed;
@@ -3530,6 +3535,8 @@ namespace TienKeyboardStudio3
             public void Start()
             {
                 Claim?.Invoke();
+                _smoother.Reset();
+                _clock.Restart();
                 Timer.Interval = TimeSpan.FromMilliseconds(1000 / Math.Max(10, Math.Min(20, Fps)));
                 Timer.Start();
                 Tick(null, null);
@@ -3541,13 +3548,19 @@ namespace TienKeyboardStudio3
             {
                 if (State == null || _busy) return;
                 _busy = true;
-                int mode = Mode, bl = BlackLevel;
+                int mode = Mode, bl = BlackLevel, smoothMs = SmoothingMs;
                 double br = Brightness;
+                var corr = Correction;
                 Task.Run(() =>
                 {
                     L99Protocol.StreamQuad[] quads = null;
                     bool ok = ScreenCapture.CapturePrimaryBgra(192, 108, out var bgra);
-                    if (ok) quads = ScreenSampler.SampleAll(bgra, 192, 108, mode, bl, br);
+                    if (ok)
+                    {
+                        quads = ScreenSampler.SampleAll(bgra, 192, 108, mode, bl, br);
+                        // Pipeline Hyperion: lay mau -> CHINH MAU -> lam muot
+                        quads = ColorCorrection.ApplyToFrame(quads, corr);
+                    }
                     Dispatcher.UIThread.Post(() =>
                     {
                         _busy = false;
@@ -3562,6 +3575,9 @@ namespace TienKeyboardStudio3
                             return;
                         }
                         _captureFailed = false;
+                        double dt = Math.Max(0, Math.Min(0.5, _clock.Elapsed.TotalSeconds));
+                        _clock.Restart();
+                        quads = _smoother.Step(quads, dt, smoothMs);
                         var dict = new Dictionary<string, Color>();
                         for (int i = 0; i < quads.Length; i++)
                             dict["k" + MaxKeyData.StreamSlots[i].ViewIndex] = Color.FromRgb(quads[i].R, quads[i].G, quads[i].B);
@@ -3927,6 +3943,27 @@ namespace TienKeyboardStudio3
         private int _ambiFps = 15;
         private double _ambiBrightness = 1.0;
         private int _ambiBlackLevel = ScreenSampler.DefaultBlackLevel;
+        // v3.16: lam muot + chinh mau Ambilight (luu trong LightingStateData)
+        private int _ambiSmoothingMs = 200;
+        private double _ambiGammaR = 1.0, _ambiGammaG = 1.0, _ambiGammaB = 1.0;
+        private double _ambiSaturation = 1.15;
+        private double _ambiLumGain = 1.0;
+        private double _ambiLumMin = 0.05;
+
+        /// <summary>v3.16: dong bo bo chinh mau tu cac truong UI vao player.</summary>
+        private void SyncAmbiCorrection()
+        {
+            _ambiPlayer.Correction = new ColorCorrectionSettings
+            {
+                GammaR = _ambiGammaR,
+                GammaG = _ambiGammaG,
+                GammaB = _ambiGammaB,
+                SaturationGain = _ambiSaturation,
+                LuminanceGain = _ambiLumGain,
+                LuminanceMinimum = _ambiLumMin,
+            };
+            _ambiPlayer.SmoothingMs = _ambiSmoothingMs;
+        }
         private int _reactiveSelected = -1; // -1 tat; 0..2 ReactiveEffects
         // v3.15: day TFT nhanh — cache chuyen doi + cong day widget
         private readonly DisplayCacheStore _displayCache = new DisplayCacheStore(DisplayCacheStore.DefaultDir);
@@ -3969,6 +4006,13 @@ namespace TienKeyboardStudio3
             _ambiFps = L.AmbilightFps == 10 || L.AmbilightFps == 20 ? L.AmbilightFps : 15;
             _ambiBrightness = ClampD(L.AmbilightBrightness, 0.2, 1.5);
             _ambiBlackLevel = ClampI(L.AmbilightBlackLevel, 0, 60);
+            _ambiSmoothingMs = ClampI(L.AmbilightSmoothingMs, 0, 500);
+            _ambiGammaR = ClampD(L.AmbilightGammaR, 0.4, 2.8);
+            _ambiGammaG = ClampD(L.AmbilightGammaG, 0.4, 2.8);
+            _ambiGammaB = ClampD(L.AmbilightGammaB, 0.4, 2.8);
+            _ambiSaturation = ClampD(L.AmbilightSaturation, 0, 2);
+            _ambiLumGain = ClampD(L.AmbilightLumGain, 0.4, 1.6);
+            _ambiLumMin = ClampD(L.AmbilightLumMin, 0, 0.3);
             _reactiveSelected = ClampI(L.ReactiveEffect, -1, ReactiveEffects.Names.Length - 1);
             _activeSchemeName = L.PaintedSchemeName ?? "";
             if (!string.IsNullOrEmpty(_activeSchemeName))
@@ -4021,6 +4065,13 @@ namespace TienKeyboardStudio3
             L.AmbilightFps = _ambiFps;
             L.AmbilightBrightness = _ambiBrightness;
             L.AmbilightBlackLevel = _ambiBlackLevel;
+            L.AmbilightSmoothingMs = _ambiSmoothingMs;
+            L.AmbilightGammaR = _ambiGammaR;
+            L.AmbilightGammaG = _ambiGammaG;
+            L.AmbilightGammaB = _ambiGammaB;
+            L.AmbilightSaturation = _ambiSaturation;
+            L.AmbilightLumGain = _ambiLumGain;
+            L.AmbilightLumMin = _ambiLumMin;
             L.ReactiveEffect = _reactiveSelected;
             L.GifBrightness = _gifBrightness;
             L.GifBlackLevel = _gifBlackLevel;
@@ -4080,6 +4131,26 @@ namespace TienKeyboardStudio3
                     _ = ApplyRgbAsync(0, _rgb.Brush, false, (int)_rgb.Brightness, (int)_rgb.Speed, _rgb.Direction);
                     AppendLog("[Lịch trình] Đã tắt đèn theo lịch trình.");
                 }
+                else if (rule.Kind == ScheduleRuleData.KindScheme)
+                {
+                    // v3.16: ap scheme den theo ten (ghi 0x23 nhu nut
+                    // ap scheme thu cong o trang Per-key).
+                    var sc = string.IsNullOrWhiteSpace(rule.SchemeName)
+                        ? null : new LightingSchemeStore(SchemesDir).Load(rule.SchemeName);
+                    if (sc == null)
+                    {
+                        AppendLog($"[Lịch trình] Không tìm thấy scheme “{rule.SchemeName}” — bỏ qua luật này.");
+                    }
+                    else
+                    {
+                        _painted.Clear();
+                        foreach (var kv in sc.ToPainted())
+                            _painted[kv.Key] = Color.FromRgb(kv.Value.R, kv.Value.G, kv.Value.B);
+                        _activeSchemeName = sc.Name;
+                        _ = SendPaintedAsync();
+                        AppendLog($"[Lịch trình] Đã áp scheme “{sc.Name}” theo lịch trình.");
+                    }
+                }
                 else if (rule.Kind == ScheduleRuleData.KindEffect)
                 {
                     _rgb.Effect = rule.EffectId;
@@ -4125,18 +4196,20 @@ namespace TienKeyboardStudio3
                 var kindBox = new ComboBox
                 {
                     Width = 130,
-                    ItemsSource = new[] { "Độ sáng", "Hiệu ứng", "Tắt đèn" },
-                    SelectedIndex = Math.Max(0, Math.Min(2, rule.Kind)),
+                    ItemsSource = new[] { "Độ sáng", "Hiệu ứng", "Tắt đèn", "Scheme đèn" },
+                    SelectedIndex = Math.Max(0, Math.Min(3, rule.Kind)),
                 };
                 kindBox.SelectionChanged += (s, e) =>
                 {
                     captured.Kind = kindBox.SelectedIndex < 0 ? 0 : kindBox.SelectedIndex;
                     SaveSchedule();
+                    RefreshScheduleRows(); // doi loai -> doi o gia tri (so <-> danh sach scheme)
                 };
                 var valBox = new TextBox
                 {
                     Text = rule.Kind == ScheduleRuleData.KindEffect ? rule.EffectId.ToString() : rule.BrightnessPercent.ToString(),
                     Width = 70,
+                    IsVisible = rule.Kind != ScheduleRuleData.KindScheme,
                 };
                 valBox.LostFocus += (s, e) =>
                 {
@@ -4147,13 +4220,27 @@ namespace TienKeyboardStudio3
                     }
                     SaveSchedule();
                 };
+                // v3.16: o gia tri cho loai Scheme — chon ten scheme da luu
+                var schemeNames = new LightingSchemeStore(SchemesDir).ListNames();
+                var schemeBox = new ComboBox
+                {
+                    Width = 180,
+                    ItemsSource = schemeNames,
+                    IsVisible = rule.Kind == ScheduleRuleData.KindScheme,
+                };
+                if (schemeNames.Contains(rule.SchemeName)) schemeBox.SelectedItem = rule.SchemeName;
+                schemeBox.SelectionChanged += (s, e) =>
+                {
+                    captured.SchemeName = schemeBox.SelectedItem as string ?? "";
+                    SaveSchedule();
+                };
                 var delBtn = GhostBtn("Xoá", () =>
                 {
                     LightingState.ScheduleRules.Remove(captured);
                     SaveSchedule();
                     RefreshScheduleRows();
                 });
-                _schedPanel.Children.Add(H(8, timeBox, kindBox, valBox, delBtn));
+                _schedPanel.Children.Add(H(8, timeBox, kindBox, valBox, schemeBox, delBtn));
             }
         }
 
@@ -4654,6 +4741,7 @@ namespace TienKeyboardStudio3
             _ambiPlayer.Fps = _ambiFps;
             _ambiPlayer.Brightness = _ambiBrightness;
             _ambiPlayer.BlackLevel = _ambiBlackLevel;
+            SyncAmbiCorrection();
             var ambiStatus = Tb("Đèn phím chạy theo màu trên màn hình chính của PC (xem phim/chơi game).", "sub");
             var (ambiModeSeg, _) = Segmented(new[] { "Toàn màn hình", "Viền màn hình" }, _ambiMode, i =>
             {
@@ -4679,6 +4767,39 @@ namespace TienKeyboardStudio3
             {
                 if (e.Property == Slider.ValueProperty) { _ambiBlackLevel = (int)Math.Round(ambiBlack.Value); _ambiPlayer.BlackLevel = _ambiBlackLevel; QueuePersistLighting(); }
             };
+            // v3.16: lam muot mau + bo chinh mau (co che Hyperion.ng)
+            var ambiSmooth = new Slider { Minimum = 0, Maximum = 500, Value = _ambiSmoothingMs, Width = 200 };
+            ambiSmooth.PropertyChanged += (s, e) =>
+            {
+                if (e.Property == Slider.ValueProperty) { _ambiSmoothingMs = (int)Math.Round(ambiSmooth.Value); SyncAmbiCorrection(); QueuePersistLighting(); }
+            };
+            var ambiSat = new Slider { Minimum = 0, Maximum = 2, Value = _ambiSaturation, Width = 200 };
+            ambiSat.PropertyChanged += (s, e) =>
+            {
+                if (e.Property == Slider.ValueProperty) { _ambiSaturation = ambiSat.Value; SyncAmbiCorrection(); QueuePersistLighting(); }
+            };
+            Slider GammaSlider(double init, Action<double> set)
+            {
+                var sl = new Slider { Minimum = 0.4, Maximum = 2.8, Value = init, Width = 130 };
+                sl.PropertyChanged += (s, e) =>
+                {
+                    if (e.Property == Slider.ValueProperty) { set(sl.Value); SyncAmbiCorrection(); QueuePersistLighting(); }
+                };
+                return sl;
+            }
+            var ambiGammaR = GammaSlider(_ambiGammaR, v => _ambiGammaR = v);
+            var ambiGammaG = GammaSlider(_ambiGammaG, v => _ambiGammaG = v);
+            var ambiGammaB = GammaSlider(_ambiGammaB, v => _ambiGammaB = v);
+            var ambiLumGain = new Slider { Minimum = 0.4, Maximum = 1.6, Value = _ambiLumGain, Width = 200 };
+            ambiLumGain.PropertyChanged += (s, e) =>
+            {
+                if (e.Property == Slider.ValueProperty) { _ambiLumGain = ambiLumGain.Value; SyncAmbiCorrection(); QueuePersistLighting(); }
+            };
+            var ambiLumMin = new Slider { Minimum = 0, Maximum = 0.3, Value = _ambiLumMin, Width = 200 };
+            ambiLumMin.PropertyChanged += (s, e) =>
+            {
+                if (e.Property == Slider.ValueProperty) { _ambiLumMin = ambiLumMin.Value; SyncAmbiCorrection(); QueuePersistLighting(); }
+            };
             var ambiBtn = GhostBtn("Bật Ambilight", () =>
             {
                 if (_ambiPlayer.Running)
@@ -4692,6 +4813,7 @@ namespace TienKeyboardStudio3
                     _ambiPlayer.Fps = _ambiFps;
                     _ambiPlayer.Brightness = _ambiBrightness;
                     _ambiPlayer.BlackLevel = _ambiBlackLevel;
+                    SyncAmbiCorrection();
                     _ambiPlayer.Start();
                     ambiStatus.Text = "Đang chạy Ambilight — mở phim/game lên xem đèn theo màu màn hình.";
                 }
@@ -4705,6 +4827,16 @@ namespace TienKeyboardStudio3
                 H(24,
                     V(4, Tb("Độ sáng", "sub"), ambiBright),
                     V(4, Tb("Ngưỡng đen (blackLevel)", "sub"), ambiBlack)),
+                H(24,
+                    V(4, Tb("Làm mượt màu (ms)", "sub"), ambiSmooth),
+                    V(4, Tb("Độ bão hoà màu", "sub"), ambiSat)),
+                H(16,
+                    V(4, Tb("Gamma đỏ", "sub"), ambiGammaR),
+                    V(4, Tb("Gamma xanh lá", "sub"), ambiGammaG),
+                    V(4, Tb("Gamma xanh dương", "sub"), ambiGammaB)),
+                H(24,
+                    V(4, Tb("Độ sáng tổng", "sub"), ambiLumGain),
+                    V(4, Tb("Mức sáng tối thiểu", "sub"), ambiLumMin)),
                 H(10, ambiBtn),
                 ambiStatus,
                 Tb("Chỉ màn hình chính. Nội dung có DRM (Netflix, app xem phim bản quyền…) chụp ra khung đen — giới hạn của Windows, không phải lỗi app.", "faint")));

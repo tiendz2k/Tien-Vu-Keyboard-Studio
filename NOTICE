@@ -17,6 +17,10 @@ Code derived from third-party work
 - The experimental per-key / streaming / music protocol builders are a port
   of protocol.py from aula-l99-linux by Gavin Graham / Revisory676 —
   MIT License (attribution retained as that license requires).
+- The Ambilight temporal colour-smoothing and colour-correction mechanisms
+  are adapted from Hyperion.ng by the Hyperion Project — MIT License.
+- The Now Playing (GSMTC) session-handling patterns are adapted from
+  ModernFlyouts by ModernFlyouts-Community — MIT License.
 
 All product names, keyboard models and brand names mentioned in this project
 belong to their respective owners. This is a personal project and is not

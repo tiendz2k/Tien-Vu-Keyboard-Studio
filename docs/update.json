@@ -1,6 +1,6 @@
 {
-  "lightUrl": "https://drive.google.com/uc?export=download&id=1WUKJAybbqOrjmpp7STy0or9EJr4i8lrC",
-  "notes": "Ambilight theo màn hình PC, Now Playing thật (SMTC), kho scheme đèn cộng đồng + mã chia sẻ TVKS1, hiệu ứng gõ phím phản ứng, lịch trình đèn theo giờ, đẩy TFT nhanh hơn (cache chuyển đổi).",
-  "sha256": "8feb415bd251c918327644b5375a1498ad4bc84a14071ef31dca5881f5a9baaa",
-  "version": "3.15.0"
+  "version": "3.16.0",
+  "notes": "Ambilight mượt hơn (làm mượt màu + bộ chỉnh màu), Now Playing chọn đúng phiên đang phát + tiến trình mượt, thêm hiệu ứng gõ Đa sóng / Bản đồ nhiệt / Chữ thập, luật lịch trình áp được scheme đèn theo tên.",
+  "lightUrl": "https://drive.google.com/uc?export=download&id=1oLbuDxcLvhTrIZM4gp-KxvJi3hjmtcxV",
+  "sha256": "3618029e5c1fda65b7cd8a52912f1724013b6d16ad97b8caad8a205d09bdd844"
 }

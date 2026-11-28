@@ -23,12 +23,23 @@ namespace TienKeyboardStudio3
     // =====================================================================
     public static class ReactiveEffects
     {
-        public static readonly string[] Names = { "Sóng lan", "Vệt sáng", "Mưa phím" };
+        public static readonly string[] Names =
+            { "Sóng lan", "Vệt sáng", "Mưa phím", "Đa sóng", "Bản đồ nhiệt", "Chữ thập" };
         public const int Ripple = 0;
         public const int Trail = 1;
         public const int KeyRain = 2;
+        // v3.16: ba hieu ung moi, hanh vi tai hien tu tai lieu cong khai
+        // cua QMK RGB Matrix (GPL — chi hoc co che, tu viet lai, khong
+        // sao chep ma): MULTISPLASH (nhieu xung tron dong thoi), TYPING
+        // HEATMAP (dem luot go + suy giam -> ramp hue lanh-nong),
+        // SOLID_REACTIVE_CROSS (sang doc hang + cot cua phim vua go).
+        public const int MultiSplash = 3;
+        public const int Heatmap = 4;
+        public const int Cross = 5;
 
         // Thoi gian song cua mot su kien theo tung hieu ung (giay).
+        // Heatmap khong song bang su kien (song bang bo dem nhiet) —
+        // gia tri nay chi de don dep danh sach su kien dung chung.
         public static double LifetimeSec(int effectId)
         {
             switch (effectId)
@@ -36,6 +47,8 @@ namespace TienKeyboardStudio3
                 case Ripple: return 1.4;
                 case Trail: return 1.1;
                 case KeyRain: return 1.6;
+                case MultiSplash: return 1.3;
+                case Cross: return 1.1;
                 default: return 1.0;
             }
         }
@@ -51,6 +64,15 @@ namespace TienKeyboardStudio3
         private readonly object _gate = new object();
         public const int MaxEvents = 512;
 
+        // v3.16 — BAN DO NHIET: bo dem luot go theo phim (chi so dem,
+        // khong noi dung) + suy giam mu theo thoi gian. Cung dieu khoan
+        // rieng tu nhu su kien: chi trong RAM, khong log/khong file.
+        private readonly double[] _heat = new double[80];
+        private double _heatClock = double.NaN;
+        public const double HeatTauSec = 5.0;    // hang so suy giam nhiet
+        public const double HeatFullCount = 15;  // so luot go de "nong" toi da
+        public const double HeatCap = 40;        // tran bo dem (chong tran so)
+
         public int PendingCount { get { lock (_gate) return _events.Count; } }
 
         /// <summary>Ghi mot su kien go: CHI vi tri phim + moc thoi gian.</summary>
@@ -61,10 +83,44 @@ namespace TienKeyboardStudio3
             {
                 _events.Add(new KeyEvent { View = viewIndex, T = t });
                 if (_events.Count > MaxEvents) _events.RemoveRange(0, _events.Count - MaxEvents);
+                DecayHeatTo(t);
+                _heat[viewIndex] = Math.Min(HeatCap, _heat[viewIndex] + 1);
             }
         }
 
-        public void Clear() { lock (_gate) _events.Clear(); }
+        public void Clear()
+        {
+            lock (_gate)
+            {
+                _events.Clear();
+                Array.Clear(_heat, 0, _heat.Length);
+                _heatClock = double.NaN;
+            }
+        }
+
+        // Suy giam toan bo bo dem nhiet toi moc thoi gian t (mu theo
+        // HeatTauSec). Goi trong khoa _gate.
+        private void DecayHeatTo(double t)
+        {
+            if (double.IsNaN(_heatClock)) { _heatClock = t; return; }
+            double dt = t - _heatClock;
+            if (dt <= 0) return;
+            double f = Math.Exp(-dt / HeatTauSec);
+            for (int i = 0; i < _heat.Length; i++) _heat[i] *= f;
+            _heatClock = t;
+        }
+
+        /// <summary>Muc nhiet 0..1 cua mot phim tai moc t (cho test +
+        /// chan doan): 0 = nguoi, 1 = nong toi da.</summary>
+        public double HeatLevel(int viewIndex, double t)
+        {
+            if (viewIndex < 0 || viewIndex >= 80) return 0;
+            lock (_gate)
+            {
+                DecayHeatTo(t);
+                return Math.Min(1, _heat[viewIndex] / HeatFullCount);
+            }
+        }
 
         // Hash xac dinh theo id phim (giong RealtimeEffects — dung cho
         // che do Bang mau nhat quan giua cac generator stream).
@@ -90,10 +146,45 @@ namespace TienKeyboardStudio3
             double life = ReactiveEffects.LifetimeSec(effectId);
 
             KeyEvent[] evs;
+            double[] heatSnap = null;
             lock (_gate)
             {
                 _events.RemoveAll(e => tNow - e.T > life);
                 evs = _events.ToArray();
+                if (effectId == ReactiveEffects.Heatmap)
+                {
+                    DecayHeatTo(tNow);
+                    heatSnap = (double[])_heat.Clone();
+                }
+            }
+
+            // v3.16 — BAN DO NHIET: mau khong den tu su kien ma tu bo
+            // dem nhiet cua tung phim: hue chay 240 (xanh lanh) -> 0
+            // (do nong) theo muc nhiet, do sang theo ca muc nhiet.
+            // Ramp hue LA noi dung cua hieu ung nay nen khong qua che
+            // do mau dung chung (giong generator co hue rieng o
+            // RealtimeEffects).
+            if (heatSnap != null)
+            {
+                for (int i = 0; i < slots.Length; i++)
+                {
+                    var s = slots[i];
+                    double hv = s.ViewIndex >= 0 && s.ViewIndex < heatSnap.Length
+                        ? heatSnap[s.ViewIndex] : 0;
+                    (byte R, byte G, byte B) c;
+                    if (hv <= 0.05)
+                    {
+                        c = (0, 0, 0);
+                    }
+                    else
+                    {
+                        double p = Math.Min(1, hv / HeatFullCount);
+                        var hc = ColorMath.HsvToRgb(240.0 * (1 - p), 0.9, 1.0);
+                        c = ColorMath.Scale(hc, b * (0.2 + 0.8 * p));
+                    }
+                    quads[i] = new L99Protocol.StreamQuad(s.Id, c.R, c.G, c.B);
+                }
+                return quads;
             }
             // Tam cua tung su kien (theo ViewIndex -> slot).
             var centers = new (double X, double Y)[evs.Length];
@@ -151,8 +242,37 @@ namespace TienKeyboardStudio3
                                 contrib = col * Math.Max(head, tail) * Math.Max(0, 1 - age / life);
                                 break;
                             }
+                        case ReactiveEffects.MultiSplash:
+                            {
+                                // Da song: xung TRON day dac lan ra tu
+                                // phim vua go — do sang la ham cua khoang
+                                // cach (trong ban kinh dang lon dan theo
+                                // tuoi) va thoi gian ke tu luot go; nhieu
+                                // xung CONG DON (o vong lap ngoai) nen go
+                                // nhanh van thay tung dot song rieng.
+                                double radius = 0.10 + age * 0.55;
+                                double core = dist < radius ? 1 - dist / radius : 0;
+                                contrib = core * Math.Max(0, 1 - age / life);
+                                break;
+                            }
+                        case ReactiveEffects.Cross:
+                            {
+                                // Chu thap: sang doc HANG va COT cua
+                                // phim vua go, mo theo khoang cach do
+                                // doc canh va theo tuoi; phim cheo (khong
+                                // cung hang lan cot) giu toi.
+                                double dArm = double.PositiveInfinity;
+                                if (Math.Abs(dy) <= 0.055) dArm = Math.Min(dArm, Math.Abs(dx));
+                                if (Math.Abs(dx) <= 0.035) dArm = Math.Min(dArm, Math.Abs(dy));
+                                if (!double.IsInfinity(dArm))
+                                    contrib = Math.Exp(-dArm / 0.28) * Math.Max(0, 1 - age / life);
+                                break;
+                            }
                     }
-                    if (contrib > p) p = contrib; // max, khong cong don (tranh chay sang khi go nhanh)
+                    // Da song cong don nhieu xung; cac hieu ung con lai
+                    // lay max (tranh chay sang khi go nhanh).
+                    if (effectId == ReactiveEffects.MultiSplash) p += contrib;
+                    else if (contrib > p) p = contrib;
                 }
                 p = Math.Min(1, p);
                 (byte R, byte G, byte B) c;
