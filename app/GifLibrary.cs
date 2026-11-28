@@ -64,6 +64,19 @@ namespace TienKeyboardStudio3
         // dung mac dinh trong LightingStateData. ---
         public LightingStateData Lighting { get; set; }
         public List<string> RecentColors { get; set; } = new List<string>();
+
+        // --- v3.14: trang thai muc Cap nhat (panel Cai dat). settings.json
+        // cu khong co cac truong nay -> mac dinh rong/-1, nap binh thuong.
+        // (Ban nay khong con truong DryRun/Experimental nao trong settings;
+        // file cu neu con thua hai truong do thi trinh doc JSON bo qua.) ---
+        public string UpdateLastCheckUtc { get; set; } = "";   // ISO 8601 UTC
+        public string UpdateLatestVersion { get; set; } = "";  // phien ban moi nhat da biet tu manifest
+        public string UpdateLatestNotes { get; set; } = "";
+        public string UpdateLightUrl { get; set; } = "";
+        public string UpdateSha256 { get; set; } = "";
+        public string RegistryLastCheckUtc { get; set; } = "";
+        public string GifCatalogLastCheckUtc { get; set; } = "";
+        public int GifCatalogCount { get; set; } = -1;         // -1 = chua tung lam moi
     }
 
     /// <summary>Thu muc luu anh nen nguoi dung tu chon (v3.3).</summary>

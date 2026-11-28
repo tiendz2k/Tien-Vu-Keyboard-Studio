@@ -152,7 +152,7 @@ namespace TienKeyboardStudio3
                 ProtocolStatus = "Driver Pack 4 (họ B — SONiX 64B) — chưa kiểm chứng phần cứng", StatusKind = 1,
                 HasScreen = true, ScreenSize = 128, HasKnob = true,
                 Family = "sonix_sib", Stack = "B",
-                IdNote = "Chung VID:PID 0C45:800A và giao thức với F75 Max — probe 0xF5 KHÔNG phân biệt được S75 Pro với F75 Max; app dựa vào productName + mẫu bạn chọn, ghi/stream vẫn khóa sau công tắc thử nghiệm + tắt dry-run.",
+                IdNote = "Chung VID:PID 0C45:800A và giao thức với F75 Max — probe 0xF5 KHÔNG phân biệt được S75 Pro với F75 Max; app dựa vào productName + mẫu bạn chọn; ghi/stream áp dụng trực tiếp sau probe.",
                 Ids = { (0x0C45, 0x800A, "USB có dây") },
             },
             new KeyboardModel
@@ -161,7 +161,7 @@ namespace TienKeyboardStudio3
                 ProtocolStatus = "Driver Pack 4 (họ B) — stream chỉ ở mức log (trình ghi frame native chưa rõ)", StatusKind = 1,
                 HasScreen = true, ScreenSize = 128, HasKnob = true,
                 Family = "sonix_sib", Stack = "B",
-                IdNote = "Nhận diện bằng productName đúng \"AULA-NOVA75\". Trình ghi frame tăng tốc native của app gốc (hid_write_nova_frame) chưa rõ cách chia gói nên stream của Nova75 chỉ ghi log, không ghi thật.",
+                IdNote = "Nhận diện bằng productName đúng \"AULA-NOVA75\". Trình ghi frame tăng tốc native của app gốc (hid_write_nova_frame) chưa rõ cách chia gói nên app không hỗ trợ stream cho Nova75 (mục stream được ẩn với mẫu này).",
                 Ids = { (0x0C45, 0x800A, "USB có dây") },
             },
             new KeyboardModel
@@ -176,10 +176,10 @@ namespace TienKeyboardStudio3
             new KeyboardModel
             {
                 Name = "AULA WIN60 SE", Layout = "60% · 61 phím",
-                ProtocolStatus = "Driver Pack 4 (họ F2) — chỉ builder + log; nhà sản xuất tự đánh dấu thử nghiệm", StatusKind = 1,
+                ProtocolStatus = "Chưa hỗ trợ ghi — trình ghi của hãng dùng byte phiên ngẫu nhiên, chưa tái dựng được", StatusKind = 1,
                 HasScreen = false, HasKnob = false,
                 Family = "sonix_sib", Stack = "F2",
-                IdNote = "Giao thức dùng byte phiên ngẫu nhiên chọn khi kết nối; giao diện của chính nhà sản xuất ghi mẫu này là thử nghiệm/chưa kiểm chứng — app này chỉ dựng gói và ghi log, không ghi thật.",
+                IdNote = "Giao thức dùng byte phiên ngẫu nhiên chọn khi kết nối và chưa tái dựng được dứt khoát — app chưa hỗ trợ ghi cho mẫu này.",
                 Ids = { (0x38A6, 0x291A, "USB có dây") },
             },
             new KeyboardModel

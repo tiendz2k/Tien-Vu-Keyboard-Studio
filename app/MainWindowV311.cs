@@ -148,6 +148,7 @@ namespace TienKeyboardStudio3
             { "general", "Cài đặt chung" },
             { "theme", "Giao diện chủ đề" },
             { "gamesense", "GameSense" },
+            { "update", "Cập nhật" },
             { "feedback", "Phản hồi" },
             { "about", "Giới thiệu" },
         };
@@ -157,6 +158,7 @@ namespace TienKeyboardStudio3
             _settingsSections["general"] = BuildGeneralSection();
             _settingsSections["theme"] = BuildThemeSectionReal();
             _settingsSections["gamesense"] = BuildGameSensePage();
+            _settingsSections["update"] = BuildUpdateSection();
             _settingsSections["feedback"] = BuildFeedbackSection();
             _settingsSections["about"] = BuildAboutSectionReal();
             foreach (var s in _settingsSections.Values) { s.IsVisible = false; SettingsHost.Children.Add(s); }
@@ -166,17 +168,22 @@ namespace TienKeyboardStudio3
                 ("general", "Cài đặt chung"),
                 ("theme", "Giao diện chủ đề"),
                 ("gamesense", "GameSense"),
+                ("update", "Cập nhật"),
                 ("feedback", "Phản hồi"),
                 ("about", "Giới thiệu"),
             };
             foreach (var (key, label) in items)
             {
-                var b = new Button { Content = Tb(label, null, 13.5) };
+                var lbl = Tb(label, null, 13.5);
+                var b = new Button { Content = lbl };
                 b.Classes.Add("nav");
                 string k = key;
                 b.Click += (s, e) => ShowSettingsSection(k);
                 _settingsNav.Add((key, b));
                 SettingsNavPanel.Children.Add(b);
+                // v3.14: nhan cua muc Cap nhat — them hau to "• Co ban moi"
+                // khi kiem tra am tham luc mo app thay ban moi hon.
+                if (key == "update") _updateNavLabel = lbl;
             }
             SettingsBackBtn.Click += (s, e) => CloseSettings();
             SettingsDim.PointerPressed += (s, e) => CloseSettings();
@@ -255,11 +262,6 @@ namespace TienKeyboardStudio3
             // --- Cai dat app ---
             var appCard = Card(V(6,
                 Tb("Cài đặt app", "h2"),
-                SettingRow("Dry-run (chế độ an toàn)", "Bật: mọi thao tác ghi chỉ ghi log, không ghi xuống phím", true, v =>
-                {
-                    if (_syncingDry) return;
-                    SetDryRun(v, fromUi: true);
-                }).Also(c => _drySwitch = FindPill(c)),
                 SettingRow("Hiện nhật ký thao tác", "Hiện panel nhật ký ở Trang chủ và trang Per-key — chỉ cần khi kiểm tra/gỡ lỗi. Mặc định tắt cho gọn giao diện; nhật ký vẫn được ghi ngầm bên trong, bật lên là thấy lịch sử gần đây.", _ui.ShowOperationLog, v =>
                 {
                     _ui.ShowOperationLog = v;
@@ -268,15 +270,7 @@ namespace TienKeyboardStudio3
                 }),
                 SettingRow("Khởi động cùng Windows", "Tự mở app khi đăng nhập Windows (ghi vào HKCU Run)", GetAutostart(), v => SetAutostart(v)),
                 SettingRow("Thu nhỏ xuống khay hệ thống", "Đóng cửa sổ thì app vẫn chạy nền ở khay", true, v => _trayEnabled = v),
-                Tb("App không tự kiểm tra cập nhật; chỉ gọi mạng khi bạn chủ động bấm (tải GIF, thời tiết, danh sách mẫu).", "faint")));
-
-            // --- Bang thiet bi cong dong ---
-            _regStatus = Tb(RegistryStatusText(), "sub");
-            var regCard = Card(V(8,
-                Tb("Bảng thiết bị cộng đồng", "h2"),
-                Tb("Danh sách mẫu có thể cập nhật không cần bản app mới — bấm nút dưới để tải bản mới nhất từ repo của dự án.", "sub"),
-                _regStatus,
-                GhostBtn("Kiểm tra cập nhật bảng thiết bị", async () => await CheckRegistryUpdateAsync())));
+                Tb("Cập nhật bản app, bảng thiết bị và thư viện GIF nằm ở mục Cập nhật trong panel này. App tự kiểm tra bản mới một lần khi mở — chỉ hiện dấu nhỏ ở mục Cập nhật, không tự tải.", "faint")));
 
             // --- Stage 2: ho so theo app ---
             _profileCurrent = Tb("App đang mở: —", "sub");
@@ -346,7 +340,7 @@ namespace TienKeyboardStudio3
                 _typingStatus,
                 _heatKb));
 
-            var root = V(14, clockCard, devSetCard, appCard, regCard, profileCard, macroCard, typingCard);
+            var root = V(14, clockCard, devSetCard, appCard, profileCard, macroCard, typingCard);
             return Scroll(root);
         }
 
@@ -407,7 +401,7 @@ namespace TienKeyboardStudio3
                 CornerRadius = new CornerRadius(14), ClipToBounds = true,
                 Width = 64, Height = 64, Child = logoImg,
             };
-            var aboutPara = Tb("Phiên bản 3.13.0 — bản rực màu: hiệu ứng firmware có chế độ màu Đơn sắc / Đa sắc rõ ràng (hiệu ứng động mặc định Đa sắc — firmware tự rải cầu vồng, xem trước trong app cũng rải màu theo từng phím); hiệu ứng thời gian thực stream 0x20 thêm chế độ màu Đơn sắc / Cầu vồng / Bảng màu (mặc định Cầu vồng). Kế thừa v3.12: bộ chọn màu tự do, scheme đèn có tên, mở khoá tham số nhạc 0x78, trạng thái đèn được nhớ. F75 Max hỗ trợ đầy đủ; các họ còn lại định danh bằng probe đọc trước khi ghi, chưa kiểm chứng trên phần cứng thật. Dry-run bật mặc định.", "sub");
+            var aboutPara = Tb("Phiên bản 3.14.0 — bản hoàn thiện: bỏ hẳn Dry-run và các công tắc thử nghiệm, mọi thao tác áp dụng trực tiếp xuống phím (các họ khác vẫn định danh bằng probe đọc trước khi ghi). Thêm mục Cập nhật trong Cài đặt: kiểm tra bản app mới, cập nhật bảng thiết bị và làm mới thư viện GIF online. Kế thừa v3.13: chế độ màu Đơn sắc / Đa sắc cho hiệu ứng firmware và stream, bộ chọn màu tự do, scheme đèn có tên, tham số nhạc 0x78, trạng thái đèn được nhớ. F75 Max hỗ trợ đầy đủ; các họ còn lại chưa kiểm chứng trên phần cứng thật.", "sub");
             aboutPara.MaxWidth = 640; // cot ngang H() cho chieu rong vo han — gioi han de chu xuong dong trong the
             var aboutTexts = V(4,
                 Tb("Tien Vu Keyboard Studio", "h2"),

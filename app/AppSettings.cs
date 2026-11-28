@@ -48,9 +48,9 @@ namespace TienKeyboardStudio3
         public bool BombEnabled { get; set; } = false;
         public int BombAction { get; set; } = 0; // 0 nhay den phim, 1 khong lam gi
 
-        // Phan ung den phim qua lop thu nghiem (ExperimentalDevice) — chi la
-        // cong tac chon tuy chon; viec gui that van bi khoa boi cong tac Thu
-        // nghiem + Dry-run toan cuc nhu moi lenh 0x20 khac.
+        // Phan ung den phim qua stream 0x20 (ExperimentalDevice) — chi la
+        // cong tac chon tuy chon; viec gui dien ra truc tiep nhu moi lenh
+        // 0x20 khac (v3.14: khong con cong tac thu nghiem / Dry-run).
         public bool LightingEnabled { get; set; } = false;
     }
 

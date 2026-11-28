@@ -7,15 +7,14 @@ using HidSharp;
 namespace TienKeyboardStudio3
 {
     // =====================================================================
-    // Transport rieng cho LOP THU NGHIEM (0xF5 / 0x23 / 0x20 / 0x78).
-    // Tach khoi F75Device (duong verified, giu nguyen 100%) — lop nay mo
-    // stream HID rieng toi kenh lenh 0xFF13 cua F75 Max khi can.
+    // Transport rieng cho cac lenh per-key / stream (0xF5 / 0x23 / 0x20 /
+    // 0x78) cua F75 Max. Tach khoi F75Device (duong verified, giu nguyen
+    // 100%) — lop nay mo stream HID rieng toi kenh lenh 0xFF13 cua F75 Max
+    // khi can.
     //
-    // QUY TAC AN TOAN (hard-coded, khong co ngoai le):
-    // - Doc 0xF5 (ReadColors): CHI DOC — duoc phep chay live bat cu luc nao
-    //   nguoi dung bam nut, ke ca khi Dry-run toan cuc dang bat.
-    // - Ghi (SendSteps): CHI gui that khi ExperimentalEnabled == true VA
-    //   DryRun == false. Thieu mot trong hai -> chi ghi log cac goi se gui.
+    // v3.14 (ban hoan thien): khong con Dry-run, khong con cong tac thu
+    // nghiem — moi lenh gui deu GUI THAT ngay khi nguoi dung bam nut.
+    // Doc 0xF5 (ReadColors) van la thao tac CHI DOC nhu truoc.
     //
     // KY LUAT TRUYEN (v3.9.2 — port theo co che dang chay that cua ung
     // dung tham chieu tren cung nen tang SONiX, qua SonixCommander):
@@ -34,19 +33,6 @@ namespace TienKeyboardStudio3
     // =====================================================================
     public sealed class ExperimentalDevice : IDisposable
     {
-        private bool _dryRun = true;
-        private bool _experimentalEnabled;
-
-        public bool DryRun
-        {
-            get => _dryRun;
-            set { if (_dryRun != value) { _dryRun = value; _handshakeDone = false; } }
-        }
-        public bool ExperimentalEnabled
-        {
-            get => _experimentalEnabled;
-            set { if (_experimentalEnabled != value) { _experimentalEnabled = value; _handshakeDone = false; } }
-        }
         public Action<string> Log { get; set; } = _ => { };
 
         private readonly object _gate = new object();
@@ -55,8 +41,6 @@ namespace TienKeyboardStudio3
         private SonixCommander _commander;
         private bool _handshakeDone;
         private bool _disposed;
-
-        public bool WritesArmed => ExperimentalEnabled && !DryRun;
 
         // Kenh feature-report tren HidStream: goi gui/di la 65 byte
         // ([0]=report id 0 + 64 byte lenh) giong moi duong khac cua app.
@@ -149,7 +133,7 @@ namespace TienKeyboardStudio3
                 .ToList();
             if (candidates.Count == 0)
             {
-                Log("[THU NGHIEM] Khong tim thay kenh lenh F75 Max (0xFF13). Kiem tra cap USB-C.");
+                Log("[PER-KEY] Khong tim thay kenh lenh F75 Max (0xFF13). Kiem tra cap USB-C.");
                 return false;
             }
             var ranked = candidates
@@ -164,27 +148,27 @@ namespace TienKeyboardStudio3
                 _channel = new HidFeatureChannel(_cmdStream);
                 _commander = new SonixCommander(_channel, Thread.Sleep, Log);
                 _handshakeDone = false;
-                Log($"[THU NGHIEM] Da mo kenh lenh rieng cho lop thu nghiem — {cand.Note}. Path: {cand.Info.Path}");
+                Log($"[PER-KEY] Da mo kenh lenh rieng cho lop thu nghiem — {cand.Note}. Path: {cand.Info.Path}");
                 if (cand.Rank == 2)
-                    Log("[THU NGHIEM] CANH BAO: giao dien mo duoc khong phai 0xFF13 theo descriptor — neu stream khong phan hoi, hay xem lai log chon kenh.");
+                    Log("[PER-KEY] CANH BAO: giao dien mo duoc khong phai 0xFF13 theo descriptor — neu stream khong phan hoi, hay xem lai log chon kenh.");
                 return true;
             }
-            Log("[THU NGHIEM] Khong mo duoc kenh lenh (thiet bi dang ban?).");
+            Log("[PER-KEY] Khong mo duoc kenh lenh (thiet bi dang ban?).");
             return false;
         }
 
-        // ---------------- Bat tay phien stream (armed) ----------------
+        // ---------------- Bat tay phien stream ----------------
         // Dung trinh tu connect cua ung dung tham chieu: 0xF5 bat buoc
         // ready -> doc 9 khoi trang thai ROI BO DI (ho khong luu backup;
         // stop() cua ho cung khong gui gi) -> 0x02 bat buoc ready.
         private bool RunHandshake()
         {
-            Log("[THU NGHIEM] Bat tay phien stream: 0xF5 -> doc bo 9 khoi -> 0x02 ...");
+            Log("[PER-KEY] Bat tay phien stream: 0xF5 -> doc bo 9 khoi -> 0x02 ...");
             var probe = L99Protocol.BuildCommand(L99Protocol.OpColorQuery, L99Protocol.ColorBlockCount);
             var oc = _commander.SendCommand(probe);
             if (oc != SonixAckOutcome.Ready)
             {
-                Log($"[THU NGHIEM] Bat tay that bai: lenh 0xF5 khong ve ready (ket qua: {oc}). Phien stream chua mo; frame nay bi bo, frame sau se thu bat tay lai.");
+                Log($"[PER-KEY] Bat tay that bai: lenh 0xF5 khong ve ready (ket qua: {oc}). Phien stream chua mo; frame nay bi bo, frame sau se thu bat tay lai.");
                 return false;
             }
             int got = 0;
@@ -193,23 +177,16 @@ namespace TienKeyboardStudio3
                 Thread.Sleep(1); // tham chieu: wait(1) truoc moi lan doc khoi
                 if (_channel.TryReceive() != null) got++;
             }
-            Log($"[THU NGHIEM] Da doc bo {got}/{L99Protocol.ColorBlockCount} khoi trang thai sau 0xF5.");
+            Log($"[PER-KEY] Da doc bo {got}/{L99Protocol.ColorBlockCount} khoi trang thai sau 0xF5.");
             var end = _commander.SendCommand(L99Protocol.BuildCommand(L99Protocol.OpCommit));
             if (end != SonixAckOutcome.Ready)
             {
-                Log($"[THU NGHIEM] Bat tay that bai: lenh 0x02 khong ve ready (ket qua: {end}).");
+                Log($"[PER-KEY] Bat tay that bai: lenh 0x02 khong ve ready (ket qua: {end}).");
                 return false;
             }
             _handshakeDone = true;
-            Log("[THU NGHIEM] Bat tay xong — phien stream san sang.");
+            Log("[PER-KEY] Bat tay xong — phien stream san sang.");
             return true;
-        }
-
-        private void LogHandshakeWouldSend()
-        {
-            Log($"    -> Bat tay phien: {F75Device.Hex(L99Protocol.BuildCommand(L99Protocol.OpColorQuery, L99Protocol.ColorBlockCount), 12)} (04 F5, [8]=9)");
-            Log("    -> Doc bo 9 khoi trang thai (buoc doc, khong co goi gui)");
-            Log($"    -> Ket thuc bat tay: {F75Device.Hex(L99Protocol.BuildCommand(L99Protocol.OpCommit), 12)} (04 02)");
         }
 
         // Log loi stream co tiet che: stream chay ~17fps, loi lap lai tung
@@ -231,32 +208,21 @@ namespace TienKeyboardStudio3
         private static bool IsStreamSequence(IList<F75Protocol.Step> steps)
             => steps.Any(s => s.Bytes != null && s.Bytes.Length > 1 && s.Bytes[1] == L99Protocol.OpColorStream);
 
-        // Gui mot chuoi Step. Tra ve true neu da gui that (live), false neu
-        // chi log (dry-run / chua bat thu nghiem) hoac frame bi bo vi bat
-        // tay chua xong. Voi stream: loi ACK khong nem exception (bo frame,
-        // stream song tiep). Voi cac duong ghi khac: het ngan sach ACK van
-        // nem exception nhu cu.
+        // Gui mot chuoi Step — GUI THAT truc tiep (v3.14: khong con che
+        // do chi-log). Tra ve true neu da gui xong; false neu frame stream
+        // bi bo vi bat tay chua xong. Voi stream: loi ACK khong nem
+        // exception (bo frame, stream song tiep). Voi cac duong ghi khac:
+        // het ngan sach ACK van nem exception nhu cu.
         public bool SendSteps(string title, IList<F75Protocol.Step> steps)
         {
             lock (_gate)
             {
                 bool isStream = IsStreamSequence(steps);
-                if (!WritesArmed)
-                {
-                    string why = !ExperimentalEnabled
-                        ? "cong tac Thu nghiem dang TAT"
-                        : "Dry-run toan cuc dang BAT";
-                    Log($"[THU NGHIEM - CHI LOG] {title}: se gui {steps.Count} goi (khong gui that — {why}).");
-                    if (isStream) LogHandshakeWouldSend();
-                    foreach (var s in steps)
-                        Log($"    -> {s.Name}: {F75Device.Hex(s.Bytes, 24)}");
-                    return false;
-                }
                 if (!EnsureStream())
                     throw new InvalidOperationException("Khong mo duoc kenh lenh F75 Max.");
                 if (isStream && !_handshakeDone && !RunHandshake())
                     return false;
-                Log($"[THU NGHIEM - GUI THAT] {title}: {steps.Count} goi.");
+                Log($"[PER-KEY] {title}: {steps.Count} goi.");
                 foreach (var s in steps)
                 {
                     if (!s.ExpectAck)
@@ -270,18 +236,18 @@ namespace TienKeyboardStudio3
                     if (outcome == SonixAckOutcome.DroppedBusy && opcode == L99Protocol.OpColorStream)
                     {
                         // Header stream ban dai: bo frame nay, stream tiep tuc.
-                        LogStreamIssue($"[THU NGHIEM] Header 0x20 van ban sau {SonixCommander.StreamHeaderBusyRetries} lan gui lai — bo frame nay, stream tiep tuc.");
+                        LogStreamIssue($"[PER-KEY] Header 0x20 van ban sau {SonixCommander.StreamHeaderBusyRetries} lan gui lai — bo frame nay, stream tiep tuc.");
                         return true;
                     }
                     if (outcome == SonixAckOutcome.DroppedBusy && opcode == L99Protocol.OpCommit)
                     {
                         // 0x02 ban dai: da gui lai 2 lan theo ky luat; ghi log va di tiep.
-                        Log($"[THU NGHIEM] Lenh 0x02 van ban sau {SonixCommander.EndBusyRetries} lan gui lai — bo qua buoc '{s.Name}', tiep tuc.");
+                        Log($"[PER-KEY] Lenh 0x02 van ban sau {SonixCommander.EndBusyRetries} lan gui lai — bo qua buoc '{s.Name}', tiep tuc.");
                         continue;
                     }
                     if (isStream)
                     {
-                        LogStreamIssue($"[THU NGHIEM] Buoc '{s.Name}' (opcode 0x{opcode:X2}) khong nhan duoc ACK hop le trong ngan sach thoi gian — bo frame nay, stream tiep tuc.");
+                        LogStreamIssue($"[PER-KEY] Buoc '{s.Name}' (opcode 0x{opcode:X2}) khong nhan duoc ACK hop le trong ngan sach thoi gian — bo frame nay, stream tiep tuc.");
                         return true;
                     }
                     throw new InvalidOperationException(

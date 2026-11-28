@@ -29,8 +29,24 @@ namespace TienKeyboardStudio3
         private static OnlineCacheStore _store;
         public static OnlineCacheStore Store => _store ??= new OnlineCacheStore(CacheDir);
 
+        /// <summary>
+        /// File cache catalog da lam moi tu repo (muc Cap nhat, v3.14) —
+        /// nam trong %AppData% cua app; co cache hop le thi uu tien cache
+        /// (chua GIF moi), khong thi dung catalog nhung san trong app.
+        /// </summary>
+        public static string CatalogCachePath => Path.Combine(GifLibraryStore.RootDir, "online-library-drive.json");
+
         public static List<OnlineGifItem> LoadCatalog()
         {
+            try
+            {
+                if (File.Exists(CatalogCachePath))
+                {
+                    var cached = OnlineCatalogCore.ParseCatalog(File.ReadAllText(CatalogCachePath));
+                    if (cached.Count > 0) return cached;
+                }
+            }
+            catch { }
             try
             {
                 var asm = Assembly.GetExecutingAssembly();
@@ -42,6 +58,13 @@ namespace TienKeyboardStudio3
                 }
             }
             catch { return new List<OnlineGifItem>(); }
+        }
+
+        /// <summary>Luu JSON catalog vua tai ve lam cache (muc Cap nhat goi sau khi da kiem hop le).</summary>
+        public static void SaveCatalogCache(string json)
+        {
+            Directory.CreateDirectory(GifLibraryStore.RootDir);
+            File.WriteAllText(CatalogCachePath, json);
         }
 
         /// <summary>Duong dan file GIF trong cache; null neu chua tai.</summary>

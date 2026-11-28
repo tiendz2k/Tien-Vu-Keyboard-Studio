@@ -15,12 +15,10 @@ namespace TienKeyboardStudio3
     // HttpListener de tranh quyen urlacl cua Windows). Chi nghe trong LAN,
     // mac dinh TAT, bat/tat tu trang Dien thoai. Bao ve bang PIN 4 so (ma QR
     // chua san PIN trong URL). Moi thao tac deu goi lai dung lop thiet bi
-    // cua app nen ton trong Dry-run toan cuc nhu thao tac tren PC.
+    // cua app nen ap dung truc tiep xuong phim nhu thao tac tren PC.
     // =====================================================================
     public sealed class RemoteState
     {
-        public bool DryRun;
-        public bool Experimental;
         public string Model = "";
         public List<(int Id, string Name)> Effects = new List<(int, string)>();
         public List<string> Gifs = new List<string>();
@@ -201,8 +199,6 @@ namespace TienKeyboardStudio3
                 using (var w = new Utf8JsonWriter(ms))
                 {
                     w.WriteStartObject();
-                    w.WriteBoolean("dryRun", s.DryRun);
-                    w.WriteBoolean("experimental", s.Experimental);
                     w.WriteString("model", s.Model);
                     w.WriteStartArray("effects");
                     foreach (var (id, name) in s.Effects) { w.WriteStartObject(); w.WriteNumber("id", id); w.WriteString("name", name); w.WriteEndObject(); }
@@ -304,7 +300,7 @@ async function api(p,b){var o=b?{method:'POST',headers:{'Content-Type':'applicat
 var r=await fetch(p,o);return r.json();}
 function hex(c){var n=parseInt(c.slice(1),16);return{r:n>>16&255,g:n>>8&255,b:n&255};}
 async function load(){var s=await api('/api/state');document.getElementById('model').textContent=s.model||'';
-document.getElementById('st').textContent=(s.dryRun?'Đang ở chế độ Dry-run: thao tác chỉ ghi log, không ghi xuống phím thật.':'Đang ở chế độ GHI THẬT xuống bàn phím.')+(s.experimental?'\nLớp thử nghiệm per-key: BẬT':'');
+document.getElementById('st').textContent='Thao tác áp dụng trực tiếp xuống bàn phím.';
 var fx=document.getElementById('fx');fx.innerHTML='';s.effects.forEach(function(e){var b=document.createElement('button');b.textContent=e.name;
 b.onclick=async function(){var c=hex(document.getElementById('col').value);await api('/api/effect',{id:e.id,r:c.r,g:c.g,b:c.b,brightness:3,speed:2,direction:0});toast('Đã áp dụng: '+e.name);};fx.appendChild(b);});
 var g=document.getElementById('gifs');g.innerHTML='';s.gifs.forEach(function(n){var b=document.createElement('button');b.textContent=n;

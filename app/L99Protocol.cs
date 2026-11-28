@@ -13,11 +13,9 @@ namespace TienKeyboardStudio3
     // CAC BUILDER O DAY DUOC PORT NGUYEN VAN LOGIC CUA protocol.py va co
     // unit test doi chieu byte-for-byte voi chinh protocol.py (xem tests/).
     //
-    // !!! CHUA DUOC KIEM CHUNG TREN F75 MAX THAT !!!
-    // - Doc 0xF5: chi doc (read-only) — duoc phep chay live.
-    // - Ghi 0x23 / stream 0x20 / feed nhac 0x78: app CHI gui that khi nguoi
-    //   dung bat cong tac "Thu nghiem" rieng (mac dinh TAT). Khi TAT, app
-    //   chi ghi log dung cac goi se gui (dry-run).
+    // - Doc 0xF5: chi doc (read-only) — chay live.
+    // - Ghi 0x23 / stream 0x20 / feed nhac 0x78: gui truc tiep khi nguoi
+    //   dung bam nut (v3.14: khong con cong tac thu nghiem / Dry-run).
     // File F75Protocol.cs / F75Device.cs (duong verified) KHONG bi dong vao.
     // =====================================================================
     public static class L99Protocol
