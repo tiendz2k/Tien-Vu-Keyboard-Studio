@@ -335,7 +335,10 @@ namespace TienKeyboardStudio3
                 if (_updProgress == null) return;
                 if (p >= 0) { _updProgress.IsIndeterminate = false; _updProgress.Value = p; }
             });
-            var (ok, error) = await UpdateCore.DownloadAndVerifyAsync(url, dest, sha, progress);
+            // v3.17.1: goi cap nhat PHAI la zip that — bat chu ky PK de trang
+            // HTML lac duong bi loai ngay (kem co che qua trang trung gian
+            // Drive trong UpdateCore.HttpDownloadAsync).
+            var (ok, error) = await UpdateCore.DownloadAndVerifyAsync(url, dest, sha, progress, null, default, requireZipMagic: true);
             if (_updProgress != null) { _updProgress.IsVisible = false; _updProgress.IsIndeterminate = false; }
             if (ok)
             {

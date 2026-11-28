@@ -1,6 +1,6 @@
 {
-  "lightUrl": "https://drive.google.com/uc?export=download&id=1pVJ5jgvSOVgTJF12uvoyc97n6F2N5nWW",
-  "notes": "Cập nhật một nút bấm (từ bản sau chỉ cần bấm Cập nhật ngay trong app), sửa hiệu ứng gõ phím phản ứng không lên đèn + thêm dòng Phím vừa nhận, tách nhóm GIF màn TFT / đèn phím, sửa lỗi gửi màu 0x23 báo không ACK bước Commit, widget Đang phát trên TFT hiện đầy đủ hơn.",
-  "sha256": "f41223daa3470b9087151194912e3be682dc91a73adf8b0fd62518b4a32df2be",
-  "version": "3.17.0"
+  "version": "3.17.1",
+  "notes": "Bản vá nóng: sửa lỗi tải bản cập nhật trong app — gói zip lớn trên Google Drive bị tải nhầm thành trang HTML trung gian nên báo sai mã băm. Cài bản này một lần cuối bằng tay; từ bản sau bấm Cập nhật trong app là xong.",
+  "lightUrl": "https://drive.google.com/uc?export=download&id=1KpCE6a-TrTTn1SsdrLl2zSFvMVkFM3uL",
+  "sha256": "4517318c0f97220a8fec2d5b35c79a3880aa6ef5ff29e9436dd01d19b9b51a39"
 }
