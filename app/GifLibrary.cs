@@ -77,6 +77,14 @@ namespace TienKeyboardStudio3
         public string RegistryLastCheckUtc { get; set; } = "";
         public string GifCatalogLastCheckUtc { get; set; } = "";
         public int GifCatalogCount { get; set; } = -1;         // -1 = chua tung lam moi
+
+        // --- v3.17 (scope B): the nhom GIF do nguoi dung gan de bang
+        // nut "Chuyen nhom" (GifGroups): khoa = duong dan file day du,
+        // gia tri "tft" | "led". Item khong co the -> phan loai tu dong
+        // theo kich thuoc (lan chay dau tien sau nang cap, moi item cu
+        // deu duoc phan loai bang kich thuoc — khong mat du lieu).
+        // settings cu khong co truong nay -> null, Load() khoi tao lai.
+        public Dictionary<string, string> GifGroupOverrides { get; set; } = new Dictionary<string, string>();
     }
 
     /// <summary>Thu muc luu anh nen nguoi dung tu chon (v3.3).</summary>
@@ -117,6 +125,7 @@ namespace TienKeyboardStudio3
                     if (s != null)
                     {
                         if (s.Folders == null) s.Folders = new List<string>();
+                        if (s.GifGroupOverrides == null) s.GifGroupOverrides = new Dictionary<string, string>();
                         if (s.RecentColors == null) s.RecentColors = new List<string>();
                         if (s.Plugins == null) s.Plugins = new Dictionary<string, PluginState>();
                         if (s.GameSense == null) s.GameSense = new GameSenseSettings();

@@ -30,16 +30,43 @@ namespace TienKeyboardStudio3
     //   gui lai sau 35 ms, <=2 lan; pacer 2 ms truoc moi khoi du lieu.
     // - Ngoai stream: het ngan sach ACK van nem exception nhu cu (ghi
     //   0x23 phai that bai la dung ngay — an toan hon la ghi tiep).
+    //
+    // v3.17 (scope E — Tien bao loi that tren F75 Max: ghi 0x23 chet o
+    // buoc 'Commit' (04 02) voi ket qua Failed; xac nhan khong co app
+    // nao khac giu phim — loi nam trong chinh duong ghi cua minh):
+    // - Phien GHI BEN (0x23) cung chay bat tay 0xF5 -> 9 khoi -> 0x02
+    //   truoc khi gui (truoc day chi stream moi co) — dung ky luat
+    //   connect cua ung dung tham chieu; bat tay khong ready thi huy
+    //   lan ghi truoc khi gui bat ky khoi mau nao.
+    // - Commit 0x02 duoc gui lai ca khi het thang poll chi thay reply
+    //   toan 0 (firmware ghi flash khong phat byte ban) — sua o
+    //   SonixCommander (ExperimentalTransport.cs).
+    // - Them nhip nghi 10 ms truoc buoc Commit khi no di ngay sau cac
+    //   khoi du lieu (Graham: cac goi khong duoc gui sat nhau).
+    // - Buoc ket thuc 04 F0 khong ACK nua thi KHONG lam hong ca lan ghi
+    //   (commit da xong): ghi canh bao, danh dau mo lai kenh + bat tay
+    //   lai o lan gui ke tiep — F0 co the lam phim khoi dong lai / rot
+    //   HID (tai lieu PROTOCOL-F75MAX §3.6); duong verified cua hang
+    //   cung dat expectAck: false cho F0.
+    // - Nhat ky ghi ket qua ACK cua TUNG buoc (cac phien khong phai
+    //   stream) va thong bao loi kem hex reply cuoi thay duoc — phuc vu
+    //   chan doan tu xa qua nhat ky nguoi dung gui lai.
     // =====================================================================
     public sealed class ExperimentalDevice : IDisposable
     {
         public Action<string> Log { get; set; } = _ => { };
+
+        // v3.17: nhip nghi truoc buoc Commit khi no di ngay sau khoi du
+        // lieu (ms) — Graham ghi ro cac goi khong duoc gui sat nhau,
+        // mac dinh cua anh la 10 ms.
+        private const int CommitSettleMs = 10;
 
         private readonly object _gate = new object();
         private HidStream _cmdStream;
         private HidFeatureChannel _channel;
         private SonixCommander _commander;
         private bool _handshakeDone;
+        private bool _reopenBeforeNextCall;
         private bool _disposed;
 
         // Kenh feature-report tren HidStream: goi gui/di la 65 byte
@@ -208,6 +235,32 @@ namespace TienKeyboardStudio3
         private static bool IsStreamSequence(IList<F75Protocol.Step> steps)
             => steps.Any(s => s.Bytes != null && s.Bytes.Length > 1 && s.Bytes[1] == L99Protocol.OpColorStream);
 
+        private static bool IsWriteSequence(IList<F75Protocol.Step> steps)
+            => steps.Any(s => s.Bytes != null && s.Bytes.Length > 1 && s.Bytes[1] == L99Protocol.OpColorSet);
+
+        // Dong kenh hien tai (neu co) va quen trang thai bat tay — dung
+        // khi buoc 04 F0 lan truoc co the da lam thiet bi khoi dong lai
+        // / rot HID, va trong Dispose.
+        private void CloseChannel()
+        {
+            try { _cmdStream?.Dispose(); } catch { }
+            _cmdStream = null;
+            _channel = null;
+            _commander = null;
+            _handshakeDone = false;
+        }
+
+        private void ReopenIfMarked()
+        {
+            if (!_reopenBeforeNextCall) return;
+            _reopenBeforeNextCall = false;
+            CloseChannel();
+            Log("[PER-KEY] Mo lai kenh lenh: buoc 04 F0 lan truoc khong ACK (thiet bi co the da khoi dong lai).");
+        }
+
+        private string LastReplyHex()
+            => _commander?.LastReply != null ? F75Device.Hex(_commander.LastReply, 8) : "(chua doc duoc reply nao)";
+
         // Gui mot chuoi Step — GUI THAT truc tiep (v3.14: khong con che
         // do chi-log). Tra ve true neu da gui xong; false neu frame stream
         // bi bo vi bat tay chua xong. Voi stream: loi ACK khong nem
@@ -218,20 +271,34 @@ namespace TienKeyboardStudio3
             lock (_gate)
             {
                 bool isStream = IsStreamSequence(steps);
+                bool isWrite = IsWriteSequence(steps);
+                ReopenIfMarked();
                 if (!EnsureStream())
                     throw new InvalidOperationException("Khong mo duoc kenh lenh F75 Max.");
                 if (isStream && !_handshakeDone && !RunHandshake())
                     return false;
+                if (isWrite && !_handshakeDone && !RunHandshake())
+                    throw new InvalidOperationException(
+                        "Bắt tay phiên (0xF5 → đọc bỏ 9 khối → 0x02) không đạt ready — huỷ lần ghi per-key này trước khi gửi bất kỳ khối màu nào. Chi tiết trong nhật ký thao tác.");
                 Log($"[PER-KEY] {title}: {steps.Count} goi.");
+                F75Protocol.Step prev = null;
                 foreach (var s in steps)
                 {
                     if (!s.ExpectAck)
                     {
                         _commander.SendBlock(s.Bytes); // pacer 2 ms truoc khoi
+                        prev = s;
                         continue;
                     }
-                    var outcome = _commander.SendCommand(s.Bytes);
                     byte opcode = s.Bytes[1];
+                    // Commit di ngay sau cac khoi du lieu: them nhip nghi
+                    // ngan de firmware kip nuot khoi cuoi (Graham).
+                    if (opcode == L99Protocol.OpCommit && prev != null && !prev.ExpectAck)
+                        Thread.Sleep(CommitSettleMs);
+                    var outcome = _commander.SendCommand(s.Bytes);
+                    if (!isStream)
+                        Log($"[PER-KEY]   <- {s.Name} (opcode 0x{opcode:X2}): ACK {outcome}");
+                    prev = s;
                     if (outcome == SonixAckOutcome.Ready) continue;
                     if (outcome == SonixAckOutcome.DroppedBusy && opcode == L99Protocol.OpColorStream)
                     {
@@ -245,13 +312,23 @@ namespace TienKeyboardStudio3
                         Log($"[PER-KEY] Lenh 0x02 van ban sau {SonixCommander.EndBusyRetries} lan gui lai — bo qua buoc '{s.Name}', tiep tuc.");
                         continue;
                     }
+                    if (opcode == L99Protocol.OpEnd)
+                    {
+                        // 04 F0 khong ACK: commit da xong truoc do, dung
+                        // lam hong ca lan ghi. Thiet bi co the dang khoi
+                        // dong lai / rot HID — danh dau mo lai kenh va
+                        // bat tay lai o lan gui ke tiep.
+                        Log($"[PER-KEY] CANH BAO: buoc ket thuc phien '{s.Name}' (04 F0) khong ACK (ket qua: {outcome}, reply cuoi: {LastReplyHex()}). Phan ghi chinh da xong; lan gui sau se mo lai kenh va bat tay lai.");
+                        _reopenBeforeNextCall = true;
+                        continue;
+                    }
                     if (isStream)
                     {
                         LogStreamIssue($"[PER-KEY] Buoc '{s.Name}' (opcode 0x{opcode:X2}) khong nhan duoc ACK hop le trong ngan sach thoi gian — bo frame nay, stream tiep tuc.");
                         return true;
                     }
                     throw new InvalidOperationException(
-                        $"Thiet bi khong ACK buoc '{s.Name}' (opcode 0x{opcode:X2}, ket qua: {outcome}). Dung lai de an toan.");
+                        $"Thiết bị không ACK bước '{s.Name}' (opcode 0x{opcode:X2}, kết quả: {outcome}, reply cuối thấy được: {LastReplyHex()}). Dừng lại để an toàn.");
                 }
                 return true;
             }
@@ -267,6 +344,7 @@ namespace TienKeyboardStudio3
         {
             lock (_gate)
             {
+                ReopenIfMarked();
                 if (!EnsureStream())
                     throw new InvalidOperationException("Khong mo duoc kenh lenh F75 Max. Kiem tra cap USB-C va dong app chinh hang / app tham chieu neu dang mo.");
                 var steps = L99Protocol.BuildColorQuerySteps();
@@ -306,11 +384,7 @@ namespace TienKeyboardStudio3
         {
             if (_disposed) return;
             _disposed = true;
-            try { _cmdStream?.Dispose(); } catch { }
-            _cmdStream = null;
-            _channel = null;
-            _commander = null;
-            _handshakeDone = false;
+            CloseChannel();
         }
     }
 }

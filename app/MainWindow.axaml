@@ -85,7 +85,7 @@
 
           <StackPanel DockPanel.Dock="Bottom" Spacing="10">
             <StackPanel x:Name="SideSettingsHost" Spacing="1" />
-            <TextBlock Text="Tien Vu Keyboard Studio · v3.16.0" FontSize="10.5" Foreground="#6F6C84"
+            <TextBlock Text="Tien Vu Keyboard Studio · v3.17.0" FontSize="10.5" Foreground="#6F6C84"
                        HorizontalAlignment="Center" />
           </StackPanel>
 

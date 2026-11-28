@@ -87,6 +87,13 @@ namespace TienKeyboardStudio3
             return m;
         }
 
+        // v3.17 (scope A): be mat THUAN LOGIC cua bang VK -> vi tri de
+        // unit test duoi day kiem chung toan bo chuoi go pham ung
+        // (VK -> view -> ReactiveEngine -> frame stream). -1 = phim
+        // khong nam trong bang F75 Max (vd nut Fn khong co ma VK).
+        public static int ViewIndexForVk(int vk) => VkToView.TryGetValue(vk, out int v) ? v : -1;
+        public static System.Collections.Generic.IReadOnlyCollection<int> MappableVks => VkToView.Keys;
+
         public double Wpm
         {
             get

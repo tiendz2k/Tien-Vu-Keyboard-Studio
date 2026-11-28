@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- v3.17 (scope C): helper cap nhat mot nut bam. Exe console NHO,
+       doc lap hoan toan voi app chinh: chi dung BCL + UpdaterCore.cs
+       (link tu ../src). Publish FRAMEWORK-DEPENDENT single-file: luong
+       cap nhat cua app von tai ban Light (docs/update.json chi co
+       LightUrl) — ban Light can .NET 8 Runtime san, nen helper dung
+       chung runtime do; ban self-contained + trim can toi ~10.8MB
+       (runtime chiem gan het) khong dang gia. May chi co ban
+       Compressed ma chua co runtime: app cho helper 3 giay ghi file
+       "alive" truoc khi thoat — khong thay thi huy cap nhat, giu
+       nguyen ban cu (xem MainWindowUpdate). Build MOT lan, cung mot
+       binary vao ca hai goi zip de bam trong integrity manifest khop. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>TienVuUpdater</AssemblyName>
+    <RootNamespace>TienVuUpdater</RootNamespace>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Version>3.17.0</Version>
+    <AssemblyVersion>3.17.0.0</AssemblyVersion>
+    <FileVersion>3.17.0.0</FileVersion>
+    <Product>Tien Vu Updater</Product>
+    <Authors>tiendz2k</Authors>
+    <Copyright>© 2026 Vũ Minh Tiến (tiendz2k)</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\src\UpdaterCore.cs" Link="UpdaterCore.cs" />
+  </ItemGroup>
+
+</Project>

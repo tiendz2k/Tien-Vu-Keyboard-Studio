@@ -54,6 +54,46 @@ namespace TienKeyboardStudio3
         }
     }
 
+    // =====================================================================
+    // v3.17 (scope A) — CONG GUI FRAME cua bo phat go pham ung.
+    //
+    // Loi tren phan cung that (v3.16): hieu ung go KHONG phan hoi du
+    // chuoi VK -> view -> engine -> builder dung het (test chuoi chung
+    // minh). Diem nghe: bo phat cu dung co che "ban thi BO frame" —
+    // moi lan SendSteps co the keo dai ~1 giay khi firmware ACK cham
+    // (thang poll ACK cua SonixCommander), trong khi su kien go chi
+    // song 1,1–1,6 giay; mot luot go roi tron trong mot vong gui ban
+    // thi khong bao gio toi duoc phim. Ban nay doi sang mo hinh worker
+    // cua ung dung tham chieu: frame MOI NHAT luon thang (sender doc
+    // o chua frame moi nhat ngay khi kenh ranh) + cong nay: chi gui khi
+    // frame THUC SU khac frame da gui gan nhat (frame den im lang chi
+    // gui mot lan luc chuyen trang thai, sau do im — tra kenh ranh cho
+    // su kien that).
+    // =====================================================================
+    public static class ReactiveFrameGate
+    {
+        /// <summary>Hai frame bang nhau tung o (id + RGB).</summary>
+        public static bool FramesEqual(L99Protocol.StreamQuad[] a, L99Protocol.StreamQuad[] b)
+        {
+            if (ReferenceEquals(a, b)) return true;
+            if (a == null || b == null || a.Length != b.Length) return false;
+            for (int i = 0; i < a.Length; i++)
+                if (a[i].Id != b[i].Id || a[i].R != b[i].R || a[i].G != b[i].G || a[i].B != b[i].B)
+                    return false;
+            return true;
+        }
+
+        /// <summary>Co nen gui frame nay khong: chua gui bao gio -> gui;
+        /// giong het frame da gui gan nhat -> khong (im lang tiet kiem
+        /// kenh); khac -> gui.</summary>
+        public static bool ShouldSend(L99Protocol.StreamQuad[] frame, L99Protocol.StreamQuad[] lastSent)
+        {
+            if (frame == null) return false;
+            if (lastSent == null) return true;
+            return !FramesEqual(frame, lastSent);
+        }
+    }
+
     /// <summary>Engine su kien go phim: nhan (viewIndex, t) va sinh
     /// frame stream theo hieu ung dang chon. Thread-safety: khoa noi bo
     /// (hook goi tu thread rieng, generator goi tu timer UI).</summary>

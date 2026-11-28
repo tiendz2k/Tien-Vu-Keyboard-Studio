@@ -327,9 +327,12 @@ namespace TienKeyboardStudio3
             RefreshWriteStates();
             ShowPage("home");
             _ = RunIntegrityCheckAsync();
-            AppendLog("Tien Vu Keyboard Studio v3.16.0 đã mở. Mọi thao tác áp dụng trực tiếp xuống phím qua USB-C.");
+            AppendLog($"Tien Vu Keyboard Studio v{AboutInfo.Version} đã mở. Mọi thao tác áp dụng trực tiếp xuống phím qua USB-C.");
             AppendLog("Lần đầu: Quét thiết bị → chọn đúng mẫu → dùng các trang tính năng; các họ khác cần bấm Nhận diện (probe đọc) trước khi ghi.");
             _ = SilentAppUpdateCheckAsync();
+            // v3.17 (scope C): doc ghi chu ket qua cap nhat tu dong do
+            // helper ghi lai (neu lan chay truoc vua cap nhat).
+            _ = ShowPendingUpdateResultAsync();
         }
 
         // v3.8: tu kiem tra toan ven ban phat hanh (khong chan tinh nang)
@@ -2835,6 +2838,51 @@ namespace TienKeyboardStudio3
             public string FilePath;
             public string GroupKey;   // NganHa/PixelGame/ThuGian/Mine/Online
             public bool Deletable;    // chi file trong MyGIFs
+            // v3.17 (scope B): nhom be mat — TFT (man 128x128) hay LED
+            // (dai rong cho den phim). Trang Man hinh GIF chi liet ke
+            // Tft; cac be mat GIF->LED chi liet ke Led.
+            public GifKind Kind;
+        }
+
+        // v3.17 (scope B): cache phan loai theo (duong dan + dau file)
+        // de khong phai doc header anh lai moi lan dung luoi.
+        private readonly Dictionary<string, (long Stamp, GifKind Kind)> _gifKindCache =
+            new Dictionary<string, (long, GifKind)>();
+
+        /// <summary>v3.17 (scope B): nhom hieu luc cua mot file GIF —
+        /// the nguoi dung (settings.GifGroupOverrides) thang phan loai
+        /// theo kich thuoc doc tu header anh (Identify, khong giai ma
+        /// frame). Loi doc -> mac dinh TFT (duong chuan hoa an toan).</summary>
+        private GifKind ResolveGifKind(string path, LibrarySettings settings)
+        {
+            if (settings?.GifGroupOverrides != null &&
+                settings.GifGroupOverrides.TryGetValue(path, out var tag) &&
+                GifGroups.TryParseTag(tag, out var tagged))
+                return tagged;
+            long stamp = 0;
+            try { var fi = new FileInfo(path); stamp = fi.Length * 31L + fi.LastWriteTimeUtc.Ticks; }
+            catch { }
+            if (_gifKindCache.TryGetValue(path, out var hit) && hit.Stamp == stamp) return hit.Kind;
+            var kind = GifKind.Tft;
+            try
+            {
+                var info = SixLabors.ImageSharp.Image.Identify(path);
+                if (info != null) kind = GifGroups.Classify(info.Width, info.Height);
+            }
+            catch { }
+            _gifKindCache[path] = (stamp, kind);
+            return kind;
+        }
+
+        /// <summary>v3.17 (scope B): gan the nhom cho mot file (nut
+        /// "Chuyen nhom") va luu xuong settings ngay.</summary>
+        private void SetGifKindOverride(string path, GifKind kind)
+        {
+            var s = GifLibraryStore.Load();
+            if (s.GifGroupOverrides == null) s.GifGroupOverrides = new Dictionary<string, string>();
+            s.GifGroupOverrides[path] = GifGroups.TagOf(kind);
+            GifLibraryStore.Save(s);
+            _gifKindCache.Remove(path);
         }
 
         private Control BuildGifPage()
@@ -2889,10 +2937,13 @@ namespace TienKeyboardStudio3
             RefreshGifGrid();
 
             var filterRow = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+            // v3.17 (scope B): bo chip "Thu vien Online" khoi trang TFT —
+            // GIF online la dai LED, thuoc nhom den phim (trang Per-key /
+            // Thu vien Online), khong con xuat hien o day.
             var filters = new (string Label, string Group)[]
             {
                 ("Tất cả", null), ("Ngân hà", "NganHa"), ("Pixel & Game", "PixelGame"),
-                ("Thư giãn", "ThuGian"), ("Của tôi", "Mine"), ("Thư viện Online", "Online"),
+                ("Thư giãn", "ThuGian"), ("Của tôi", "Mine"),
             };
             var filterBtns = new List<Button>();
             foreach (var (label, group) in filters)
@@ -2943,7 +2994,21 @@ namespace TienKeyboardStudio3
                     }
                     catch (Exception ex) { ShowToast("Không mở được thư mục: " + ex.Message); }
                 }),
-                GhostBtn("Xoá GIF đang chọn", () => DeleteSelectedGif()));
+                GhostBtn("Xoá GIF đang chọn", () => DeleteSelectedGif()),
+                // v3.17 (scope B): chuyen nhom cho GIF dang chon — ghi the
+                // "led" vao settings; item bien khoi luoi TFT va xuat
+                // hien o cac be mat GIF->LED.
+                GhostBtn("Chuyển sang nhóm đèn LED", () =>
+                {
+                    if (_selectedGif == null) { ShowToast("Hãy chọn một GIF trước nhé."); return; }
+                    if (!_selectedGif.IsFile || string.IsNullOrEmpty(_selectedGif.FilePath))
+                    { ShowToast("GIF nhúng sẵn của app thuộc nhóm màn TFT sẵn rồi, không cần chuyển."); return; }
+                    string nm = _selectedGif.Entry.Name;
+                    SetGifKindOverride(_selectedGif.FilePath, GifKind.Led);
+                    _selectedGif = null;
+                    RefreshGifGrid();
+                    ShowToast($"Đã chuyển “{nm}” sang nhóm đèn LED — dùng ở trang Per-key (GIF → đèn phím) nhé.");
+                }));
             var topGrid = new Grid { ColumnDefinitions = new ColumnDefinitions("*,300"), ColumnSpacing = 14 };
             topGrid.Children.Add(Card(kb, 14));
             var previewCard = Card(V(10, Tb("Xem trước lớn", "h3"), bigImg, _gifInfo));
@@ -2985,8 +3050,12 @@ namespace TienKeyboardStudio3
         private List<GifItem> CollectGifItems()
         {
             var items = new List<GifItem>();
+            // v3.17 (scope B): nap settings mot lan o dau — chua ca the
+            // nhom nguoi dung (GifGroupOverrides) de phan loai tung item.
+            var settings = GifLibraryStore.Load();
             foreach (var e in GifCatalog.Library())
-                items.Add(new GifItem { Entry = e, IsFile = false, GroupKey = e.Group });
+                // GIF nhung san cua app deu 128x128 -> nhom TFT theo thiet ke.
+                items.Add(new GifItem { Entry = e, IsFile = false, GroupKey = e.Group, Kind = GifKind.Tft });
             // Thu muc Library canh exe (ban dong goi kem theo)
             string baseLib = System.IO.Path.Combine(AppContext.BaseDirectory, "Library");
             foreach (var (group, label, _) in GifCatalog.LibraryGroups)
@@ -3001,6 +3070,7 @@ namespace TienKeyboardStudio3
                     {
                         Entry = new GifEntry { Name = name, Group = group, GroupLabel = label },
                         IsFile = true, FilePath = f, GroupKey = group,
+                        Kind = ResolveGifKind(f, settings),
                     });
                 }
             }
@@ -3010,23 +3080,28 @@ namespace TienKeyboardStudio3
                 {
                     Entry = new GifEntry { Name = GifCatalog.PrettyName(f), Group = "Mine", GroupLabel = "Của tôi" },
                     IsFile = true, FilePath = f, GroupKey = "Mine", Deletable = true,
+                    Kind = ResolveGifKind(f, settings),
                 });
-            var settings = GifLibraryStore.Load();
             foreach (var folder in settings.Folders)
                 foreach (var f in GifLibraryStore.ScanFolder(folder))
                     items.Add(new GifItem
                     {
                         Entry = new GifEntry { Name = GifCatalog.PrettyName(f), Group = "Mine", GroupLabel = "Của tôi" },
                         IsFile = true, FilePath = f, GroupKey = "Mine",
+                        Kind = ResolveGifKind(f, settings),
                     });
             // v3.8: muc Online cua luoi GIF = cac GIF da tai ve cache
             // (%AppData%/TienKeyboardStudio/OnlineLibrary) — khong con dong goi san.
+            // v3.17 (scope B): cac file nay la dai LED rong -> Kind = Led
+            // theo kich thuoc, tu dong bi loai khoi luoi TFT o
+            // RefreshGifGrid va xuat hien o bo chon GIF->LED.
             if (Directory.Exists(OnlineCatalog.CacheDir))
                 foreach (var f in GifLibraryStore.ScanFolder(OnlineCatalog.CacheDir))
                     items.Add(new GifItem
                     {
                         Entry = new GifEntry { Name = "Online · " + GifCatalog.PrettyName(f), Group = "Online", GroupLabel = "Thư viện Online" },
                         IsFile = true, FilePath = f, GroupKey = "Online",
+                        Kind = ResolveGifKind(f, settings),
                     });
             return items;
         }
@@ -3036,7 +3111,9 @@ namespace TienKeyboardStudio3
             if (_gifWrap == null) return;
             _gifWrap.Children.Clear();
             _gifCards.Clear();
-            var items = CollectGifItems();
+            // v3.17 (scope B): trang Man hinh GIF chi liet ke nhom TFT —
+            // GIF dai LED khong con tron vao luoi nay nua.
+            var items = CollectGifItems().Where(i => i.Kind == GifKind.Tft).ToList();
             foreach (var item in items)
             {
                 var it = item;
@@ -3616,7 +3693,20 @@ namespace TienKeyboardStudio3
             public double Brightness01 = 0.75;
             public int ColorMode = ColorModes.Rainbow;
             private readonly System.Diagnostics.Stopwatch _clock = System.Diagnostics.Stopwatch.StartNew();
-            private bool _sendBusy;
+            // v3.17 (scope A): gui theo mo hinh "frame moi nhat luon
+            // thang" — Tick chi nap frame moi nhat vao o chua, mot
+            // thread gui rieng doc o chua ngay khi kenh ranh. Ban cu
+            // "dang ban thi bo frame" lam mat luot go khi SendSteps keo
+            // dai (ACK cham): su kien song 1,1–1,6 s nhung mot vong gui
+            // ban co the nuot tron cua so do.
+            private volatile L99Protocol.StreamQuad[] _latestFrame;
+            private L99Protocol.StreamQuad[] _lastSentFrame; // chi thread gui dung
+            private Thread _senderThread;
+            private volatile bool _senderRun;
+            /// <summary>v3.17: bao UI moi su kien go (CHI index vi tri)
+            /// de dong trang thai "Phim vua nhan" — chi hien tren man
+            /// hinh, khong luu/khong log, dung dieu khoan rieng tu cu.</summary>
+            public Action<int> KeyEcho;
 
             public ReactiveLedPlayer() { Timer.Tick += Tick; }
             public bool Running => Timer.IsEnabled;
@@ -3624,18 +3714,68 @@ namespace TienKeyboardStudio3
 
             /// <summary>Nhan su kien go: CHI index vi tri phim (hook da
             /// dich VK -> vi tri o TypingStatsService).</summary>
-            public void OnKey(int viewIndex) => Engine.AddEvent(viewIndex, NowSec);
+            public void OnKey(int viewIndex)
+            {
+                Engine.AddEvent(viewIndex, NowSec);
+                try { KeyEcho?.Invoke(viewIndex); } catch { }
+            }
 
             public void Start(int effectId)
             {
                 EffectId = effectId;
                 Claim?.Invoke();
                 Engine.Clear();
+                _latestFrame = null;
+                _lastSentFrame = null;
+                StartSender();
                 Timer.Start();
                 Tick(null, null);
             }
 
-            public void Stop() { Timer.Stop(); }
+            public void Stop()
+            {
+                Timer.Stop();
+                _senderRun = false;
+            }
+
+            private void StartSender()
+            {
+                _senderRun = true;
+                if (_senderThread != null && _senderThread.IsAlive) return;
+                _senderThread = new Thread(SenderLoop) { IsBackground = true, Name = "ReactiveStreamSender" };
+                _senderThread.Start();
+            }
+
+            // Vong gui: chi gui khi frame moi nhat KHAC frame da gui
+            // (ReactiveFrameGate) — frame den im lang chi gui mot lan
+            // luc chuyen trang thai. SendSteps tra false (bat tay chua
+            // xong, frame bi bo o tang duoi) thi KHONG danh dau da gui:
+            // frame se duoc thu lai o vong ke tiep.
+            private void SenderLoop()
+            {
+                while (_senderRun)
+                {
+                    var frame = _latestFrame;
+                    if (Exp == null || frame == null || !ReactiveFrameGate.ShouldSend(frame, _lastSentFrame))
+                    {
+                        Thread.Sleep(10);
+                        continue;
+                    }
+                    try
+                    {
+                        var steps = L99Protocol.BuildStreamFrameSteps(frame.ToList());
+                        if (Exp.SendSteps("Stream gõ phím phản ứng 0x20", steps))
+                            _lastSentFrame = frame;
+                        else
+                            Thread.Sleep(50); // tang duoi vua bo frame — tho roi thu lai
+                    }
+                    catch (Exception ex)
+                    {
+                        Log?.Invoke("Lỗi gõ phím phản ứng: " + ex.Message);
+                        Thread.Sleep(100);
+                    }
+                }
+            }
 
             private void Tick(object sender, EventArgs e)
             {
@@ -3647,15 +3787,7 @@ namespace TienKeyboardStudio3
                 State.FrameColors = dict;
                 State.PaintMode = false;
                 Target?.InvalidateVisual();
-                if (Exp == null || _sendBusy) return;
-                _sendBusy = true;
-                var steps = L99Protocol.BuildStreamFrameSteps(quads.ToList());
-                Task.Run(() =>
-                {
-                    try { Exp.SendSteps("Stream gõ phím phản ứng 0x20", steps); }
-                    catch (Exception ex) { Log?.Invoke("Lỗi gõ phím phản ứng: " + ex.Message); }
-                    _sendBusy = false;
-                });
+                _latestFrame = quads; // sender doc o vong cua no
             }
         }
 
@@ -3970,6 +4102,11 @@ namespace TienKeyboardStudio3
         private readonly WidgetPushGate _widgetGate = new WidgetPushGate();
         // v3.15: Now Playing that (GSMTC) — khoi tao luoi khi mo widget
         private readonly NowPlayingService _nowPlaying = new NowPlayingService();
+        // v3.17: state marquee tieu de widget Dang phat — offset ky tu
+        // hien tai; renderer tra offset ke tiep moi lan dung khung,
+        // doi bai thi reset ve 0. Chi song trong RAM.
+        private string _npMarqueeTitle = "";
+        private int _npMarqueeOffset;
         private string _activeSchemeName = "";
         private Action _refreshSchemeList;
         private Action _clearReactiveChips; // v3.15: bo chon chip go phim phan ung
@@ -4509,7 +4646,9 @@ namespace TienKeyboardStudio3
             var ledState = new RgbAnimState { Brush = Color.FromRgb(0x7C, 0x3A, 0xED), Brightness = 3 };
             var ledKb = new KeyboardView { Mode = KeyboardMode.Animated, State = ledState };
             var ledPicker = new ComboBox { Width = 340 };
-            var ledItems = CollectGifItems();
+            // v3.17 (scope B): bo chon GIF->LED chi liet ke nhom LED —
+            // GIF vuong cho man TFT khong con tron vao day.
+            var ledItems = CollectGifItems().Where(i => i.Kind == GifKind.Led).ToList();
             ledPicker.ItemsSource = ledItems.Select(i => i.Entry.Name).ToList();
             if (ledItems.Count > 0) ledPicker.SelectedIndex = 0;
             var ledInfo = Tb("Chọn GIF rồi bấm Nạp GIF để stream lên đèn phím.", "sub");
@@ -4572,7 +4711,22 @@ namespace TienKeyboardStudio3
             var ledCard = Card(V(12,
                 Tb("GIF → đèn phím (stream 0x20)", "h2"),
                 ledKb,
-                H(10, ledPicker, loadLedBtn),
+                H(10, ledPicker, loadLedBtn,
+                    // v3.17 (scope B): chuyen muc dang chon sang nhom TFT.
+                    GhostBtn("Chuyển sang nhóm màn TFT", () =>
+                    {
+                        int idx = ledPicker.SelectedIndex;
+                        if (idx < 0 || idx >= ledItems.Count) { ShowToast("Hãy chọn một GIF trước nhé."); return; }
+                        var item = ledItems[idx];
+                        if (!item.IsFile || string.IsNullOrEmpty(item.FilePath))
+                        { ShowToast("Mục này không chuyển nhóm được."); return; }
+                        string nm = item.Entry.Name;
+                        SetGifKindOverride(item.FilePath, GifKind.Tft);
+                        ledItems = CollectGifItems().Where(i => i.Kind == GifKind.Led).ToList();
+                        ledPicker.ItemsSource = ledItems.Select(i => i.Entry.Name).ToList();
+                        if (ledItems.Count > 0) ledPicker.SelectedIndex = 0;
+                        ledInfo.Text = $"Đã chuyển “{nm}” sang nhóm màn hình TFT — mở trang Màn hình GIF để dùng nhé.";
+                    })),
                 ledInfo,
                 H(10, playLedBtn, sendLedBtn),
                 H(24,
@@ -4669,6 +4823,13 @@ namespace TienKeyboardStudio3
             var reactiveStatus = Tb(_typingOn
                 ? "Đang theo dõi vị trí phím gõ. Chọn một hiệu ứng rồi gõ thử."
                 : "Bật công tắc theo dõi phím bên dưới để hiệu ứng nhận phím gõ thật (xem trước trong app vẫn chạy).", "sub");
+            // v3.17 (scope A): dong chan doan "Phim vua nhan" — neu dong
+            // nay doi theo phim dang go thi hook dang chay tot (tach
+            // bach loi hook khoi loi gui stream). Chi hien tren UI trong
+            // phien chay, khong luu settings, khong ghi log.
+            var lastKeyStatus = Tb("Phím vừa nhận: —", "faint");
+            _reactivePlayer.KeyEcho = view => Dispatcher.UIThread.Post(() =>
+                lastKeyStatus.Text = "Phím vừa nhận: " + MaxKeyData.ViewKeyNames[view]);
             var reactiveBtns = new List<Button>();
             var reactiveWrap = new WrapPanel();
             _clearReactiveChips = () =>
@@ -4730,7 +4891,8 @@ namespace TienKeyboardStudio3
                 reactiveWrap,
                 H(10, reactiveOffBtn),
                 hookRow,
-                reactiveStatus));
+                reactiveStatus,
+                lastKeyStatus));
 
             // --- v3.15: AMBILIGHT (man hinh PC -> stream 0x20) ---
             var ambiState = new RgbAnimState { Brush = Color.FromRgb(0x7C, 0x3A, 0xED), Brightness = 3 };
@@ -5184,6 +5346,15 @@ namespace TienKeyboardStudio3
             double phase = (DateTime.Now - DateTime.Today).TotalSeconds;
             if (snap == null || !snap.Available)
                 return WidgetRenderer.RenderNowPlayingIdle();
+            // v3.17: marquee — doi bai thi offset ve 0; moi lan dung
+            // khung, renderer tra offset ke tiep (tien 3 ky tu/tick khi
+            // tieu de qua dai, giu nguyen 0 khi tieu de xep vua 2 dong).
+            string npTitle = snap.Title ?? "";
+            if (!string.Equals(npTitle, _npMarqueeTitle, StringComparison.Ordinal))
+            {
+                _npMarqueeTitle = npTitle;
+                _npMarqueeOffset = 0;
+            }
             var data = new WidgetRenderer.MediaViewData
             {
                 Title = snap.Title,
@@ -5192,8 +5363,11 @@ namespace TienKeyboardStudio3
                 DurationSec = snap.DurationSec,
                 IsPlaying = snap.IsPlaying,
                 ArtPngBytes = _nowPlaying.ArtPng,
+                MarqueeOffset = _npMarqueeOffset,
             };
-            return WidgetRenderer.RenderNowPlayingReal(data, phase);
+            var bmp = WidgetRenderer.RenderNowPlayingReal(data, phase, out int npNextOffset);
+            _npMarqueeOffset = npNextOffset;
+            return bmp;
         }
 
         private async Task UploadCurrentWidgetAsync()

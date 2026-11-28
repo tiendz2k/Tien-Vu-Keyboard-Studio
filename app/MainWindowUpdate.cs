@@ -13,8 +13,15 @@ namespace TienKeyboardStudio3
     // am tham khi mo app:
     //  - Ban app: doc docs/update.json tren repo; co ban moi thi tai zip
     //    ban Light ve %AppData%\TienKeyboardStudio\Updates\, kiem SHA-256
-    //    theo manifest roi cho mo thu muc — KHONG bao gio tu thay exe
-    //    dang chay.
+    //    theo manifest roi cho mo thu muc.
+    // v3.17 (scope C) — CAP NHAT MOT NUT BAM (yeu cau cua Tien): tai +
+    // kiem bam xong thi co nut "Cap nhat ngay": app ghi update-job.json,
+    // chep TienVuUpdater.exe vao Updates va mo tu do, cho helper bao
+    // "con song" (file alive) roi thoat han; helper de zip len thu muc
+    // cai (UpdaterCore.PerformSwap, co backup/rollback), mo lai app va
+    // ghi update-result.json de lan mo sau hien mot dong ghi chu. That
+    // bai o bat ky buoc nao: ban cu nguyen ven. "Mo thu muc" van la lua
+    // chon phu (cai tay nhu truoc).
     //  - Du lieu thiet bi: dung lai co che bang thiet bi cong dong san co
     //    (DeviceRegistry: RawUrl + TryParseValid + LocalPath).
     //  - Thu vien GIF online: tai lai docs/online-library-drive.json,
@@ -32,6 +39,7 @@ namespace TienKeyboardStudio3
         private ProgressBar _updProgress;
         private Button _updDownloadBtn;
         private Button _updOpenDirBtn;
+        private Button _updInstallBtn;
         private string _updDownloadedPath;
         // v3.15: kho scheme den cong dong
         private TextBlock _schemeLibStatus;
@@ -54,6 +62,10 @@ namespace TienKeyboardStudio3
                 catch (Exception ex) { ShowToast("Không mở được thư mục: " + ex.Message); }
             });
             _updOpenDirBtn.IsVisible = false;
+            // v3.17 (scope C): nut chinh cua luong mot-nut-bam — chi hien
+            // sau khi tai + kiem bam xong.
+            _updInstallBtn = PrimaryBtn("Cập nhật ngay", async () => await InstallDownloadedUpdateAsync());
+            _updInstallBtn.IsVisible = false;
             var appCard = Card(V(8,
                 Tb("Phiên bản app", "h2"),
                 Tb("Phiên bản hiện tại: " + AboutInfo.Version, "sub"),
@@ -62,6 +74,7 @@ namespace TienKeyboardStudio3
                 H(10,
                     GhostBtn("Kiểm tra cập nhật", async () => await CheckAppUpdateAsync(manual: true)),
                     _updDownloadBtn,
+                    _updInstallBtn,
                     _updOpenDirBtn)));
 
             _regStatus = Tb("", "sub");
@@ -197,7 +210,7 @@ namespace TienKeyboardStudio3
                 {
                     _updAppStatus.Text = $"Có bản mới: {_ui.UpdateLatestVersion}" +
                         (string.IsNullOrWhiteSpace(_ui.UpdateLatestNotes) ? "" : " — " + _ui.UpdateLatestNotes) +
-                        " Bấm “Tải bản mới” để tải về thư mục Updates (app không tự thay bản đang chạy).";
+                        " Bấm “Tải bản mới”, tải xong bấm “Cập nhật ngay” — app tự đóng, thay bản mới rồi mở lại; cài đặt và dữ liệu giữ nguyên.";
                     if (_updDownloadBtn != null) _updDownloadBtn.IsVisible = true;
                 }
                 else
@@ -328,9 +341,10 @@ namespace TienKeyboardStudio3
             {
                 _updDownloadedPath = dest;
                 if (_updAppStatus != null)
-                    _updAppStatus.Text = $"Đã tải xong bản {version} và kiểm tra mã băm khớp. Giải nén file trong thư mục Updates để dùng bản mới (app không tự thay bản đang chạy).";
+                    _updAppStatus.Text = $"Đã tải xong bản {version} và kiểm tra mã băm khớp. Bấm “Cập nhật ngay” để app tự đóng, thay bản mới và mở lại — hoặc “Mở thư mục” nếu muốn cài tay.";
+                if (_updInstallBtn != null) _updInstallBtn.IsVisible = true;
                 if (_updOpenDirBtn != null) _updOpenDirBtn.IsVisible = true;
-                ShowToast($"Đã tải xong bản {version}.");
+                ShowToast($"Đã tải xong bản {version} — bấm Cập nhật ngay để hoàn tất.");
                 AppendLog($"[Cập nhật] Đã tải + kiểm băm OK: {dest}");
             }
             else
@@ -338,6 +352,118 @@ namespace TienKeyboardStudio3
                 AppendLog("[Cập nhật] Tải bản mới thất bại: " + error);
                 if (_updAppStatus != null) _updAppStatus.Text = "Tải thất bại — thử lại sau. (" + error + ")";
             }
+        }
+
+        // ---------------- v3.17 (scope C): cap nhat mot nut bam ----------------
+
+        /// <summary>
+        /// "Cap nhat ngay": ghi job, chep helper vao Updates, mo helper
+        /// tu ban chep, cho no bao "con song" (file alive, toi da ~3s)
+        /// roi thoat han de helper thay ban. Helper khong bao song ->
+        /// huy, app khong thoat, ban cu nguyen ven.
+        /// </summary>
+        private async Task InstallDownloadedUpdateAsync()
+        {
+            string zip = _updDownloadedPath;
+            string version = _ui.UpdateLatestVersion;
+            if (string.IsNullOrWhiteSpace(zip) || !File.Exists(zip))
+            {
+                ShowToast("Chưa có file bản mới đã tải — hãy bấm Tải bản mới trước.");
+                return;
+            }
+            string baseDir = AppContext.BaseDirectory;
+            string helperSrc = Path.Combine(baseDir, UpdaterCore.HelperExeName);
+            if (!File.Exists(helperSrc))
+            {
+                if (_updAppStatus != null)
+                    _updAppStatus.Text = "Bản đang chạy thiếu " + UpdaterCore.HelperExeName +
+                        " nên chưa tự cập nhật được — dùng “Mở thư mục” để cài tay nhé.";
+                if (_updOpenDirBtn != null) _updOpenDirBtn.IsVisible = true;
+                return;
+            }
+            try
+            {
+                Directory.CreateDirectory(UpdateCore.UpdatesDir);
+                string helperCopy = UpdaterCore.HelperCopyPathIn(UpdateCore.UpdatesDir);
+                File.Copy(helperSrc, helperCopy, overwrite: true);
+                string alive = UpdaterCore.AlivePathIn(UpdateCore.UpdatesDir);
+                try { if (File.Exists(alive)) File.Delete(alive); } catch { }
+                // Xoa result cu (neu con) de lan mo sau khong hien nham.
+                try { string rp = UpdaterCore.ResultPathIn(UpdateCore.UpdatesDir); if (File.Exists(rp)) File.Delete(rp); } catch { }
+                string relaunch = "TienKeyboardStudio.exe";
+                try { string pp = Environment.ProcessPath; if (!string.IsNullOrEmpty(pp)) relaunch = Path.GetFileName(pp); } catch { }
+                var job = new UpdateJob
+                {
+                    ZipPath = zip,
+                    TargetDir = baseDir.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar),
+                    RelaunchExe = relaunch,
+                    AppPid = Environment.ProcessId,
+                    ToVersion = version ?? "",
+                };
+                string jobPath = UpdaterCore.JobPathIn(UpdateCore.UpdatesDir);
+                File.WriteAllText(jobPath, UpdaterCore.SerializeJob(job));
+                SaveUi();
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = helperCopy,
+                    Arguments = "\"" + jobPath + "\"",
+                    UseShellExecute = false,
+                });
+                if (_updAppStatus != null) _updAppStatus.Text = "Đang khởi động trình cập nhật…";
+                bool aliveSeen = false;
+                for (int i = 0; i < 30 && !aliveSeen; i++)
+                {
+                    await Task.Delay(100);
+                    aliveSeen = File.Exists(alive);
+                }
+                if (!aliveSeen)
+                {
+                    AppendLog("[Cập nhật] Helper không báo alive trong 3 giây — huỷ cập nhật tự động, app không thoát.");
+                    if (_updAppStatus != null)
+                        _updAppStatus.Text = "Không khởi động được trình cập nhật phụ — bản hiện tại vẫn nguyên vẹn. Hãy dùng “Mở thư mục” để cài tay.";
+                    if (_updOpenDirBtn != null) _updOpenDirBtn.IsVisible = true;
+                    return;
+                }
+                AppendLog($"[Cập nhật] Helper đã sẵn sàng — app thoát để thay bản {version}.");
+                _reallyExit = true;
+                Close();
+                // Phong xa: cua so khong dong han thi ep thoat sau 1.5s
+                // (helper chi tien hanh khi PID nay da chet).
+                _ = Task.Run(async () => { await Task.Delay(1500); Environment.Exit(0); });
+            }
+            catch (Exception ex)
+            {
+                AppendLog("[Cập nhật] Lỗi khởi động cập nhật tự động: " + ex.Message);
+                if (_updAppStatus != null)
+                    _updAppStatus.Text = "Không bắt đầu được cập nhật tự động — bản hiện tại vẫn nguyên vẹn. (" + ex.Message + ")";
+            }
+        }
+
+        /// <summary>
+        /// Doc update-result.json do helper ghi (neu co) o lan mo app ke
+        /// tiep: hien MOT dong ghi chu roi xoa file. Dong thoi don ban
+        /// chep helper con sot trong Updates (helper da thoat nen xoa
+        /// duoc; rieng lan cap nhat THAT BAI thi app cu mo lai cung chay
+        /// qua day va don sach).
+        /// </summary>
+        private async Task ShowPendingUpdateResultAsync()
+        {
+            try
+            {
+                await Task.Delay(1200);
+                try { string hc = UpdaterCore.HelperCopyPathIn(UpdateCore.UpdatesDir); if (File.Exists(hc)) File.Delete(hc); } catch { }
+                var r = UpdaterCore.ReadResult(UpdateCore.UpdatesDir);
+                if (r == null) return;
+                try { File.Delete(UpdaterCore.ResultPathIn(UpdateCore.UpdatesDir)); } catch { }
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    AppendLog("[Cập nhật] " + r.Message);
+                    if (_updAppStatus != null) _updAppStatus.Text = r.Message;
+                    ShowToast(r.Ok ? r.Message
+                        : "Cập nhật tự động chưa thành — vẫn dùng bản cũ, xem Cài đặt → Cập nhật.");
+                });
+            }
+            catch { }
         }
 
         // ---------------- Lam moi du lieu ----------------

@@ -1,6 +1,6 @@
 {
-  "version": "3.16.0",
-  "notes": "Ambilight mượt hơn (làm mượt màu + bộ chỉnh màu), Now Playing chọn đúng phiên đang phát + tiến trình mượt, thêm hiệu ứng gõ Đa sóng / Bản đồ nhiệt / Chữ thập, luật lịch trình áp được scheme đèn theo tên.",
-  "lightUrl": "https://drive.google.com/uc?export=download&id=1oLbuDxcLvhTrIZM4gp-KxvJi3hjmtcxV",
-  "sha256": "3618029e5c1fda65b7cd8a52912f1724013b6d16ad97b8caad8a205d09bdd844"
+  "lightUrl": "https://drive.google.com/uc?export=download&id=1pVJ5jgvSOVgTJF12uvoyc97n6F2N5nWW",
+  "notes": "Cập nhật một nút bấm (từ bản sau chỉ cần bấm Cập nhật ngay trong app), sửa hiệu ứng gõ phím phản ứng không lên đèn + thêm dòng Phím vừa nhận, tách nhóm GIF màn TFT / đèn phím, sửa lỗi gửi màu 0x23 báo không ACK bước Commit, widget Đang phát trên TFT hiện đầy đủ hơn.",
+  "sha256": "f41223daa3470b9087151194912e3be682dc91a73adf8b0fd62518b4a32df2be",
+  "version": "3.17.0"
 }

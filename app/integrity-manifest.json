@@ -1,6 +1,6 @@
 {
  "App": "Tien Vu Keyboard Studio",
- "Version": "3.16.0",
+ "Version": "3.17.0",
  "Author": "tiendz2k",
  "Files": {
   "Avalonia.Base.dll": "d453ec090ab58d2a6bc85e84738c6c96f8a9e94789c31fd94a9a071d5314dd0b",
@@ -40,6 +40,7 @@
   "WinRT.Runtime.dll": "bcf3a14e8712a90837fc5c0d8c8a24696af2bd7f74e9767597ec81ededfb23db",
   "av_libglesv2.dll": "9b203e40323b49dad29546a52b8b67d200bba8ff4cab9709a79cede23ba847d4",
   "libHarfBuzzSharp.dll": "eb76238c9e8e41d44b5a5b18167c4c5b39ca5db4277af5dbe92d730f0fc14a7d",
-  "libSkiaSharp.dll": "9a0d95e8caaa852c70d085af6a40a744242172ad9ea3fd6bc7599875a8a1dbcd"
+  "libSkiaSharp.dll": "9a0d95e8caaa852c70d085af6a40a744242172ad9ea3fd6bc7599875a8a1dbcd",
+  "TienVuUpdater.exe": "77e0b5f9193a59312e8894eeb843a830823a8e07f8ffd736b4d7772c9e0dfac3"
  }
 }
